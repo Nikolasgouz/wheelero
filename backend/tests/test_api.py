@@ -57,7 +57,7 @@ def test_ownership_every_private_route(client, payload):
     {"options": [{"id": "bad", "label": "x"}]},
     {"options": [{"id": str(uuid4()), "label": " "}]},
     {"options": [{"id": str(uuid4()), "label": "a" * 161}]},
-    {"options": [{"id": str(uuid4()), "label": "x"} for _ in range(201)]},
+    {"options": [{"id": str(uuid4()), "label": "x"} for _ in range(10001)]},
     {"unknown": True},
 ])
 def test_validation(client, payload, change):
@@ -148,7 +148,7 @@ def test_sharing_is_snapshot_revocable_and_private(client, payload):
     assert client.put(path, json=payload).status_code == 200
     public = TestClient(app).get(f"/api/shares/{token}").json()
     assert public["title"] == wheel["title"]
-    assert set(public) == {"title", "options", "no_repeat"}
+    assert set(public) == {"title", "options", "no_repeat", "customization"}
     assert client.delete(path + f"/shares/{token}").status_code == 204
     assert TestClient(app).get(f"/api/shares/{token}").status_code == 404
 

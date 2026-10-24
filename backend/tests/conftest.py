@@ -38,7 +38,7 @@ def payload():
     return {
         "mutation_id": str(uuid4()), "revision": 0, "title": "Τι θα φάμε; 🍕",
         "no_repeat": False, "options": [
-            {"id": str(uuid4()), "label": label, "active": True}
+            {"id": str(uuid4()), "label": label, "active": True, "image": None}
             for label in ["Πίτσα 🍕", "Σαλάτα 🥗", "Πίτσα 🍕"]
         ], "results": [],
     }

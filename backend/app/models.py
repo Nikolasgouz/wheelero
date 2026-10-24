@@ -4,6 +4,7 @@ from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Index, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
+from .customization import Customization
 
 
 def now() -> str:
@@ -28,6 +29,7 @@ class Wheel(Base):
     title: Mapped[str] = mapped_column(String(120))
     revision: Mapped[int] = mapped_column(default=1)
     no_repeat: Mapped[bool] = mapped_column(Boolean, default=False)
+    customization: Mapped[dict] = mapped_column(JSON, default=lambda: Customization().model_dump())
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     updated_at: Mapped[str] = mapped_column(default=now)
 
@@ -36,7 +38,7 @@ class Option(Base):
     __tablename__ = "options"
     __table_args__ = (
         UniqueConstraint("wheel_id", "position"),
-        CheckConstraint("position >= 0 AND position < 200"),
+        CheckConstraint("position >= 0 AND position < 10000"),
         CheckConstraint("length(label) BETWEEN 1 AND 160"),
     )
     wheel_id: Mapped[str] = mapped_column(ForeignKey("wheels.id"), primary_key=True)
@@ -44,6 +46,7 @@ class Option(Base):
     label: Mapped[str] = mapped_column(String(160))
     position: Mapped[int]
     active: Mapped[bool] = mapped_column(Boolean, default=True)
+    image: Mapped[str | None]
 
 
 class Result(Base):
@@ -51,7 +54,7 @@ class Result(Base):
     __table_args__ = (
         CheckConstraint("source IN ('server', 'offline')"),
         CheckConstraint("choice_index >= 0 AND choice_index < choice_count"),
-        CheckConstraint("choice_count BETWEEN 1 AND 200"),
+        CheckConstraint("choice_count BETWEEN 1 AND 10000"),
         Index("ix_results_wheel_created", "wheel_id", "created_at"),
     )
     wheel_id: Mapped[str] = mapped_column(ForeignKey("wheels.id"), primary_key=True)

@@ -37,8 +37,11 @@ def wheel_data(db: Session, wheel: Wheel) -> dict:
     return {
         "id": wheel.id, "title": wheel.title, "revision": wheel.revision,
         "no_repeat": wheel.no_repeat, "deleted": wheel.deleted,
+        "customization": wheel.customization,
         "updated_at": wheel.updated_at,
-        "options": [{"id": o.id, "label": o.label, "active": o.active} for o in options],
+        "options": [
+            {"id": o.id, "label": o.label, "active": o.active, "image": o.image} for o in options
+        ],
         "results": [result_data(r) for r in results],
     }
 

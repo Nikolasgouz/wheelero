@@ -3,6 +3,7 @@ from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from .customization import Customization, Image
 
 
 class StrictModel(BaseModel):
@@ -13,6 +14,7 @@ class OptionInput(StrictModel):
     id: UUID
     label: str = Field(min_length=1, max_length=160)
     active: bool = True
+    image: Image | None = None
 
     @field_validator("label")
     @classmethod
@@ -26,8 +28,8 @@ class OfflineResult(StrictModel):
     id: UUID
     option_id: UUID
     label: str = Field(min_length=1, max_length=160)
-    choice_index: int = Field(ge=0, lt=200)
-    choice_count: int = Field(ge=1, le=200)
+    choice_index: int = Field(ge=0, lt=10000)
+    choice_count: int = Field(ge=1, le=10000)
     source: Literal["offline"]
     created_at: datetime
 
@@ -43,8 +45,9 @@ class WheelWrite(StrictModel):
     revision: int = Field(ge=0)
     title: str = Field(min_length=1, max_length=120)
     no_repeat: bool = False
+    customization: Customization = Field(default_factory=Customization)
     # Drafts with 0 or 1 options can be saved, but cannot be spun.
-    options: list[OptionInput] = Field(max_length=200)
+    options: list[OptionInput] = Field(max_length=10000)
     results: list[OfflineResult] = Field(default_factory=list, max_length=1000)
 
     @field_validator("title")
@@ -56,6 +59,8 @@ class WheelWrite(StrictModel):
 
     @model_validator(mode="after")
     def unique_ids(self):
+        if len(self.model_dump_json()) > 8_000_000:
+            raise ValueError("Wheel snapshot exceeds 8 MB")
         for items in (self.options, self.results):
             if len({item.id for item in items}) != len(items):
                 raise ValueError("Duplicate client IDs")

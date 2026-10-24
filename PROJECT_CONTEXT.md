@@ -1,11 +1,11 @@
 # Γύρνα. — context
 
-Last updated: 2026-10-24. Local v1 implemented and verified; no pending implementation task.
+Last updated: 2026-10-24. Customization implementation in progress; final browser verification pending.
 
 ## Product and scope
 
 Greek decision spinner, no account required, responsive installable PWA. Implemented:
-2–200-entry wheels (0–1-entry drafts), editing/reordering/bulk input/duplicate warning,
+2–10,000-entry wheels (0–1-entry drafts), editing/reordering/bulk input/duplicate warning,
 templates, library/copy/delete, history, no-repeat, JSON backups, theme/sound/presentation,
 revocable public snapshots, offline editing/draws and conflict-preserving synchronization.
 Stack: FastAPI/SQLAlchemy/Alembic/SQLite + React/TypeScript/Vite/Bun. No external services.
@@ -35,6 +35,12 @@ original ID; it is never replaced by a fresh offline draw. Losing the cookie cre
 workspace and copies remaining local data. There is no cross-device account recovery.
 
 ## Verification
+
+Customization work: versioned API validation and migration implemented; old-database
+upgrade test passes, 38 other backend cases passed before its test configuration fix.
+UI now has all three tabs, private image snapshots, procedural audio and durable winner
+removal. E2E found ambiguous select labels; explicit labels added. Full checks are pending.
+Reference inspection and the complete feature mapping are in docs/customization.md.
 
 - Latest full verification (2026-10-24): backend pytest 22 passed, including ownership,
   validation, persistence, simultaneous

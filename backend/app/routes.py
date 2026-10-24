@@ -76,12 +76,13 @@ def write_wheel(wheel_id: UUID, body: WheelWrite, response: Response, db: DB, ow
         response.status_code = 201
     wheel.title = body.title
     wheel.no_repeat = body.no_repeat
+    wheel.customization = body.customization.model_dump()
     wheel.updated_at = now()
     db.execute(delete(Option).where(Option.wheel_id == wheel_id))
     for position, option in enumerate(body.options):
         db.add(Option(
             wheel_id=wheel_id, id=str(option.id), label=option.label,
-            active=option.active, position=position,
+            active=option.active, position=position, image=option.image,
         ))
     for result in body.results:
         existing = db.get(Result, (wheel_id, str(result.id)))
@@ -154,6 +155,7 @@ def create_share(wheel_id: UUID, body: RevisionRequest, db: DB, owner: Owner):
     data = wheel_data(db, wheel)
     share = Share(token=secrets.token_urlsafe(32), wheel_id=wheel.id, snapshot={
         "title": wheel.title, "no_repeat": wheel.no_repeat, "options": data["options"],
+        "customization": wheel.customization,
     })
     db.add(share)
     db.flush()
