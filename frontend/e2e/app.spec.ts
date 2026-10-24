@@ -164,7 +164,8 @@ test('bulk blanks, duplicate removal, 200 entries and no-repeat exhaustion', asy
     .fill(Array.from({ length: 197 }, (_, i) => `Όνομα ${i}`).join('\n'))
   await page.getByRole('button', { name: 'Πρόσθεσε τις γραμμές' }).click()
   await expect(page.locator('.option-row')).toHaveCount(200)
-  await expect(page.locator('.wheel-svg text')).toHaveCount(0)
+  await expect(page.locator('.wheel-svg text')).toHaveCount(200)
+  await expect(page.locator('.wheel-legend li')).toHaveCount(200)
 })
 
 for (const width of [360, 390, 768, 1440]) {
@@ -191,7 +192,12 @@ for (const width of [360, 390, 768, 1440]) {
     const darkScan = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze()
-    expect(darkScan.violations.map((v) => v.id)).toEqual([])
+    expect(
+      darkScan.violations.map((v) => ({
+        id: v.id,
+        nodes: v.nodes.map((n) => ({ target: n.target, detail: n.failureSummary })),
+      })),
+    ).toEqual([])
   })
 }
 

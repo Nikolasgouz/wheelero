@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from 'react'
 import { api, ApiError, NetworkError, setCsrf } from '../api/client'
 import { t } from '../i18n'
+import { ct } from '../customization.i18n'
+import { defaults, type Customization } from '../customization'
 import { randomIndex } from '../lib/random'
 import type { DrawResult, LocalWheel, Option, SavedState, Wheel } from '../types'
 import { readState, writeState } from './storage'
@@ -12,9 +14,10 @@ export function makeWheel(title: string, labels: string[]): LocalWheel {
     title,
     revision: 0,
     no_repeat: false,
+    customization: structuredClone(defaults),
     deleted: false,
     updated_at: new Date().toISOString(),
-    options: labels.map((label) => ({ id: crypto.randomUUID(), label, active: true })),
+    options: labels.map((label) => ({ id: crypto.randomUUID(), label, active: true, image: null })),
     results: [],
     dirty: true,
     mutation_id: crypto.randomUUID(),
@@ -27,7 +30,10 @@ function localWheel(wheel: Wheel): LocalWheel {
 }
 
 export function forkWheel(
-  wheel: Pick<Wheel, 'title' | 'options' | 'no_repeat' | 'results'>,
+  wheel: Pick<
+    Wheel,
+    'title' | 'options' | 'no_repeat' | 'customization' | 'results' | 'customization'
+  >,
 ): LocalWheel {
   const results = wheel.results.map((r) => ({
     ...r,
@@ -38,6 +44,7 @@ export function forkWheel(
     ...makeWheel(wheel.title, []),
     options: wheel.options,
     no_repeat: wheel.no_repeat,
+    customization: wheel.customization,
     results,
     pending_results: results.map((r) => r.id),
   }
@@ -99,6 +106,7 @@ export async function initialize() {
         active: first.id,
         pending_draw: null,
         workspace_id: '',
+        removals: [],
       }
       await writeState(saved)
     }
@@ -113,8 +121,18 @@ export function activeOptions(wheel: Wheel): Option[] {
 
 export async function editWheel(
   id: string,
-  patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat'>>,
+  patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat' | 'customization'>>,
 ) {
+  if (
+    new TextEncoder().encode(
+      JSON.stringify({
+        ...saved.wheels.find((w) => w.id === id),
+        ...pendingEdits.get(id),
+        ...patch,
+      }),
+    ).length > 8_000_000
+  )
+    throw new Error(ct.bigWheel)
   // Controlled inputs need synchronous values to preserve their caret. Keep newer
   // edits visible while older IndexedDB writes complete in the serialized queue.
   const change = {
@@ -200,7 +218,14 @@ async function syncState(state: SavedState) {
     const activeIndex = state.wheels
       .filter((w) => !w.deleted)
       .findIndex((w) => w.id === state.active)
-    state.wheels = state.wheels.filter((w) => !w.deleted).map(forkWheel)
+    state.wheels = state.wheels
+      .filter((w) => !w.deleted)
+      .map((wheel) => {
+        const copy = forkWheel(wheel)
+        for (const removal of state.removals)
+          if (removal.wheel_id === wheel.id) removal.wheel_id = copy.id
+        return copy
+      })
     state.active = state.wheels[Math.max(activeIndex, 0)].id
     state.pending_draw = null
     view.notice = t.sessionChanged
@@ -228,6 +253,7 @@ async function syncState(state: SavedState) {
           revision: wheel.revision,
           title: wheel.title,
           no_repeat: wheel.no_repeat,
+          customization: wheel.customization,
           options: wheel.options,
           results: wheel.results.filter((r) => batch.includes(r.id)),
         })
@@ -249,6 +275,8 @@ async function syncState(state: SavedState) {
           title: `${Array.from(wheel.title).slice(0, 100).join('')} · ${t.copy}`,
         })
         state.wheels.push(copy)
+        for (const removal of state.removals)
+          if (removal.wheel_id === wheel.id) removal.wheel_id = copy.id
         if (state.active === wheel.id) state.active = copy.id
       }
       state.wheels[i] = localWheel(
@@ -288,7 +316,9 @@ export async function synchronize() {
   })
 }
 
-export async function spinWheel(id: string): Promise<{ result: DrawResult; options: Option[] }> {
+export async function spinWheel(
+  id: string,
+): Promise<{ result: DrawResult; options: Option[]; customization: Customization }> {
   return transaction(async (state) => {
     if (state.pending_draw) throw new Error(t.uncertain)
     try {
@@ -301,7 +331,8 @@ export async function spinWheel(id: string): Promise<{ result: DrawResult; optio
     const wheel = state.wheels.find((w) => w.id === id)!
     if (wheel.deleted) throw new Error(t.conflict)
     const options = activeOptions(wheel)
-    if (wheel.options.length < 2) throw new Error(t.insufficient)
+    if (wheel.options.length < 2 && !(wheel.no_repeat && wheel.results.length > 0))
+      throw new Error(t.insufficient)
     if (!options.length) throw new Error(t.exhausted)
     const drawId = crypto.randomUUID()
     if (view.online) {
@@ -318,7 +349,7 @@ export async function spinWheel(id: string): Promise<{ result: DrawResult; optio
         )
         state.wheels = state.wheels.map((w) => (w.id === id ? localWheel(response.wheel) : w))
         state.pending_draw = null
-        return { result: response.result, options }
+        return { result: response.result, options, customization: wheel.customization }
       } catch (error) {
         if (error instanceof ApiError) state.pending_draw = null
         if (error instanceof NetworkError) {
@@ -346,10 +377,45 @@ export async function spinWheel(id: string): Promise<{ result: DrawResult; optio
       )
     wheel.dirty = true
     wheel.mutation_id = crypto.randomUUID()
-    return { result, options }
+    return { result, options, customization: wheel.customization }
   })
 }
 
 export async function flushStorage() {
   await navigator.locks.request('gyrna-state', () => Promise.resolve())
+}
+
+function removeOption(state: SavedState, wheelId: string, optionId: string): boolean {
+  if (state.pending_draw?.wheel_id === wheelId) throw new Error(t.uncertain)
+  const wheel = state.wheels.find((w) => w.id === wheelId && !w.deleted)
+  state.removals = state.removals.filter((r) => r.wheel_id !== wheelId || r.option_id !== optionId)
+  if (!wheel || !wheel.options.some((o) => o.id === optionId)) return false
+  wheel.options = wheel.options.filter((o) => o.id !== optionId)
+  wheel.dirty = true
+  wheel.mutation_id = crypto.randomUUID()
+  return true
+}
+export async function removeWinner(wheelId: string, optionId: string): Promise<boolean> {
+  return transaction((state) => removeOption(state, wheelId, optionId))
+}
+export async function removeDueWinners() {
+  return transaction((state) => {
+    if (state.pending_draw) return []
+    return state.removals
+      .filter((removal) => removal.due <= Date.now())
+      .filter((removal) => removeOption(state, removal.wheel_id, removal.option_id))
+  })
+}
+export async function scheduleRemoval(wheelId: string, result: DrawResult, config: Customization) {
+  await transaction((state) => {
+    if (!state.removals.some((r) => r.result_id === result.id))
+      state.removals.push({
+        wheel_id: wheelId,
+        option_id: result.option_id,
+        result_id: result.id,
+        due: Date.now() + 5000,
+        sound: config.removal_sound,
+        volume: config.result_volume,
+      })
+  })
 }

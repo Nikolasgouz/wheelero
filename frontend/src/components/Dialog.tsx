@@ -13,10 +13,23 @@ export function Dialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
-    ref.current!.showModal()
+    const opener = document.activeElement as HTMLElement
+    const dialog = ref.current!
+    dialog.showModal()
+    return () => {
+      dialog.close()
+      opener.focus()
+    }
   }, [])
   return (
-    <dialog ref={ref} onCancel={close} aria-labelledby="dialog-title">
+    <dialog
+      ref={ref}
+      onCancel={(event) => {
+        event.preventDefault()
+        close()
+      }}
+      aria-labelledby="dialog-title"
+    >
       <div className="dialog-heading">
         <h2 id="dialog-title">{title}</h2>
         <button className="icon-button" onClick={close} aria-label={t.close}>

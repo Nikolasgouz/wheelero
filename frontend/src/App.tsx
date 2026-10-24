@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { ct } from './customization.i18n'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import {
   ArrowRight,
   Check,
@@ -22,6 +23,10 @@ import {
   X,
 } from 'lucide-react'
 import { api, NetworkError } from './api/client'
+import { Customize } from './components/Customize'
+import type { Customization } from './customization'
+import { playSound, stopSounds } from './lib/audio'
+import { presentationOptions, textColor } from './lib/presentation'
 import { Dialog } from './components/Dialog'
 import { PwaControls } from './components/PwaControls'
 import { Wheel as Spinner } from './components/Wheel'
@@ -36,6 +41,9 @@ import {
   forkWheel,
   initialize,
   makeWheel,
+  removeWinner,
+  removeDueWinners,
+  scheduleRemoval,
   spinWheel,
   synchronize,
   useStore,
@@ -44,7 +52,7 @@ import { templates as bundledTemplates } from './state/templates'
 import type { DrawResult, Option, Share, Template, Wheel } from './types'
 
 type Screen = 'wheel' | 'options' | 'library'
-type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options'>
+type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
 
 export default function App() {
   const { data, online, notice } = useStore()
@@ -60,6 +68,9 @@ export default function App() {
     localStorage.getItem('theme') ??
       (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   )
+  const [customOpen, setCustomOpen] = useState(false)
+  const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
+  const [popupOpen, setPopupOpen] = useState(false)
   const [sound, setSound] = useState(false)
   const [presenting, setPresenting] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -67,7 +78,8 @@ export default function App() {
   const [shared, setShared] = useState<SharedWheel | null>(null)
   const [templates, setTemplates] = useState<Template[]>(bundledTemplates)
   const [allHistory, setAllHistory] = useState(false)
-  const audio = useRef<AudioContext | null>(null)
+  const soundEnabled = useRef(sound)
+  soundEnabled.current = sound
   const operation = useRef(false)
   const wheel = data?.wheels.find((w) => w.id === data.active && !w.deleted)
 
@@ -134,51 +146,89 @@ export default function App() {
     }
   }, [])
 
-  function edit(patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat'>>) {
+  function edit(patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat' | 'customization'>>) {
+    setResult(null)
+    setPopupOpen(false)
     setSpinOptions(null)
+    setSpinConfig(null)
     setRotation(0)
     void editWheel(wheel!.id, patch).catch(reportError)
   }
+  useEffect(() => () => stopSounds(), [])
+  useEffect(() => {
+    if (!data || busy || data.pending_draw) return
+    const timer = window.setInterval(() => {
+      const due = data.removals.filter((removal) => removal.due <= Date.now())
+      if (!due.length) return
+      run(async () => {
+        for (const removal of await removeDueWinners()) {
+          if (soundEnabled.current && removal.sound) playSound('click', removal.volume)
+        }
+      })
+    }, 250)
+    return () => clearInterval(timer)
+  }, [data, busy, run])
   function spin() {
     if (operation.current) return
-    if (sound) {
-      audio.current ??= new AudioContext()
-      void audio.current.resume()
-    }
+    stopSounds()
     run(async () => {
       setResult(null)
+      setPopupOpen(false)
       setSpinning(true)
-      setSpinOptions(activeOptions(wheel!))
+      setSpinOptions(presentationOptions(activeOptions(wheel!), wheel!.customization, null))
+      let stop = () => {}
       try {
         const outcome = await spinWheel(wheel!.id)
-        setSpinOptions(outcome.options)
-        setRotation((current) =>
-          targetRotation(current, outcome.result.choice_index, outcome.options.length),
+        const config = outcome.customization
+        const visible = presentationOptions(outcome.options, config, outcome.result.option_id)
+        setSpinConfig(config)
+        setSpinOptions(visible)
+        // Paint the new projection before applying the target transform.
+        await new Promise<void>((resolve) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         )
+        setRotation(
+          (current) =>
+            targetRotation(
+              current,
+              visible.findIndex((o) => o.id === outcome.result.option_id),
+              visible.length,
+            ) +
+            (config.slow_spin ? -3 : Math.max(0, Math.floor(config.duration / 2) - 5)) * 360,
+        )
+        if (soundEnabled.current) stop = playSound(config.spin_sound, config.spin_volume, true)
         await new Promise((resolve) =>
-          setTimeout(resolve, matchMedia('(prefers-reduced-motion: reduce)').matches ? 30 : 3100),
+          setTimeout(
+            resolve,
+            matchMedia('(prefers-reduced-motion: reduce)').matches
+              ? 30
+              : config.duration * 1000 + 50,
+          ),
         )
+        stop()
         setResult(outcome.result)
-        if (sound && audio.current) {
-          const oscillator = audio.current.createOscillator()
-          const gain = audio.current.createGain()
-          oscillator.connect(gain)
-          gain.connect(audio.current.destination)
-          oscillator.frequency.setValueAtTime(660, audio.current.currentTime)
-          oscillator.frequency.setValueAtTime(880, audio.current.currentTime + 0.12)
-          gain.gain.setValueAtTime(0.08, audio.current.currentTime)
-          gain.gain.exponentialRampToValueAtTime(0.001, audio.current.currentTime + 0.45)
-          oscillator.start()
-          oscillator.stop(audio.current.currentTime + 0.45)
-        }
+        setPopupOpen(config.popup)
+        if (soundEnabled.current) playSound(config.result_sound, config.result_volume)
+        if (config.auto_remove) await scheduleRemoval(wheel!.id, outcome.result, config)
       } finally {
+        stop()
         setSpinning(false)
       }
+    })
+  }
+  function removeResult() {
+    if (!result || !wheel) return
+    run(async () => {
+      const removed = await removeWinner(wheel.id, result.option_id)
+      if (removed && soundEnabled.current && (spinConfig ?? wheel.customization).removal_sound)
+        playSound('click', (spinConfig ?? wheel.customization).result_volume)
+      setPopupOpen(false)
     })
   }
   function navigate(next: Screen) {
     setScreen(next)
     setSpinOptions(null)
+    setSpinConfig(null)
     setRotation(0)
     setResult(null)
   }
@@ -189,7 +239,7 @@ export default function App() {
     })
   }
   function closeResult() {
-    setResult(null)
+    setPopupOpen(false)
   }
 
   if (!data || !wheel)
@@ -208,12 +258,26 @@ export default function App() {
   const locked = busy || !!data.pending_draw
   const valid =
     wheel.title.trim().length > 0 && wheel.options.every((o) => o.label.trim().length > 0)
-  const canSpin = wheel.options.length >= 2 && available.length > 0 && valid && !locked
-  const displayed = spinOptions ?? available
+  const enoughOptions = wheel.options.length >= 2 || (wheel.no_repeat && wheel.results.length > 0)
+  const canSpin = enoughOptions && available.length > 0 && valid && !locked
+  const config = spinConfig ?? wheel.customization
+  const displayed = spinOptions ?? presentationOptions(available, config, null)
   const sharedUrl = (token: string) => `${location.origin}/?share=${encodeURIComponent(token)}`
 
   return (
-    <div className={`app ${presenting ? 'presenting' : ''}`}>
+    <div
+      className={`app ${presenting ? 'presenting' : ''}`}
+      style={
+        presenting
+          ? ({
+              background: config.gradient
+                ? `linear-gradient(145deg, ${config.page_color}, #7650cc44), ${config.page_color}`
+                : config.page_color,
+              '--presentation-ink': textColor(config.page_color),
+            } as CSSProperties)
+          : undefined
+      }
+    >
       <header className="topbar">
         <a className="brand" href="/" aria-label={t.brand}>
           <span className="brand-icon">✳</span>
@@ -308,9 +372,20 @@ export default function App() {
                   </span>
                   <div className="wheel-tools">
                     <button
+                      className="text-button"
+                      disabled={locked}
+                      onClick={() => setCustomOpen(true)}
+                    >
+                      <Settings2 size={17} />
+                      {ct.title}
+                    </button>
+                    <button
                       className="icon-button"
                       aria-label={sound ? t.soundOff : t.soundOn}
-                      onClick={() => setSound(!sound)}
+                      onClick={() => {
+                        if (sound) stopSounds()
+                        setSound(!sound)
+                      }}
                     >
                       {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
                     </button>
@@ -334,8 +409,72 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-                <h2 className="wheel-title">{wheel.title}</h2>
-                <Spinner options={displayed} rotation={rotation} spinning={spinning} />
+                {config.show_title && <h2 className="wheel-title">{wheel.title}</h2>}
+                <Spinner
+                  options={displayed}
+                  rotation={rotation}
+                  spinning={spinning}
+                  config={config}
+                  winnerId={result?.option_id ?? null}
+                />
+                {displayed.length !== available.length && (
+                  <p className="muted display-note">{ct.visible(displayed.length)}</p>
+                )}
+                {displayed.length > 48 && config.text !== 'never' && (
+                  <details className="wheel-legend">
+                    <summary>{ct.legend}</summary>
+                    <ol>
+                      {displayed.map((o) => (
+                        <li key={o.id}>{o.label}</li>
+                      ))}
+                    </ol>
+                  </details>
+                )}
+                {result && (
+                  <section
+                    className={`inline-result ${config.animate_winner ? 'winner-animation' : ''}`}
+                    aria-live="polite"
+                  >
+                    <span>{config.popup_message}</span>
+                    <strong>{result.label}</strong>
+                    <div className="result-actions">
+                      <button className="text-button" disabled={!canSpin} onClick={spin}>
+                        {t.again}
+                      </button>
+                      {config.remove_button && (
+                        <button
+                          className="text-button"
+                          disabled={locked || !wheel.options.some((o) => o.id === result.option_id)}
+                          onClick={removeResult}
+                        >
+                          {t.removeWinner}
+                        </button>
+                      )}
+                      <button
+                        className="icon-button"
+                        aria-label={t.copyResult}
+                        onClick={() => copy(result.label)}
+                      >
+                        <Copy size={18} />
+                      </button>
+                    </div>
+                  </section>
+                )}
+                {result && config.confetti && (
+                  <div key={result.id} className="confetti" aria-hidden="true">
+                    {Array.from({ length: 40 }, (_, i) => (
+                      <i
+                        key={i}
+                        style={{
+                          left: `${(i * 37) % 100}%`,
+                          background: config.palette[i % config.palette.length].color,
+                          animationDelay: `${(i % 7) * 0.08}s`,
+                          transform: `rotate(${i * 29}deg)`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
                 <div className="spin-actions">
                   <button className="primary spin-button" disabled={!canSpin} onClick={spin}>
                     <RefreshCw size={20} className={spinning ? 'rotating' : ''} />
@@ -343,11 +482,7 @@ export default function App() {
                     <ArrowRight size={19} />
                   </button>
                   <p>
-                    {wheel.options.length < 2
-                      ? t.insufficient
-                      : !available.length
-                        ? t.exhausted
-                        : t.spinHint}
+                    {!enoughOptions ? t.insufficient : !available.length ? t.exhausted : t.spinHint}
                   </p>
                   {!available.length && wheel.options.length > 1 && (
                     <button
@@ -515,8 +650,24 @@ export default function App() {
         ))}
       </nav>
 
-      {result && (
-        <Dialog title={t.selected} close={closeResult}>
+      {customOpen && (
+        <Customize
+          value={wheel.customization}
+          muted={!sound}
+          close={() => setCustomOpen(false)}
+          save={async (customization) => {
+            await editWheel(wheel.id, { customization })
+            setResult(null)
+            setPopupOpen(false)
+            setSpinOptions(null)
+            setSpinConfig(null)
+            setRotation(0)
+            setCustomOpen(false)
+          }}
+        />
+      )}
+      {result && popupOpen && (
+        <Dialog title={config.popup_message} close={closeResult}>
           <div className="result-display">
             <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
@@ -538,15 +689,15 @@ export default function App() {
             </button>
           )}
           <div className="result-actions">
-            <button
-              className="text-button"
-              onClick={() => {
-                edit({ options: wheel.options.filter((o) => o.id !== result.option_id) })
-                closeResult()
-              }}
-            >
-              {t.removeWinner}
-            </button>
+            {config.remove_button && (
+              <button
+                className="text-button"
+                disabled={locked || !wheel.options.some((o) => o.id === result.option_id)}
+                onClick={removeResult}
+              >
+                {t.removeWinner}
+              </button>
+            )}
             <button
               className="icon-button"
               aria-label={t.copyResult}

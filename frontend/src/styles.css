@@ -1408,6 +1408,8 @@ dialog::backdrop {
     box-shadow: 0 -4px 20px #00000004;
   }
   .mobile-nav button {
+    /* Change theme colors together so their interpolation cannot lower text contrast. */
+    transition: box-shadow 0.18s;
     flex-direction: column;
     gap: 5px;
     font-size: 9px;
@@ -1508,4 +1510,309 @@ dialog::backdrop {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+/* Wheel customization: transactional dialog, mobile scrolling and reduced motion. */
+dialog:has(.customization) {
+  width: min(760px, calc(100vw - 24px));
+  padding: 24px;
+}
+.custom-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  gap: 8px;
+}
+.custom-tabs button {
+  flex: 1;
+  padding: 14px 6px;
+  font-weight: 650;
+  border-bottom: 3px solid transparent;
+}
+.custom-tabs [aria-selected='true'] {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.custom-panel {
+  display: grid;
+  gap: 18px;
+  padding: 24px 0;
+  min-height: 320px;
+}
+.custom-panel label:not(.custom-check) {
+  display: grid;
+  gap: 8px;
+}
+.custom-panel select,
+.custom-panel input:not([type='checkbox'], [type='radio'], [type='range'], [type='color']),
+.custom-panel select {
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+}
+.custom-check {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.custom-check input,
+.appearance-modes input,
+.palette-editor input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+.custom-range {
+  grid-template-columns: 1fr 76px;
+  align-items: center;
+}
+.custom-range output {
+  text-align: right;
+  font-weight: 700;
+}
+.custom-range input[type='range'] {
+  width: 100%;
+  accent-color: var(--primary);
+}
+.custom-footer {
+  position: sticky;
+  bottom: -24px;
+  background: var(--surface);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  z-index: 2;
+}
+.sound-setting {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sound-setting label {
+  flex: 1;
+  min-width: 180px;
+}
+.custom-panel fieldset,
+.image-picker {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  min-width: 0;
+}
+.custom-panel legend,
+.image-picker legend {
+  padding: 0 6px;
+}
+.custom-panel .appearance-modes label {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+.palette-editor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.palette-editor > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+input[type='color'] {
+  width: 44px;
+  height: 40px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.image-preview {
+  display: block;
+  max-width: 120px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+.image-upload {
+  display: grid;
+  gap: 10px;
+  font-size: 13px;
+}
+.image-upload input {
+  width: 100%;
+}
+.image-gallery {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+.image-gallery button {
+  border: 2px solid transparent;
+  padding: 3px;
+  border-radius: 10px;
+}
+.image-gallery [aria-pressed='true'] {
+  border-color: var(--primary);
+}
+.image-gallery img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.wheel-center-image {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.entry-thumbnail {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.option-row > input {
+  min-width: 0;
+}
+.editor-pages {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+}
+.editor-pages button {
+  color: var(--primary);
+}
+.inline-result {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+.inline-result > strong {
+  font-size: 30px;
+  overflow-wrap: anywhere;
+}
+.inline-result > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.display-note {
+  font-size: 12px;
+  text-align: center;
+}
+.wheel-legend {
+  margin: 10px 0;
+  font-size: 13px;
+}
+.wheel-legend ol {
+  max-height: 200px;
+  overflow: auto;
+}
+.winning-sector {
+  animation: winner-glow 0.7s ease-in-out 6 alternate;
+}
+.winner-animation > strong {
+  animation: winner-pop 0.6s ease 3;
+}
+@keyframes winner-glow {
+  to {
+    filter: brightness(1.25);
+  }
+}
+@keyframes winner-pop {
+  50% {
+    transform: scale(1.08);
+  }
+}
+.spinner-panel {
+  position: relative;
+}
+.confetti {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  right: 0;
+  height: 65%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+.confetti i {
+  position: absolute;
+  top: -20px;
+  width: 9px;
+  height: 16px;
+  animation: confetti-fall 2.8s ease-out forwards;
+}
+@keyframes confetti-fall {
+  to {
+    top: 110%;
+    transform: rotate(720deg);
+    opacity: 0;
+  }
+}
+@media (max-width: 600px) {
+  dialog:has(.customization) {
+    padding: 16px;
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+  .custom-tabs {
+    gap: 2px;
+  }
+  .custom-tabs button {
+    font-size: 12px;
+    padding: 12px 2px;
+  }
+  .custom-footer {
+    bottom: -16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .custom-panel {
+    gap: 16px;
+  }
+  .wheel-tools {
+    gap: 1px;
+  }
+  .wheel-tools > .text-button {
+    font-size: 11px;
+    gap: 4px;
+  }
+  .option-row {
+    gap: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .winning-sector,
+  .winner-animation > strong,
+  .confetti i {
+    animation: none !important;
+  }
+  .confetti {
+    display: none;
+  }
+}
+.presenting {
+  max-width: none;
+  min-height: 100dvh;
+}
+.presenting .wheel-title,
+.presenting .wheel-tools button,
+.presenting .spin-actions > p,
+.presenting .display-note,
+.presenting .wheel-legend {
+  color: var(--presentation-ink);
 }

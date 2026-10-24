@@ -59,7 +59,7 @@ class WheelWrite(StrictModel):
 
     @model_validator(mode="after")
     def unique_ids(self):
-        if len(self.model_dump_json()) > 8_000_000:
+        if len(self.model_dump_json().encode("utf-8")) > 8_000_000:
             raise ValueError("Wheel snapshot exceeds 8 MB")
         for items in (self.options, self.results):
             if len({item.id for item in items}) != len(items):

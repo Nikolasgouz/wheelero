@@ -86,3 +86,35 @@ def test_old_database_upgrade_preserves_private_and_shared_data(tmp_path, monkey
         assert connection.execute(text("SELECT label, image FROM options")).one() == ("Name", None)
         assert '"customization"' in connection.scalar(text("SELECT snapshot FROM shares"))
     engine.dispose()
+
+
+def test_ten_thousand_entries_are_all_eligible_with_four_visible(client, payload, monkeypatch):
+    payload["options"] = [
+        {"id": str(uuid4()), "label": f"Entry {index}", "active": True}
+        for index in range(10000)
+    ]
+    payload["customization"] = Customization(max_names=4).model_dump()
+    monkeypatch.setattr("app.routes.choose_index", lambda count: count - 1)
+    path = f"/api/wheels/{uuid4()}"
+    assert client.put(path, json=payload).status_code == 201
+    response = client.post(path + "/draws", json={"id": str(uuid4()), "revision": 1})
+    assert response.status_code == 200
+    result = response.json()["result"]
+    assert result["choice_count"] == 10000
+    assert result["choice_index"] == 9999
+    assert result["option_id"] == payload["options"][-1]["id"]
+
+
+def test_no_repeat_can_finish_last_entry_after_winner_removal(client, payload):
+    payload["no_repeat"] = True
+    path = f"/api/wheels/{uuid4()}"
+    client.put(path, json=payload)
+    first = client.post(path + "/draws", json={"id": str(uuid4()), "revision": 1}).json()
+    remaining = next(o for o in first["wheel"]["options"] if o["active"])
+    payload.update(options=[remaining], revision=2, mutation_id=str(uuid4()))
+    assert client.put(path, json=payload).status_code == 200
+    last = client.post(path + "/draws", json={"id": str(uuid4()), "revision": 3})
+    assert last.status_code == 200
+    assert last.json()["result"]["choice_count"] == 1
+    assert last.json()["result"]["option_id"] == remaining["id"]
+    assert client.post(path + "/draws", json={"id": str(uuid4()), "revision": 4}).status_code == 422

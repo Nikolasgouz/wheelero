@@ -107,12 +107,15 @@ export function Library({
                     {
                       format: 'gyrna',
                       version: 1,
-                      wheels: wheels.map(({ title, no_repeat, options, results }) => ({
-                        title,
-                        no_repeat,
-                        options,
-                        results,
-                      })),
+                      wheels: wheels.map(
+                        ({ title, no_repeat, customization, options, results }) => ({
+                          title,
+                          no_repeat,
+                          customization,
+                          options,
+                          results,
+                        }),
+                      ),
                     },
                     null,
                     2,
@@ -145,7 +148,7 @@ export function Library({
             if (!selected) return
             e.target.value = ''
             run(async () => {
-              if (selected.size > 10_000_000) throw new Error(t.fileTooLarge)
+              if (selected.size > 100_000_000) throw new Error(t.fileTooLarge)
               let json: unknown
               try {
                 json = JSON.parse(await selected.text())

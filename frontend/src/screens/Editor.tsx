@@ -1,5 +1,17 @@
-import { ArrowDown, ArrowUp, ClipboardList, Plus, RotateCcw, Shuffle, Trash2 } from 'lucide-react'
+import { ct } from '../customization.i18n'
+import {
+  ImagePlus,
+  ArrowDown,
+  ArrowUp,
+  ClipboardList,
+  Plus,
+  RotateCcw,
+  Shuffle,
+  Trash2,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Dialog } from '../components/Dialog'
+import { ImagePicker } from '../components/ImagePicker'
 import { t } from '../i18n'
 import { colors } from '../lib/geometry'
 import { shuffled } from '../lib/random'
@@ -22,16 +34,20 @@ export function Editor({
   useEffect(() => {
     localStorage.setItem(`draft:${wheel.id}`, JSON.stringify({ bulk, newLabel }))
   }, [bulk, newLabel, wheel.id])
+  const [imageOption, setImageOption] = useState<string | null>(null)
+  const [imageBusy, setImageBusy] = useState(false)
+  const [page, setPage] = useState(0)
+  const currentPage = Math.min(page, Math.max(0, Math.ceil(wheel.options.length / 200) - 1))
   const duplicate = new Set(wheel.options.map((o) => o.label)).size !== wheel.options.length
   function add(labels: string[]) {
-    if (labels.length + wheel.options.length > 200 || labels.some((v) => v.length > 160)) {
+    if (labels.length + wheel.options.length > 10000 || labels.some((v) => v.length > 160)) {
       report(t.limit)
       return
     }
     edit({
       options: [
         ...wheel.options,
-        ...labels.map((label) => ({ id: crypto.randomUUID(), label, active: true })),
+        ...labels.map((label) => ({ id: crypto.randomUUID(), label, active: true, image: null })),
       ],
     })
     setDraft({ newLabel: '', bulk: null })
@@ -120,48 +136,78 @@ export function Editor({
           </div>
         )}
         <div className="option-list">
-          {wheel.options.map((option, i) => (
-            <div
-              className={`option-row ${!option.active && wheel.no_repeat ? 'used' : ''}`}
-              key={option.id}
-            >
-              <span className="option-dot" style={{ background: colors[i % colors.length] }} />
-              <input
-                aria-label={t.optionLabel(i + 1)}
-                value={option.label}
-                maxLength={160}
-                onChange={(e) => update(option, e.target.value)}
-                onBlur={() => {
-                  if (!option.label.trim())
-                    edit({ options: wheel.options.filter((o) => o.id !== option.id) })
-                }}
-              />
-              <div className="reorder">
+          {wheel.options.slice(currentPage * 200, (currentPage + 1) * 200).map((option, offset) => {
+            const i = currentPage * 200 + offset
+            return (
+              <div
+                className={`option-row ${!option.active && wheel.no_repeat ? 'used' : ''}`}
+                key={option.id}
+              >
+                <span className="option-dot" style={{ background: colors[i % colors.length] }} />
+                <input
+                  aria-label={t.optionLabel(i + 1)}
+                  value={option.label}
+                  maxLength={160}
+                  onChange={(e) => update(option, e.target.value)}
+                  onBlur={() => {
+                    if (!option.label.trim())
+                      edit({ options: wheel.options.filter((o) => o.id !== option.id) })
+                  }}
+                />
                 <button
-                  aria-label={`${t.up}: ${option.label}`}
-                  disabled={i === 0}
-                  onClick={() => move(i, -1)}
+                  className="icon-button"
+                  aria-label={ct.entry(option.label)}
+                  onClick={() => setImageOption(option.id)}
                 >
-                  <ArrowUp size={12} />
+                  {option.image ? (
+                    <img className="entry-thumbnail" src={option.image} alt="" />
+                  ) : (
+                    <ImagePlus size={15} />
+                  )}
                 </button>
+                <div className="reorder">
+                  <button
+                    aria-label={`${t.up}: ${option.label}`}
+                    disabled={i === 0}
+                    onClick={() => move(i, -1)}
+                  >
+                    <ArrowUp size={12} />
+                  </button>
+                  <button
+                    aria-label={`${t.down}: ${option.label}`}
+                    disabled={i === wheel.options.length - 1}
+                    onClick={() => move(i, 1)}
+                  >
+                    <ArrowDown size={12} />
+                  </button>
+                </div>
                 <button
-                  aria-label={`${t.down}: ${option.label}`}
-                  disabled={i === wheel.options.length - 1}
-                  onClick={() => move(i, 1)}
+                  className="icon-button remove-option"
+                  aria-label={`${t.remove}: ${option.label}`}
+                  onClick={() => edit({ options: wheel.options.filter((o) => o.id !== option.id) })}
                 >
-                  <ArrowDown size={12} />
+                  <Trash2 size={15} />
                 </button>
               </div>
-              <button
-                className="icon-button remove-option"
-                aria-label={`${t.remove}: ${option.label}`}
-                onClick={() => edit({ options: wheel.options.filter((o) => o.id !== option.id) })}
-              >
-                <Trash2 size={15} />
-              </button>
-            </div>
-          ))}
+            )
+          })}
         </div>
+        {wheel.options.length > 200 && (
+          <div className="editor-pages">
+            <button disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>
+              {ct.previous}
+            </button>
+            <span>
+              {currentPage + 1} / {Math.ceil(wheel.options.length / 200)}
+            </span>
+            <button
+              disabled={(currentPage + 1) * 200 >= wheel.options.length}
+              onClick={() => setPage(currentPage + 1)}
+            >
+              {ct.next}
+            </button>
+          </div>
+        )}
         <form
           className="add-option"
           onSubmit={(e) => {
@@ -178,7 +224,7 @@ export function Editor({
           />
           <button
             className="icon-button"
-            disabled={!newLabel.trim() || wheel.options.length === 200}
+            disabled={!newLabel.trim() || wheel.options.length === 10000}
             aria-label={t.add}
           >
             <Plus size={20} />
@@ -229,6 +275,25 @@ export function Editor({
           </button>
         )}
       </fieldset>
+      {imageOption && (
+        <Dialog
+          title={ct.imageTitle}
+          close={() => {
+            if (!imageBusy) setImageOption(null)
+          }}
+        >
+          <ImagePicker
+            busyChanged={setImageBusy}
+            label={ct.entryImage}
+            value={wheel.options.find((o) => o.id === imageOption)!.image}
+            change={(image) =>
+              edit({
+                options: wheel.options.map((o) => (o.id === imageOption ? { ...o, image } : o)),
+              })
+            }
+          />
+        </Dialog>
+      )}
     </section>
   )
 }
