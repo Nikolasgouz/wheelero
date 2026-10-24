@@ -20,6 +20,9 @@ All schema changes require explicit Alembic migrations. Never create tables at a
 Enforce ownership and CSRF on private writes. No tokens or private payloads in logs.
 Offline results are client-reported; never label them as server-verified.
 Preserve revisions, idempotency and conflict copies when changing sync.
+Keep backend/frontend customization schemas aligned and versioned. Display projection
+must never change draw eligibility; the winning entry ID must remain under the pointer.
+Modal settings stay temporary until OK completes durable storage; removal jobs follow copies.
 Do not commit databases, secrets, virtualenvs, dependencies, screenshots or build outputs.
 Keep lockfiles, .env.example and migrations tracked. Make coherent local commits;
 never push or deploy without instruction. Use a per-command automation author when

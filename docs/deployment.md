@@ -9,9 +9,11 @@ proxying `/api` to Python. The API URL is relative; Vite's port 8017 proxy is de
 - Apply `alembic upgrade head` before starting the upgraded backend.
 - One backend instance with local SQLite. WAL improves readers; only one writer operates
   at a time. Network filesystems and horizontal replicas are not supported.
-- Proxy body limit <=2 MB for API requests, request timeout >10 seconds and TLS.
+- Proxy body limit 9 MB for API requests (validated wheel snapshots are limited to 8 MB),
+  request timeout >10 seconds and TLS. User images are embedded in private SQLite snapshots.
 - SPA fallback to `index.html`, never for `/api`; revalidate HTML, service worker and
-  manifest. Hashed assets may be immutable. CSP should permit self assets and dynamic styles.
+  manifest. Hashed assets may be immutable. CSP should permit self assets, `data:` images
+  and dynamic styles. Gallery WebP assets are part of the offline precache.
 - Disable/redact access logs containing share-token paths and sensitive headers. Keep
   useful startup/error logs. Never expose SQLite files through the web server.
 - Use consistent SQLite backups (backup API or snapshot including WAL); verify restoration.

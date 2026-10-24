@@ -1,77 +1,90 @@
-# Γύρνα. — context
+﻿# Γύρνα. — context
 
-Last updated: 2026-10-24. Customization implementation in progress; final browser verification pending.
+Last updated: 2026-10-24. Customization implementation and automated verification complete.
 
-## Product and scope
+## Product and implemented scope
 
-Greek decision spinner, no account required, responsive installable PWA. Implemented:
-2–10,000-entry wheels (0–1-entry drafts), editing/reordering/bulk input/duplicate warning,
-templates, library/copy/delete, history, no-repeat, JSON backups, theme/sound/presentation,
-revocable public snapshots, offline editing/draws and conflict-preserving synchronization.
-Stack: FastAPI/SQLAlchemy/Alembic/SQLite + React/TypeScript/Vite/Bun. No external services.
-The workspace started empty. No remote push or public deployment was authorized or made.
+Greek anonymous decision spinner, responsive installable PWA. FastAPI/SQLAlchemy/Alembic/
+SQLite backend; React/TypeScript/Vite/Bun frontend. Includes editing/reordering/bulk input,
+templates, multiple wheels, history/no-repeat, JSON backups, revocable public snapshots,
+offline editing/draws, conflict copies and uncertain-request recovery. Supports 10,000
+entries; display projects at most 1,000 without changing eligibility or winning ID.
 
-## Decisions and file map
+Customize has During spin / After spin / Appearance tabs, temporary drafts, durable OK,
+cancel, independent audio/preview/volume, duration/slow motion, duplicates/title visibility,
+result popup/message/actions, confetti/animation, durable automatic winner removal,
+palettes/themes, full-wheel/center/per-entry images, text policies, borders/shadow and
+presentation background/gradient. Global mute and reduced motion take precedence.
+Configuration/images survive refresh, copies, sharing, JSON and offline synchronization.
+Reference inspection, feature mapping and deliberate differences: `docs/customization.md`.
 
-- `START_GYRNA.bat`: Windows double-click launcher; checks prerequisites/ports, runs
-  migrations, builds missing frontend output, opens both servers and the browser.
-  Uses the existing production build; rebuild explicitly after frontend source changes.
-- `backend/app/routes.py`, `schemas.py`, `security.py`: API, validation, cookie ownership,
-  CSRF and Origin checks. `/docs` is the generated API reference.
-- `models.py`, `database.py`, `migrations/`: explicit schema, WAL/foreign keys and serialized
-  writes. Function-scoped DB dependencies commit **before** sending success responses.
-- `services.py`: secure server selection and snapshots; results survive option deletion.
-- `frontend/src/state/store.ts`: IndexedDB outbox, mutation/result UUIDs, server revisions,
-  tombstones, conflict copies, uncertain-draw recovery, Web Locks/BroadcastChannel.
-  Synchronous edit overlays preserve the caret while serialized durable writes complete.
-- `lib/random.ts`, `lib/geometry.ts`: independent unbiased offline RNG and wheel geometry.
-- `App.tsx`, `screens/`, `components/`: actual UI; `i18n.ts` is the Greek copy dictionary.
-- `vite.config.ts`: prompt-updated PWA; shell/fonts only are cached, never private APIs.
-- `backend/tests`, `frontend/src/lib/*.test.ts`, `frontend/e2e`: automated verification.
+## Architecture and important files
 
-Client-reported/imported results are explicitly `offline`. Public shares never include
-history or original write access. A lost online draw response must be recovered with its
-original ID; it is never replaced by a fresh offline draw. Losing the cookie creates a new
-workspace and copies remaining local data. There is no cross-device account recovery.
+- `backend/app/routes.py`, `schemas.py`, `security.py`: atomic revisioned API, validation,
+  ownership/CSRF/Origin checks. `/docs` provides generated OpenAPI documentation.
+- `models.py`, `database.py`, `migrations/`: SQLite WAL/foreign keys, serialized writes;
+  DB dependencies commit before success responses. No startup table creation.
+- `customization.py`: version 1 configuration and bounded raster validation. Migration
+  `c72f1a9e4b02` preserves old wheels/results/shares and adds defaults/images/new limits.
+- `services.py`: secure server RNG; immutable result snapshots survive entry removal.
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v2, revisions, UUID outbox,
+  Web Locks/BroadcastChannel, conflict/session-loss copies and durable removal jobs.
+  Jobs follow conflict copies; manual and automatic removal share an atomic ID-based path.
+- `lib/random.ts`, `geometry.ts`, `presentation.ts`: separate RNG, geometry and display
+  projection. The projected wheel always contains the backend-selected entry ID.
+- `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: transactional settings,
+  bounded uploads, actual renderer. OK waits for uploads and local durable storage.
+- `customization.ts`, `customization.i18n.ts`: frontend schema/defaults and Greek labels.
+- `lib/audio.ts`: original procedural sounds; `scripts/generate-gallery.mjs`: three
+  original bundled WebP images. No third-party recordings or copied reference assets.
+- `App.tsx`, `screens/`: application flow; `vite.config.ts`: prompt-update PWA with
+  shell/fonts/gallery precache. Private APIs are never cached by the service worker.
 
-## Verification
+Private images are embedded PNG/JPEG/WebP or known gallery paths, not public uploads.
+Uploads <=10 MB become <=1024px/512 KB; wheel payload <=8 MB UTF-8; archives <=100 MB.
+No-repeat allows a last single entry after winner removal if the wheel already has history.
+A new one-entry draft cannot draw. Client/imported results remain explicitly offline.
+Cookie loss copies local work to a new isolated workspace; no cross-device recovery.
 
-Customization work: versioned API validation and migration implemented; old-database
-upgrade test passes, 38 other backend cases passed before its test configuration fix.
-UI now has all three tabs, private image snapshots, procedural audio and durable winner
-removal. E2E found ambiguous select labels; explicit labels added. Full checks are pending.
-Reference inspection and the complete feature mapping are in docs/customization.md.
+## Actual verification
 
-- Latest full verification (2026-10-24): backend pytest 22 passed, including ownership,
-  validation, persistence, simultaneous
-  idempotent retries, offline ingestion, rollback, shares/revocation and actual process restart.
-  Restart verification retains the cookie in a fresh HTTP client after each server restart;
-  it no longer reuses a stale keepalive connection to the terminated process.
-- Alembic upgrade/drift check and Python compilation passed; Python lines <=100.
-- Bun frozen install, TypeScript, ESLint and production build passed. PWA precache ~838 KiB.
-- Unit tests: 3 passed, including all 20,100 sector positions for counts 1–200.
-- Full Chromium E2E suite: 16 passed together (48.8 s), covering offline reload/resync,
-  conflict copies, sharing/revocation, refresh persistence, JSON export/valid and malformed
-  import, 200 entries, no-repeat, caret preservation, cookie loss, Unicode title copying,
-  lost-response recovery and real service-worker updates preserving unsubmitted editor text.
-- Light/dark axe WCAG A/AA scans, keyboard and reduced-motion checks passed at
-  360/390/768/1440px. Screenshots are in ignored `artifacts/`; inspected locally.
-- Latest Origin regression passed for 127.0.0.1 preview while rejecting an external origin.
-- Git diff/ignore checks passed; no secrets, DBs, venv, dependencies or build outputs tracked.
-- Windows launcher: Python/Bun resolution and free/occupied-port branches verified through
-  cmd.exe; occupied ports fail with a visible message. Interactive browser launch not exercised.
+- Backend: 41 pytest passed (12.56 s), including ownership, invalid configurations/images,
+  migration from the old DB, persistence across process restart, idempotency, sharing/
+  revocation, 10,000-entry eligibility and last-entry no-repeat. Alembic check passed.
+- Frontend: TypeScript, ESLint and production build passed; 24 PWA precache entries,
+  approximately 903 KiB. Unit tests: 10 passed, including 6,600 projection/winner cases
+  and 20,100 original geometry positions.
+- Full Chromium production-PWA E2E: 30 passed together in 2.4 minutes. Covers all
+  customization tabs, cancel/refresh, real audio graph/volume/mute, image uploads,
+  legacy IndexedDB, copies/JSON/shares, offline/resync, automatic/manual removal and
+  conflict copies, 1,000 visible entries, palette/sizes/presentation, cookie loss,
+  lost draw responses and actual waiting-service-worker update without lost editor work.
+- Keyboard, reduced motion and axe WCAG A/AA scans passed at 360/390/768/1440px;
+  screenshots at all four widths and dark mode inspected in ignored `artifacts/`.
+- Python lines <=100 and Git diff checks passed. Secrets, databases, dependencies,
+  screenshots and build outputs stay ignored. No remote push or deployment performed.
+- Existing Windows launcher prerequisite/port checks were tested in the initial work;
+  interactive double-click/browser launch was not exercised automatically.
 
-## Limits and next steps
+## Differences, limits and next steps
 
-No known unresolved application failure in tested paths. Upstream warnings: Starlette deprecates the httpx test
-adapter; Rollup removes two malformed PURE annotations in Zod. Neither prevented checks.
-Physical iOS/Android installation, virtual-keyboard/safe-area behavior and human screen-reader
-review are not verified by Chromium desktop emulation. Real-device checks remain next.
-Large archives are loaded in full; history pagination and retention/quotas are later work.
-Before public launch: persistent SQLite volume, HTTPS/Secure cookie, exact origins,
-consistent backups and hosting-specific rate limits. Account/live-room/payment/AI/store
-distribution features are deliberately excluded; see roadmap.
+No known failing tested path. Smaller original sound/image/theme collections than Wheel
+of Names; no Unsplash integration. Duplicates collapse only visually, preserving required
+probabilities. Above 48 entries the renderer uses numbered sectors plus a full-name legend.
+Animation curves/center-size proportions are ours; native color picker, popup limit 200.
+Human listening, real screen-reader use and physical iOS/Android installation/keyboard/
+safe-area behavior remain unverified. These are the next validation steps.
+Large archives load in memory; history pagination/quotas remain future work. Upstream
+Starlette/httpx deprecation and two Rollup/Zod PURE warnings do not prevent checks.
+Before public hosting: HTTPS/Secure cookie, exact origins, persistent SQLite volume,
+consistent backups and deployment-specific rate limits. See deployment.md and roadmap.md.
+Accounts, live rooms, payments, AI and app-store distribution remain outside this version.
 
-Use backend port **8017** (8000 belongs to an unrelated project), frontend dev 5173 or
-production preview 4173. Exact setup/run/check commands are in README and AGENTS.md.
-No background deployment was installed. Close both launcher console windows to stop it.
+## Run and continue
+
+Use `START_GYRNA.bat` from the root or the exact README commands. Backend port **8017**
+(8000 belongs to another project); frontend dev 5173, production preview 4173.
+The launcher reuses the existing build: run `cd frontend; bun run build` after source edits.
+Local preview: http://localhost:4173. No background deployment service was installed.
+Keep backend/frontend schemas aligned, add migrations for schema changes and update this
+file with actual results. AGENTS.md contains stable conventions and check commands.

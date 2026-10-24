@@ -24,10 +24,20 @@ Wrong-owner access returns 404. The server never accepts client results as serve
 Playwright uses Chromium and the built PWA. Its backend runner uses ignored `e2e.db`.
 Do not reuse unrelated services on configured ports. Screenshots/traces remain untracked.
 Emulation does not verify real Safari installation, OS audio or fullscreen support.
-The final verification covers 16 distinct E2E scenarios. In addition to bulk fills,
+Customization regressions live in `e2e/customization.spec.ts`; they exercise the actual
+audio graph, image uploads, all tabs, durable OK/cancel, legacy storage and timed removal.
+In addition to bulk fills,
 the typing regression inserts Greek text in the middle of both title and option inputs
 and verifies caret position and persistence. SW update tests serve a changed worker file,
 exercise its real waiting/activation lifecycle, then restore the original generated file.
+
+Customization schemas must remain aligned in `backend/app/customization.py` and
+`frontend/src/customization.ts`. Keep selection independent of `lib/presentation.ts`:
+it projects eligible entries for rendering and must always retain the winning ID.
+Change settings only through the modal draft and commit after uploads complete.
+Generate the original bundled gallery with `bun scripts/generate-gallery.mjs`.
+Run the build to completion before starting E2E; avoid concurrent Playwright runs because
+they share the output directory. Current verified counts are in PROJECT_CONTEXT.md.
 
 Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
 deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.

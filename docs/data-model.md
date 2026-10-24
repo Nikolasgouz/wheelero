@@ -10,7 +10,9 @@ unique order, optional embedded raster image), results
 mutations (composite wheel+UUID, payload digest), shares (random public token + JSON snapshot).
 Results intentionally have no option FK: deleting an option preserves history.
 Draft wheels may have 0–1 options; draws require a configured list of 2–10,000.
-No-repeat may draw the last remaining option. Draws increment wheel revision even when
+No-repeat may draw the last remaining option, including a one-entry list left by winner
+removals when the wheel already has history. A new one-entry draft cannot draw.
+Draws increment wheel revision even when
 no-repeat is off, preventing a concurrent edit/draw from silently losing history.
 
 Customization has schema version 1 and is part of the atomic revisioned snapshot.

@@ -17,7 +17,10 @@ controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives
 Greek/Latin Noto Sans variable fonts are bundled locally and precached, with no external
 font request. Platform emoji fonts render emojis.
 `lib/random.ts` uses Web Crypto rejection sampling; `lib/geometry.ts` independently
-calculates sectors and angles. No text labels are squeezed into wheels above 16 entries.
+calculates sectors and angles. `lib/presentation.ts` projects up to 1,000 visible entries
+out of up to 10,000 eligible entries and always includes the actual winning ID before
+animation. Display-only duplicate collapsing never changes eligibility. Above 48 visible
+entries, numbers refer to an expandable full-name legend; the editor pages by 200 rows.
 
 Backend: `routes.py` handles HTTP, `schemas.py` validates inputs, `security.py` checks
 cookies/ownership/CSRF, `services.py` owns revisions, serialization and random selection.
@@ -60,8 +63,22 @@ the wheel retains the pre-draw snapshot so its pointer matches the selected resu
 Random 256-bit cookie: HttpOnly, SameSite=Lax, path `/api`, Secure in production. Only
 its SHA-256 digest is stored. All private endpoints check ownership; mutations require
 a workspace CSRF header and an allowed Origin when supplied. Public random share tokens
-expose only title/options/no-repeat. They never expose history or grant write access.
+expose only title/options/no-repeat/customization, including explicitly shared images.
+They never expose history or grant write access.
 Deleting a wheel atomically revokes all its shares. New links/revocation require a server.
+
+## Customization
+
+`components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
+`customization.ts` defines versioned settings and bounded raster image import;
+`customization.i18n.ts` contains its Greek UI copy. The same settings/images travel
+through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON
+settings and optional option images. IndexedDB version 2 migrates old local wheels.
+`lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
+Completed draws snapshot their settings; an ID-based durable removal queue runs after
+five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
+Conflict/session-loss copies take their pending jobs with them; execution reads and
+changes the latest IndexedDB state under the same Web Lock to prevent stale-tab removals.
 
 ## Upstream references
 
