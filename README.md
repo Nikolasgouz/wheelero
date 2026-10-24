@@ -58,7 +58,7 @@ OpenAPI: [Swagger UI](http://localhost:8017/docs), [ReDoc](http://localhost:8017
 | Μεταβλητή | Τοπική τιμή | Χρήση |
 | --- | --- | --- |
 | `DATABASE_URL` | `sqlite:///./gyrna.db` | Αρχείο στο backend· production: απόλυτη διαδρομή σε μόνιμο volume |
-| `ALLOWED_ORIGINS` | `http://localhost:5173,http://localhost:4173` | Ρητή λίστα CORS/Origin, χωρίς κενά |
+| `ALLOWED_ORIGINS` | localhost και 127.0.0.1 στις θύρες 5173/4173 | Ρητή λίστα στο `.env.example`, χωρίς κενά |
 | `COOKIE_SECURE` | `false` | `true` υποχρεωτικά σε production HTTPS |
 
 Μην καταγράφετε cookies, CSRF/share tokens ή ιδιωτικά δεδομένα. Το `--no-access-log`

@@ -53,9 +53,8 @@ export type Template = {
   category: string
   options: string[]
 }
-export type PendingDraw = { wheel_id: string; id: string; revision: number; options: Option[] }
+export type PendingDraw = { wheel_id: string; id: string; revision: number }
 export type SavedState = {
-  version: 1
   wheels: LocalWheel[]
   active: string
   pending_draw: PendingDraw | null

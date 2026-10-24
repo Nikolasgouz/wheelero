@@ -4,10 +4,12 @@ import AxeBuilder from '@axe-core/playwright'
 async function ready(page: Page) {
   await page.goto('/')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeEnabled()
-  await expect.poll(async () => {
-    const response = await page.request.get('/api/wheels')
-    return response.ok() && (await response.json()).length > 0
-  }).toBe(true)
+  await expect
+    .poll(async () => {
+      const response = await page.request.get('/api/wheels')
+      return response.ok() && (await response.json()).length > 0
+    })
+    .toBe(true)
 }
 
 test('edit, spin, pointer agreement, refresh persistence, JSON backup and library', async ({
@@ -53,13 +55,11 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   expect((await download).suggestedFilename()).toMatch(/gyrna.*\.json/)
   await page.getByRole('button', { name: 'Αντίγραφο: Η παρέα μας 🎲', exact: true }).click()
   await expect(page.locator('.wheel-card')).toHaveCount(2)
-  await page
-    .locator('input[type=file]')
-    .setInputFiles({
-      name: 'bad.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from('{"version":9}'),
-    })
+  await page.locator('input[type=file]').setInputFiles({
+    name: 'bad.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{"version":9}'),
+  })
   await expect(page.getByRole('alert')).toContainText('Μη έγκυρο αντίγραφο')
 })
 

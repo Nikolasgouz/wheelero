@@ -44,11 +44,18 @@ export function forkWheel(
 }
 
 let saved: SavedState
+const pendingEdits = new Map<string, Partial<LocalWheel>>()
 let view = { data: null as SavedState | null, online: navigator.onLine, notice: '' }
 const listeners = new Set<() => void>()
 const channel = new BroadcastChannel('gyrna-state')
 function publish() {
-  view = { ...view, data: structuredClone(saved) }
+  view = {
+    ...view,
+    data: structuredClone({
+      ...saved,
+      wheels: saved.wheels.map((wheel) => ({ ...wheel, ...pendingEdits.get(wheel.id) })),
+    }),
+  }
   listeners.forEach((listener) => listener())
 }
 export function useStore() {
@@ -88,7 +95,6 @@ export async function initialize() {
     else {
       const first = makeWheel(templates[0].title, templates[0].options)
       saved = {
-        version: 1,
         wheels: [first],
         active: first.id,
         pending_draw: null,
@@ -109,15 +115,31 @@ export async function editWheel(
   id: string,
   patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat'>>,
 ) {
-  await transaction((state) => {
-    if (state.pending_draw?.wheel_id === id) throw new Error(t.uncertain)
-    const wheel = state.wheels.find((w) => w.id === id)!
-    Object.assign(wheel, patch, {
-      dirty: true,
-      mutation_id: crypto.randomUUID(),
-      updated_at: new Date().toISOString(),
+  // Controlled inputs need synchronous values to preserve their caret. Keep newer
+  // edits visible while older IndexedDB writes complete in the serialized queue.
+  const change = {
+    ...pendingEdits.get(id),
+    ...patch,
+    dirty: true,
+    mutation_id: crypto.randomUUID(),
+    updated_at: new Date().toISOString(),
+  }
+  pendingEdits.set(id, change)
+  publish()
+  try {
+    await transaction((state) => {
+      if (state.pending_draw?.wheel_id === id) throw new Error(t.uncertain)
+      Object.assign(
+        state.wheels.find((w) => w.id === id)!,
+        change,
+      )
     })
-  })
+  } finally {
+    if (pendingEdits.get(id)?.mutation_id === change.mutation_id) {
+      pendingEdits.delete(id)
+      publish()
+    }
+  }
 }
 
 export async function addWheels(wheels: LocalWheel[]) {
@@ -136,8 +158,9 @@ export async function selectWheel(id: string) {
 export async function deleteWheel(id: string) {
   await transaction((state) => {
     if (state.pending_draw?.wheel_id === id) throw new Error(t.uncertain)
-    state.wheels.find((w) => w.id === id)!.deleted = true
-    state.wheels.find((w) => w.id === id)!.dirty = true
+    const wheel = state.wheels.find((w) => w.id === id)!
+    wheel.deleted = true
+    wheel.dirty = true
     let next = state.wheels.find((w) => !w.deleted)
     if (!next) {
       next = makeWheel(t.newTitle, [])
@@ -221,7 +244,10 @@ async function syncState(state: SavedState) {
     } catch (error) {
       if (!(error instanceof ApiError) || ![404, 409].includes(error.status)) throw error
       if (!wheel.deleted) {
-        const copy = forkWheel({ ...wheel, title: `${wheel.title.slice(0, 100)} · ${t.copy}` })
+        const copy = forkWheel({
+          ...wheel,
+          title: `${Array.from(wheel.title).slice(0, 100).join('')} · ${t.copy}`,
+        })
         state.wheels.push(copy)
         if (state.active === wheel.id) state.active = copy.id
       }
@@ -271,14 +297,15 @@ export async function spinWheel(id: string): Promise<{ result: DrawResult; optio
       if (!(error instanceof NetworkError)) throw error
       view.online = false
     }
+    if (state.active !== id) throw new Error(t.conflict)
     const wheel = state.wheels.find((w) => w.id === id)!
-    if (wheel.deleted || state.active !== id) throw new Error(t.conflict)
+    if (wheel.deleted) throw new Error(t.conflict)
     const options = activeOptions(wheel)
     if (wheel.options.length < 2) throw new Error(t.insufficient)
     if (!options.length) throw new Error(t.exhausted)
     const drawId = crypto.randomUUID()
     if (view.online) {
-      state.pending_draw = { wheel_id: id, id: drawId, revision: wheel.revision, options }
+      state.pending_draw = { wheel_id: id, id: drawId, revision: wheel.revision }
       await writeState(state)
       try {
         const response = await api<{ wheel: Wheel; result: DrawResult }>(

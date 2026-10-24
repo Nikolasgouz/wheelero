@@ -7,6 +7,8 @@ __pycache__/
 *.db-*
 *.sqlite*
 .env
+.env.*
+!.env.example
 node_modules/
 dist/
 test-results/

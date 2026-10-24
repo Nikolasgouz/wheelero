@@ -74,7 +74,10 @@ export function Library({
                 onClick={() =>
                   run(() =>
                     addWheels([
-                      forkWheel({ ...wheel, title: `${wheel.title.slice(0, 100)} · ${t.copy}` }),
+                      forkWheel({
+                        ...wheel,
+                        title: `${Array.from(wheel.title).slice(0, 100).join('')} · ${t.copy}`,
+                      }),
                     ]),
                   )
                 }

@@ -14,6 +14,8 @@ flowchart LR
 `screens/` contains the editor and library; `components/` holds wheel, dialog and PWA
 controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives in
 `i18n.ts`. Bundled templates support offline startup and are refreshed from the API.
+Greek/Latin Noto Sans variable fonts are bundled locally and precached, with no external
+font request. Platform emoji fonts render emojis.
 `lib/random.ts` uses Web Crypto rejection sampling; `lib/geometry.ts` independently
 calculates sectors and angles. No text labels are squeezed into wheels above 16 entries.
 
@@ -29,6 +31,9 @@ is sent, including when the process is terminated immediately after the response
 `state/store.ts` coordinates one IndexedDB document containing wheels, dirty flags,
 mutation UUIDs, pending result IDs, workspace identity and any uncertain online draw.
 Web Locks serialize operations across tabs; BroadcastChannel updates their views.
+An in-memory overlay displays edits synchronously to preserve input caret position;
+each overlay is removed only after its corresponding IndexedDB write completes, so
+an older write cannot replace a newer keystroke on screen.
 Unsubmitted form text/preferences use localStorage. The service worker caches only
 the app shell; API responses never enter its cache.
 

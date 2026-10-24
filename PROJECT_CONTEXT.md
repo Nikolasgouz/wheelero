@@ -1,19 +1,68 @@
 # Γύρνα. — context
 
-Last updated: 2026-10-24. Implementation and verification in progress.
-Product: Greek anonymous decision spinner, responsive PWA, no account required.
-Stack: FastAPI/SQLAlchemy/Alembic/SQLite; React/TypeScript/Vite/Bun.
-Architecture: cookie-isolated workspaces, CSRF, revisioned snapshots, idempotent draws,
-IndexedDB local state and outbox, conflict copies, immutable revocable public snapshots.
-No deployment or remote push authorized. The workspace was empty.
+Last updated: 2026-10-24. Local v1 implemented and verified; no pending implementation task.
 
-Implemented backend: anonymous cookie sessions, CSRF/Origin checks, owned wheel CRUD,
-ordered options, revision/mutation-id sync, cryptographic idempotent draws, no-repeat,
-offline-result ingestion, immutable revocable shares, templates, initial Alembic migration.
-Backend API tests: 21 passed; separate real-process restart test passed after fixing
-transaction scope to commit before sending a response. Full rerun underway.
-Frontend typecheck/lint and production build passed. Geometry/random/import tests: 3 passed.
-Browser: 1440px light/dark screenshots and axe checks passed. First long E2E flow reached
-its final assertion but exceeded the slow-host timeout; increased runner budget and rerunning.
-Remaining browser suite (mobile, offline, sharing, conflicts) underway.
-Use backend port 8017: port 8000 belongs to an existing unrelated process.
+## Product and scope
+
+Greek decision spinner, no account required, responsive installable PWA. Implemented:
+2–200-entry wheels (0–1-entry drafts), editing/reordering/bulk input/duplicate warning,
+templates, library/copy/delete, history, no-repeat, JSON backups, theme/sound/presentation,
+revocable public snapshots, offline editing/draws and conflict-preserving synchronization.
+Stack: FastAPI/SQLAlchemy/Alembic/SQLite + React/TypeScript/Vite/Bun. No external services.
+The workspace started empty. No remote push or public deployment was authorized or made.
+
+## Decisions and file map
+
+- `backend/app/routes.py`, `schemas.py`, `security.py`: API, validation, cookie ownership,
+  CSRF and Origin checks. `/docs` is the generated API reference.
+- `models.py`, `database.py`, `migrations/`: explicit schema, WAL/foreign keys and serialized
+  writes. Function-scoped DB dependencies commit **before** sending success responses.
+- `services.py`: secure server selection and snapshots; results survive option deletion.
+- `frontend/src/state/store.ts`: IndexedDB outbox, mutation/result UUIDs, server revisions,
+  tombstones, conflict copies, uncertain-draw recovery, Web Locks/BroadcastChannel.
+  Synchronous edit overlays preserve the caret while serialized durable writes complete.
+- `lib/random.ts`, `lib/geometry.ts`: independent unbiased offline RNG and wheel geometry.
+- `App.tsx`, `screens/`, `components/`: actual UI; `i18n.ts` is the Greek copy dictionary.
+- `vite.config.ts`: prompt-updated PWA; shell/fonts only are cached, never private APIs.
+- `backend/tests`, `frontend/src/lib/*.test.ts`, `frontend/e2e`: automated verification.
+
+Client-reported/imported results are explicitly `offline`. Public shares never include
+history or original write access. A lost online draw response must be recovered with its
+original ID; it is never replaced by a fresh offline draw. Losing the cookie creates a new
+workspace and copies remaining local data. There is no cross-device account recovery.
+
+## Verification
+
+- Backend pytest: 22 passed, including ownership, validation, persistence, simultaneous
+  idempotent retries, offline ingestion, rollback, shares/revocation and actual process restart.
+- Alembic upgrade/drift check and Python compilation passed; Python lines <=100.
+- Bun frozen install, TypeScript, ESLint and production build passed. PWA precache ~838 KiB.
+- Unit tests: 3 passed, including all 20,100 sector positions for counts 1–200.
+- Main Chromium E2E suite: 10 passed, covering offline reload/resync, conflict copies,
+  sharing, refresh persistence, JSON export/malformed import, 200 entries and no-repeat.
+- Light/dark axe WCAG A/AA scans, keyboard and reduced-motion checks passed at
+  360/390/768/1440px. Screenshots are in ignored `artifacts/`; inspected locally.
+- Rebuilt-font suite: 13 E2E tests passed (5.3 min), including lost-response recovery,
+  valid backup import and a real service-worker update preserving unsaved editor text.
+  Additional cookie-clearing and Unicode-boundary title-copy regressions passed.
+- Final build and lint passed. After fixing controlled-input caret movement, the affected
+  E2E paths were rerun: 4 passed (real typing in title/options plus refresh, offline/resync,
+  conflicts, actual SW update). In total, all 16 distinct E2E scenarios have passed;
+  the final targeted rerun took 1.3 min, rather than rerunning unrelated visual checks.
+- Latest Origin regression passed for 127.0.0.1 preview while rejecting an external origin.
+- Git diff/ignore checks passed; no secrets, DBs, venv, dependencies or build outputs tracked.
+
+## Limits and next steps
+
+No known unresolved application failure in tested paths. Upstream warnings: Starlette deprecates the httpx test
+adapter; Rollup removes two malformed PURE annotations in Zod. Neither prevented checks.
+Physical iOS/Android installation, virtual-keyboard/safe-area behavior and human screen-reader
+review are not verified by Chromium desktop emulation. Real-device checks remain next.
+Large archives are loaded in full; history pagination and retention/quotas are later work.
+Before public launch: persistent SQLite volume, HTTPS/Secure cookie, exact origins,
+consistent backups and hosting-specific rate limits. Account/live-room/payment/AI/store
+distribution features are deliberately excluded; see roadmap.
+
+Use backend port **8017** (8000 belongs to an unrelated project), frontend dev 5173 or
+production preview 4173. Exact setup/run/check commands are in README and AGENTS.md.
+Verification servers are stopped at handoff; no background deployment was installed.

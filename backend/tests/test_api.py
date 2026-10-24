@@ -24,6 +24,8 @@ def test_session_cookie_and_csrf(client, payload):
 
 
 def test_origin_and_cors(client, payload):
+    client.headers["Origin"] = "http://127.0.0.1:4173"
+    assert client.put(f"/api/wheels/{uuid4()}", json=payload).status_code == 201
     client.headers["Origin"] = "https://evil.example"
     assert client.put(f"/api/wheels/{uuid4()}", json=payload).status_code == 403
     response = client.options("/api/wheels", headers={

@@ -18,6 +18,10 @@ Wrong-owner access returns 404. The server never accepts client results as serve
 Playwright uses Chromium and the built PWA. Its backend runner uses ignored `e2e.db`.
 Do not reuse unrelated services on configured ports. Screenshots/traces remain untracked.
 Emulation does not verify real Safari installation, OS audio or fullscreen support.
+The final verification covers 16 distinct E2E scenarios. In addition to bulk fills,
+the typing regression inserts Greek text in the middle of both title and option inputs
+and verifies caret position and persistence. SW update tests serve a changed worker file,
+exercise its real waiting/activation lifecycle, then restore the original generated file.
 
 Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
 deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.

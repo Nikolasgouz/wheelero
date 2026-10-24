@@ -1,8 +1,6 @@
-@import url('./typography.css');
-
 :root {
   font-family:
-    'Gyrna Sans',
+    'Noto Sans Variable',
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
