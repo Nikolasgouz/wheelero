@@ -10,6 +10,8 @@ use Vite development mode or run `bun run build` before relaunching the preview.
 
 Daily checks: pytest, Alembic check, typecheck, lint, unit tests, build and E2E. Tests
 were explicitly requested for initial implementation. Surface failures; no broad catches.
+The process-restart persistence test preserves session cookies but creates a fresh HTTP
+client for each server process; a keepalive connection cannot survive server termination.
 
 Schema changes: edit models, generate and review a new Alembic migration, apply it to a
 temporary DB and check drift. Never create tables during API startup. Do not edit released

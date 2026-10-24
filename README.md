@@ -104,6 +104,10 @@ server αν οι θύρες 8017/4173 δεν εξυπηρετούν ήδη τη�
 browser session. Screenshots: αγνοημένος φάκελος `artifacts/`. Τα πραγματικά αποτελέσματα
 και οι περιορισμοί καταγράφονται στο `PROJECT_CONTEXT.md`.
 
+Τελευταίος πλήρης έλεγχος (24/10/2026): 22 backend tests, 3 unit tests και 16 E2E
+πέρασαν, όπως και typecheck, lint, production build και έλεγχος Alembic.
+Η εγκατάσταση και η χρήση σε πραγματικές συσκευές iOS/Android παραμένουν προς έλεγχο.
+
 ## Production preview και PWA
 
 Με το backend ανοιχτό:

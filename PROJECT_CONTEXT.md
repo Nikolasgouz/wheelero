@@ -36,22 +36,20 @@ workspace and copies remaining local data. There is no cross-device account reco
 
 ## Verification
 
-- Backend pytest: 22 passed, including ownership, validation, persistence, simultaneous
+- Latest full verification (2026-10-24): backend pytest 22 passed, including ownership,
+  validation, persistence, simultaneous
   idempotent retries, offline ingestion, rollback, shares/revocation and actual process restart.
+  Restart verification retains the cookie in a fresh HTTP client after each server restart;
+  it no longer reuses a stale keepalive connection to the terminated process.
 - Alembic upgrade/drift check and Python compilation passed; Python lines <=100.
 - Bun frozen install, TypeScript, ESLint and production build passed. PWA precache ~838 KiB.
 - Unit tests: 3 passed, including all 20,100 sector positions for counts 1–200.
-- Main Chromium E2E suite: 10 passed, covering offline reload/resync, conflict copies,
-  sharing, refresh persistence, JSON export/malformed import, 200 entries and no-repeat.
+- Full Chromium E2E suite: 16 passed together (48.8 s), covering offline reload/resync,
+  conflict copies, sharing/revocation, refresh persistence, JSON export/valid and malformed
+  import, 200 entries, no-repeat, caret preservation, cookie loss, Unicode title copying,
+  lost-response recovery and real service-worker updates preserving unsubmitted editor text.
 - Light/dark axe WCAG A/AA scans, keyboard and reduced-motion checks passed at
   360/390/768/1440px. Screenshots are in ignored `artifacts/`; inspected locally.
-- Rebuilt-font suite: 13 E2E tests passed (5.3 min), including lost-response recovery,
-  valid backup import and a real service-worker update preserving unsaved editor text.
-  Additional cookie-clearing and Unicode-boundary title-copy regressions passed.
-- Final build and lint passed. After fixing controlled-input caret movement, the affected
-  E2E paths were rerun: 4 passed (real typing in title/options plus refresh, offline/resync,
-  conflicts, actual SW update). In total, all 16 distinct E2E scenarios have passed;
-  the final targeted rerun took 1.3 min, rather than rerunning unrelated visual checks.
 - Latest Origin regression passed for 127.0.0.1 preview while rejecting an external origin.
 - Git diff/ignore checks passed; no secrets, DBs, venv, dependencies or build outputs tracked.
 - Windows launcher: Python/Bun resolution and free/occupied-port branches verified through
