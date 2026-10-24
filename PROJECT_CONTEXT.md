@@ -13,6 +13,9 @@ The workspace started empty. No remote push or public deployment was authorized 
 
 ## Decisions and file map
 
+- `START_GYRNA.bat`: Windows double-click launcher; checks prerequisites/ports, runs
+  migrations, builds missing frontend output, opens both servers and the browser.
+  Uses the existing production build; rebuild explicitly after frontend source changes.
 - `backend/app/routes.py`, `schemas.py`, `security.py`: API, validation, cookie ownership,
   CSRF and Origin checks. `/docs` is the generated API reference.
 - `models.py`, `database.py`, `migrations/`: explicit schema, WAL/foreign keys and serialized
@@ -51,6 +54,8 @@ workspace and copies remaining local data. There is no cross-device account reco
   the final targeted rerun took 1.3 min, rather than rerunning unrelated visual checks.
 - Latest Origin regression passed for 127.0.0.1 preview while rejecting an external origin.
 - Git diff/ignore checks passed; no secrets, DBs, venv, dependencies or build outputs tracked.
+- Windows launcher: Python/Bun resolution and free/occupied-port branches verified through
+  cmd.exe; occupied ports fail with a visible message. Interactive browser launch not exercised.
 
 ## Limits and next steps
 
@@ -65,4 +70,4 @@ distribution features are deliberately excluded; see roadmap.
 
 Use backend port **8017** (8000 belongs to an unrelated project), frontend dev 5173 or
 production preview 4173. Exact setup/run/check commands are in README and AGENTS.md.
-Verification servers are stopped at handoff; no background deployment was installed.
+No background deployment was installed. Close both launcher console windows to stop it.

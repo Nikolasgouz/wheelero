@@ -4,6 +4,10 @@ Run commands from the directories in README. Use Bun for frontend packages/scrip
 retain `bun.lock`. Python inputs are in `requirements.in`; the pinned environment is
 `requirements.lock` (`python -m pip freeze`). TypeScript is strict; Python lines <=100.
 
+Windows users can double-click `START_GYRNA.bat` for the production preview on 4173.
+It runs migrations and builds only when `dist/index.html` is absent. For code changes,
+use Vite development mode or run `bun run build` before relaunching the preview.
+
 Daily checks: pytest, Alembic check, typecheck, lint, unit tests, build and E2E. Tests
 were explicitly requested for initial implementation. Surface failures; no broad catches.
 
