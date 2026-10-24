@@ -9,7 +9,8 @@ from .config import settings
 from .database import get_db
 from .models import Workspace
 
-DB = Annotated[Session, Depends(get_db)]
+# Commit before sending a successful response, including on immediate process shutdown.
+DB = Annotated[Session, Depends(get_db, scope="function")]
 COOKIE = "gyrna_session"
 
 

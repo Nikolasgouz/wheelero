@@ -11,7 +11,7 @@ Do not add tests unless requested (the initial implementation explicitly request
 Install: `python -m venv .venv`, `.venv/Scripts/python -m pip install -r backend/requirements.lock`;
 `cd frontend; bun install --frozen-lockfile`.
 Backend (from backend): `../.venv/Scripts/python -m alembic upgrade head`, then
-`../.venv/Scripts/python -m uvicorn app.main:app --reload --no-access-log`.
+`../.venv/Scripts/python -m uvicorn app.main:app --port 8017 --reload --no-access-log`.
 Frontend: `bun run dev`. Checks: backend `../.venv/Scripts/python -m pytest`,
 frontend `bun run typecheck`, `bun run lint`, `bun run test`, `bun run build`, `bun run e2e`.
 Unix: use `.venv/bin/python` instead of `.venv/Scripts/python`.

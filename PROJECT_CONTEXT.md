@@ -10,6 +10,10 @@ No deployment or remote push authorized. The workspace was empty.
 Implemented backend: anonymous cookie sessions, CSRF/Origin checks, owned wheel CRUD,
 ordered options, revision/mutation-id sync, cryptographic idempotent draws, no-repeat,
 offline-result ingestion, immutable revocable shares, templates, initial Alembic migration.
-Backend tests: first run 20 passed, 1 test-client API error (fixed; rerun pending).
-Frontend implemented; production/browser verification still pending.
+Backend API tests: 21 passed; separate real-process restart test passed after fixing
+transaction scope to commit before sending a response. Full rerun underway.
+Frontend typecheck/lint and production build passed. Geometry/random/import tests: 3 passed.
+Browser: 1440px light/dark screenshots and axe checks passed. First long E2E flow reached
+its final assertion but exceeded the slow-host timeout; increased runner budget and rerunning.
+Remaining browser suite (mobile, offline, sharing, conflicts) underway.
 Use backend port 8017: port 8000 belongs to an existing unrelated process.

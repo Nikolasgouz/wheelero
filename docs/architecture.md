@@ -1,5 +1,66 @@
 # Architecture
 
-Browser → same-origin /api → FastAPI → SQLAlchemy → SQLite.
-IndexedDB stores local wheels and pending operations. The service worker caches only
-the app shell, never private API responses. See final implementation notes here.
+```mermaid
+flowchart LR
+  UI[React screens] --> Store[State coordinator]
+  Store <--> IDB[IndexedDB and outbox]
+  Store --> API[FastAPI /api]
+  API --> Logic[Ownership / revisions / selection]
+  Logic --> DB[(SQLite)]
+  SW[Service worker] --> Shell[Cached app shell]
+  Result[Server or Web Crypto outcome] --> Geometry[Sector-center rotation]
+```
+
+`screens/` contains the editor and library; `components/` holds wheel, dialog and PWA
+controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives in
+`i18n.ts`. Bundled templates support offline startup and are refreshed from the API.
+`lib/random.ts` uses Web Crypto rejection sampling; `lib/geometry.ts` independently
+calculates sectors and angles. No text labels are squeezed into wheels above 16 entries.
+
+Backend: `routes.py` handles HTTP, `schemas.py` validates inputs, `security.py` checks
+cookies/ownership/CSRF, `services.py` owns revisions, serialization and random selection.
+SQLAlchemy sessions are request-scoped. `BEGIN IMMEDIATE` serializes mutations so
+revision checking, idempotency lookup and no-repeat updates share one transaction.
+The database dependency uses function scope: commits complete before a success response
+is sent, including when the process is terminated immediately after the response.
+
+## Offline and concurrency
+
+`state/store.ts` coordinates one IndexedDB document containing wheels, dirty flags,
+mutation UUIDs, pending result IDs, workspace identity and any uncertain online draw.
+Web Locks serialize operations across tabs; BroadcastChannel updates their views.
+Unsubmitted form text/preferences use localStorage. The service worker caches only
+the app shell; API responses never enter its cache.
+
+1. Persist edits locally with the base server revision.
+2. On startup, reconnect, manual save or idle interval, obtain the session/CSRF.
+3. Recover an uncertain online draw using its original ID and revision.
+4. PUT dirty snapshots with at most 1,000 pending offline results per batch. Mutation
+   UUID plus payload digest makes identical retries safe; result UUIDs are also unique.
+5. On a revision conflict, retain the server version and upload a separate copy of the
+   local changes. Copied/imported history is marked client-reported (`offline`).
+6. Refresh server snapshots. Deletion tombstones prevent stale resurrection; conflicting
+   offline deletion preserves the newer server wheel.
+
+Temporary blank fields remain local until editing finishes. Bulk blank lines are ignored.
+Duplicate labels retain individual probability unless explicitly removed. Drafts with
+0–1 options can be saved, but cannot spin. No-repeat can draw the last remaining entry.
+
+An online request ID is persisted before sending. A lost response blocks further draws
+until the same request is resolved. During animation, options/navigation are locked and
+the wheel retains the pre-draw snapshot so its pointer matches the selected result.
+
+## Session and sharing
+
+Random 256-bit cookie: HttpOnly, SameSite=Lax, path `/api`, Secure in production. Only
+its SHA-256 digest is stored. All private endpoints check ownership; mutations require
+a workspace CSRF header and an allowed Origin when supplied. Public random share tokens
+expose only title/options/no-repeat. They never expose history or grant write access.
+Deleting a wheel atomically revokes all its shares. New links/revocation require a server.
+
+## Upstream references
+
+- [FastAPI credentialed CORS](https://fastapi.tiangolo.com/tutorial/cors/): explicit origins.
+- [Vite PWA updates](https://vite-pwa-org.netlify.app/guide/auto-update): prompt updates
+  avoid unannounced reloads while editing forms.
+- [SQLite foreign keys](https://www.sqlite.org/foreignkeys.html): enabled per connection.

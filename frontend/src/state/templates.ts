@@ -1,0 +1,32 @@
+import type { Template } from '../types'
+// Bundled examples remain available before the first successful API connection.
+export const templates: Template[] = [
+  {
+    id: 'food',
+    title: 'Τι θα φάμε;',
+    emoji: '🍜',
+    category: 'Κάτι νόστιμο',
+    options: ['Πίτσα 🍕', 'Σουβλάκι 🥙', 'Μακαρόνια 🍝', 'Σαλάτα 🥗', 'Sushi 🍣', 'Burger 🍔'],
+  },
+  {
+    id: 'plans',
+    title: 'Τι κάνουμε απόψε;',
+    emoji: '✨',
+    category: 'Για την παρέα',
+    options: ['Σινεμά 🎬', 'Επιτραπέζια 🎲', 'Μια βόλτα 🌙', 'Ποτό 🍹', 'Σπίτι 🛋️'],
+  },
+  {
+    id: 'yes',
+    title: 'Ναι ή όχι;',
+    emoji: '🤔',
+    category: 'Η μεγάλη ερώτηση',
+    options: ['Ναι', 'Όχι'],
+  },
+  {
+    id: 'first',
+    title: 'Ποιος ξεκινάει;',
+    emoji: '🎲',
+    category: 'Πάμε για παιχνίδι',
+    options: ['Άννα', 'Νίκος', 'Μαρία', 'Γιάννης'],
+  },
+]

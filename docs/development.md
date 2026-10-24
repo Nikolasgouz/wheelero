@@ -1,4 +1,23 @@
 # Development
 
-Use Bun for all frontend dependency and script operations. Use Alembic for every schema change.
-The initial implementation includes the explicitly requested automated tests.
+Run commands from the directories in README. Use Bun for frontend packages/scripts and
+retain `bun.lock`. Python inputs are in `requirements.in`; the pinned environment is
+`requirements.lock` (`python -m pip freeze`). TypeScript is strict; Python lines <=100.
+
+Daily checks: pytest, Alembic check, typecheck, lint, unit tests, build and E2E. Tests
+were explicitly requested for initial implementation. Surface failures; no broad catches.
+
+Schema changes: edit models, generate and review a new Alembic migration, apply it to a
+temporary DB and check drift. Never create tables during API startup. Do not edit released
+migrations. Keep business logic independent of HTTP and wheel geometry independent of RNG.
+
+API experimentation: use `/docs`; request `/api/session` first, keep its cookie and pass
+`X-CSRF-Token` on writes. Atomic wheel PUT includes ordered options, title and settings.
+Wrong-owner access returns 404. The server never accepts client results as server-certified.
+
+Playwright uses Chromium and the built PWA. Its backend runner uses ignored `e2e.db`.
+Do not reuse unrelated services on configured ports. Screenshots/traces remain untracked.
+Emulation does not verify real Safari installation, OS audio or fullscreen support.
+
+Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
+deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.
