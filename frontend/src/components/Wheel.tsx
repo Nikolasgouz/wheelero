@@ -85,6 +85,11 @@ export function Wheel({
           {options.map((option, i) => {
             const angle = ((i + 0.5) * 360) / count
             const label = Array.from(option.label)
+            const visibleLabel =
+              count > 48
+                ? String(i + 1)
+                : label.slice(0, count > 16 ? 12 : 17).join('') +
+                  (label.length > (count > 16 ? 12 : 17) ? '…' : '')
             const showText =
               config.text !== 'never' && !(config.text === 'unless_image' && option.image)
             const selected = winnerId === option.id && !spinning && config.animate_winner
@@ -119,7 +124,11 @@ export function Wheel({
                       x="200"
                       y="85"
                       textAnchor="middle"
-                      fontSize={count > 48 ? 2 : count > 16 ? 6 : count > 10 ? 10 : 14}
+                      fontSize={
+                        count > 48
+                          ? 2
+                          : Math.min(count > 16 ? 8 : count > 10 ? 12 : 24, 160 / visibleLabel.length)
+                      }
                       fontWeight="650"
                       fill={config.mode === 'image' ? '#161322' : textColor(fill)}
                       stroke={config.mode === 'image' ? '#ffffff' : 'none'}
@@ -127,8 +136,7 @@ export function Wheel({
                       paintOrder="stroke"
                       transform="rotate(90 200 85)"
                     >
-                      {count > 48 ? i + 1 : label.slice(0, count > 16 ? 12 : 17).join('')}
-                      {count <= 48 && label.length > (count > 16 ? 12 : 17) ? '…' : ''}
+                      {visibleLabel}
                     </text>
                   )}
                 </g>

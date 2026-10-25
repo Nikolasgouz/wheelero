@@ -105,7 +105,11 @@ settings and optional option images. IndexedDB version 3 includes both local mig
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
 The home wheel uses equal flexible rows above and below the wheel itself, centering it
-within its column, with diameter up to 760px according to available width/height.
+within its column, with stage diameter up to 820px according to available width/height.
+The rim uses 96% of that stage with a thin border, leaving more area for the segments.
+SVG label sizes depend on entry count and displayed label length; up to 10 entries use
+24-unit text when space permits. Long labels shrink, and the numbered large-list mode
+remains unchanged. Sector angles, palette settings and draw geometry are unchanged.
 Short viewports reduce its size; the sidebar scrolls independently without stretching
 the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
 Completed draws snapshot their settings; an ID-based durable removal queue runs after

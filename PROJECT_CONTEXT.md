@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. English interface and names starter implemented.
+Last updated: 2026-10-25. Enlarged wheel and labels after the English/names release.
 
 ## Product and current UI
 
@@ -16,7 +16,10 @@ IndexedDB v3 adds this example once to existing installations, preserving old wh
 settings, results and user-written messages. It selects the example unless a draw is
 pending. Close old app tabs if an upgrade-blocked message appears. No SQLite shape change.
 
-Home now has a wheel up to 760px and an Entries/Results sidebar on the right (>=1024px).
+Home now has a wheel stage up to 820px and an Entries/Results sidebar on the right (>=1024px).
+The rim fills 96% of the stage with a thinner border. Short-list names use larger text,
+shrinking for long labels; numbered large lists are unchanged. At 1440x900, the stage
+grew from 580px to 660px and the colored disk from about 483px to 594px (~23%).
 Below 1024px the sidebar sits underneath; on phones the wheel section uses compact flow.
 Entries support edit/add/delete with 100-row pagination, shared autosave and draw locks.
 Results show source/time, recent/all history and become selected after a completed draw.
@@ -65,6 +68,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Wheel-size follow-up: TypeScript, ESLint, 10 unit tests and production build passed.
+All 9 relevant E2E passed (45.1s): four responsive/accessibility sizes, draw/pointer and
+refresh, reduced motion, entry images, 1,000-entry projection, palettes/center sizes.
+Desktop/mobile screenshots visually inspected; no horizontal overflow. Wheel of Names
+was inspected in live Chromium for proportions. No backend or stored-settings changes.
 
 English/names release (2026-10-25): TypeScript, ESLint, 10 unit tests, 41 pytest tests
 (19.17s), production build and all 30 E2E tests passed (2.7min). PWA precaches 24 assets.

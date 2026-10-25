@@ -354,10 +354,10 @@ button:hover:not(:disabled) {
   place-items: center;
 }
 .wheel-rim {
-  width: 90%;
-  height: 90%;
+  width: 96%;
+  height: 96%;
   background: var(--surface);
-  border: 7px solid var(--surface);
+  border: 4px solid var(--surface);
   border-radius: 50%;
   box-shadow:
     0 9px 25px #40305c12,
@@ -398,7 +398,7 @@ button:hover:not(:disabled) {
 .wheel-pointer {
   position: absolute;
   z-index: 2;
-  top: 9px;
+  top: 0;
   left: calc(50% - 12px);
   width: 24px;
   height: 31px;
@@ -1274,10 +1274,10 @@ dialog::backdrop {
     max-width: 370px;
   }
   .wheel-rim {
-    border-width: 6px;
+    border-width: 3px;
   }
   .wheel-pointer {
-    top: 8px;
+    top: 0;
     width: 22px;
     height: 28px;
     left: calc(50% - 11px);
@@ -1851,7 +1851,7 @@ input[type='color'] {
 .home:not(.presenting) > main {
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 192px);
+  min-height: calc(100dvh - 144px);
 }
 .home:not(.presenting) .workspace {
   display: grid;
@@ -1871,11 +1871,11 @@ input[type='color'] {
   align-self: end;
 }
 .home:not(.presenting) .wheel-stage {
-  width: min(100%, 760px, max(220px, calc(100dvh - 320px)));
+  width: min(100%, 820px, max(220px, calc(100dvh - 240px)));
   max-width: none;
 }
 .home:not(.presenting) > footer {
-  min-height: 96px;
+  min-height: 48px;
 }
 .wheel-sidebar-column {
   min-width: 0;
