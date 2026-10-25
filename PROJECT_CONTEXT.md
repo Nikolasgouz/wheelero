@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Winner message: And The Winner is...
+Last updated: 2026-10-25. Removed Server draw badge from the winner popup.
 
 ## Product and current UI
 
@@ -32,6 +32,8 @@ preserving previous history. Backend/IndexedDB persistence still happens immedia
 Results show source/time, recent/all history and become selected after a completed draw.
 The winner popup offers only Close and Remove winner (unless removal is hidden in
 Customize). It has no respin/copy/New round actions; these remain on the main screen.
+Server draws no longer show a source badge in the popup; offline draws retain their
+label. History and CSV still preserve the draw source.
 Default popup/inline message: `And The Winner is...`. SQLite data migration
 `e92f4b8c013a` and IndexedDB v5 replace the English/Greek old defaults on existing
 private wheels, preserving custom messages, revisions and pending history clears.
@@ -129,6 +131,11 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Winner badge follow-up: typecheck, lint and production build passed. Chromium verified
+an actual server draw has no source badge in the winner popup and retains its stored
+source. Existing offline reload/draw/resync E2E passed (15.7s), including the offline
+label. Backend/schema unchanged; pytest not rerun.
 
 Winner-message follow-up: typecheck, lint, production build, 41 pytest (20.37s) and
 2 existing customization/legacy E2E passed (8.7s). An isolated SQLite migration check

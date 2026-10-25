@@ -668,7 +668,7 @@ export default function App() {
           <div className="result-display">
             <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
-            <span className="pill">{result.source === 'server' ? t.server : t.offlineResult}</span>
+            {result.source === 'offline' && <span className="pill">{t.offlineResult}</span>}
           </div>
           <div className="result-actions">
             <button className="secondary" onClick={closeResult}>
