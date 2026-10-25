@@ -12,6 +12,8 @@ export const t = {
   wheelDetails: 'Wheel entries and results',
   newEntry: 'New entry…',
   addEntry: 'Add entry',
+  editEntry: 'Edit name',
+  editEntriesHint: 'Click a name or pencil to edit. Changes save automatically.',
   removeEntry: 'Delete entry',
   entryLabel: (n: number) => `Entry ${n}`,
   library: 'My wheels',

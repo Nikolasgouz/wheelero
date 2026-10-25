@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { History, Plus, Trash2, Wifi, WifiOff } from 'lucide-react'
+import { History, Pencil, Plus, Trash2, Wifi, WifiOff } from 'lucide-react'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
@@ -69,6 +69,9 @@ export function WheelSidebar({
         hidden={tab !== 'entries'}
         className="sidebar-panel"
       >
+        <p className="sidebar-edit-hint" id="sidebar-edit-hint">
+          {t.editEntriesHint}
+        </p>
         <fieldset disabled={disabled}>
           <div className="sidebar-entry-list">
             {wheel.options
@@ -81,8 +84,13 @@ export function WheelSidebar({
                   <span aria-hidden="true">{currentPage * 100 + offset + 1}</span>
                   <input
                     aria-label={t.entryLabel(currentPage * 100 + offset + 1)}
+                    aria-describedby="sidebar-edit-hint"
                     value={option.label}
                     maxLength={160}
+                    onFocus={(event) => event.currentTarget.select()}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') event.currentTarget.blur()
+                    }}
                     onChange={(event) =>
                       edit({
                         options: wheel.options.map((o) =>
@@ -95,6 +103,18 @@ export function WheelSidebar({
                         edit({ options: wheel.options.filter((o) => o.id !== option.id) })
                     }}
                   />
+                  <button
+                    className="icon-button"
+                    aria-label={`${t.editEntry}: ${option.label}`}
+                    title={t.editEntry}
+                    onClick={(event) => {
+                      const input = event.currentTarget.parentElement!.querySelector('input')!
+                      input.focus()
+                      input.select()
+                    }}
+                  >
+                    <Pencil size={15} />
+                  </button>
                   <button
                     className="icon-button"
                     aria-label={`${t.removeEntry}: ${option.label}`}

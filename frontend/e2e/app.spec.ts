@@ -32,7 +32,17 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
     .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
     .toBe(0)
   await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
-  await page.getByLabel('Entry 1', { exact: true }).fill('Πίτσα παρέας 🍕')
+  await page.getByRole('button', { name: 'Edit name: Alex', exact: true }).click()
+  const firstEntry = page.getByLabel('Entry 1', { exact: true })
+  await expect(firstEntry).toBeFocused()
+  expect(
+    await firstEntry.evaluate((input: HTMLInputElement) =>
+      input.value.slice(input.selectionStart!, input.selectionEnd!),
+    ),
+  ).toBe('Alex')
+  await page.keyboard.insertText('Πίτσα παρέας 🍕')
+  await firstEntry.press('Enter')
+  await expect(firstEntry).not.toBeFocused()
   await page.getByLabel('New entry…', { exact: true }).fill('Παγωτό 🍦')
   await page.getByRole('button', { name: 'Add entry', exact: true }).click()
   await expect(page.locator('.sidebar-entry')).toHaveCount(7)
@@ -46,6 +56,16 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
+  await expect
+    .poll(async () => {
+      const response = await page.request.get('/api/wheels')
+      return (await response.json())[0].results.length
+    })
+    .toBe(1)
+  await page.getByRole('tab', { name: 'Results', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
+  await expect(page.locator('#sidebar-results .history li')).toHaveCount(0)
+  await expect(page.locator('#sidebar-tab-results .count-badge')).toHaveText('0')
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.locator('.winner')).not.toBeEmpty()

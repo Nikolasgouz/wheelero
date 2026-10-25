@@ -92,6 +92,13 @@ on smaller screens the sidebar sits below the wheel. `components/WheelSidebar.ts
 provides inline entry editing/add/remove, 100-entry pagination and result history with
 source/time indicators. It uses the same revisioned edit path as the full editor and
 locks all mutations during a draw. A completed draw selects Results automatically.
+The sidebar displays a pre-draw wheel snapshot until animation completion. This freezes
+history, its count and no-repeat markers while the real draw is already durably stored;
+it does not delay or change server/IndexedDB writes. Completion (or failed draw cleanup)
+releases the snapshot to show live data. Previous results remain browsable during a spin.
+Each row has a pencil action; focusing its input selects the name, Enter blurs, and
+edits continue through the same immediate local autosave path. Input text is 16px for
+mobile readability; editing controls stay disabled while a draw is pending/animating.
 Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
 The separate Entries view retains the full editor, customization, sharing and templates.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.

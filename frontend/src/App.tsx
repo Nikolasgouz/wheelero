@@ -48,7 +48,7 @@ import {
 } from './state/store'
 import { makeWheel } from './state/wheel'
 import { templates as bundledTemplates } from './state/templates'
-import type { DrawResult, Option, Share, Template, Wheel } from './types'
+import type { DrawResult, LocalWheel, Option, Share, Template, Wheel } from './types'
 
 type Screen = 'wheel' | 'options' | 'library'
 type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
@@ -58,6 +58,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>('wheel')
   const [busy, setBusy] = useState(false)
   const [spinning, setSpinning] = useState(false)
+  const [sidebarSnapshot, setSidebarSnapshot] = useState<LocalWheel | null>(null)
   const [rotation, setRotation] = useState(0)
   const wheelSvg = useRef<SVGSVGElement>(null)
   const [idlePaused, setIdlePaused] = useState(false)
@@ -178,6 +179,7 @@ export default function App() {
       setResult(null)
       setPopupOpen(false)
       setSpinning(true)
+      setSidebarSnapshot(wheel!)
       setSpinOptions(presentationOptions(activeOptions(wheel!), wheel!.customization, null))
       let stop = () => {}
       try {
@@ -216,6 +218,7 @@ export default function App() {
       } finally {
         stop()
         setSpinning(false)
+        setSidebarSnapshot(null)
       }
     })
   }
@@ -511,7 +514,7 @@ export default function App() {
               <div className="wheel-sidebar-column" hidden={screen !== 'wheel'}>
                 <WheelSidebar
                   key={wheel.id}
-                  wheel={wheel}
+                  wheel={sidebarSnapshot ?? wheel}
                   disabled={locked}
                   edit={edit}
                   tab={sidebarTab}

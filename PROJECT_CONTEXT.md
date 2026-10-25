@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Centered larger wheel, center spin control and idle motion.
+Last updated: 2026-10-25. Easier inline name editing and results revealed after animation.
 
 ## Product and current UI
 
@@ -25,6 +25,10 @@ The rim fills 96% of the stage with a thinner border. Short-list names use large
 shrinking for long labels; numbered large lists are unchanged.
 Below 1024px the sidebar sits underneath; on phones the wheel section uses compact flow.
 Entries support edit/add/delete with 100-row pagination, shared autosave and draw locks.
+Click/focus or pencil selects a name for replacement; Enter finishes editing. Inputs
+are 16px and focused rows are highlighted. The sidebar holds a pre-draw wheel snapshot
+until the animation finishes, hiding the new result/count and no-repeat marker while
+preserving previous history. Backend/IndexedDB persistence still happens immediately.
 Results show source/time, recent/all history and become selected after a completed draw.
 Entries remains a separate full editor with Customize, sharing and templates. Both entry
 editors use distinct labels/draft keys and preserve incomplete input while hidden.
@@ -79,6 +83,14 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Inline-edit/result-reveal follow-up: typecheck, lint and production build passed;
+9 relevant E2E passed (1.1min), including pencil replacement/persistence and a stored
+server result remaining absent from Results/count during animation. Direct name-click
+replacement and refresh were also checked in Chromium. Online/offline checks with
+popup disabled and no-repeat enabled verified previous history stays visible while
+the new result, counter and used-entry marker wait until completion. Four viewport
+accessibility checks passed; mobile screenshot inspected. No backend/schema changes.
 
 Center-spin/idle release: TypeScript, ESLint, 10 unit tests and production build passed.
 All 30 E2E passed (3.2min). After making the center-image hit area transparent, all 4

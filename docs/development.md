@@ -59,3 +59,5 @@ The home sidebar uses the same `editWheel` path as the full editor. Keep its mut
 controls disabled during draws, preserve entry IDs/images, and keep its draft key/labels
 distinct from the full editor. Lists are paged at 100 entries; Results selects automatically
 after a completed draw. Presentation hides the sidebar; below 1024px it stacks under the wheel.
+Keep the pre-draw sidebar snapshot until animation completion: subscribing directly to
+the new store results would expose the winner and no-repeat marker before the wheel stops.
