@@ -194,6 +194,9 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(page.getByRole('button', { name: 'Προσαρμογή', exact: true })).toHaveCount(0)
     await expect(page.locator('.templates-section')).toBeHidden()
     await expect(page.locator('.history')).not.toHaveAttribute('open')
+    const wheelBounds = (await page.locator('.wheel-stage').boundingBox())!
+    expect(Math.abs(wheelBounds.x + wheelBounds.width / 2 - width / 2)).toBeLessThan(2)
+    expect(Math.abs(wheelBounds.y + wheelBounds.height / 2 - 500)).toBeLessThan(6)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: `../artifacts/light-${width}.png`, fullPage: true })
     const scan = await new AxeBuilder({ page })

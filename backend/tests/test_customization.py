@@ -34,6 +34,7 @@ def test_settings_images_sharing_and_draw_integrity(client, payload, monkeypatch
     payload["customization"] = Customization(
         duration=60, max_names=4, show_duplicates=False, center_image=image,
         mode="image", wheel_image="/images/sunset.webp", auto_remove=True,
+        spin_sound="arpeggio", result_sound="magic",
     ).model_dump()
     path = f"/api/wheels/{uuid4()}"
     created = client.put(path, json=payload)

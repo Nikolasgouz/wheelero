@@ -265,7 +265,7 @@ export default function App() {
 
   return (
     <div
-      className={`app ${presenting ? 'presenting' : ''}`}
+      className={`app ${screen === 'wheel' ? 'home' : ''} ${presenting ? 'presenting' : ''}`}
       style={
         presenting
           ? ({
@@ -364,43 +364,45 @@ export default function App() {
           <>
             <div className={`workspace mobile-${screen}`}>
               <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
-                <div className="wheel-heading">
-                  <span className="pill">
-                    <span />
-                    {t.count(wheel.options.length)}
-                  </span>
-                  <div className="wheel-tools">
-                    <button
-                      className="icon-button"
-                      aria-label={sound ? t.soundOff : t.soundOn}
-                      onClick={() => {
-                        if (sound) stopSounds()
-                        setSound(!sound)
-                      }}
-                    >
-                      {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
-                    </button>
-                    <button
-                      className="icon-button"
-                      aria-label={presenting ? t.exitFullscreen : t.fullscreen}
-                      onClick={() =>
-                        run(async () => {
-                          if (presenting) {
-                            if (document.fullscreenElement) await document.exitFullscreen()
-                            setPresenting(false)
-                          } else {
-                            setPresenting(true)
-                            if (document.fullscreenEnabled)
-                              await document.documentElement.requestFullscreen()
-                          }
-                        })
-                      }
-                    >
-                      <Maximize2 size={17} />
-                    </button>
+                <div className="wheel-top">
+                  <div className="wheel-heading">
+                    <span className="pill">
+                      <span />
+                      {t.count(wheel.options.length)}
+                    </span>
+                    <div className="wheel-tools">
+                      <button
+                        className="icon-button"
+                        aria-label={sound ? t.soundOff : t.soundOn}
+                        onClick={() => {
+                          if (sound) stopSounds()
+                          setSound(!sound)
+                        }}
+                      >
+                        {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                      </button>
+                      <button
+                        className="icon-button"
+                        aria-label={presenting ? t.exitFullscreen : t.fullscreen}
+                        onClick={() =>
+                          run(async () => {
+                            if (presenting) {
+                              if (document.fullscreenElement) await document.exitFullscreen()
+                              setPresenting(false)
+                            } else {
+                              setPresenting(true)
+                              if (document.fullscreenEnabled)
+                                await document.documentElement.requestFullscreen()
+                            }
+                          })
+                        }
+                      >
+                        <Maximize2 size={17} />
+                      </button>
+                    </div>
                   </div>
+                  <h1 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h1>
                 </div>
-                <h1 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h1>
                 <Spinner
                   options={displayed}
                   rotation={rotation}
@@ -408,128 +410,132 @@ export default function App() {
                   config={config}
                   winnerId={result?.option_id ?? null}
                 />
-                {displayed.length !== available.length && (
-                  <p className="muted display-note">{ct.visible(displayed.length)}</p>
-                )}
-                {displayed.length > 48 && config.text !== 'never' && (
-                  <details className="wheel-legend">
-                    <summary>{ct.legend}</summary>
-                    <ol>
-                      {displayed.map((o) => (
-                        <li key={o.id}>{o.label}</li>
-                      ))}
-                    </ol>
-                  </details>
-                )}
-                {result && (
-                  <section
-                    className={`inline-result ${config.animate_winner ? 'winner-animation' : ''}`}
-                    aria-live="polite"
-                  >
-                    <span>{config.popup_message}</span>
-                    <strong>{result.label}</strong>
-                    <div className="result-actions">
-                      <button className="text-button" disabled={!canSpin} onClick={spin}>
-                        {t.again}
-                      </button>
-                      {config.remove_button && (
-                        <button
-                          className="text-button"
-                          disabled={locked || !wheel.options.some((o) => o.id === result.option_id)}
-                          onClick={removeResult}
-                        >
-                          {t.removeWinner}
-                        </button>
-                      )}
-                      <button
-                        className="icon-button"
-                        aria-label={t.copyResult}
-                        onClick={() => copy(result.label)}
-                      >
-                        <Copy size={18} />
-                      </button>
-                    </div>
-                  </section>
-                )}
-                {result && config.confetti && (
-                  <div key={result.id} className="confetti" aria-hidden="true">
-                    {Array.from({ length: 40 }, (_, i) => (
-                      <i
-                        key={i}
-                        style={{
-                          left: `${(i * 37) % 100}%`,
-                          background: config.palette[i % config.palette.length].color,
-                          animationDelay: `${(i % 7) * 0.08}s`,
-                          transform: `rotate(${i * 29}deg)`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-                <div className="spin-actions">
-                  <button className="primary spin-button" disabled={!canSpin} onClick={spin}>
-                    <RefreshCw size={20} className={spinning ? 'rotating' : ''} />
-                    {spinning ? t.spinning : t.spin}
-                    <ArrowRight size={19} />
-                  </button>
-                  {(!enoughOptions || !available.length) && (
-                    <p>{!enoughOptions ? t.insufficient : t.exhausted}</p>
+                <div className="wheel-bottom">
+                  {displayed.length !== available.length && (
+                    <p className="muted display-note">{ct.visible(displayed.length)}</p>
                   )}
-                  {!available.length && wheel.options.length > 1 && (
-                    <button
-                      className="secondary"
-                      disabled={locked}
-                      onClick={() =>
-                        edit({ options: wheel.options.map((o) => ({ ...o, active: true })) })
-                      }
+                  {displayed.length > 48 && config.text !== 'never' && (
+                    <details className="wheel-legend">
+                      <summary>{ct.legend}</summary>
+                      <ol>
+                        {displayed.map((o) => (
+                          <li key={o.id}>{o.label}</li>
+                        ))}
+                      </ol>
+                    </details>
+                  )}
+                  {result && (
+                    <section
+                      className={`inline-result ${config.animate_winner ? 'winner-animation' : ''}`}
+                      aria-live="polite"
                     >
-                      {t.reset}
-                    </button>
+                      <span>{config.popup_message}</span>
+                      <strong>{result.label}</strong>
+                      <div className="result-actions">
+                        <button className="text-button" disabled={!canSpin} onClick={spin}>
+                          {t.again}
+                        </button>
+                        {config.remove_button && (
+                          <button
+                            className="text-button"
+                            disabled={
+                              locked || !wheel.options.some((o) => o.id === result.option_id)
+                            }
+                            onClick={removeResult}
+                          >
+                            {t.removeWinner}
+                          </button>
+                        )}
+                        <button
+                          className="icon-button"
+                          aria-label={t.copyResult}
+                          onClick={() => copy(result.label)}
+                        >
+                          <Copy size={18} />
+                        </button>
+                      </div>
+                    </section>
                   )}
-                </div>
-                <details className="history">
-                  <summary className="history-heading">
-                    <History size={15} />
-                    <span>{t.history}</span>
-                    <span>{t.historyCount(wheel.results.length)}</span>
-                  </summary>
-                  {wheel.results.length ? (
-                    <ol>
-                      {(allHistory ? wheel.results : wheel.results.slice(0, 5)).map((r) => (
-                        <li key={r.id}>
-                          <span className="history-marker" />
-                          <strong>{r.label}</strong>
-                          <span
-                            className="result-source"
-                            title={r.source === 'server' ? t.server : t.offlineResult}
-                          >
-                            {r.source === 'server' ? (
-                              <Wifi size={12} aria-label={t.server} />
-                            ) : (
-                              <WifiOff size={12} aria-label={t.offlineResult} />
-                            )}
-                          </span>
-                          <time
-                            dateTime={r.created_at}
-                            title={new Date(r.created_at).toLocaleString('el-GR')}
-                          >
-                            {new Date(r.created_at).toLocaleTimeString('el-GR', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </time>
-                        </li>
+                  {result && config.confetti && (
+                    <div key={result.id} className="confetti" aria-hidden="true">
+                      {Array.from({ length: 40 }, (_, i) => (
+                        <i
+                          key={i}
+                          style={{
+                            left: `${(i * 37) % 100}%`,
+                            background: config.palette[i % config.palette.length].color,
+                            animationDelay: `${(i % 7) * 0.08}s`,
+                            transform: `rotate(${i * 29}deg)`,
+                          }}
+                        />
                       ))}
-                    </ol>
-                  ) : (
-                    <p className="empty-history">{t.noHistory}</p>
+                    </div>
                   )}
-                  {wheel.results.length > 5 && (
-                    <button className="text-button" onClick={() => setAllHistory(!allHistory)}>
-                      {allHistory ? t.lessHistory : t.allHistory}
+                  <div className="spin-actions">
+                    <button className="primary spin-button" disabled={!canSpin} onClick={spin}>
+                      <RefreshCw size={20} className={spinning ? 'rotating' : ''} />
+                      {spinning ? t.spinning : t.spin}
+                      <ArrowRight size={19} />
                     </button>
-                  )}
-                </details>
+                    {(!enoughOptions || !available.length) && (
+                      <p>{!enoughOptions ? t.insufficient : t.exhausted}</p>
+                    )}
+                    {!available.length && wheel.options.length > 1 && (
+                      <button
+                        className="secondary"
+                        disabled={locked}
+                        onClick={() =>
+                          edit({ options: wheel.options.map((o) => ({ ...o, active: true })) })
+                        }
+                      >
+                        {t.reset}
+                      </button>
+                    )}
+                  </div>
+                  <details className="history">
+                    <summary className="history-heading">
+                      <History size={15} />
+                      <span>{t.history}</span>
+                      <span>{t.historyCount(wheel.results.length)}</span>
+                    </summary>
+                    {wheel.results.length ? (
+                      <ol>
+                        {(allHistory ? wheel.results : wheel.results.slice(0, 5)).map((r) => (
+                          <li key={r.id}>
+                            <span className="history-marker" />
+                            <strong>{r.label}</strong>
+                            <span
+                              className="result-source"
+                              title={r.source === 'server' ? t.server : t.offlineResult}
+                            >
+                              {r.source === 'server' ? (
+                                <Wifi size={12} aria-label={t.server} />
+                              ) : (
+                                <WifiOff size={12} aria-label={t.offlineResult} />
+                              )}
+                            </span>
+                            <time
+                              dateTime={r.created_at}
+                              title={new Date(r.created_at).toLocaleString('el-GR')}
+                            >
+                              {new Date(r.created_at).toLocaleTimeString('el-GR', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </time>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p className="empty-history">{t.noHistory}</p>
+                    )}
+                    {wheel.results.length > 5 && (
+                      <button className="text-button" onClick={() => setAllHistory(!allHistory)}>
+                        {allHistory ? t.lessHistory : t.allHistory}
+                      </button>
+                    )}
+                  </details>
+                </div>
               </section>
               <div className="editor-column" hidden={screen !== 'options'}>
                 <div className="options-toolbar">

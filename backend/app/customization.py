@@ -36,14 +36,18 @@ class PaletteColor(BaseModel):
 class Customization(BaseModel):
     model_config = ConfigDict(extra="forbid")
     version: Literal[1] = 1
-    spin_sound: Literal["none", "ticking", "drum", "pulse"] = "ticking"
+    spin_sound: Literal[
+        "none", "ticking", "drum", "pulse", "woodblock", "shaker", "heartbeat", "arpeggio", "space"
+    ] = "ticking"
     spin_volume: int = Field(default=50, ge=0, le=100)
     show_duplicates: bool = True
     slow_spin: bool = False
     show_title: bool = True
     duration: int = Field(default=10, ge=1, le=60)
     max_names: int = Field(default=1000, ge=4, le=1000)
-    result_sound: Literal["none", "applause", "chime", "fanfare"] = "applause"
+    result_sound: Literal[
+        "none", "applause", "chime", "fanfare", "victory", "magic", "bell", "arcade", "gong"
+    ] = "applause"
     result_volume: int = Field(default=50, ge=0, le=100)
     animate_winner: bool = False
     confetti: bool = True

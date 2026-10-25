@@ -79,6 +79,11 @@ and templates. The editor stays mounted while hidden to preserve unfinished inpu
 through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON
 settings and optional option images. IndexedDB version 2 migrates old local wheels.
 `lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
+Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
+nodes are disconnected and removed while looping, keeping resource use bounded.
+The home wheel uses equal flexible rows above and below the wheel itself, centering it
+vertically between the header and the reserved bottom area. Short viewports reduce the
+wheel size; long results/history can grow the page instead of overlapping controls.
 Completed draws snapshot their settings; an ID-based durable removal queue runs after
 five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
 Conflict/session-loss copies take their pending jobs with them; execution reads and

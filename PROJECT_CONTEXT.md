@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Home simplified; customization moved to Options.
+Last updated: 2026-10-25. Expanded built-in sounds and vertically centered home wheel.
 
 ## Product and implemented scope
 
@@ -22,6 +22,11 @@ The home screen now centers the wheel and spin button, with collapsed history. E
 templates, save/share and the Customize button live in Options on desktop and mobile.
 The marketing intro, beta badge and redundant footer copy were removed. Offline status
 and PWA install/update controls remain available. Hidden editor state stays mounted.
+Home now uses equal flexible rows around the wheel, centered horizontally and vertically
+between header/bottom reservations; small-height screens shrink the wheel to keep actions
+accessible. Eight built-in spin sounds and eight result sounds are synthesized locally.
+Existing sound defaults/mute remain unchanged. New allowed IDs keep configuration version 1:
+no JSON structure or SQL schema changed, so no data migration is required.
 
 ## Architecture and important files
 
@@ -53,17 +58,26 @@ Cookie loss copies local work to a new isolated workspace; no cross-device recov
 
 ## Actual verification
 
+Latest sounds/centering change (2026-10-25): 41 pytest passed (23.96 s), Alembic check,
+TypeScript, ESLint and production build passed. Nine targeted production E2E passed
+(36.8 s): all 16 audio presets/stop/volume/mute, new sound persistence after reload,
+copy/JSON/share, offline synchronization, reduced motion, presentation and responsive
+accessibility at 360/390/768/1440px. The responsive checks assert actual wheel-center
+coordinates. Additional browser measurements/screenshots verified 360x640, 390x900,
+768x1000 and 1440x900; wheel/button remain visible on the short mobile viewport.
+The earlier full 30-test run below predates this sound/centering change.
+
 2026-10-25 layout change: TypeScript, ESLint and production build passed. All 30 existing
 E2E scenarios passed with the new navigation (2.9 minutes). Home screenshots inspected
 at 360/390/768/1440px and Options at mobile/desktop sizes, without horizontal overflow.
 Responsive checks now also verify hidden editor/templates on home and Options-to-Customize.
 
-- Backend (2026-10-24; unchanged by layout work): 41 pytest passed (12.56 s), including
+- Backend (latest rerun 2026-10-25): 41 pytest passed (23.96 s), including
   ownership, invalid configurations/images,
   migration from the old DB, persistence across process restart, idempotency, sharing/
   revocation, 10,000-entry eligibility and last-entry no-repeat. Alembic check passed.
 - Frontend: TypeScript, ESLint and production build passed; 24 PWA precache entries,
-  approximately 903 KiB. Unit tests (2026-10-24): 10 passed, including 6,600 projection/winner cases
+  approximately 905 KiB. Unit tests (2026-10-24): 10 passed, including 6,600 projection/winner cases
   and 20,100 original geometry positions.
 - Full Chromium production-PWA E2E (2026-10-25): 30 passed together in 2.9 minutes. Covers all
   customization tabs, cancel/refresh, real audio graph/volume/mute, image uploads,

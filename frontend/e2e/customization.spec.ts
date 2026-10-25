@@ -201,7 +201,16 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   expect(observed.starts).toBeGreaterThan(stopped)
   expect(observed.volumes.at(-1)).toBeCloseTo(0.35)
   expect(observed.stops).toBeGreaterThan(0)
-  for (const choice of ['applause', 'chime', 'fanfare']) {
+  for (const choice of [
+    'applause',
+    'chime',
+    'fanfare',
+    'victory',
+    'magic',
+    'bell',
+    'arcade',
+    'gong',
+  ]) {
     await dialog.getByLabel('Ήχος αποτελέσματος', { exact: true }).selectOption(choice)
     const before = await page.evaluate(
       () => (window as unknown as { observedAudio: { starts: number } }).observedAudio.starts,
@@ -215,7 +224,16 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
     await dialog.getByRole('button', { name: 'Διακοπή', exact: true }).click()
   }
   await dialog.getByRole('tab', { name: 'Κατά την περιστροφή' }).click()
-  for (const choice of ['ticking', 'drum', 'pulse']) {
+  for (const choice of [
+    'ticking',
+    'drum',
+    'pulse',
+    'woodblock',
+    'shaker',
+    'heartbeat',
+    'arpeggio',
+    'space',
+  ]) {
     await dialog.getByLabel('Ήχος περιστροφής', { exact: true }).selectOption(choice)
     const before = await page.evaluate(
       () => (window as unknown as { observedAudio: { starts: number } }).observedAudio.starts,
@@ -230,8 +248,20 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   }
   await dialog.getByLabel('Ήχος περιστροφής', { exact: true }).selectOption('none')
   await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()
+  await dialog.getByLabel('Ήχος περιστροφής', { exact: true }).selectOption('arpeggio')
+  await dialog.getByRole('tab', { name: 'Μετά την περιστροφή' }).click()
+  await dialog.getByLabel('Ήχος αποτελέσματος', { exact: true }).selectOption('magic')
+  await save(page)
+  await page.reload()
+  dialog = await customize(page)
+  await expect(dialog.getByLabel('Ήχος περιστροφής', { exact: true })).toHaveValue('arpeggio')
+  await dialog.getByRole('tab', { name: 'Μετά την περιστροφή' }).click()
+  await expect(dialog.getByLabel('Ήχος αποτελέσματος', { exact: true })).toHaveValue('magic')
+  await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()
   await dialog.getByRole('button', { name: 'Ακύρωση' }).click()
+  // Reload resets global sound to mute; toggle it on and back off explicitly.
   await showScreen(page, 'wheel')
+  await page.getByRole('button', { name: 'Ενεργοποίηση ήχου', exact: true }).click()
   await page.getByRole('button', { name: 'Απενεργοποίηση ήχου', exact: true }).click()
   dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()

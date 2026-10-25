@@ -1843,3 +1843,46 @@ input[type='color'] {
 .presenting .wheel-legend {
   color: var(--presentation-ink);
 }
+
+/* Equal space above and below the wheel keeps its center in the viewport. */
+.home:not(.presenting) {
+  padding-top: 0;
+}
+.home:not(.presenting) > main {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 192px);
+}
+.home:not(.presenting) .workspace {
+  display: grid;
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+}
+.home:not(.presenting) .spinner-panel {
+  display: grid;
+  grid-template-rows: minmax(min-content, 1fr) auto minmax(min-content, 1fr);
+  padding-top: 0;
+}
+.wheel-top {
+  align-self: end;
+}
+.home:not(.presenting) .wheel-stage {
+  width: min(100%, 440px, max(180px, calc(100dvh - 440px)));
+  max-width: none;
+}
+.home:not(.presenting) .history {
+  margin-top: 12px;
+  padding-top: 8px;
+}
+.home:not(.presenting) .history-heading {
+  margin-bottom: 0;
+}
+.home:not(.presenting) > footer {
+  min-height: 96px;
+}
+@media (max-width: 760px) {
+  .home:not(.presenting) > main {
+    min-height: calc(100dvh - 155px - env(safe-area-inset-bottom));
+  }
+}
