@@ -105,7 +105,7 @@ The wheel toolbar contains Customize (gear), sound and fullscreen, with accessib
 Pause and its local state were removed. All three buttons use `locked`, preventing click/
 keyboard activation during draws and showing the existing `button:disabled` not-allowed
 cursor. The Entries toolbar offers Shuffle/Sort/Clear and hides on Results;
-the Results panel keeps its separate Clear. Sort uses English collator order
+the Results toolbar has Sort/Clear/Export results. Entry Sort uses English collator order
 (numeric, case-insensitive). Both reorder actions
 preserve IDs/images/active flags/duplicates, reset pagination and use the same autosave.
 All actions lock during draws. Shuffle uses unbiased Fisher-Yates/Web Crypto with the
@@ -113,6 +113,12 @@ same 10,000-entry limit as the wheel; the old 200-entry RNG bound was corrected.
 The desktop top navigation contains Wheel/My wheels. More options below the sidebar
 opens the full editor, sharing and templates; mobile retains its Entries navigation.
 The full editor also retains its Customize shortcut.
+Results sorting is a local display preference per wheel, toggling A-Z/newest-first without
+changing result IDs, source or stored chronology. Export uses that full ordered history,
+not the five-row preview, and is disabled during a draw to preserve the result reveal.
+`lib/results.ts` serializes CSV with UTF-8 BOM, quoted cells/escaped quotes and CRLF;
+formula-like text gets a leading apostrophe. Downloads include title, label, UTC date,
+source, result UUID and entry UUID. No server request or new schema is needed.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.

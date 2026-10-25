@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Pause removed; Customize/sound/fullscreen locked during draws.
+Last updated: 2026-10-25. Results toolbar: Sort / Clear / Export results (CSV).
 
 ## Product and current UI
 
@@ -36,7 +36,13 @@ Dialog's optional headerClose hides its duplicate close icon for this popup only
 The wheel toolbar contains Customize (gear), sound and fullscreen only. Pause was removed.
 All three controls use the draw/pending-operation lock and show a not-allowed cursor
 while disabled, restoring after completion. Entries
-has Shuffle/Sort/Clear directly below the tabs; Results retains its own history Clear.
+has Shuffle/Sort/Clear directly below the tabs; Results has Sort/Clear/Export results.
+Result Sort toggles natural A-Z/newest-first display, remembers preference in localStorage
+per wheel and never rewrites draw records. CSV exports all visible-history records for
+the current wheel in the selected order (not just five recent rows), retaining duplicates.
+`lib/results.ts` quotes CSV cells, emits UTF-8 BOM/CRLF, UTC timestamps, source and IDs,
+and prefixes formula-like text with an apostrophe for safe spreadsheet opening. Export
+works offline and locks during draws; Clear uses the existing durable history reset.
 The entry toolbar is hidden while Results is selected. Shuffle and numeric,
 case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
 and lock during draws. Desktop navigation is Wheel/My wheels. More options opens the
@@ -119,6 +125,14 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Results toolbar: typecheck, lint, production build and 5 relevant E2E passed (38.0s),
+including keyboard/accessibility at 360/390/768/1440px and disabled draw controls.
+Manual production Chromium checks passed for natural sort/toggle, per-wheel refresh
+preference, all-history CSV online/offline and independent offline Clear after refresh.
+Both CSV downloads parsed successfully: eight records despite five displayed rows,
+duplicate names, Unicode, quotes/newlines, formula protection, UTC, IDs and sources.
+Backend/schema unchanged; pytest not rerun for this toolbar change.
 
 Pause/toolbar-lock follow-up: typecheck, lint, build and 6 relevant E2E passed (38.0s).
 Verified no Pause control, continuous idle before/after draws, all three toolbar buttons

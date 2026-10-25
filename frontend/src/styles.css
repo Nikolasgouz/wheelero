@@ -1921,6 +1921,13 @@ input[type='color'] {
   padding: 8px 6px;
   font-size: 12px;
 }
+.result-toolbar button:last-child {
+  flex: 1.7;
+}
+.result-toolbar button[aria-pressed='true'] {
+  background: var(--tint);
+  border-color: var(--primary);
+}
 .sidebar-more-options {
   flex-shrink: 0;
   min-height: 44px;
@@ -1971,11 +1978,6 @@ input[type='color'] {
   margin: 0 0 12px;
   color: var(--muted);
   font-size: 12px;
-}
-.sidebar-panel .history-heading button {
-  flex-shrink: 0;
-  min-height: 44px;
-  gap: 4px;
 }
 .sidebar-entry.used input {
   text-decoration: line-through;

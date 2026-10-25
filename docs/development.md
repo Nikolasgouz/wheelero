@@ -63,10 +63,13 @@ Keep the pre-draw sidebar snapshot until animation completion: subscribing direc
 the new store results would expose the winner and no-repeat marker before the wheel stops.
 The wheel toolbar contains Customize, sound and fullscreen; all must stay disabled with
 the not-allowed cursor during draws/pending operations. There is no Pause. The Entries action
-row holds Shuffle/Sort/Clear and hides on Results, which has its own Clear. Preserve option IDs,
+row holds Shuffle/Sort/Clear and hides on Results, which has Sort/Clear/Export results. Preserve option IDs,
 active flags and images on reordering; sorting must retain duplicate entries. The full
 editor remains reachable through More options; desktop navigation has no Entries button.
 Keep Clear entries/history independent and locked during draws. History clearing is a
 pending local mutation, not a local-only array reset. Preserve retry records server-side,
 apply clear before new offline uploads, and never reactivate no-repeat entries implicitly.
 IndexedDB v4 initializes the clear flag; new local wheels must initialize it as well.
+Result sort changes display only. CSV export must include the whole current wheel history,
+retain duplicate wins, quote newlines/commas/quotes and protect formula-like user input.
+Keep export disabled during draws; never bypass the pre-draw sidebar snapshot.

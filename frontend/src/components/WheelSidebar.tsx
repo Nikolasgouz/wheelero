@@ -1,9 +1,20 @@
-import { useEffect, useState } from 'react'
-import { ArrowDownAZ, History, Pencil, Plus, Shuffle, Trash2, Wifi, WifiOff } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  ArrowDownAZ,
+  Download,
+  History,
+  Pencil,
+  Plus,
+  Shuffle,
+  Trash2,
+  Wifi,
+  WifiOff,
+} from 'lucide-react'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
 import { shuffled } from '../lib/random'
+import { resultsCsv } from '../lib/results'
 
 const alphabetical = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
@@ -29,10 +40,23 @@ export function WheelSidebar({
   )
   const [page, setPage] = useState(0)
   const [allHistory, setAllHistory] = useState(false)
+  const [sortedResults, setSortedResults] = useState(
+    () => localStorage.getItem(`result-sort:${wheel.id}`) === 'true',
+  )
+  const results = useMemo(
+    () =>
+      sortedResults
+        ? [...wheel.results].sort((a, b) => alphabetical.compare(a.label, b.label))
+        : wheel.results,
+    [wheel.results, sortedResults],
+  )
   const currentPage = Math.min(page, Math.max(0, Math.ceil(wheel.options.length / 100) - 1))
   useEffect(() => {
     localStorage.setItem(`sidebar-draft:${wheel.id}`, newEntry)
   }, [newEntry, wheel.id])
+  useEffect(() => {
+    localStorage.setItem(`result-sort:${wheel.id}`, String(sortedResults))
+  }, [sortedResults, wheel.id])
 
   return (
     <aside className="wheel-sidebar card" aria-label={t.wheelDetails}>
@@ -110,6 +134,54 @@ export function WheelSidebar({
           }}
         >
           <Trash2 size={14} /> {t.clear}
+        </button>
+      </fieldset>
+      <fieldset
+        className="sidebar-actions result-toolbar"
+        disabled={disabled}
+        aria-label={t.resultActions}
+        hidden={tab !== 'results'}
+      >
+        <button
+          className="secondary"
+          disabled={results.length < 2}
+          aria-pressed={sortedResults}
+          onClick={() => {
+            setSortedResults(!sortedResults)
+            setAllHistory(true)
+          }}
+        >
+          <ArrowDownAZ size={14} /> {t.sort}
+        </button>
+        <button
+          className="secondary"
+          aria-label={t.clearResults}
+          disabled={!results.length}
+          onClick={() => {
+            clear('results')
+            setAllHistory(false)
+            setSortedResults(false)
+          }}
+        >
+          <Trash2 size={14} /> {t.clear}
+        </button>
+        <button
+          className="secondary"
+          disabled={!results.length}
+          onClick={() => {
+            const url = URL.createObjectURL(
+              new Blob([resultsCsv(wheel.title, results)], { type: 'text/csv;charset=utf-8' }),
+            )
+            const link = document.createElement('a')
+            link.href = url
+            link.download = `gyrna-results-${wheel.id}-${new Date().toISOString().slice(0, 10)}.csv`
+            document.body.append(link)
+            link.click()
+            link.remove()
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+          }}
+        >
+          <Download size={14} /> {t.exportResults}
         </button>
       </fieldset>
       <div
@@ -234,23 +306,12 @@ export function WheelSidebar({
         <div className="history">
           <div className="history-heading">
             <History size={15} />
-            <span>{t.history}</span>
+            <span>{sortedResults ? t.sortedResults : t.history}</span>
             <span>{t.historyCount(wheel.results.length)}</span>
-            <button
-              className="text-button"
-              aria-label={t.clearResults}
-              disabled={disabled || !wheel.results.length}
-              onClick={() => {
-                clear('results')
-                setAllHistory(false)
-              }}
-            >
-              <Trash2 size={14} /> {t.clear}
-            </button>
           </div>
           {wheel.results.length ? (
             <ol>
-              {(allHistory ? wheel.results : wheel.results.slice(0, 5)).map((r) => (
+              {(allHistory ? results : results.slice(0, 5)).map((r) => (
                 <li key={r.id}>
                   <span className="history-marker" />
                   <strong>{r.label}</strong>

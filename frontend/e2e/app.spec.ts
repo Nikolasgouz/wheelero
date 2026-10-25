@@ -79,7 +79,9 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await expect(page.locator('.home')).not.toHaveClass(/presenting/)
   for (const name of ['Shuffle', 'Sort', 'Clear entries'])
     await expect(
-      page.locator('.sidebar-actions').getByRole('button', { name, exact: true }),
+      page
+        .locator('.sidebar-actions:not(.result-toolbar)')
+        .getByRole('button', { name, exact: true }),
     ).toBeDisabled()
   await expect
     .poll(async () => {
@@ -88,6 +90,10 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
     })
     .toBe(1)
   await page.getByRole('tab', { name: 'Results', exact: true }).click()
+  for (const button of await page.locator('.result-toolbar button').all()) {
+    await expect(button).toBeDisabled()
+    await expect(button).toHaveCSS('cursor', 'not-allowed')
+  }
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
   await expect(page.locator('#sidebar-results .history li')).toHaveCount(0)
   await expect(page.locator('#sidebar-tab-results .count-badge')).toHaveText('0')
@@ -278,7 +284,11 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(
       page.locator('.desktop-nav').getByRole('button', { name: 'Entries', exact: true }),
     ).toHaveCount(0)
-    await expect(page.locator('.sidebar-actions button')).toHaveText(['Shuffle', 'Sort', 'Clear'])
+    await expect(page.locator('.sidebar-actions:not(.result-toolbar) button')).toHaveText([
+      'Shuffle',
+      'Sort',
+      'Clear',
+    ])
     await expect(page.locator('.wheel-tools button').first()).toHaveAttribute(
       'aria-label',
       'Customize',
@@ -309,6 +319,11 @@ for (const width of [360, 390, 768, 1440]) {
     await page.keyboard.press('ArrowRight')
     await expect(page.getByRole('tab', { name: 'Results', exact: true })).toBeFocused()
     await expect(page.locator('#sidebar-results')).toBeVisible()
+    await expect(page.locator('.result-toolbar button')).toHaveText([
+      'Sort',
+      'Clear',
+      'Export results',
+    ])
     await page.keyboard.press('ArrowLeft')
     await expect(page.locator('#sidebar-entries')).toBeVisible()
     await page.evaluate(() => window.scrollTo(0, 0))
