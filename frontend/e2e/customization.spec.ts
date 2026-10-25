@@ -9,7 +9,7 @@ test.use({ actionTimeout: 15000 })
 async function ready(page: Page) {
   await page.goto('/')
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
 async function state(page: Page): Promise<SavedState> {
   return page.evaluate(async () => {
@@ -35,7 +35,7 @@ async function save(page: Page) {
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
 
 test('configuration and uploaded assets survive copy, JSON and public snapshot copying', async ({
@@ -356,7 +356,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   const remote: Wheel[] = await (await page.request.get('/api/wheels')).json()
   expect(remote[0].customization).toEqual(config)
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.locator('.confetti')).toHaveCount(0)
@@ -432,7 +432,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await showScreen(page, 'options')
   await page.getByRole('switch', { name: 'No repeats', exact: true }).check()
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
   const winner = (await state(page)).wheels[0].results[0]
@@ -440,7 +440,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(5)
   expect((await state(page)).wheels[0].options.some((o) => o.id === winner.option_id)).toBe(false)
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await page
     .locator('.inline-result')
@@ -453,12 +453,12 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await showScreen(page, 'options')
   for (let i = 0; i < 3; i++) await page.locator('.remove-option').first().click()
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(0)
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
   dialog = await customize(page)
   await dialog.getByRole('button', { name: 'Cancel' }).click()
 })
@@ -480,7 +480,7 @@ test('pending automatic removal follows the conflict copy without modifying the 
   const session = await (await page.request.get('/api/session')).json()
   await context.setOffline(true)
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
   const response = await page.request.put(`/api/wheels/${original.id}`, {
     headers: { 'X-CSRF-Token': session.csrf },
@@ -532,7 +532,7 @@ test('customization and embedded images work offline and synchronize once', asyn
       .evaluate((img) => (img as HTMLImageElement).naturalWidth),
   ).toBeGreaterThan(0)
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('Offline draw')
   await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await context.setOffline(false)
@@ -579,7 +579,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
     })
   })
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Entries', exact: true })).toBeDisabled()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   const data = await state(page)

@@ -104,14 +104,25 @@ settings and optional option images. IndexedDB version 3 includes both local mig
 `lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
-The home wheel uses equal flexible rows above and below the wheel itself, centering it
-within its column, with stage diameter up to 820px according to available width/height.
+The desktop home uses the viewport width with a 340px sidebar 16px from the right edge.
+Its stage grows up to 960px, constrained by viewport height and sidebar space. A bounded
+left inset centers the wheel on the viewport when possible, keeping it clear of the
+sidebar when space is limited. Small screens retain a centered, stacked layout.
 The rim uses 96% of that stage with a thin border, leaving more area for the segments.
 SVG label sizes depend on entry count and displayed label length; up to 10 entries use
 24-unit text when space permits. Long labels shrink, and the numbered large-list mode
 remains unchanged. Sector angles, palette settings and draw geometry are unchanged.
 Short viewports reduce its size; the sidebar scrolls independently without stretching
 the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
+The stationary center button starts the same guarded draw flow as result actions and
+supports native keyboard activation. With a custom center image its hit area is
+transparent and its label sits just below the image, keeping small images visible.
+When eligible and awaiting a first draw, `Wheel.tsx` uses Web Animations for a silent
+120-second idle revolution without React updates each frame. Pause/resume and live
+reduced-motion changes are respected; hidden screens/dialogs and operations stop idle
+motion. `lib/motion.ts` captures the actual rendered angle before cancelling idle motion.
+The draw animation starts from that angle, still targeting the backend/offline winner.
+Results stay stationary until another spin or edit; idle animation never selects a winner.
 Completed draws snapshot their settings; an ID-based durable removal queue runs after
 five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
 Conflict/session-loss copies take their pending jobs with them; execution reads and

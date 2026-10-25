@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Enlarged wheel and labels after the English/names release.
+Last updated: 2026-10-25. Centered larger wheel, center spin control and idle motion.
 
 ## Product and current UI
 
@@ -16,15 +16,24 @@ IndexedDB v3 adds this example once to existing installations, preserving old wh
 settings, results and user-written messages. It selects the example unless a draw is
 pending. Close old app tabs if an upgrade-blocked message appears. No SQLite shape change.
 
-Home now has a wheel stage up to 820px and an Entries/Results sidebar on the right (>=1024px).
+Home now has a wheel stage up to 960px and an Entries/Results sidebar on the right (>=1024px).
+Desktop layout spans the viewport, with a 340px sidebar 16px from its right edge.
+The wheel shifts toward the viewport center as available space allows. At 1440x900
+its stage is 760px wide, centered at x=680 (previously 660px at x=532); at 1920x1080
+it is 940px wide and centered at x=960.
 The rim fills 96% of the stage with a thinner border. Short-list names use larger text,
-shrinking for long labels; numbered large lists are unchanged. At 1440x900, the stage
-grew from 580px to 660px and the colored disk from about 483px to 594px (~23%).
+shrinking for long labels; numbered large lists are unchanged.
 Below 1024px the sidebar sits underneath; on phones the wheel section uses compact flow.
 Entries support edit/add/delete with 100-row pagination, shared autosave and draw locks.
 Results show source/time, recent/all history and become selected after a completed draw.
 Entries remains a separate full editor with Customize, sharing and templates. Both entry
 editors use distinct labels/draft keys and preserve incomplete input while hidden.
+
+Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
+guarded draw flow. Custom center images remain visible with a transparent hit area.
+Eligible wheels idle silently at one turn per 120 seconds. Pause/resume is in the
+wheel toolbar; live reduced-motion changes disable idle animation. Results remain
+stationary; editing/selecting a wheel resumes idle motion. No selection occurs on idle.
 
 Customize has three transactional tabs: During spin / After spin / Appearance. Settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
@@ -52,6 +61,8 @@ refresh, sharing, copies, JSON and offline sync. See docs/customization.md for p
 - `lib/random.ts`, `geometry.ts`, `presentation.ts`: independent RNG, geometry and visual
   projection of at most 1,000 entries. All eligible entries retain their probability;
   the displayed wheel always contains the winning ID.
+- `lib/motion.ts`: capture the rendered angle and cancel idle animation before a draw.
+  `components/Wheel.tsx` owns Web Animations idle motion; the center control does not rotate.
 - `components/WheelSidebar.tsx`: home entries and history; `screens/Editor.tsx`: full editor.
 - `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: draft settings, bounded
   uploads and renderer. OK waits for uploads and local durable storage.
@@ -69,11 +80,16 @@ new isolated workspace; no cross-device recovery.
 
 ## Actual verification
 
-Wheel-size follow-up: TypeScript, ESLint, 10 unit tests and production build passed.
-All 9 relevant E2E passed (45.1s): four responsive/accessibility sizes, draw/pointer and
-refresh, reduced motion, entry images, 1,000-entry projection, palettes/center sizes.
-Desktop/mobile screenshots visually inspected; no horizontal overflow. Wheel of Names
-was inspected in live Chromium for proportions. No backend or stored-settings changes.
+Center-spin/idle release: TypeScript, ESLint, 10 unit tests and production build passed.
+All 30 E2E passed (3.2min). After making the center-image hit area transparent, all 4
+image/palette/copy/offline checks passed again. The final build precaches 24 assets.
+Browser inspection verified idle/pause/resume, live reduced-motion changes, a continuous
+start from the current angle, a real 10-second transition, one draw request and an
+actual rendered pointer matching the stationary winner. Enter and Space both work.
+An XS center image stays visible even on hover, with its button label below it.
+Responsive/accessibility checks passed at 360/390/768/1440px; manual layout measurements
+also passed at 1024/1366/1920px. Desktop/mobile screenshots visually inspected, no
+horizontal overflow. No backend, data schema or saved-customization changes.
 
 English/names release (2026-10-25): TypeScript, ESLint, 10 unit tests, 41 pytest tests
 (19.17s), production build and all 30 E2E tests passed (2.7min). PWA precaches 24 assets.

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
+import { freezeWheel } from '../lib/motion'
 import { indexAtPointer, sectorPath } from '../lib/geometry'
 import { textColor } from '../lib/presentation'
 import type { Customization } from '../customization'
@@ -12,18 +13,45 @@ export function Wheel({
   spinning,
   config,
   winnerId,
+  svg,
+  idle,
+  canSpin,
+  onSpin,
 }: {
   options: Option[]
   rotation: number
   spinning: boolean
   config: Customization
   winnerId: string | null
+  svg: RefObject<SVGSVGElement | null>
+  idle: boolean
+  canSpin: boolean
+  onSpin: () => void
 }) {
-  const svg = useRef<SVGSVGElement>(null)
   const pointer = useRef<HTMLDivElement>(null)
   const count = options.length
+  const centerImage = config.mode === 'colors' && config.center_image
   const colors = config.palette.filter((color) => color.enabled).map((color) => color.color)
   const paletteKey = colors.join(',')
+  useEffect(() => {
+    if (!idle) return
+    const node = svg.current!
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+    const start = () => {
+      const angle = freezeWheel(node)
+      if (!reduced.matches)
+        node.animate(
+          [{ transform: `rotate(${angle}deg)` }, { transform: `rotate(${angle + 360}deg)` }],
+          { duration: 120000, iterations: Infinity, easing: 'linear' },
+        )
+    }
+    start()
+    reduced.addEventListener('change', start)
+    return () => {
+      reduced.removeEventListener('change', start)
+      freezeWheel(node)
+    }
+  }, [idle, rotation, svg])
   useEffect(() => {
     if (!spinning || !config.pointer_changes) return
     const palette = paletteKey.split(',')
@@ -36,7 +64,7 @@ export function Wheel({
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [spinning, config.pointer_changes, count, paletteKey])
+  }, [spinning, config.pointer_changes, count, paletteKey, svg])
   return (
     <div className={`wheel-stage ${spinning ? 'is-spinning' : ''}`}>
       <span className="orbit-dot dot-one" />
@@ -127,7 +155,10 @@ export function Wheel({
                       fontSize={
                         count > 48
                           ? 2
-                          : Math.min(count > 16 ? 8 : count > 10 ? 12 : 24, 160 / visibleLabel.length)
+                          : Math.min(
+                              count > 16 ? 8 : count > 10 ? 12 : 24,
+                              160 / visibleLabel.length,
+                            )
                       }
                       fontWeight="650"
                       fill={config.mode === 'image' ? '#161322' : textColor(fill)}
@@ -145,21 +176,30 @@ export function Wheel({
             )
           })}
         </svg>
-        {config.mode === 'colors' && config.center_image ? (
+        {centerImage && (
           <img
             className="wheel-center-image"
-            src={config.center_image}
+            src={centerImage}
             alt=""
             style={{
               width: `${sizes[config.center_size]}%`,
               height: `${sizes[config.center_size]}%`,
             }}
           />
-        ) : (
-          <div className="wheel-hub" aria-hidden="true">
-            <span>γ.</span>
-          </div>
         )}
+        <button
+          className={`wheel-spin-control ${centerImage ? 'with-center-image' : ''}`}
+          aria-label={t.spin}
+          disabled={!canSpin}
+          onClick={onSpin}
+          style={
+            centerImage
+              ? { width: `${sizes[config.center_size]}%`, height: `${sizes[config.center_size]}%` }
+              : undefined
+          }
+        >
+          <span>{spinning ? t.spinning : t.spin}</span>
+        </button>
       </div>
     </div>
   )

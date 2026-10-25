@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright'
 async function ready(page: Page) {
   await page.goto('/')
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await expect
     .poll(async () => {
       const response = await page.request.get('/api/wheels')
@@ -18,6 +18,20 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   page,
 }) => {
   await ready(page)
+  await expect
+    .poll(() =>
+      page
+        .locator('.wheel-svg')
+        .evaluate((svg) =>
+          svg.getAnimations().some((animation) => animation.playState === 'running'),
+        ),
+    )
+    .toBe(true)
+  await page.getByRole('button', { name: 'Pause idle rotation', exact: true }).click()
+  await expect
+    .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
+    .toBe(0)
+  await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
   await page.getByLabel('Entry 1', { exact: true }).fill('Πίτσα παρέας 🍕')
   await page.getByLabel('New entry…', { exact: true }).fill('Παγωτό 🍦')
   await page.getByRole('button', { name: 'Add entry', exact: true }).click()
@@ -29,7 +43,8 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
+  await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
@@ -114,11 +129,11 @@ test('production service worker: offline reload, edit, draw and idempotent resyn
   await context.setOffline(true)
   await page.reload()
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'options')
   await page.getByLabel('Wheel title', { exact: true }).fill('Χωρίς σύνδεση 🏕️')
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('Offline draw')
   await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await page.reload()
@@ -174,14 +189,14 @@ test('bulk blanks, duplicate removal, 200 entries and no-repeat exhaustion', asy
   await page.getByRole('switch', { name: 'No repeats' }).check()
   for (let i = 0; i < 2; i++) {
     await showScreen(page, 'wheel')
-    await page.getByRole('button', { name: 'Spin the wheel', exact: true }).click()
+    await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
     await expect(page.getByRole('dialog')).toBeVisible()
     await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   }
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
   await page.getByRole('button', { name: 'New round', exact: true }).first().click()
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Spin the wheel', exact: true })).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Add multiple entries' }).click()
   await page.getByLabel('One entry per line').fill('\nAnna\n\nAnna\n')
@@ -213,13 +228,15 @@ for (const width of [360, 390, 768, 1440]) {
     const wheelBounds = (await page.locator('.wheel-stage').boundingBox())!
     const wheelPanel = (await page.locator('.spinner-panel').boundingBox())!
     const sidebar = (await page.locator('.wheel-sidebar').boundingBox())!
-    expect(
-      Math.abs(wheelBounds.x + wheelBounds.width / 2 - wheelPanel.x - wheelPanel.width / 2),
-    ).toBeLessThan(2)
     if (width >= 1024) {
       expect(sidebar.x).toBeGreaterThan(wheelBounds.x + wheelBounds.width)
-      expect(wheelBounds.width).toBeGreaterThan(600)
+      expect(width - sidebar.x - sidebar.width).toBeLessThanOrEqual(17)
+      expect(Math.abs(wheelBounds.x + wheelBounds.width / 2 - width / 2)).toBeLessThan(100)
+      expect(wheelBounds.width).toBeGreaterThan(800)
     } else {
+      expect(
+        Math.abs(wheelBounds.x + wheelBounds.width / 2 - wheelPanel.x - wheelPanel.width / 2),
+      ).toBeLessThan(2)
       expect(sidebar.y).toBeGreaterThan(wheelBounds.y + wheelBounds.height)
     }
     await page.getByRole('tab', { name: 'Entries', exact: true }).focus()
@@ -265,8 +282,10 @@ for (const width of [360, 390, 768, 1440]) {
 test('reduced motion and keyboard modal dismissal', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await ready(page)
+  expect(await page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length)).toBe(0)
+  await expect(page.getByRole('button', { name: 'Pause idle rotation' })).toBeHidden()
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Spin the wheel', exact: true }).focus()
+  await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByRole('dialog')).toBeVisible()
   expect(

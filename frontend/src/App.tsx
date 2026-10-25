@@ -1,7 +1,6 @@
 import { ct } from './customization.i18n'
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import {
-  ArrowRight,
   Check,
   ChevronRight,
   CircleDot,
@@ -9,6 +8,8 @@ import {
   LayoutGrid,
   Maximize2,
   Moon,
+  Pause,
+  Play,
   Plus,
   RefreshCw,
   Settings2,
@@ -28,6 +29,7 @@ import { PwaControls } from './components/PwaControls'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
+import { freezeWheel } from './lib/motion'
 import { Editor } from './screens/Editor'
 import { WheelSidebar } from './components/WheelSidebar'
 import { Library } from './screens/Library'
@@ -57,6 +59,8 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [spinning, setSpinning] = useState(false)
   const [rotation, setRotation] = useState(0)
+  const wheelSvg = useRef<SVGSVGElement>(null)
+  const [idlePaused, setIdlePaused] = useState(false)
   const [spinOptions, setSpinOptions] = useState<Option[] | null>(null)
   const [result, setResult] = useState<DrawResult | null>(null)
   const [message, setMessage] = useState('')
@@ -167,6 +171,8 @@ export default function App() {
   }, [data, busy, run])
   function spin() {
     if (operation.current) return
+    const startAngle = freezeWheel(wheelSvg.current!)
+    setRotation(startAngle)
     stopSounds()
     run(async () => {
       setResult(null)
@@ -185,12 +191,11 @@ export default function App() {
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         )
         setRotation(
-          (current) =>
-            targetRotation(
-              current,
-              visible.findIndex((o) => o.id === outcome.result.option_id),
-              visible.length,
-            ) +
+          targetRotation(
+            startAngle,
+            visible.findIndex((o) => o.id === outcome.result.option_id),
+            visible.length,
+          ) +
             (config.slow_spin ? -3 : Math.max(0, Math.floor(config.duration / 2) - 5)) * 360,
         )
         if (soundEnabled.current) stop = playSound(config.spin_sound, config.spin_volume, true)
@@ -372,6 +377,14 @@ export default function App() {
                     </span>
                     <div className="wheel-tools">
                       <button
+                        className="icon-button idle-toggle"
+                        aria-label={idlePaused ? t.resumeIdle : t.pauseIdle}
+                        aria-pressed={idlePaused}
+                        onClick={() => setIdlePaused(!idlePaused)}
+                      >
+                        {idlePaused ? <Play size={18} /> : <Pause size={18} />}
+                      </button>
+                      <button
                         className="icon-button"
                         aria-label={sound ? t.soundOff : t.soundOn}
                         onClick={() => {
@@ -404,11 +417,17 @@ export default function App() {
                   <h1 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h1>
                 </div>
                 <Spinner
+                  svg={wheelSvg}
                   options={displayed}
                   rotation={rotation}
                   spinning={spinning}
                   config={config}
                   winnerId={result?.option_id ?? null}
+                  idle={
+                    canSpin && !idlePaused && !result && screen === 'wheel' && !shareOpen && !shared
+                  }
+                  canSpin={canSpin}
+                  onSpin={spin}
                 />
                 <div className="wheel-bottom">
                   {displayed.length !== available.length && (
@@ -472,11 +491,6 @@ export default function App() {
                     </div>
                   )}
                   <div className="spin-actions">
-                    <button className="primary spin-button" disabled={!canSpin} onClick={spin}>
-                      <RefreshCw size={20} className={spinning ? 'rotating' : ''} />
-                      {spinning ? t.spinning : t.spin}
-                      <ArrowRight size={19} />
-                    </button>
                     {(!enoughOptions || !available.length) && (
                       <p>{!enoughOptions ? t.insufficient : t.exhausted}</p>
                     )}
