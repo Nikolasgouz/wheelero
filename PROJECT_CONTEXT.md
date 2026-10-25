@@ -1,6 +1,6 @@
 # SPINARO — context
 
-Last updated: 2026-10-25. English legacy examples in My wheels and Notepad TXT export.
+Last updated: 2026-10-25. Center image feature removed; customization version 2.
 
 ## Product and current UI
 
@@ -81,7 +81,11 @@ the server hides cleared rows but retains them for draw retry idempotency. This 
 physical deletion of retry records. Conflicts retain the existing remote/copy behavior.
 
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
-guarded draw flow. Custom center images remain visible with a transparent hit area.
+guarded draw flow. Center images and their size control have been removed entirely.
+Customization v2 omits both fields in the API, new backups and renderer. Migration
+a14b6d0e235c upgrades saved wheels/shared snapshots; IndexedDB v7 upgrades local state.
+Version 1 backups are explicitly migrated during import in customizationMigration.ts.
+Other settings/images, IDs, revisions and results survive. The normal center spin button remains.
 Visible wheels idle silently at one turn per 30 seconds before and after every draw,
 including behind the result popup and during background sync. There is no manual Pause;
 live reduced-motion changes disable idle animation. The wheel lands on
@@ -98,7 +102,7 @@ All available settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
 Appearance offers 16 themes and 12 original named images in a scrollable responsive
-gallery, shared with center/entry image pickers. Nine new WebP assets are precached;
+gallery, shared with entry image pickers. Nine new WebP assets are precached;
 backend and frontend allowlists agree. No schema migration: palettes and image paths
 use the existing configuration fields. Theme labels/gallery names live in
 customization.i18n.ts; palette values in customization.ts. Existing three image URLs
@@ -127,10 +131,10 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
   ownership/CSRF/Origin checks. `/docs` is generated OpenAPI documentation.
 - `models.py`, `database.py`, `migrations/`: SQLite WAL/foreign keys, serialized writes;
   DB dependencies commit before success responses. No startup table creation.
-- `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
+- `customization.py`: version 2 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v6, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v7, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
   `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
@@ -160,6 +164,15 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Center-image removal (2026-10-25): typecheck, lint, production build, 10 unit tests,
+41 pytest tests and all 14 customization E2E tests passed (2.1min). Responsive/axe
+checks passed at 360/390/768/1440px; the 390px Appearance screenshot was inspected.
+Separate real-browser checks verified IndexedDB v6-to-v7 upgrade, server sync,
+center-button spin, old JSON backup import/current export and offline reload.
+An isolated SQLite migration verified private wheels and public snapshots retain
+IDs/revisions, background and entry images while removing center fields. The launcher
+rebuilt and migrated the local app. The complete non-customization E2E suite was not rerun.
 
 English library/TXT export: typecheck, lint, production build, 41 pytest (12.72s) and
 six relevant E2E passed (36.2s: draw/library/backup, legacy upgrade and four responsive

@@ -5,8 +5,9 @@ import { makeWheel } from './wheel'
 import { templates } from './templates'
 import { t } from '../i18n'
 import { translateEnglishDefaults } from './englishDefaults'
+import { upgradeCustomization } from './customizationMigration'
 
-const database = openDB('gyrna', 6, {
+const database = openDB('gyrna', 7, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -43,7 +44,13 @@ const database = openDB('gyrna', 6, {
             }
           }
         }
-        for (const wheel of state.wheels) translateEnglishDefaults(wheel)
+        if (oldVersion < 6) {
+          for (const wheel of state.wheels) translateEnglishDefaults(wheel)
+        }
+        for (const wheel of state.wheels) {
+          wheel.customization = upgradeCustomization(wheel.customization)
+          if (wheel.dirty) wheel.mutation_id = crypto.randomUUID()
+        }
         await store.put(state, 'current')
       }
     }

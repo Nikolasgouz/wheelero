@@ -46,6 +46,7 @@ test('configuration and uploaded assets survive copy, JSON and public snapshot c
   const dialog = await customize(page)
   await dialog.getByLabel('Spin duration (seconds) — value').fill('7')
   await dialog.getByRole('tab', { name: 'Appearance', exact: true }).click()
+  await dialog.getByLabel('Wheel background image', { exact: true }).check()
   await dialog.locator('input[type=file]').setInputFiles('public/images/sunset.webp')
   await expect(dialog.locator('.image-preview')).toHaveAttribute('src', /^data:image\/webp;base64,/)
   await save(page)
@@ -314,8 +315,8 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   await dialog.getByLabel('Apply a theme', { exact: true }).selectOption('ocean')
   await dialog.getByLabel('Enabled color 1', { exact: true }).uncheck()
   await dialog.getByLabel('Color 2', { exact: true }).fill('#112233')
-  await dialog.getByRole('button', { name: 'Aurora', exact: true }).click()
-  await dialog.getByLabel('Center image size', { exact: true }).selectOption('XXL')
+  await expect(dialog.getByLabel('Center image size')).toHaveCount(0)
+  await expect(dialog.getByRole('group', { name: 'Center image', exact: true })).toHaveCount(0)
   await dialog.getByLabel('Presentation background color', { exact: true }).fill('#aabbcc')
   await dialog.getByLabel('Show page gradient', { exact: true }).uncheck()
   await dialog.getByLabel('Text on the wheel', { exact: true }).selectOption('unless_image')
@@ -340,8 +341,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
     confetti: false,
     remove_button: false,
     removal_sound: true,
-    center_size: 'XXL',
-    center_image: '/images/aurora.webp',
+    version: 2,
     page_color: '#aabbcc',
     gradient: false,
     text: 'unless_image',
@@ -351,7 +351,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   })
   await page.reload()
   await expect(page.locator('.wheel-title')).toHaveCount(0)
-  await expect(page.locator('.wheel-center-image')).toHaveCSS('width', /.+px/)
+  await expect(page.locator('.wheel-center-image')).toHaveCount(0)
   await expect(page.locator('.wheel-rim')).toHaveCSS('box-shadow', 'none')
   expect((await state(page)).wheels[0].customization).toEqual(config)
   const remote: Wheel[] = await (await page.request.get('/api/wheels')).json()
@@ -521,16 +521,21 @@ test('customization and embedded images work offline and synchronize once', asyn
   let dialog = await customize(page)
   await dialog.getByLabel('Spin duration (seconds) — value').fill('1')
   await dialog.getByRole('tab', { name: 'Appearance', exact: true }).click()
+  await dialog.getByLabel('Wheel background image', { exact: true }).check()
   await dialog.getByRole('button', { name: 'Nebula', exact: true }).click()
-  await dialog.getByLabel('Center image size', { exact: true }).selectOption('L')
   await dialog.getByRole('button', { name: 'OK', exact: true }).click()
   await expect(dialog).toHaveCount(0)
   await page.reload()
-  await expect(page.locator('.wheel-center-image')).toHaveAttribute('src', '/images/nebula.webp')
+  await expect(page.locator('.wheel-svg > image')).toHaveAttribute('href', '/images/nebula.webp')
   expect(
     await page
-      .locator('.wheel-center-image')
-      .evaluate((img) => (img as HTMLImageElement).naturalWidth),
+      .locator('.wheel-svg > image')
+      .evaluate(async (svg) => {
+        const img = new Image()
+        img.src = svg.getAttribute('href')!
+        await img.decode()
+        return img.naturalWidth
+      }),
   ).toBeGreaterThan(0)
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
@@ -542,9 +547,9 @@ test('customization and embedded images work offline and synchronize once', asyn
   await expect
     .poll(async () => {
       const wheels: Wheel[] = await (await page.request.get('/api/wheels')).json()
-      return wheels[0].customization.center_size
+      return wheels[0].customization.wheel_image
     })
-    .toBe('L')
+    .toBe('/images/nebula.webp')
   const wheels: Wheel[] = await (await page.request.get('/api/wheels')).json()
   expect(wheels[0].results).toHaveLength(1)
   dialog = await customize(page)
@@ -603,7 +608,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   await expect(page.locator('.confetti i')).toHaveCount(40)
 })
 
-test('palette, all center sizes and presentation background are applied to the renderer', async ({
+test('palette and presentation background are applied to the renderer', async ({
   page,
 }) => {
   await ready(page)
@@ -614,7 +619,6 @@ test('palette, all center sizes and presentation background are applied to the r
   await expect(dialog.getByLabel('Enabled color 1', { exact: true })).toBeDisabled()
   await dialog.getByLabel('Color 1', { exact: true }).fill('#010203')
   await dialog.getByLabel('Segment borders', { exact: true }).check()
-  await dialog.getByRole('button', { name: 'Aurora', exact: true }).click()
   await dialog.getByLabel('Presentation background color', { exact: true }).fill('#112233')
   await dialog.getByLabel('Show page gradient', { exact: true }).uncheck()
   await save(page)
@@ -627,24 +631,6 @@ test('palette, all center sizes and presentation background are applied to the r
     '#343044',
   )
   await expect(page.locator('.wheel-svg text').first()).toHaveAttribute('fill', '#ffffff')
-  for (const [size, percent] of [
-    ['XS', 10],
-    ['S', 16],
-    ['M', 24],
-    ['L', 32],
-    ['XL', 42],
-    ['XXL', 54],
-  ] as const) {
-    dialog = await customize(page)
-    await dialog.getByRole('tab', { name: 'Appearance', exact: true }).click()
-    await dialog.getByLabel('Center image size', { exact: true }).selectOption(size)
-    await dialog.getByRole('button', { name: 'OK', exact: true }).click()
-    await expect(dialog).toHaveCount(0)
-    await expect(page.locator('.wheel-center-image')).toHaveAttribute(
-      'style',
-      new RegExp(`width: ${percent}%`),
-    )
-  }
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Presentation mode', exact: true }).click()
   await expect(page.locator('.app.presenting')).toHaveCSS('background-color', 'rgb(17, 34, 51)')

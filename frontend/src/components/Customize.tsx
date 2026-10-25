@@ -320,26 +320,6 @@ export function Customize({
                             </button>
                           </div>
                         </fieldset>
-                        <ImagePicker
-                          busyChanged={(busy) => setUploads((count) => count + (busy ? 1 : -1))}
-                          label={ct.center}
-                          value={draft.center_image}
-                          change={(center_image) => patch({ center_image })}
-                        />
-                        <label>
-                          {ct.size}
-                          <select
-                            aria-label={ct.size}
-                            value={draft.center_size}
-                            onChange={(e) =>
-                              patch({ center_size: e.target.value as Customization['center_size'] })
-                            }
-                          >
-                            {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                              <option key={size}>{size}</option>
-                            ))}
-                          </select>
-                        </label>
                       </div>
                     </>
                   ) : (

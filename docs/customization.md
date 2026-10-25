@@ -71,7 +71,7 @@ Spin again, αντιγραφή και New round παραμένουν στην κ
 | One color per section / wheel background image | Αμοιβαία αποκλειόμενα πεδία | Image E2E | Καμία |
 | Apply theme | 16 θέματα: SPINARO, Ocean, Sunset, Forest, Rainbow, Candy, Tropical, Lavender, Rose garden, Midnight, Neon, Autumn, Ice, Earth tones, Coral reef, Retro | Transactional E2E / validation και μοναδικότητα χρωμάτων | Δική μας συλλογή |
 | Customize colors / enabled colors / picker | 1–12 αρχικά χρώματα, τουλάχιστον ένα ενεργό, native color picker· αυτόματη επέκταση με μοναδικό χρώμα ανά φέτα | Schema / transactional E2E και έλεγχος μοναδικότητας έως 1000 φέτες | Κατόπιν αιτήματος, η παλέτα δεν επαναλαμβάνεται· ίδια αρχικά χρώματα χρησιμοποιούνται μία φορά. Native picker αντί ειδικού HEX/RGB panel |
-| Center image / size | Upload, συλλογή, αντικατάσταση, αφαίρεση· XS/S/M/L/XL/XXL, default S | Image / persistence E2E | Τα ποσοστά μεγέθους είναι δικά μας (10/16/24/32/42/54%) |
+| Center image / size | Αφαιρέθηκε πλήρως κατόπιν αιτήματος | Migration / import / renderer checks | Δεν προσφέρεται πλέον· παραμένει το Click to spin |
 | Wheel image / upload / gallery | Raster upload και 12 δικές μας εικόνες, ονομαστικές μικρογραφίες με κύλιση | Image / offline E2E | Δεν περιλαμβάνει Unsplash ή αναζήτηση στο internet |
 | Page background / gradient, on | Φόντο λειτουργίας παρουσίασης, επιλογή gradient | Appearance E2E | Το κύριο περιβάλλον διατηρεί light/dark ταυτότητα |
 | Always show / always hide / hide if image | Και οι τρεις επιλογές με εικόνες ανά εγγραφή | Image E2E | Καμία |
@@ -80,8 +80,14 @@ Spin again, αντιγραφή και New round παραμένουν στην κ
 
 ## Δεδομένα και ασφάλεια
 
-- `backend/app/customization.py` και `frontend/src/customization.ts`: configuration version 1,
+- `backend/app/customization.py` και `frontend/src/customization.ts`: configuration version 2,
   όρια και προεπιλογές. Τα πεδία During/After ακολουθούν τις ζητούμενες αρχικές τιμές.
+- Η κεντρική εικόνα και το μέγεθός της αφαιρέθηκαν πλήρως στις 25/10/2026.
+  Migration `a14b6d0e235c` αναβαθμίζει τροχούς και δημόσια snapshots σε version 2.
+  IndexedDB v7 και εισαγωγή παλιών JSON backups κάνουν την ίδια μετατροπή,
+  διατηρώντας τις εικόνες φόντου/εγγραφών. Το API δέχεται μόνο τη νέα μορφή.
+  Πέρασαν 41 pytest, 10 unit και 14 customization E2E, typecheck/lint/build,
+  μαζί με άμεσο έλεγχο SQLite, παλιού IndexedDB, backup import/export και offline reload.
 - Migration `c72f1a9e4b02`: JSON configuration ανά τροχό, εικόνα ανά επιλογή,
   όριο 10.000 συμμετοχών. Διατηρεί υπάρχοντες τροχούς, αποτελέσματα και share tokens.
   Τα παλιά snapshots αποκτούν defaults. Το downgrade απαιτεί επαναφορά backup για
@@ -120,9 +126,9 @@ Celebration sparkle, Celebration bells, Jackpot! και Grand finale. Το χε�
 τους 8 ήχους αποτελέσματος χωρίς clipping στο 100%. Μετρήθηκαν επιβράδυνση κλικ,
 επιτάχυνση drumroll, αυτόματο stop και έναρξη χειροκροτήματος μετά την κλήρωση.
 Δεν έγινε ακρόαση σε φυσικά ηχεία/ακουστικά.
-Τα νέα IDs προστέθηκαν στα επιτρεπτά enum και των δύο schemas. Η δομή version 1
-και η αποθήκευση JSON δεν αλλάζουν, οπότε δεν απαιτείται SQL migration ή μετατροπή
-παλιών δεδομένων. Παραμένουν τα defaults ticking/χειροκρότημα. Ο συνολικός ήχος
+Τα νέα IDs προστέθηκαν στα επιτρεπτά enum και των δύο schemas. Η επέκταση ήχων
+δεν άλλαξε τη δομή JSON και δεν χρειάστηκε migration. Η μεταγενέστερη αφαίρεση
+κεντρικής εικόνας χρησιμοποιεί version 2. Παραμένουν τα defaults ticking/χειροκρότημα. Ο συνολικός ήχος
 πλέον ξεκινά ενεργός σε κάθε άνοιγμα/refresh. Η χειροκίνητη σίγαση λειτουργεί μέχρι
 το επόμενο άνοιγμα· οι επιλογές No sound και έντασης στο Customize διατηρούνται.
 Επαλήθευση επέκτασης 25/10/2026: 41 backend tests και 9 στοχευμένοι E2E πέρασαν,
@@ -135,7 +141,7 @@ Tropical, Candy swirl, Nebula, Golden glow, Mosaic, Blossom) παράγοντα�
 `frontend/scripts/generate-gallery.mjs`. Οι ήχοι παράγονται από Web Audio στο
 `frontend/src/lib/audio.ts`. Δεν υπάρχουν τρίτες άδειες προς μεταβίβαση για αυτά τα assets.
 Τα gallery assets precache-άρονται από την PWA· τα προσωπικά παραμένουν στο IndexedDB.
-Η ίδια συλλογή είναι διαθέσιμη και για κεντρική εικόνα ή εικόνες εγγραφών.
+Η ίδια συλλογή είναι διαθέσιμη και για εικόνες εγγραφών. Η κεντρική εικόνα έχει αφαιρεθεί.
 Οι νέες διαδρομές επιτρέπονται ρητά στο backend και στο frontend. Δεν αλλάζει το
 σχήμα δεδομένων: αποθηκεύονται χρώματα/διαδρομές, όχι IDs θεμάτων. Δεν χρειάζεται migration.
 Έλεγχος επέκτασης 25/10/2026: 41 pytest και 14 customization E2E πέρασαν, μαζί με

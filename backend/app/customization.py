@@ -40,7 +40,7 @@ class PaletteColor(BaseModel):
 
 class Customization(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    version: Literal[1] = 1
+    version: Literal[2] = 2
     spin_sound: Literal[
         "none", "ticking", "drum", "pulse", "woodblock", "shaker", "heartbeat", "arpeggio", "space"
     ] = "ticking"
@@ -66,8 +66,6 @@ class Customization(BaseModel):
         PaletteColor(color=color)
         for color in ("#ded2f6", "#f6d5c4", "#cbe5dc", "#f4e6b7", "#cddff2", "#edcfe1")
     ], min_length=1, max_length=12)
-    center_image: Image | None = None
-    center_size: Literal["XS", "S", "M", "L", "XL", "XXL"] = "S"
     wheel_image: Image | None = None
     pointer_changes: bool = True
     pointer_color: Color = "#7650cc"

@@ -169,8 +169,7 @@ The circular rim clips the rotating SVG's square bounds to prevent horizontal ov
 Short viewports reduce its size; the sidebar scrolls independently without stretching
 the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
 The stationary center button starts the same guarded draw flow as result actions and
-supports native keyboard activation. With a custom center image its hit area is
-transparent and its label sits just below the image, keeping small images visible.
+supports native keyboard activation. Center images and custom hub sizes were removed.
 While awaiting the next spin, `Wheel.tsx` uses Web Animations for a silent
 30-second idle revolution without React updates each frame. Live
 reduced-motion changes are respected; hidden screens/share dialogs and pending draws stop idle

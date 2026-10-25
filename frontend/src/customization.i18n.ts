@@ -68,8 +68,6 @@ export const ct = {
   palette: 'Customize palette',
   uniqueColors: 'Each entry gets a different color. Extra colors are added automatically.',
   addColor: '+ Color',
-  center: 'Center image',
-  size: 'Center image size',
   fullImage: 'Full-wheel background image',
   page: 'Presentation background color',
   gradient: 'Show page gradient',

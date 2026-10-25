@@ -6,7 +6,6 @@ import type { Customization } from '../customization'
 import { t } from '../i18n'
 import type { Option } from '../types'
 
-const sizes = { XS: 10, S: 16, M: 24, L: 32, XL: 42, XXL: 54 }
 export function Wheel({
   options,
   rotation,
@@ -30,7 +29,6 @@ export function Wheel({
 }) {
   const pointer = useRef<HTMLDivElement>(null)
   const count = options.length
-  const centerImage = config.mode === 'colors' && config.center_image
   const colors = useMemo(() => sectorColors(count, config.palette), [count, config.palette])
   useEffect(() => {
     if (!idle) return
@@ -174,27 +172,11 @@ export function Wheel({
             )
           })}
         </svg>
-        {centerImage && (
-          <img
-            className="wheel-center-image"
-            src={centerImage}
-            alt=""
-            style={{
-              width: `${sizes[config.center_size]}%`,
-              height: `${sizes[config.center_size]}%`,
-            }}
-          />
-        )}
         <button
-          className={`wheel-spin-control ${centerImage ? 'with-center-image' : ''}`}
+          className="wheel-spin-control"
           aria-label={t.spin}
           disabled={!canSpin}
           onClick={onSpin}
-          style={
-            centerImage
-              ? { width: `${sizes[config.center_size]}%`, height: `${sizes[config.center_size]}%` }
-              : undefined
-          }
         >
           <span>{spinning ? t.spinning : t.spin}</span>
         </button>

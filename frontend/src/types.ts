@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { customizationSchema, defaults, imageSchema } from './customization'
+import { legacyCustomizationSchema } from './state/customizationMigration'
 
 export const optionSchema = z.object({
   id: z.uuid(),
@@ -30,7 +31,9 @@ export const backupWheelSchema = z
       .max(120)
       .refine((v) => v.trim().length > 0),
     no_repeat: z.boolean(),
-    customization: customizationSchema.default(() => structuredClone(defaults)),
+    customization: z
+      .union([customizationSchema, legacyCustomizationSchema])
+      .default(() => structuredClone(defaults)),
     options: z.array(optionSchema).max(10000),
     results: z.array(resultSchema).max(10000),
   })

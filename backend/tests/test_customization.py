@@ -13,14 +13,14 @@ from app.main import app
 
 
 @pytest.mark.parametrize("patch", [
-    {"version": 2}, {"duration": 0}, {"duration": 61}, {"max_names": 3},
+    {"version": 1}, {"duration": 0}, {"duration": 61}, {"max_names": 3},
     {"max_names": 1001}, {"spin_volume": -1}, {"result_volume": 101},
     {"mode": "unknown"}, {"text": "unknown"}, {"center_size": "unknown"},
     {"palette": [{"color": "#ffffff", "enabled": False}]},
     {"palette": [{"color": "red", "enabled": True}]},
     {"wheel_image": "https://private.example/image.png"},
-    {"center_image": "data:image/svg+xml;base64,PHN2Zz4="},
-    {"center_image": "data:image/png;base64,bm90LWFuLWltYWdl"},
+    {"wheel_image": "data:image/svg+xml;base64,PHN2Zz4="},
+    {"wheel_image": "data:image/png;base64,bm90LWFuLWltYWdl"},
 ])
 def test_invalid_customization(client, payload, patch):
     payload["customization"] = Customization().model_dump() | patch
@@ -32,7 +32,7 @@ def test_settings_images_sharing_and_draw_integrity(client, payload, monkeypatch
     image = "/images/aurora.webp"
     payload["options"][2]["image"] = image
     payload["customization"] = Customization(
-        duration=60, max_names=4, show_duplicates=False, center_image=image,
+        duration=60, max_names=4, show_duplicates=False,
         mode="image", wheel_image="/images/sunset.webp", auto_remove=True,
         spin_sound="arpeggio", result_sound="magic",
     ).model_dump()

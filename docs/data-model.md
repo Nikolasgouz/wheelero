@@ -22,7 +22,7 @@ No-repeat exhausts that entry after one draw, and New round reactivates it.
 Draws increment wheel revision even when
 no-repeat is off, preventing a concurrent edit/draw from silently losing history.
 
-Customization has schema version 1 and is part of the atomic revisioned snapshot.
+Customization has schema version 2 and is part of the atomic revisioned snapshot.
 Migration c72f1a9e4b02 preserves old data and public tokens, adds defaults to existing
 wheels/shares, and increases option/result constraints. Private images are embedded
 in the owner's snapshot; public snapshots explicitly copy them. No public upload store
@@ -41,3 +41,9 @@ recognized default titles/entry labels/result labels and generated Copy suffixes
 English. This one-time data migration preserves IDs, positions, active flags, revisions
 and source; custom labels remain unchanged. Published snapshots remain immutable.
 Dirty local payloads changed by localization receive a fresh mutation ID.
+
+Migration a14b6d0e235c removes center_image/center_size from wheels and shared snapshots,
+and sets customization.version to 2. This explicit feature-removal upgrade preserves
+IDs, revisions, results, wheel backgrounds and entry images. IndexedDB v7 mirrors it,
+renewing dirty payload mutation IDs. Version 1 JSON backups are validated and migrated
+once at import by customizationMigration.ts; the API accepts only version 2 settings.

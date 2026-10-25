@@ -29,7 +29,7 @@ describe('customized display preserves every winning ID', () => {
   it('requires a nonempty enabled palette and bounded versioned settings', () => {
     expect(customizationSchema.safeParse(defaults).success).toBe(true)
     for (const patch of [
-      { version: 2 },
+      { version: 1 },
       { duration: 61 },
       { max_names: 3 },
       { spin_volume: 101 },

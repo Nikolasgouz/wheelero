@@ -39,7 +39,7 @@ export const palettes = {
 }
 export const customizationSchema = z
   .object({
-    version: z.literal(1),
+    version: z.literal(2),
     spin_sound: z.enum([
       'none',
       'ticking',
@@ -82,8 +82,6 @@ export const customizationSchema = z
       .min(1)
       .max(12)
       .refine((values) => values.some((v) => v.enabled)),
-    center_image: imageSchema.nullable(),
-    center_size: z.enum(['XS', 'S', 'M', 'L', 'XL', 'XXL']),
     wheel_image: imageSchema.nullable(),
     pointer_changes: z.boolean(),
     pointer_color: color,
@@ -96,7 +94,7 @@ export const customizationSchema = z
   .strict()
 export type Customization = z.infer<typeof customizationSchema>
 export const defaults: Customization = {
-  version: 1,
+  version: 2,
   spin_sound: 'ticking',
   spin_volume: 50,
   show_duplicates: true,
@@ -115,8 +113,6 @@ export const defaults: Customization = {
   removal_sound: false,
   mode: 'colors',
   palette: palettes.gyrna.map((color) => ({ color, enabled: true })),
-  center_image: null,
-  center_size: 'S',
   wheel_image: null,
   pointer_changes: true,
   pointer_color: '#7650cc',
