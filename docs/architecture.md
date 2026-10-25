@@ -101,8 +101,10 @@ Each row has a pencil action; focusing its input selects the name, Enter blurs, 
 edits continue through the same immediate local autosave path. Input text is 16px for
 mobile readability; editing controls stay disabled while a draw is pending/animating.
 Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
-The Customize gear sits immediately after Pause in the wheel toolbar, with an accessible
-label and tooltip. The Entries toolbar offers Shuffle/Sort/Clear and hides on Results;
+The wheel toolbar contains Customize (gear), sound and fullscreen, with accessible labels.
+Pause and its local state were removed. All three buttons use `locked`, preventing click/
+keyboard activation during draws and showing the existing `button:disabled` not-allowed
+cursor. The Entries toolbar offers Shuffle/Sort/Clear and hides on Results;
 the Results panel keeps its separate Clear. Sort uses English collator order
 (numeric, case-insensitive). Both reorder actions
 preserve IDs/images/active flags/duplicates, reset pagination and use the same autosave.
@@ -156,7 +158,7 @@ The stationary center button starts the same guarded draw flow as result actions
 supports native keyboard activation. With a custom center image its hit area is
 transparent and its label sits just below the image, keeping small images visible.
 While awaiting the next spin, `Wheel.tsx` uses Web Animations for a silent
-30-second idle revolution without React updates each frame. Pause/resume and live
+30-second idle revolution without React updates each frame. Live
 reduced-motion changes are respected; hidden screens/share dialogs and pending draws stop idle
 motion. `lib/motion.ts` captures the actual rendered angle before cancelling idle motion.
 The draw animation starts from that angle, still targeting the backend/offline winner.

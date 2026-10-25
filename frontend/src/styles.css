@@ -1530,9 +1530,6 @@ dialog::backdrop {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .idle-toggle {
-    display: none;
-  }
   *,
   *:before,
   *:after {

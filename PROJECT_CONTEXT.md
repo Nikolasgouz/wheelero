@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Customize gear beside Pause; Entries toolbar Shuffle/Sort/Clear.
+Last updated: 2026-10-25. Pause removed; Customize/sound/fullscreen locked during draws.
 
 ## Product and current UI
 
@@ -33,7 +33,9 @@ Results show source/time, recent/all history and become selected after a complet
 The winner popup offers only Close and Remove winner (unless removal is hidden in
 Customize). It has no respin/copy/New round actions; these remain on the main screen.
 Dialog's optional headerClose hides its duplicate close icon for this popup only.
-Customize is a labeled gear icon immediately after Pause in the wheel toolbar. Entries
+The wheel toolbar contains Customize (gear), sound and fullscreen only. Pause was removed.
+All three controls use the draw/pending-operation lock and show a not-allowed cursor
+while disabled, restoring after completion. Entries
 has Shuffle/Sort/Clear directly below the tabs; Results retains its own history Clear.
 The entry toolbar is hidden while Results is selected. Shuffle and numeric,
 case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
@@ -52,8 +54,8 @@ physical deletion of retry records. Conflicts retain the existing remote/copy be
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
 guarded draw flow. Custom center images remain visible with a transparent hit area.
 Visible wheels idle silently at one turn per 30 seconds before and after every draw,
-including behind the result popup and during background sync. Pause/resume is in the
-wheel toolbar; live reduced-motion changes disable idle animation. The wheel lands on
+including behind the result popup and during background sync. There is no manual Pause;
+live reduced-motion changes disable idle animation. The wheel lands on
 the winner before resuming decorative motion; stored results stay unchanged. No selection
 occurs on idle. Hidden/share screens and uncertain pending draws still suspend idle.
 
@@ -117,6 +119,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Pause/toolbar-lock follow-up: typecheck, lint, build and 6 relevant E2E passed (38.0s).
+Verified no Pause control, continuous idle before/after draws, all three toolbar buttons
+disabled with `cursor: not-allowed` during a draw, ignored click attempts and re-enabled
+controls after completion. Responsive/accessibility checks passed at 360/390/768/1440px;
+reduced motion still suppresses idle. No backend/schema changes; pytest not rerun.
 
 Customize-gear follow-up: typecheck, lint, build and 6 relevant E2E passed (44.1s),
 covering the adjacent Pause/Customize controls, draw locks, Shuffle/Sort, settings

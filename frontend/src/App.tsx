@@ -8,8 +8,6 @@ import {
   LayoutGrid,
   Maximize2,
   Moon,
-  Pause,
-  Play,
   Plus,
   RefreshCw,
   Settings,
@@ -63,7 +61,6 @@ export default function App() {
   const [sidebarSnapshot, setSidebarSnapshot] = useState<LocalWheel | null>(null)
   const [rotation, setRotation] = useState(0)
   const wheelSvg = useRef<SVGSVGElement>(null)
-  const [idlePaused, setIdlePaused] = useState(false)
   const [spinOptions, setSpinOptions] = useState<Option[] | null>(null)
   const [result, setResult] = useState<DrawResult | null>(null)
   const [message, setMessage] = useState('')
@@ -375,14 +372,6 @@ export default function App() {
                     </span>
                     <div className="wheel-tools">
                       <button
-                        className="icon-button idle-toggle"
-                        aria-label={idlePaused ? t.resumeIdle : t.pauseIdle}
-                        aria-pressed={idlePaused}
-                        onClick={() => setIdlePaused(!idlePaused)}
-                      >
-                        {idlePaused ? <Play size={18} /> : <Pause size={18} />}
-                      </button>
-                      <button
                         className="icon-button"
                         aria-label={ct.title}
                         title={ct.title}
@@ -394,6 +383,7 @@ export default function App() {
                       <button
                         className="icon-button"
                         aria-label={sound ? t.soundOff : t.soundOn}
+                        disabled={locked}
                         onClick={() => {
                           if (sound) stopSounds()
                           setSound(!sound)
@@ -404,6 +394,7 @@ export default function App() {
                       <button
                         className="icon-button"
                         aria-label={presenting ? t.exitFullscreen : t.fullscreen}
+                        disabled={locked}
                         onClick={() =>
                           run(async () => {
                             if (presenting) {
@@ -432,7 +423,6 @@ export default function App() {
                   winnerId={result?.option_id ?? null}
                   idle={
                     !spinning &&
-                    !idlePaused &&
                     displayed.length > 0 &&
                     !data.pending_draw &&
                     screen === 'wheel' &&

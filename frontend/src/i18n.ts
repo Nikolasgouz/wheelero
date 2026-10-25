@@ -45,8 +45,6 @@ export const t = {
   noRepeatHint: 'Each entry can win once per round.',
   reset: 'New round',
   spin: 'Click to spin',
-  pauseIdle: 'Pause idle rotation',
-  resumeIdle: 'Resume idle rotation',
   spinning: 'Spinning…',
   spinHint: 'Small decisions, without the overthinking.',
   exhausted: 'Every entry has had a turn. Start a new round!',

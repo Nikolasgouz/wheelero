@@ -61,7 +61,8 @@ distinct from the full editor. Lists are paged at 100 entries; Results selects a
 after a completed draw. Presentation hides the sidebar; below 1024px it stacks under the wheel.
 Keep the pre-draw sidebar snapshot until animation completion: subscribing directly to
 the new store results would expose the winner and no-repeat marker before the wheel stops.
-The wheel toolbar owns the Customize gear immediately after Pause. The Entries action
+The wheel toolbar contains Customize, sound and fullscreen; all must stay disabled with
+the not-allowed cursor during draws/pending operations. There is no Pause. The Entries action
 row holds Shuffle/Sort/Clear and hides on Results, which has its own Clear. Preserve option IDs,
 active flags and images on reordering; sorting must retain duplicate entries. The full
 editor remains reachable through More options; desktop navigation has no Entries button.

@@ -18,6 +18,8 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   page,
 }) => {
   await ready(page)
+  await expect(page.locator('.wheel-tools button')).toHaveCount(3)
+  await expect(page.getByRole('button', { name: 'Pause idle rotation' })).toHaveCount(0)
   await expect
     .poll(() =>
       page
@@ -27,11 +29,6 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
         ),
     )
     .toBe(true)
-  await page.getByRole('button', { name: 'Pause idle rotation', exact: true }).click()
-  await expect
-    .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
-    .toBe(0)
-  await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
   await page.locator('.sidebar-actions').getByRole('button', { name: 'Sort', exact: true }).click()
   expect(
     await page
@@ -72,9 +69,14 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
-  await expect(
-    page.locator('.wheel-tools').getByRole('button', { name: 'Customize' }),
-  ).toBeDisabled()
+  for (const name of ['Customize', 'Mute sound', 'Presentation mode']) {
+    const button = page.locator('.wheel-tools').getByRole('button', { name, exact: true })
+    await expect(button).toBeDisabled()
+    await expect(button).toHaveCSS('cursor', 'not-allowed')
+    await button.evaluate((node: HTMLButtonElement) => node.click())
+  }
+  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
+  await expect(page.locator('.home')).not.toHaveClass(/presenting/)
   for (const name of ['Shuffle', 'Sort', 'Clear entries'])
     await expect(
       page.locator('.sidebar-actions').getByRole('button', { name, exact: true }),
@@ -115,6 +117,8 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   })
   expect(agreement).toBe(true)
   await dialog.getByRole('button', { name: 'Close' }).click()
+  for (const button of await page.locator('.wheel-tools button').all())
+    await expect(button).toBeEnabled()
   await expect
     .poll(() =>
       page
@@ -124,11 +128,6 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
         ),
     )
     .toBe(true)
-  await page.getByRole('button', { name: 'Pause idle rotation', exact: true }).click()
-  await expect
-    .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
-    .toBe(0)
-  await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
   await expect(page.getByRole('tab', { name: 'Results', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
@@ -280,7 +279,10 @@ for (const width of [360, 390, 768, 1440]) {
       page.locator('.desktop-nav').getByRole('button', { name: 'Entries', exact: true }),
     ).toHaveCount(0)
     await expect(page.locator('.sidebar-actions button')).toHaveText(['Shuffle', 'Sort', 'Clear'])
-    await expect(page.locator('.idle-toggle + button')).toHaveAttribute('aria-label', 'Customize')
+    await expect(page.locator('.wheel-tools button').first()).toHaveAttribute(
+      'aria-label',
+      'Customize',
+    )
     await page.getByRole('button', { name: 'Customize', exact: true }).click()
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')
