@@ -43,6 +43,9 @@ Customization schemas must remain aligned in `backend/app/customization.py` and
 it projects eligible entries for rendering and must always retain the winning ID.
 Change settings only through the modal draft and commit after uploads complete.
 Generate the original bundled gallery with `bun scripts/generate-gallery.mjs`.
+Keep gallery paths in `customization.i18n.ts` aligned with backend `validate_image`;
+Vite's WebP precache glob includes all bundled gallery files. Theme keys/labels must
+match the palettes in `customization.ts`; saved wheels store the actual colors.
 Run the build to completion before starting E2E; avoid concurrent Playwright runs because
 they share the output directory. Current verified counts are in PROJECT_CONTEXT.md.
 

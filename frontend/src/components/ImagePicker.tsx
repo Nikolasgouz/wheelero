@@ -42,15 +42,15 @@ export function ImagePicker({
         />
       </label>
       <div className="image-gallery" aria-label={ct.gallery}>
-        {gallery.map((image, index) => (
+        {gallery.map((image) => (
           <button
             type="button"
-            key={image}
-            aria-label={ct.galleryImage(index + 1)}
-            aria-pressed={value === image}
-            onClick={() => change(image)}
+            key={image.src}
+            aria-pressed={value === image.src}
+            onClick={() => change(image.src)}
           >
-            <img src={image} alt="" />
+            <img src={image.src} alt="" />
+            <span>{image.name}</span>
           </button>
         ))}
       </div>

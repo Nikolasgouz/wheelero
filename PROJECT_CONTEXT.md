@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Compact Customize menu with optional More options.
+Last updated: 2026-10-25. Expanded Appearance to 16 themes and 12 gallery images.
 
 ## Product and current UI
 
@@ -81,6 +81,12 @@ tabs were reinspected; our reduced initial control count is an intentional diffe
 All available settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
+Appearance offers 16 themes and 12 original named images in a scrollable responsive
+gallery, shared with center/entry image pickers. Nine new WebP assets are precached;
+backend and frontend allowlists agree. No schema migration: palettes and image paths
+use the existing configuration fields. Theme labels/gallery names live in
+customization.i18n.ts; palette values in customization.ts. Existing three image URLs
+and four themes are unchanged. Image buttons now use their visible names as labels.
 Global mute and reduced motion take precedence. Settings and private images survive
 refresh, sharing, copies, JSON and offline sync. See docs/customization.md for parity.
 App sound defaults to enabled on each load/refresh; manual mute is session-only.
@@ -125,7 +131,7 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `lib/audio.ts`: original local sound scores, finished nodes released while looping.
   Duration-driven timeout scheduling, reusable percussion buffers, sustained brass and
   3.8-second stereo applause; cleanup uses cue length rather than a fixed cutoff.
-  `scripts/generate-gallery.mjs`: three original bundled WebP images.
+  `scripts/generate-gallery.mjs`: 12 original bundled WebP images (800×800).
 - `App.tsx`, `styles.css`: UI flow/layout; `vite.config.ts`: prompt-update PWA with
   shell/fonts/gallery precache. Private APIs never enter service-worker caches.
 
@@ -138,6 +144,15 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Expanded Appearance: typecheck, lint, production build, 41 pytest (21.25s) and all
+14 customization E2E passed (2.1min), including accessibility at 360/390/768/1440px.
+Direct checks validated all 16 palettes with 1,000 unique sector colors each and exact
+frontend/backend acceptance of all 12 image paths. Production Chromium exercised every
+theme/image choice, server save/refresh, all 12 images decoded offline, and a newly
+selected offline background surviving refresh/resync. The offline E2E now uses Nebula.
+Gallery artwork and mobile/desktop screenshots visually inspected. The launcher rebuilt
+and restarted both project servers; the PWA precaches 33 assets (1048.34 KiB).
 
 Compact Customize: typecheck, lint, production build and all 14 customization E2E
 passed (1.9min), covering draft cancellation/save, sounds, images, legacy wheels,

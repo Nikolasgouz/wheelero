@@ -1686,22 +1686,32 @@ input[type='color'] {
   width: 100%;
 }
 .image-gallery {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
   margin: 12px 0;
+  padding: 4px;
+  max-height: 280px;
+  overflow-y: auto;
 }
 .image-gallery button {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-width: 0;
   border: 2px solid transparent;
   padding: 3px;
   border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.3;
 }
 .image-gallery [aria-pressed='true'] {
   border-color: var(--primary);
 }
 .image-gallery img {
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 6px;
 }

@@ -6,7 +6,12 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, Field, model_validat
 
 
 def validate_image(value: str) -> str:
-    if value in ("/images/aurora.webp", "/images/sunset.webp", "/images/confetti.webp"):
+    if value in (
+        "/images/aurora.webp", "/images/sunset.webp", "/images/confetti.webp",
+        "/images/ocean-waves.webp", "/images/starry-night.webp", "/images/mountains.webp",
+        "/images/tropical.webp", "/images/candy.webp", "/images/nebula.webp",
+        "/images/gold.webp", "/images/mosaic.webp", "/images/blossom.webp",
+    ):
         return value
     try:
         header, encoded = value.split(",", 1)

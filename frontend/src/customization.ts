@@ -1,12 +1,12 @@
 import { ct } from './customization.i18n'
 import { z } from 'zod'
 
-export const gallery = ['/images/aurora.webp', '/images/sunset.webp', '/images/confetti.webp']
+export const gallery = Object.entries(ct.images).map(([src, name]) => ({ src, name }))
 export const imageSchema = z
   .string()
   .max(683000)
   .refine((value) => {
-    if (gallery.includes(value)) return true
+    if (gallery.some((image) => image.src === value)) return true
     if (!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)) return false
     const [header, encoded] = value.split(',')
     if (encoded.length % 4 !== 0) return false
@@ -24,6 +24,18 @@ export const palettes = {
   ocean: ['#164e63', '#0e7490', '#67e8f9', '#cffafe'],
   sunset: ['#7c3aed', '#e879a4', '#fb923c', '#fde68a'],
   forest: ['#14532d', '#4d7c0f', '#a3e635', '#ecfccb'],
+  rainbow: ['#ef4444', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#a78bfa'],
+  candy: ['#f9a8d4', '#c4b5fd', '#a5f3fc', '#bbf7d0', '#fef08a', '#fed7aa'],
+  tropical: ['#059669', '#2dd4bf', '#a3e635', '#fde047', '#fb923c', '#f472b6'],
+  lavender: ['#5b21b6', '#7c3aed', '#a78bfa', '#c4b5fd', '#ddd6fe', '#f5d0fe'],
+  rose: ['#9f1239', '#e11d48', '#fb7185', '#fda4af', '#fecdd3', '#ffe4e6'],
+  midnight: ['#172554', '#1e3a8a', '#4338ca', '#6d28d9', '#a855f7', '#c084fc'],
+  neon: ['#d9f99d', '#22d3ee', '#818cf8', '#e879f9', '#fb7185', '#fde047'],
+  autumn: ['#7c2d12', '#c2410c', '#ea580c', '#f59e0b', '#fcd34d', '#a3a448'],
+  ice: ['#155e75', '#0891b2', '#22d3ee', '#67e8f9', '#a5f3fc', '#e0f2fe'],
+  earth: ['#78350f', '#a16207', '#b08968', '#d4a373', '#a3b18a', '#588157'],
+  coral: ['#f97373', '#fb923c', '#fdba74', '#5eead4', '#14b8a6', '#0e7490'],
+  retro: ['#e76f51', '#f4a261', '#e9c46a', '#a8c686', '#2a9d8f', '#264653'],
 }
 export const customizationSchema = z
   .object({

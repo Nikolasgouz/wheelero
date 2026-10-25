@@ -81,10 +81,10 @@ Spin again, αντιγραφή και New round παραμένουν στην κ
 | Display Remove button, on | Κρύβεται και στο popup και στο inline αποτέλεσμα | Transactional E2E | Καμία |
 | Click when removed, off | Click στη χειροκίνητη και αυτόματη πραγματική αφαίρεση | Audio / auto-removal E2E | Χρήση έντασης αποτελέσματος και συνολικής σίγασης |
 | One color per section / wheel background image | Αμοιβαία αποκλειόμενα πεδία | Image E2E | Καμία |
-| Apply theme | Γύρνα., Ωκεανός, Ηλιοβασίλεμα, Δάσος | Transactional E2E | Τέσσερα δικά μας θέματα αντί της μεγάλης συλλογής αναφοράς |
+| Apply theme | 16 θέματα: Γύρνα., Ocean, Sunset, Forest, Rainbow, Candy, Tropical, Lavender, Rose garden, Midnight, Neon, Autumn, Ice, Earth tones, Coral reef, Retro | Transactional E2E / validation και μοναδικότητα χρωμάτων | Δική μας συλλογή |
 | Customize colors / enabled colors / picker | 1–12 αρχικά χρώματα, τουλάχιστον ένα ενεργό, native color picker· αυτόματη επέκταση με μοναδικό χρώμα ανά φέτα | Schema / transactional E2E και έλεγχος μοναδικότητας έως 1000 φέτες | Κατόπιν αιτήματος, η παλέτα δεν επαναλαμβάνεται· ίδια αρχικά χρώματα χρησιμοποιούνται μία φορά. Native picker αντί ειδικού HEX/RGB panel |
 | Center image / size | Upload, συλλογή, αντικατάσταση, αφαίρεση· XS/S/M/L/XL/XXL, default S | Image / persistence E2E | Τα ποσοστά μεγέθους είναι δικά μας (10/16/24/32/42/54%) |
-| Wheel image / upload / gallery | Raster upload και τρεις δικές μας εικόνες | Image / offline E2E | Δεν περιλαμβάνει Unsplash ή αναζήτηση στο internet |
+| Wheel image / upload / gallery | Raster upload και 12 δικές μας εικόνες, ονομαστικές μικρογραφίες με κύλιση | Image / offline E2E | Δεν περιλαμβάνει Unsplash ή αναζήτηση στο internet |
 | Page background / gradient, on | Φόντο λειτουργίας παρουσίασης, επιλογή gradient | Appearance E2E | Το κύριο περιβάλλον διατηρεί light/dark ταυτότητα |
 | Always show / always hide / hide if image | Και οι τρεις επιλογές με εικόνες ανά εγγραφή | Image E2E | Καμία |
 | Contours, off / shadow, on | Πραγματικό SVG stroke / CSS shadow | Transactional E2E | Καμία |
@@ -142,10 +142,18 @@ Celebration sparkle, Celebration bells, Jackpot! και Grand finale. Το χε�
 και αποθήκευση νέων επιλογών μετά από refresh. Ελέγχθηκαν επιπλέον σίγαση, stop,
 ένταση, αντίγραφα, offline συγχρονισμός, παρουσίαση και κεντράρισμα στα τέσσερα πλάτη.
 
-Οι τρεις εικόνες παράγονται από δικά μας γεωμετρικά σχέδια στο
+Οι 12 εικόνες (Aurora, Sunset, Confetti, Ocean waves, Starry night, Mountains,
+Tropical, Candy swirl, Nebula, Golden glow, Mosaic, Blossom) παράγονται από δικά μας γεωμετρικά σχέδια στο
 `frontend/scripts/generate-gallery.mjs`. Οι ήχοι παράγονται από Web Audio στο
 `frontend/src/lib/audio.ts`. Δεν υπάρχουν τρίτες άδειες προς μεταβίβαση για αυτά τα assets.
 Τα gallery assets precache-άρονται από την PWA· τα προσωπικά παραμένουν στο IndexedDB.
+Η ίδια συλλογή είναι διαθέσιμη και για κεντρική εικόνα ή εικόνες εγγραφών.
+Οι νέες διαδρομές επιτρέπονται ρητά στο backend και στο frontend. Δεν αλλάζει το
+σχήμα δεδομένων: αποθηκεύονται χρώματα/διαδρομές, όχι IDs θεμάτων. Δεν χρειάζεται migration.
+Έλεγχος επέκτασης 25/10/2026: 41 pytest και 14 customization E2E πέρασαν, μαζί με
+typecheck/lint/build. Ελέγχθηκαν όλα τα θέματα, οι 12 εικόνες, αποθήκευση/refresh,
+φόρτωση όλων των εικόνων offline και συγχρονισμός νέου φόντου μετά την επανασύνδεση.
+Η PWA περιλαμβάνει πλέον 33 precached assets. Τα νέα σχέδια και η συλλογή ελέγχθηκαν οπτικά.
 
 Η επιθεώρηση αναφοράς επιβεβαιώνει πεδία/μενού/defaults. Δεν επιβεβαιώθηκε ακουστικά κάθε
 ηχογράφηση της βιβλιοθήκης της ούτε η ακριβής καμπύλη φυσικής/μέτρηση μεγέθους εικόνων.
