@@ -5,7 +5,7 @@ import { makeWheel } from './wheel'
 import { templates } from './templates'
 import { t } from '../i18n'
 
-const database = openDB('gyrna', 4, {
+const database = openDB('gyrna', 5, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -30,7 +30,14 @@ const database = openDB('gyrna', 4, {
           state.wheels.push(starter)
           if (!state.pending_draw) state.active = starter.id
         }
-        for (const wheel of state.wheels) wheel.clear_history = false
+        if (oldVersion < 4) {
+          for (const wheel of state.wheels) wheel.clear_history = false
+        }
+        for (const wheel of state.wheels) {
+          if (['WE HAVE A WINNER', 'Η ΤΥΧΗ ΔΙΑΛΕΞΕ'].includes(wheel.customization.popup_message)) {
+            wheel.customization.popup_message = defaults.popup_message
+          }
+        }
         await store.put(state, 'current')
       }
     }

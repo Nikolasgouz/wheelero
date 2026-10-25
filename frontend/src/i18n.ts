@@ -52,7 +52,7 @@ export const t = {
   spinning: 'Spinning…',
   spinHint: 'Small decisions, without the overthinking.',
   exhausted: 'Every entry has had a turn. Start a new round!',
-  selected: 'WE HAVE A WINNER',
+  selected: 'And The Winner is...',
   again: 'Spin again',
   removeWinner: 'Remove winner',
   copyResult: 'Copy result',

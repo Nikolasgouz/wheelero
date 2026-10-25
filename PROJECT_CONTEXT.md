@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Results toolbar: Sort / Clear / Export results (CSV).
+Last updated: 2026-10-25. Winner message: And The Winner is...
 
 ## Product and current UI
 
@@ -32,6 +32,10 @@ preserving previous history. Backend/IndexedDB persistence still happens immedia
 Results show source/time, recent/all history and become selected after a completed draw.
 The winner popup offers only Close and Remove winner (unless removal is hidden in
 Customize). It has no respin/copy/New round actions; these remain on the main screen.
+Default popup/inline message: `And The Winner is...`. SQLite data migration
+`e92f4b8c013a` and IndexedDB v5 replace the English/Greek old defaults on existing
+private wheels, preserving custom messages, revisions and pending history clears.
+Published snapshots retain their original message. New frontend/backend defaults agree.
 Dialog's optional headerClose hides its duplicate close icon for this popup only.
 The wheel toolbar contains Customize (gear), sound and fullscreen only. Pause was removed.
 All three controls use the draw/pending-operation lock and show a not-allowed cursor
@@ -95,7 +99,7 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v4, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v5, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
   `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
@@ -125,6 +129,13 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Winner-message follow-up: typecheck, lint, production build, 41 pytest (20.37s) and
+2 existing customization/legacy E2E passed (8.7s). An isolated SQLite migration check
+verified old default replacement and preservation of custom messages/revisions.
+Production Chromium verified v4-to-v5 migration, preserved custom message and pending
+clear flag, offline refresh and an actual winner popup with the exact requested text.
+The Windows launcher built, migrated and restarted this project's servers successfully.
 
 Results toolbar: typecheck, lint, production build and 5 relevant E2E passed (38.0s),
 including keyboard/accessibility at 360/390/768/1440px and disabled draw controls.

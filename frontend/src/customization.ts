@@ -98,7 +98,7 @@ export const defaults: Customization = {
   confetti: true,
   auto_remove: false,
   popup: true,
-  popup_message: 'WE HAVE A WINNER',
+  popup_message: 'And The Winner is...',
   remove_button: true,
   removal_sound: false,
   mode: 'colors',
