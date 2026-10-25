@@ -42,7 +42,7 @@ export function Wheel({
       if (!reduced.matches)
         node.animate(
           [{ transform: `rotate(${angle}deg)` }, { transform: `rotate(${angle + 360}deg)` }],
-          { duration: 120000, iterations: Infinity, easing: 'linear' },
+          { duration: 60000, iterations: Infinity, easing: 'linear' },
         )
     }
     start()

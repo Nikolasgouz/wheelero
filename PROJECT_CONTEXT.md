@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Idle rotation resumes after every completed spin.
+Last updated: 2026-10-25. Idle rotation doubled to one revolution per 60 seconds.
 
 ## Product and current UI
 
@@ -35,7 +35,7 @@ editors use distinct labels/draft keys and preserve incomplete input while hidde
 
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
 guarded draw flow. Custom center images remain visible with a transparent hit area.
-Visible wheels idle silently at one turn per 120 seconds before and after every draw,
+Visible wheels idle silently at one turn per 60 seconds before and after every draw,
 including behind the result popup and during background sync. Pause/resume is in the
 wheel toolbar; live reduced-motion changes disable idle animation. The wheel lands on
 the winner before resuming decorative motion; stored results stay unchanged. No selection
@@ -85,6 +85,9 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Idle speed follow-up: lint and production build (including TypeScript) passed.
+Chromium verified a 60,000ms idle animation and measured 6.03 degrees/second.
 
 Continuous-idle follow-up: typecheck, lint, build and 5 relevant E2E passed (1.1min).
 Verified post-result idle restart, pause/resume, landing agreement, reduced motion,
