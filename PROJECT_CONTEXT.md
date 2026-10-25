@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Expanded built-in sounds and vertically centered home wheel.
+Last updated: 2026-10-25. Windows launcher now rebuilds and bypasses stale PWA HTML.
 
 ## Product and implemented scope
 
@@ -30,6 +30,13 @@ no JSON structure or SQL schema changed, so no data migration is required.
 
 ## Architecture and important files
 
+- `START_GYRNA.bat`, `STOP_GYRNA.bat`, `scripts/start-gyrna.ps1`: always build before
+  startup, verify listener ownership, restart only this project, migrate and launch hidden
+  servers with logs. Browser entry `/api/launch` in `backend/app/main.py` serves the latest
+  built HTML with no-store headers through the existing /api proxy. Old service workers
+  exclude /api navigation, so stale HTML cannot intercept this entry. Same-origin browser
+  data stays intact; no cache/IndexedDB/cookie deletion or forced reload of existing tabs.
+
 - `backend/app/routes.py`, `schemas.py`, `security.py`: atomic revisioned API, validation,
   ownership/CSRF/Origin checks. `/docs` provides generated OpenAPI documentation.
 - `models.py`, `database.py`, `migrations/`: SQLite WAL/foreign keys, serialized writes;
@@ -57,6 +64,16 @@ A new one-entry draft cannot draw. Client/imported results remain explicitly off
 Cookie loss copies local work to a new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Latest launcher change (2026-10-25): executed the real BAT via cmd.exe, including fresh
+build, migration, backend/frontend startup and browser-open command; exit code 0.
+STOP_GYRNA.bat successfully stopped its servers. Existing project listeners were also
+replaced during the initial restart check. Fixed a Windows PowerShell localhost timeout
+by probing 127.0.0.1 while retaining localhost for the browser's existing storage.
+Chromium verification deliberately replaced the real PWA's cached index with an old
+screen: `/` showed that cached screen; `/api/launch` loaded current centered UI and all
+16 sound presets with the saved private wheel intact. HTTP 200/no-store verified.
+No new full pytest/E2E suite was run for this launcher-only change; prior results below.
 
 Latest sounds/centering change (2026-10-25): 41 pytest passed (23.96 s), Alembic check,
 TypeScript, ESLint and production build passed. Nine targeted production E2E passed
@@ -88,8 +105,8 @@ Responsive checks now also verify hidden editor/templates on home and Options-to
   screenshots at all four widths and dark mode inspected in ignored `artifacts/`.
 - Python lines <=100 and Git diff checks passed. Secrets, databases, dependencies,
   screenshots and build outputs stay ignored. No remote push or deployment performed.
-- Existing Windows launcher prerequisite/port checks were tested in the initial work;
-  interactive double-click/browser launch was not exercised automatically.
+- The BAT startup and browser-open command were executed through cmd.exe; physical
+  double-click interaction and the user's browser profile are not automated checks.
 
 ## Differences, limits and next steps
 
@@ -109,7 +126,8 @@ Accounts, live rooms, payments, AI and app-store distribution remain outside thi
 
 Use `START_GYRNA.bat` from the root or the exact README commands. Backend port **8017**
 (8000 belongs to another project); frontend dev 5173, production preview 4173.
-The launcher reuses the existing build: run `cd frontend; bun run build` after source edits.
-Local preview: http://localhost:4173. No background deployment service was installed.
+The launcher always rebuilds and opens http://localhost:4173/api/launch to bypass stale
+PWA HTML. Use STOP_GYRNA.bat to stop its hidden servers. Logs: artifacts/launcher-*.log.
+Normal preview/PWA entry remains http://localhost:4173. No Windows service was installed.
 Keep backend/frontend schemas aligned, add migrations for schema changes and update this
 file with actual results. AGENTS.md contains stable conventions and check commands.

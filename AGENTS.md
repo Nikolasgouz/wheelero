@@ -15,6 +15,9 @@ Backend (from backend): `../.venv/Scripts/python -m alembic upgrade head`, then
 Frontend: `bun run dev`. Checks: backend `../.venv/Scripts/python -m pytest`,
 frontend `bun run typecheck`, `bun run lint`, `bun run test`, `bun run build`, `bun run e2e`.
 Unix: use `.venv/bin/python` instead of `.venv/Scripts/python`.
+Windows launcher: `START_GYRNA.bat` always builds and opens `/api/launch` to bypass stale
+PWA HTML; `STOP_GYRNA.bat` stops its servers. Never kill unrelated listeners or clear
+browser storage to update the app. Launcher logs stay in ignored `artifacts/`.
 
 All schema changes require explicit Alembic migrations. Never create tables at app startup.
 Enforce ownership and CSRF on private writes. No tokens or private payloads in logs.

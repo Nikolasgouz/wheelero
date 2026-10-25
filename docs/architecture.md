@@ -67,6 +67,15 @@ expose only title/options/no-repeat/customization, including explicitly shared i
 They never expose history or grant write access.
 Deleting a wheel atomically revokes all its shares. New links/revocation require a server.
 
+## Local launcher
+
+The Windows launcher opens `/api/launch`, a public HTML-only endpoint serving the built
+frontend index with no-store headers. Existing service workers exclude `/api` from
+navigation fallback, so even an old cached app cannot intercept this entry. Hashed assets
+load normally on the same origin; private cookies/IndexedDB and normal PWA caches remain.
+This local entry requires the frontend dist folder beside the backend; `/` remains the
+ordinary production/PWA entry when hosting the frontend separately.
+
 ## Customization
 
 The wheel and editor are separate views at every viewport size. The home view focuses

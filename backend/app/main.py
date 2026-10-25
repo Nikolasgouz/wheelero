@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Request
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from .config import settings
 from .routes import router
@@ -35,3 +37,12 @@ async def validation_error(_request, exc):
 
 
 app.include_router(router)
+
+
+@app.get("/api/launch", include_in_schema=False)
+def launch_latest_build():
+    # /api navigation bypasses even previously installed service workers.
+    index = Path(__file__).resolve().parents[2] / "frontend" / "dist" / "index.html"
+    if not index.is_file():
+        raise HTTPException(404, "Build the frontend before opening the local launcher.")
+    return FileResponse(index, media_type="text/html")

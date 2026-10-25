@@ -5,8 +5,15 @@ retain `bun.lock`. Python inputs are in `requirements.in`; the pinned environmen
 `requirements.lock` (`python -m pip freeze`). TypeScript is strict; Python lines <=100.
 
 Windows users can double-click `START_GYRNA.bat` for the production preview on 4173.
-It runs migrations and builds only when `dist/index.html` is absent. For code changes,
-use Vite development mode or run `bun run build` before relaunching the preview.
+It delegates to `scripts/start-gyrna.ps1`, always rebuilds, validates process ownership
+on 8017/4173, restarts this project's servers, migrates and opens `/api/launch`.
+This network-only HTML entry bypasses old PWA navigation caches at the same origin;
+normal `/` and installed-PWA offline behavior remain unchanged. It does not delete
+browser storage or force-reload existing tabs. Use `STOP_GYRNA.bat` to stop the hidden
+servers. Logs are in ignored `artifacts/launcher-*.log`. `START_GYRNA.bat -NoBrowser`
+performs the same startup without opening the user's browser, for automation.
+Readiness probes use 127.0.0.1 to avoid Windows PowerShell localhost/IPv6 timeouts;
+the browser URL stays localhost to retain the user's existing storage and cookies.
 
 Daily checks: pytest, Alembic check, typecheck, lint, unit tests, build and E2E. Tests
 were explicitly requested for initial implementation. Surface failures; no broad catches.
