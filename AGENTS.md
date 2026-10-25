@@ -1,4 +1,4 @@
-# Working in Γύρνα.
+# Working in SPINARO
 
 Use Python/FastAPI, SQLAlchemy, Alembic and SQLite in backend; React/TypeScript,
 Vite and Bun in frontend. Never replace this stack or introduce hosted dependencies.
@@ -6,7 +6,7 @@ Keep code simple, readable and focused. No broad exception handlers, silent fail
 unnecessary normalization/type guards, compatibility shims or speculative parameters.
 Inline single-use helpers unless they clarify substantial logic. Python lines <=100 chars.
 Validate external inputs at boundaries; keep internal invariants explicit.
-UI copy, templates and API messages are English; retain the Γύρνα. brand and all
+UI copy, templates and API messages are English; retain the SPINARO brand and all
 user-authored content. Keep bundled/backend templates aligned and UI labels centralized.
 Do not add tests unless requested (the initial implementation explicitly requests tests).
 

@@ -1,11 +1,11 @@
 @echo off
 setlocal
-title Gyrna - Update and Launch
+title SPINARO - Update and Launch
 cd /d "%~dp0"
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\start-gyrna.ps1" %*
 if errorlevel 1 (
     echo.
-    echo Gyrna could not start. Read the error above.
+    echo SPINARO could not start. Read the error above.
     pause
     exit /b 1
 )

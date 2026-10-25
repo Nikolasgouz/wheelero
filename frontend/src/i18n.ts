@@ -1,6 +1,6 @@
 export const t = {
-  brand: 'Γύρνα.',
-  closeOldTabs: 'Close other Γύρνα. tabs or app windows to finish this update. Your saved wheels will be kept.',
+  brand: 'SPINARO',
+  closeOldTabs: 'Close other SPINARO tabs or app windows to finish this update. Your saved wheels will be kept.',
   connectionUnavailable: 'Cannot connect to the server.',
   serverUnavailable: 'The server is unavailable.',
   eyebrow: 'LEAVE IT TO CHANCE',

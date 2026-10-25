@@ -24,7 +24,7 @@ export const ct = {
     gong: 'Grand finale',
   },
   themes: {
-    gyrna: 'Γύρνα.', ocean: 'Ocean', sunset: 'Sunset', forest: 'Forest',
+    gyrna: 'SPINARO', ocean: 'Ocean', sunset: 'Sunset', forest: 'Forest',
     rainbow: 'Rainbow', candy: 'Candy', tropical: 'Tropical', lavender: 'Lavender',
     rose: 'Rose garden', midnight: 'Midnight', neon: 'Neon', autumn: 'Autumn',
     ice: 'Ice', earth: 'Earth tones', coral: 'Coral reef', retro: 'Retro',

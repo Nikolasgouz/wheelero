@@ -1,10 +1,16 @@
-﻿# Γύρνα. — context
+# SPINARO — context
 
-Last updated: 2026-10-25. All Customize controls visible immediately; no More options toggle.
+Last updated: 2026-10-25. Application renamed to SPINARO.
 
 ## Product and current UI
 
-English anonymous decision spinner, responsive installable PWA; Γύρνα. branding retained.
+English anonymous decision spinner, responsive installable PWA; brand is SPINARO.
+Renamed header/accessibility label, browser/PWA title, default theme label, update text,
+API docs, package metadata, launcher messages and JSON/CSV download filenames.
+Storage DB/cookie/lock/channel names and the JSON format identifier remain `gyrna`
+to preserve saved data and backups; these are internal identifiers, not display labels.
+START_GYRNA.bat / STOP_GYRNA.bat retain their filenames so existing launch paths work.
+Existing installed PWA name refresh is controlled by the browser's manifest update cycle.
 FastAPI/SQLAlchemy/Alembic/
 SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
 multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
@@ -143,6 +149,13 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+SPINARO rename: frozen-lockfile install, typecheck, lint, production build and five
+relevant E2E passed (39.8s): draw/refresh/JSON backup plus responsive accessibility
+at 360/390/768/1440px. Chromium verified the header, browser title, manifest name and
+short_name, and running OpenAPI title; mobile screenshot inspected. Launcher rebuilt
+and restarted the project successfully. Backend behavior/schema unchanged; pytest not rerun.
+Actual OS-level relabeling of an already installed PWA was not tested.
 
 Always-visible Customize: typecheck, lint, production build and six relevant E2E passed
 (39.9s), covering cancellation/save/refresh, offline sync and accessibility/keyboard

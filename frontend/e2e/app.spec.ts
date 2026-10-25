@@ -147,7 +147,7 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await expect(page.locator('.wheel-card')).toHaveCount(1)
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export JSON' }).click()
-  expect((await download).suggestedFilename()).toMatch(/gyrna.*\.json/)
+  expect((await download).suggestedFilename()).toMatch(/spinaro.*\.json/)
   await page.getByRole('button', { name: 'Copy: Η παρέα μας 🎲', exact: true }).click()
   await expect(page.locator('.wheel-card')).toHaveCount(2)
   await page.locator('input[type=file]').setInputFiles({

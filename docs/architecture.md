@@ -13,7 +13,9 @@ flowchart LR
 
 `screens/` contains the editor and library; `components/` holds wheel, dialog and PWA
 controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives in
-`i18n.ts` and `customization.i18n.ts` in English; the Γύρνα. brand is unchanged.
+`i18n.ts` and `customization.i18n.ts` in English; the app is branded SPINARO.
+The rename changes display metadata and export filenames only. Internal `gyrna`
+storage/cookie/lock/channel and backup format identifiers remain stable to retain data.
 HTML/manifest language is English; history uses en-GB date/time formatting.
 Bundled templates support offline startup and are refreshed from the API. Both lists
 start with Pick a name (Alex, Emma, James, Olivia, Noah, Sofia).

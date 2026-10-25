@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-// Original geometric artwork, authored for Γύρνα. No external image sources.
+// Original geometric artwork, authored for SPINARO. No external image sources.
 const designs = {
   aurora: '<rect width="800" height="800" fill="#132b42"/><path d="M-100 600 Q200 -100 500 280T950 100" fill="none" stroke="#86efac" stroke-width="190"/><path d="M-100 800 Q200 100 500 480T950 300" fill="none" stroke="#c4b5fd" stroke-width="160"/>',
   sunset: '<rect width="800" height="800" fill="#f8c6b5"/><circle cx="400" cy="340" r="210" fill="#fde68a"/><path d="M0 450Q200 320 400 450T800 450V800H0" fill="#c4b5fd"/><path d="M0 610Q200 480 400 610T800 610V800H0" fill="#7650cc"/>',

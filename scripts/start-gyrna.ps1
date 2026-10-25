@@ -20,7 +20,7 @@ foreach ($serverId in $serverIds) {
 
 if ($StopServers) {
     foreach ($serverId in $serverIds) { Stop-Process -Id $serverId -ErrorAction SilentlyContinue }
-    Write-Host 'Gyrna servers stopped.'
+    Write-Host 'SPINARO servers stopped.'
     exit 0
 }
 
@@ -32,7 +32,7 @@ if (!(Test-Path -LiteralPath (Join-Path $frontendPath 'node_modules') -PathType 
     throw 'Frontend dependencies missing. Run bun install in frontend first.'
 }
 
-Write-Host 'Building the latest Gyrna version. Please wait...'
+Write-Host 'Building the latest SPINARO version. Please wait...'
 Set-Location -LiteralPath $frontendPath
 & $bunPath run build
 if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed. Existing servers were left running.' }

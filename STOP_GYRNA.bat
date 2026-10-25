@@ -1,10 +1,10 @@
 @echo off
 setlocal
-title Gyrna - Stop
+title SPINARO - Stop
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\start-gyrna.ps1" -StopServers
 if errorlevel 1 (
     echo.
-    echo Gyrna could not stop. Read the error above.
+    echo SPINARO could not stop. Read the error above.
     pause
     exit /b 1
 )
