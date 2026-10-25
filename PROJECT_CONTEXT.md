@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Independent Clear entries/results with durable offline sync.
+Last updated: 2026-10-25. Single-entry spins online/offline; minimum-two-entry prompt removed.
 
 ## Product and current UI
 
@@ -95,12 +95,20 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
   shell/fonts/gallery precache. Private APIs never enter service-worker caches.
 
 Private images are embedded PNG/JPEG/WebP or known gallery paths. Uploads <=10 MB become
-<=1024px/512 KB; wheel schema <=8 MB UTF-8; archives <=100 MB. No-repeat allows a last
-single entry after removals if history exists; a new one-entry draft cannot draw.
+<=1024px/512 KB; wheel schema <=8 MB UTF-8; archives <=100 MB. A fresh one-entry wheel
+can spin online/offline (index 0/count 1), without prior history. No-repeat exhausts it
+after one draw; New round works for a singleton. Empty lists stay disabled without the
+old minimum-two-entry prompt. Eligibility checks live in App.tsx, store.ts and routes.py.
 Client/imported results remain explicitly offline. Cookie loss copies local work to a
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Single-entry follow-up: 41 pytest tests (15.51s), typecheck, lint, 10 unit tests and
+production build and 3 relevant E2E passed (54.4s). Chromium verified repeated single-entry server draws, index
+0/count 1, refresh, no-repeat exhaustion/New round, offline draws after history clear,
+resync and removal of the old minimum-entry prompt. Mobile screenshot inspected.
+The launcher rebuilt and restarted this project's servers. No schema/migration change.
 
 Clear actions follow-up: 41 pytest tests passed (16.68s), Alembic check clean, typecheck,
 lint, 10 unit tests and production build passed. Full E2E: 28 passed, two exposed the

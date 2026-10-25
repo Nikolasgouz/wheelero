@@ -339,8 +339,6 @@ export async function spinWheel(
     const wheel = state.wheels.find((w) => w.id === id)!
     if (wheel.deleted) throw new Error(t.conflict)
     const options = activeOptions(wheel)
-    if (wheel.options.length < 2 && !(wheel.no_repeat && wheel.results.length > 0))
-      throw new Error(t.insufficient)
     if (!options.length) throw new Error(t.exhausted)
     const drawId = crypto.randomUUID()
     if (view.online) {

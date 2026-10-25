@@ -46,7 +46,7 @@ class WheelWrite(StrictModel):
     title: str = Field(min_length=1, max_length=120)
     no_repeat: bool = False
     customization: Customization = Field(default_factory=Customization)
-    # Drafts with 0 or 1 options can be saved, but cannot be spun.
+    # Empty drafts can be saved; draws require at least one active option.
     options: list[OptionInput] = Field(max_length=10000)
     results: list[OfflineResult] = Field(default_factory=list, max_length=1000)
     clear_history: bool = False

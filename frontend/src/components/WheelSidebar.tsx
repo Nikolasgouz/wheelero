@@ -189,7 +189,6 @@ export function WheelSidebar({
                   </button>
                 </div>
               ))}
-            {!wheel.options.length && <p className="empty-history">{t.insufficient}</p>}
           </div>
           {wheel.options.length > 100 && (
             <div className="editor-pages">

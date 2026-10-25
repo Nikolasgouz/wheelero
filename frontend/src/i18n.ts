@@ -49,7 +49,6 @@ export const t = {
   resumeIdle: 'Resume idle rotation',
   spinning: 'Spinning…',
   spinHint: 'Small decisions, without the overthinking.',
-  insufficient: 'Add at least 2 entries to get started.',
   exhausted: 'Every entry has had a turn. Start a new round!',
   selected: 'WE HAVE A WINNER',
   again: 'Spin again',

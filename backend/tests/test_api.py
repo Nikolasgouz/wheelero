@@ -130,13 +130,20 @@ def test_no_repeat_exhaustion_and_draft(client, payload):
         seen.add(response.json()["result"]["option_id"])
     assert len(seen) == 3
     assert client.post(path, json={"id": str(uuid4()), "revision": 4}).status_code == 422
-    for count in [0, 1]:
+    for count in [1, 0]:
         payload["mutation_id"] = str(uuid4())
         payload["options"] = payload["options"][:count]
         draft = create(client, payload)
-        assert client.post(f"/api/wheels/{draft['id']}/draws", json={
+        result = client.post(f"/api/wheels/{draft['id']}/draws", json={
             "id": str(uuid4()), "revision": 1,
-        }).status_code == 422
+        })
+        assert result.status_code == (200 if count else 422)
+        if count:
+            assert result.json()["result"]["choice_count"] == 1
+            assert result.json()["result"]["choice_index"] == 0
+            assert client.post(f"/api/wheels/{draft['id']}/draws", json={
+                "id": str(uuid4()), "revision": 2,
+            }).status_code == 422
 
 
 def test_sharing_is_snapshot_revocable_and_private(client, payload):

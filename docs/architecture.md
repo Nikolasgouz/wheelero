@@ -60,8 +60,9 @@ the app shell; API responses never enter its cache.
    offline deletion preserves the newer server wheel.
 
 Temporary blank fields remain local until editing finishes. Bulk blank lines are ignored.
-Duplicate labels retain individual probability unless explicitly removed. Drafts with
-0–1 options can be saved, but cannot spin. No-repeat can draw the last remaining entry.
+Duplicate labels retain individual probability unless explicitly removed. Empty drafts
+can be saved; any wheel with at least one active entry can spin, including a fresh
+one-entry wheel. A singleton always wins. No-repeat disables it until New round.
 
 An online request ID is persisted before sending. A lost response blocks further draws
 until the same request is resolved. During animation, options/navigation are locked and

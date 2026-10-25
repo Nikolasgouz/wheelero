@@ -16,9 +16,9 @@ cleared rows. This is a visible-history reset, not permanent erasure of SQLite r
 `PUT /api/wheels/{id}` accepts `clear_history`: after ownership/revision/idempotency checks,
 it marks existing history before ingesting the request's new offline results. Retrying the
 same mutation cannot erase later draws. A conflicting revision follows the existing copy flow.
-Draft wheels may have 0–1 options; draws require a configured list of 2–10,000.
-No-repeat may draw the last remaining option, including a one-entry list left by winner
-removals when the wheel already has history. A new one-entry draft cannot draw.
+Draft wheels may be empty; draws require at least one active entry from 1–10,000 options.
+A fresh one-entry wheel can draw without previous history; its result has index 0/count 1.
+No-repeat exhausts that entry after one draw, and New round reactivates it.
 Draws increment wheel revision even when
 no-repeat is off, preventing a concurrent edit/draw from silently losing history.
 

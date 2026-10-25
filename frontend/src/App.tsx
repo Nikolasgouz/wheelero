@@ -266,8 +266,7 @@ export default function App() {
   const locked = busy || !!data.pending_draw
   const valid =
     wheel.title.trim().length > 0 && wheel.options.every((o) => o.label.trim().length > 0)
-  const enoughOptions = wheel.options.length >= 2 || (wheel.no_repeat && wheel.results.length > 0)
-  const canSpin = enoughOptions && available.length > 0 && valid && !locked
+  const canSpin = available.length > 0 && valid && !locked
   const config = spinConfig ?? wheel.customization
   const displayed = spinOptions ?? presentationOptions(available, config, null)
   const sharedUrl = (token: string) => `${location.origin}/?share=${encodeURIComponent(token)}`
@@ -494,10 +493,8 @@ export default function App() {
                     </div>
                   )}
                   <div className="spin-actions">
-                    {(!enoughOptions || !available.length) && (
-                      <p>{!enoughOptions ? t.insufficient : t.exhausted}</p>
-                    )}
-                    {!available.length && wheel.options.length > 1 && (
+                    {!available.length && wheel.options.length > 0 && <p>{t.exhausted}</p>}
+                    {!available.length && wheel.options.length > 0 && (
                       <button
                         className="secondary"
                         disabled={locked}

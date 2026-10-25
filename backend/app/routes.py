@@ -124,11 +124,6 @@ def draw(wheel_id: UUID, body: DrawRequest, db: DB, owner: Owner):
     options = db.scalars(
         select(Option).where(Option.wheel_id == wheel.id).order_by(Option.position)
     ).all()
-    last_in_round = wheel.no_repeat and len(options) == 1 and db.scalar(
-        select(Result.id).where(Result.wheel_id == wheel.id, Result.cleared.is_(False)).limit(1)
-    ) is not None
-    if len(options) < 2 and not last_in_round:
-        raise HTTPException(422, "At least two entries are required.")
     active = [o for o in options if o.active or not wheel.no_repeat]
     if not active:
         raise HTTPException(422, "No entries remain. Start a new round.")
