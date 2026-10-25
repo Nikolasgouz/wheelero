@@ -665,44 +665,25 @@ export default function App() {
         />
       )}
       {result && popupOpen && (
-        <Dialog title={config.popup_message} close={closeResult}>
+        <Dialog title={config.popup_message} close={closeResult} headerClose={false}>
           <div className="result-display">
             <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
             <span className="pill">{result.source === 'server' ? t.server : t.offlineResult}</span>
           </div>
-          <button className="primary full-width" disabled={!canSpin} onClick={spin}>
-            <RefreshCw size={18} />
-            {t.again}
-          </button>
-          {!available.length && (
-            <button
-              className="secondary full-width"
-              onClick={() => {
-                edit({ options: wheel.options.map((o) => ({ ...o, active: true })) })
-                closeResult()
-              }}
-            >
-              {t.reset}
-            </button>
-          )}
           <div className="result-actions">
+            <button className="secondary" onClick={closeResult}>
+              {t.close}
+            </button>
             {config.remove_button && (
               <button
-                className="text-button"
+                className="primary"
                 disabled={locked || !wheel.options.some((o) => o.id === result.option_id)}
                 onClick={removeResult}
               >
                 {t.removeWinner}
               </button>
             )}
-            <button
-              className="icon-button"
-              aria-label={t.copyResult}
-              onClick={() => copy(result.label)}
-            >
-              <Copy size={18} />
-            </button>
           </div>
         </Dialog>
       )}

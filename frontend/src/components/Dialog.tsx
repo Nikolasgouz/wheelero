@@ -6,10 +6,12 @@ export function Dialog({
   title,
   close,
   children,
+  headerClose = true,
 }: {
   title: string
   close: () => void
   children: ReactNode
+  headerClose?: boolean
 }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
@@ -32,9 +34,11 @@ export function Dialog({
     >
       <div className="dialog-heading">
         <h2 id="dialog-title">{title}</h2>
-        <button className="icon-button" onClick={close} aria-label={t.close}>
-          <X size={20} />
-        </button>
+        {headerClose && (
+          <button className="icon-button" onClick={close} aria-label={t.close}>
+            <X size={20} />
+          </button>
+        )}
       </div>
       {children}
     </dialog>

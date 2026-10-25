@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Suspense spin scores and celebratory result sounds.
+Last updated: 2026-10-25. Result popup actions simplified to Close / Remove winner.
 
 ## Product and current UI
 
@@ -30,6 +30,9 @@ are 16px and focused rows are highlighted. The sidebar holds a pre-draw wheel sn
 until the animation finishes, hiding the new result/count and no-repeat marker while
 preserving previous history. Backend/IndexedDB persistence still happens immediately.
 Results show source/time, recent/all history and become selected after a completed draw.
+The winner popup offers only Close and Remove winner (unless removal is hidden in
+Customize). It has no respin/copy/New round actions; these remain on the main screen.
+Dialog's optional headerClose hides its duplicate close icon for this popup only.
 Customize/Shuffle/Sort sit directly below the sidebar tabs. Shuffle and numeric,
 case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
 and lock during draws. Desktop navigation is Wheel/My wheels. More options opens the
@@ -112,6 +115,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Result-popup follow-up: typecheck, lint, production build and 2 relevant E2E passed
+(28.8s: no-repeat exhaustion, reduced motion/modal dismissal). Manual Chromium checks
+at 360px verified exactly Close/Remove winner, focus/Enter/Escape, persisted winner
+removal with history retained, and the hidden-remove setting. Screenshot inspected.
+No backend/schema changes; pytest not rerun.
 
 Suspense/celebration follow-up: typecheck, lint and production build passed. Three E2E
 passed (15.2s: all 16 sounds/volume/mute, offline customization, reduced motion); the
