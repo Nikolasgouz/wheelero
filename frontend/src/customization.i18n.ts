@@ -44,8 +44,6 @@ export const ct = {
     '/images/blossom.webp': 'Blossom',
   },
   settings: 'Wheel settings',
-  moreOptions: 'More options',
-  fewerOptions: 'Fewer options',
   spinSound: 'Spin sound',
   resultSound: 'Result sound',
   spinVolume: 'Spin volume',

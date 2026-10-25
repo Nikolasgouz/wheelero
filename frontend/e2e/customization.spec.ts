@@ -28,7 +28,6 @@ async function state(page: Page): Promise<SavedState> {
 async function customize(page: Page) {
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Customize', exact: true }).click()
-  await page.getByRole('dialog').getByRole('button', { name: 'More options', exact: true }).click()
   return page.getByRole('dialog')
 }
 async function save(page: Page) {
@@ -668,7 +667,7 @@ for (const width of [360, 390, 768, 1440])
     await page.setViewportSize({ width, height: 900 })
     await ready(page)
     const dialog = await customize(page)
-    await dialog.getByRole('button', { name: 'Fewer options', exact: true }).click()
+    await expect(dialog.getByRole('button', { name: /More options|Fewer options/ })).toHaveCount(0)
     for (const tab of ['During spin', 'After spin', 'Appearance']) {
       await dialog.getByRole('tab', { name: tab, exact: true }).click()
       expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
@@ -678,17 +677,9 @@ for (const width of [360, 390, 768, 1440])
         .analyze()
       expect(scan.violations).toEqual([])
       await page.screenshot({
-        path: `../artifacts/customize-simple-${width}-${tab.replaceAll(' ', '-')}.png`,
+        path: `../artifacts/customize-all-${width}-${tab.replaceAll(' ', '-')}.png`,
         fullPage: true,
       })
-      await dialog.getByRole('button', { name: 'More options', exact: true }).click()
-      const expanded = await new AxeBuilder({ page })
-        .include('dialog')
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze()
-      expect(expanded.violations).toEqual([])
-      expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
-      await dialog.getByRole('button', { name: 'Fewer options', exact: true }).click()
     }
     await page.screenshot({ path: `../artifacts/customize-${width}.png`, fullPage: true })
     await dialog.getByRole('tab', { name: 'Appearance', exact: true }).focus()

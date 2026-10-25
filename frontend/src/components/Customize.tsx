@@ -18,7 +18,6 @@ export function Customize({
 }) {
   const [draft, setDraft] = useState(() => structuredClone(value))
   const [tab, setTab] = useState(0)
-  const [advanced, setAdvanced] = useState(false)
   const [saving, setSaving] = useState(false)
   const [uploads, setUploads] = useState(0)
   const [error, setError] = useState('')
@@ -189,15 +188,13 @@ export function Customize({
                   {sound(false)}
                   {range('spin_volume', ct.spinVolume, 0, 100)}
                   {range('duration', ct.duration, 1, 60)}
-                  {advanced && (
-                    <div className="custom-extra">
-                      {check('show_duplicates', ct.duplicates)}
-                      {check('slow_spin', ct.slow)}
-                      {check('show_title', ct.showTitle)}
-                      {range('max_names', ct.maxNames, 4, 1000)}
-                      <p className="muted">{ct.fairness}</p>
-                    </div>
-                  )}
+                  <div className="custom-extra">
+                    {check('show_duplicates', ct.duplicates)}
+                    {check('slow_spin', ct.slow)}
+                    {check('show_title', ct.showTitle)}
+                    {range('max_names', ct.maxNames, 4, 1000)}
+                    <p className="muted">{ct.fairness}</p>
+                  </div>
                 </>
               )}
               {tab === 1 && (
@@ -216,14 +213,12 @@ export function Customize({
                       onChange={(e) => patch({ popup_message: e.target.value })}
                     />
                   </label>
-                  {advanced && (
-                    <div className="custom-extra">
-                      {check('animate_winner', ct.animate)}
-                      {check('auto_remove', ct.autoRemove)}
-                      {check('remove_button', ct.remove)}
-                      {check('removal_sound', ct.click)}
-                    </div>
-                  )}
+                  <div className="custom-extra">
+                    {check('animate_winner', ct.animate)}
+                    {check('auto_remove', ct.autoRemove)}
+                    {check('remove_button', ct.remove)}
+                    {check('removal_sound', ct.click)}
+                  </div>
                 </>
               )}
               {tab === 2 && (
@@ -274,7 +269,7 @@ export function Customize({
                           ))}
                         </select>
                       </label>
-                      <div className="custom-extra" hidden={!advanced}>
+                      <div className="custom-extra">
                         <fieldset>
                           <legend>{ct.palette}</legend>
                           <p className="muted">{ct.uniqueColors}</p>
@@ -355,49 +350,37 @@ export function Customize({
                       change={(wheel_image) => patch({ wheel_image })}
                     />
                   )}
-                  {advanced && (
-                    <div className="custom-extra">
-                      <label className="color-setting">
-                        {ct.page}
-                        <input
-                          type="color"
-                          value={draft.page_color}
-                          onChange={(e) => patch({ page_color: e.target.value })}
-                        />
-                      </label>
-                      {check('gradient', ct.gradient)}
-                      <label>
-                        {ct.text}
-                        <select
-                          aria-label={ct.text}
-                          value={draft.text}
-                          onChange={(e) => patch({ text: e.target.value as Customization['text'] })}
-                        >
-                          <option value="always">{ct.always}</option>
-                          <option value="never">{ct.never}</option>
-                          <option value="unless_image">{ct.unlessImage}</option>
-                        </select>
-                      </label>
-                      {check('borders', ct.borders)}
-                      {check('shadow', ct.shadow)}
-                      {check('pointer_changes', ct.pointer)}
-                    </div>
-                  )}
+                  <div className="custom-extra">
+                    <label className="color-setting">
+                      {ct.page}
+                      <input
+                        type="color"
+                        value={draft.page_color}
+                        onChange={(e) => patch({ page_color: e.target.value })}
+                      />
+                    </label>
+                    {check('gradient', ct.gradient)}
+                    <label>
+                      {ct.text}
+                      <select
+                        aria-label={ct.text}
+                        value={draft.text}
+                        onChange={(e) => patch({ text: e.target.value as Customization['text'] })}
+                      >
+                        <option value="always">{ct.always}</option>
+                        <option value="never">{ct.never}</option>
+                        <option value="unless_image">{ct.unlessImage}</option>
+                      </select>
+                    </label>
+                    {check('borders', ct.borders)}
+                    {check('shadow', ct.shadow)}
+                    {check('pointer_changes', ct.pointer)}
+                  </div>
                 </>
               )}
             </div>
           </fieldset>
           <div className="custom-footer">
-            <button
-              type="button"
-              className="text-button custom-more"
-              aria-expanded={advanced}
-              aria-controls={`custom-panel-${tab}`}
-              disabled={saving}
-              onClick={() => setAdvanced(!advanced)}
-            >
-              {advanced ? ct.fewerOptions : ct.moreOptions}
-            </button>
             <button type="button" className="secondary" disabled={saving} onClick={close}>
               {ct.cancel}
             </button>

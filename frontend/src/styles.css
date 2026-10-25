@@ -1565,14 +1565,11 @@ dialog:has(.customization) {
   padding: 24px 0;
   min-height: 260px;
 }
-.custom-extra:not([hidden]) {
+.custom-extra {
   display: grid;
   gap: 18px;
   border-top: 1px solid var(--line);
   padding-top: 18px;
-}
-.custom-more {
-  margin-right: auto;
 }
 .custom-panel label:not(.custom-check) {
   display: grid;

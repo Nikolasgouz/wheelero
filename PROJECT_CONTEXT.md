@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Expanded Appearance to 16 themes and 12 gallery images.
+Last updated: 2026-10-25. All Customize controls visible immediately; no More options toggle.
 
 ## Product and current UI
 
@@ -72,12 +72,11 @@ the winner before resuming decorative motion; stored results stay unchanged. No 
 occurs on idle. Hidden/share screens and uncertain pending draws still suspend idle.
 
 Customize has three transactional tabs: During spin / After spin / Appearance. Settings
-start in a compact 620px dialog: spin sound/volume/duration; result sound/volume,
-confetti/popup/message; appearance mode/theme or wheel image. More options reveals
-the remaining controls across tabs; Fewer options hides them without changing values.
-This is dialog-local UI state and resets on reopening. Existing configurations and
-draft Cancel/OK behavior are preserved; no schema migration. The live reference's three
-tabs were reinspected; our reduced initial control count is an intentional difference.
+are all visible immediately in their tab in the 620px dialog, with scrolling and a sticky
+Cancel/OK footer. The More options/Fewer options toggle and its UI state were removed.
+Appearance retains conditional color/image fields. Existing configurations and draft
+Cancel/OK behavior are preserved; no schema migration. The main screen's separate
+More options shortcut still opens the full entry editor.
 All available settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
@@ -144,6 +143,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Always-visible Customize: typecheck, lint, production build and six relevant E2E passed
+(39.9s), covering cancellation/save/refresh, offline sync and accessibility/keyboard
+at 360/390/768/1440px. Confirmed no More options/Fewer options button inside Customize;
+all settings are available directly in their tab. Mobile screenshot visually inspected.
+Backend/schema unchanged; pytest not rerun for this UI-only follow-up.
 
 Expanded Appearance: typecheck, lint, production build, 41 pytest (21.25s) and all
 14 customization E2E passed (2.1min), including accessibility at 360/390/768/1440px.
