@@ -125,7 +125,7 @@ The stationary center button starts the same guarded draw flow as result actions
 supports native keyboard activation. With a custom center image its hit area is
 transparent and its label sits just below the image, keeping small images visible.
 While awaiting the next spin, `Wheel.tsx` uses Web Animations for a silent
-60-second idle revolution without React updates each frame. Pause/resume and live
+30-second idle revolution without React updates each frame. Pause/resume and live
 reduced-motion changes are respected; hidden screens/share dialogs and pending draws stop idle
 motion. `lib/motion.ts` captures the actual rendered angle before cancelling idle motion.
 The draw animation starts from that angle, still targeting the backend/offline winner.
