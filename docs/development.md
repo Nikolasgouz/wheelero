@@ -61,3 +61,6 @@ distinct from the full editor. Lists are paged at 100 entries; Results selects a
 after a completed draw. Presentation hides the sidebar; below 1024px it stacks under the wheel.
 Keep the pre-draw sidebar snapshot until animation completion: subscribing directly to
 the new store results would expose the winner and no-repeat marker before the wheel stops.
+The sidebar action row owns direct Customize/Shuffle/Sort access. Preserve option IDs,
+active flags and images on reordering; sorting must retain duplicate entries. The full
+editor remains reachable through More options; desktop navigation has no Entries button.

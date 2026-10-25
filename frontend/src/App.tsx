@@ -300,13 +300,6 @@ export default function App() {
           </button>
           <button
             disabled={locked}
-            className={screen === 'options' ? 'selected' : ''}
-            onClick={() => navigate('options')}
-          >
-            {t.options}
-          </button>
-          <button
-            disabled={locked}
             className={screen === 'library' ? 'selected' : ''}
             onClick={() => navigate('library')}
           >
@@ -525,6 +518,8 @@ export default function App() {
                   edit={edit}
                   tab={sidebarTab}
                   setTab={setSidebarTab}
+                  customize={() => setCustomOpen(true)}
+                  openEditor={() => navigate('options')}
                 />
               </div>
               <div className="editor-column" hidden={screen !== 'options'}>

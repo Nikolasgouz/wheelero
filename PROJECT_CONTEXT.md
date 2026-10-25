@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Idle rotation increased to one revolution per 30 seconds.
+Last updated: 2026-10-25. Sidebar Customize/Shuffle/Sort toolbar and simpler top navigation.
 
 ## Product and current UI
 
@@ -30,8 +30,11 @@ are 16px and focused rows are highlighted. The sidebar holds a pre-draw wheel sn
 until the animation finishes, hiding the new result/count and no-repeat marker while
 preserving previous history. Backend/IndexedDB persistence still happens immediately.
 Results show source/time, recent/all history and become selected after a completed draw.
-Entries remains a separate full editor with Customize, sharing and templates. Both entry
-editors use distinct labels/draft keys and preserve incomplete input while hidden.
+Customize/Shuffle/Sort sit directly below the sidebar tabs. Shuffle and numeric,
+case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
+and lock during draws. Desktop navigation is Wheel/My wheels. More options opens the
+full editor (also reachable from mobile Entries) with sharing, templates and Customize.
+Both entry editors use distinct labels/draft keys and preserve incomplete input while hidden.
 
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
 guarded draw flow. Custom center images remain visible with a transparent hit area.
@@ -67,6 +70,7 @@ refresh, sharing, copies, JSON and offline sync. See docs/customization.md for p
 - `lib/random.ts`, `geometry.ts`, `presentation.ts`: independent RNG, geometry and visual
   projection of at most 1,000 entries. All eligible entries retain their probability;
   the displayed wheel always contains the winning ID.
+  RNG/shuffle bounds now match 10,000 entries (corrected the previous 200-entry limit).
 - `lib/motion.ts`: capture the rendered angle and cancel idle animation before a draw.
   `components/Wheel.tsx` owns Web Animations idle motion; the center control does not rotate.
 - `components/WheelSidebar.tsx`: home entries and history; `screens/Editor.tsx`: full editor.
@@ -85,6 +89,15 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Sidebar toolbar follow-up: typecheck, lint, 10 unit tests and production build passed.
+Full E2E run: 29 passed; one navigation-helper race timed out after template selection.
+After waiting for the local write/navigation in that helper, the failed no-repeat/bulk
+scenario passed on rerun (25.7s). Responsive/accessibility checks passed at all four
+360/390/768/1440px widths; desktop/mobile screenshots were visually inspected.
+A separate 211-entry browser check verified shuffle/natural sort offline, refresh and
+server resync, preserving IDs, duplicates, active flags and images. Unit checks cover
+the 10,000-entry shuffle limit. Backend/schema unchanged; pytest not rerun this follow-up.
 
 Idle speed follow-up: lint and production build (including TypeScript) passed.
 Chromium verified a 30,000ms idle animation and measured 11.99 degrees/second.

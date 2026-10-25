@@ -20,11 +20,14 @@ describe('pointer agreement', () => {
   })
 })
 it('selects valid cryptographic indices and preserves duplicate entries in shuffle', () => {
-  for (const count of [1, 2, 3, 7, 200]) {
+  for (const count of [1, 2, 3, 7, 200, 201, 10000]) {
     for (let i = 0; i < 100; i++) expect(randomIndex(count)).toBeLessThan(count)
   }
   expect(shuffled(['a', 'a', 'b']).sort()).toEqual(['a', 'a', 'b'])
   expect(() => randomIndex(0)).toThrow()
+  expect(() => randomIndex(10001)).toThrow()
+  const entries = Array.from({ length: 10000 }, (_, id) => ({ id, label: 'Duplicate' }))
+  expect(shuffled(entries).sort((a, b) => a.id - b.id)).toEqual(entries)
 })
 it('rejects malformed imports and impossible result indices', () => {
   expect(backupSchema.safeParse({ version: 1, wheels: [] }).success).toBe(false)

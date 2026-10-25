@@ -100,7 +100,14 @@ Each row has a pencil action; focusing its input selects the name, Enter blurs, 
 edits continue through the same immediate local autosave path. Input text is 16px for
 mobile readability; editing controls stay disabled while a draw is pending/animating.
 Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
-The separate Entries view retains the full editor, customization, sharing and templates.
+Directly below Entries/Results, a shared toolbar opens Customize, shuffles all entries,
+or sorts by English collator order (numeric, case-insensitive). Both reorder actions
+preserve IDs/images/active flags/duplicates, reset pagination and use the same autosave.
+All actions lock during draws. Shuffle uses unbiased Fisher-Yates/Web Crypto with the
+same 10,000-entry limit as the wheel; the old 200-entry RNG bound was corrected.
+The desktop top navigation contains Wheel/My wheels. More options below the sidebar
+opens the full editor, sharing and templates; mobile retains its Entries navigation.
+The full editor also retains its Customize shortcut.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.

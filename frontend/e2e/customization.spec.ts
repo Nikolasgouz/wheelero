@@ -26,7 +26,7 @@ async function state(page: Page): Promise<SavedState> {
   })
 }
 async function customize(page: Page) {
-  await showScreen(page, 'options')
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Customize', exact: true }).click()
   return page.getByRole('dialog')
 }
@@ -580,7 +580,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   })
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('button', { name: 'Entries', exact: true })).toBeDisabled()
+    await expect(page.getByRole('button', { name: 'More options', exact: true })).toBeDisabled()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   const data = await state(page)
   const winner = data.wheels[0].results[0]

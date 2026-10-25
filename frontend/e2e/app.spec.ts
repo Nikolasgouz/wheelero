@@ -32,6 +32,22 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
     .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
     .toBe(0)
   await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
+  await page.locator('.sidebar-actions').getByRole('button', { name: 'Sort', exact: true }).click()
+  expect(
+    await page
+      .locator('.sidebar-entry input')
+      .evaluateAll((inputs) => inputs.map((input) => (input as HTMLInputElement).value)),
+  ).toEqual(['Alex', 'Emma', 'James', 'Noah', 'Olivia', 'Sofia'])
+  await page
+    .locator('.sidebar-actions')
+    .getByRole('button', { name: 'Shuffle', exact: true })
+    .click()
+  expect(
+    await page
+      .locator('.sidebar-entry input')
+      .evaluateAll((inputs) => inputs.map((input) => (input as HTMLInputElement).value).sort()),
+  ).toEqual(['Alex', 'Emma', 'James', 'Noah', 'Olivia', 'Sofia'])
+  await page.locator('.sidebar-actions').getByRole('button', { name: 'Sort', exact: true }).click()
   await page.getByRole('button', { name: 'Edit name: Alex', exact: true }).click()
   const firstEntry = page.getByLabel('Entry 1', { exact: true })
   await expect(firstEntry).toBeFocused()
@@ -56,6 +72,10 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
+  for (const name of ['Customize', 'Shuffle', 'Sort'])
+    await expect(
+      page.locator('.sidebar-actions').getByRole('button', { name, exact: true }),
+    ).toBeDisabled()
   await expect
     .poll(async () => {
       const response = await page.request.get('/api/wheels')
@@ -253,7 +273,17 @@ for (const width of [360, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 1000 })
     await ready(page)
     await expect(page.locator('.editor-column')).toBeHidden()
-    await expect(page.getByRole('button', { name: 'Customize', exact: true })).toHaveCount(0)
+    await expect(
+      page.locator('.desktop-nav').getByRole('button', { name: 'Entries', exact: true }),
+    ).toHaveCount(0)
+    await expect(page.locator('.sidebar-actions button')).toHaveText([
+      'Customize',
+      'Shuffle',
+      'Sort',
+    ])
+    await page.getByRole('button', { name: 'Customize', exact: true }).click()
+    await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
+    await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
     await expect(page.getByRole('tab', { name: 'Entries', exact: true })).toHaveAttribute(
       'aria-selected',
@@ -291,7 +321,7 @@ for (const width of [360, 390, 768, 1440]) {
     await page.keyboard.press('Tab')
     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true)
     {
-      await page.getByRole('button', { name: 'Entries', exact: true }).click()
+      await showScreen(page, 'options')
       await expect(page.getByLabel('Wheel title', { exact: true })).toBeVisible()
       await expect(page.locator('.spinner-panel')).toBeHidden()
       await page.getByRole('button', { name: 'Customize', exact: true }).click()

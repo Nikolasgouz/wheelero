@@ -1,6 +1,6 @@
 // Rejection sampling avoids the modulo bias of randomUint32 % count.
 export function randomIndex(count: number): number {
-  if (!Number.isInteger(count) || count < 1 || count > 200) throw new RangeError('count: 1–200')
+  if (!Number.isInteger(count) || count < 1 || count > 10000) throw new RangeError('count: 1–10000')
   const limit = Math.floor(2 ** 32 / count) * count
   const value = new Uint32Array(1)
   do {

@@ -1,8 +1,21 @@
 import { useEffect, useState } from 'react'
-import { History, Pencil, Plus, Trash2, Wifi, WifiOff } from 'lucide-react'
+import {
+  ArrowDownAZ,
+  History,
+  Pencil,
+  Plus,
+  Settings2,
+  Shuffle,
+  Trash2,
+  Wifi,
+  WifiOff,
+} from 'lucide-react'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
+import { shuffled } from '../lib/random'
+
+const alphabetical = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
 export function WheelSidebar({
   wheel,
@@ -10,12 +23,16 @@ export function WheelSidebar({
   edit,
   tab,
   setTab,
+  customize,
+  openEditor,
 }: {
   wheel: LocalWheel
   disabled: boolean
   edit: (patch: Partial<Pick<Wheel, 'options'>>) => void
   tab: 'entries' | 'results'
   setTab: (tab: 'entries' | 'results') => void
+  customize: () => void
+  openEditor: () => void
 }) {
   const [newEntry, setNewEntry] = useState(
     () => localStorage.getItem(`sidebar-draft:${wheel.id}`) ?? '',
@@ -62,6 +79,36 @@ export function WheelSidebar({
           </button>
         ))}
       </div>
+      <fieldset className="sidebar-actions" disabled={disabled} aria-label={t.wheelActions}>
+        <button className="secondary" onClick={customize}>
+          <Settings2 size={14} />
+          {ct.title}
+        </button>
+        <button
+          className="secondary"
+          disabled={wheel.options.length < 2}
+          onClick={() => {
+            edit({ options: shuffled(wheel.options) })
+            setPage(0)
+          }}
+        >
+          <Shuffle size={14} />
+          {t.shuffle}
+        </button>
+        <button
+          className="secondary"
+          disabled={wheel.options.length < 2}
+          onClick={() => {
+            edit({
+              options: [...wheel.options].sort((a, b) => alphabetical.compare(a.label, b.label)),
+            })
+            setPage(0)
+          }}
+        >
+          <ArrowDownAZ size={14} />
+          {t.sort}
+        </button>
+      </fieldset>
       <div
         role="tabpanel"
         id="sidebar-entries"
@@ -226,6 +273,9 @@ export function WheelSidebar({
           )}
         </div>
       </div>
+      <button className="sidebar-more-options text-button" disabled={disabled} onClick={openEditor}>
+        {t.moreOptions}
+      </button>
     </aside>
   )
 }
