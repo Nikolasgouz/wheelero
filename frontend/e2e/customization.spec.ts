@@ -166,6 +166,8 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
     }
   })
   await ready(page)
+  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
   let dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeDisabled()
   await dialog.getByRole('button', { name: 'Cancel' }).click()
@@ -264,11 +266,10 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   await expect(dialog.getByLabel('Spin sound', { exact: true })).toHaveValue('arpeggio')
   await dialog.getByRole('tab', { name: 'After spin' }).click()
   await expect(dialog.getByLabel('Result sound', { exact: true })).toHaveValue('magic')
-  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeDisabled()
+  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
   await dialog.getByRole('button', { name: 'Cancel' }).click()
-  // Reload resets global sound to mute; toggle it on and back off explicitly.
+  // Each reload starts with sound enabled; explicit mute still overrides the sounds.
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Unmute sound', exact: true }).click()
   await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
   dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeDisabled()

@@ -74,7 +74,7 @@ export default function App() {
   const [customOpen, setCustomOpen] = useState(false)
   const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
   const [popupOpen, setPopupOpen] = useState(false)
-  const [sound, setSound] = useState(false)
+  const [sound, setSound] = useState(true)
   const [presenting, setPresenting] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [shares, setShares] = useState<Share[]>([])

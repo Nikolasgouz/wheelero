@@ -117,6 +117,9 @@ Both editors stay mounted while hidden, using distinct labels/IDs and draft keys
 through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON
 settings and optional option images. IndexedDB version 3 includes both local migrations.
 `lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
+App sound starts enabled on every load. Manual mute applies to the current app session;
+per-wheel sound selection and volume still apply. Audio plays on spin/preview actions,
+not automatically just from opening the page.
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
 The desktop home uses the viewport width with a 340px sidebar 16px from the right edge.

@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Single-entry spins online/offline; minimum-two-entry prompt removed.
+Last updated: 2026-10-25. Sound enabled on every app load/refresh.
 
 ## Product and current UI
 
@@ -57,6 +57,8 @@ include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
 Global mute and reduced motion take precedence. Settings and private images survive
 refresh, sharing, copies, JSON and offline sync. See docs/customization.md for parity.
+App sound defaults to enabled on each load/refresh; manual mute is session-only.
+Per-wheel No sound/volume settings still apply. Audio starts on spin or preview actions.
 Color-mode sectors now use unique colors: enabled palette colors first (deduplicated),
 then deterministic generated colors. Appending preserves existing positions' colors;
 colors follow positions, not IDs on sort/removal. `lib/presentation.ts:sectorColors`
@@ -103,6 +105,10 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Sound-default follow-up: typecheck, lint and production build passed. The existing
+audio E2E passed (8.9s), checking default enabled state, all 16 sounds, stop/volume,
+manual mute and enabled previews after refresh. No backend/schema changes.
 
 Single-entry follow-up: 41 pytest tests (15.51s), typecheck, lint, 10 unit tests and
 production build and 3 relevant E2E passed (54.4s). Chromium verified repeated single-entry server draws, index
