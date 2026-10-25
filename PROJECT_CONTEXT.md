@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Result popup actions simplified to Close / Remove winner.
+Last updated: 2026-10-25. Customize gear beside Pause; Entries toolbar Shuffle/Sort/Clear.
 
 ## Product and current UI
 
@@ -33,7 +33,9 @@ Results show source/time, recent/all history and become selected after a complet
 The winner popup offers only Close and Remove winner (unless removal is hidden in
 Customize). It has no respin/copy/New round actions; these remain on the main screen.
 Dialog's optional headerClose hides its duplicate close icon for this popup only.
-Customize/Shuffle/Sort sit directly below the sidebar tabs. Shuffle and numeric,
+Customize is a labeled gear icon immediately after Pause in the wheel toolbar. Entries
+has Shuffle/Sort/Clear directly below the tabs; Results retains its own history Clear.
+The entry toolbar is hidden while Results is selected. Shuffle and numeric,
 case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
 and lock during draws. Desktop navigation is Wheel/My wheels. More options opens the
 full editor (also reachable from mobile Entries) with sharing, templates and Customize.
@@ -115,6 +117,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Customize-gear follow-up: typecheck, lint, build and 6 relevant E2E passed (44.1s),
+covering the adjacent Pause/Customize controls, draw locks, Shuffle/Sort, settings
+cancel/save and accessibility at 360/390/768/1440px. Desktop/mobile screenshots inspected;
+no horizontal overflow. Manual browser check exercised the relocated Clear and gear,
+winner removal/persistence and hidden-remove setting. No backend/schema changes.
 
 Result-popup follow-up: typecheck, lint, production build and 2 relevant E2E passed
 (28.8s: no-repeat exhaustion, reduced motion/modal dismissal). Manual Chromium checks

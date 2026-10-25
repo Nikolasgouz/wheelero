@@ -101,8 +101,10 @@ Each row has a pencil action; focusing its input selects the name, Enter blurs, 
 edits continue through the same immediate local autosave path. Input text is 16px for
 mobile readability; editing controls stay disabled while a draw is pending/animating.
 Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
-Directly below Entries/Results, a shared toolbar opens Customize, shuffles all entries,
-or sorts by English collator order (numeric, case-insensitive). Both reorder actions
+The Customize gear sits immediately after Pause in the wheel toolbar, with an accessible
+label and tooltip. The Entries toolbar offers Shuffle/Sort/Clear and hides on Results;
+the Results panel keeps its separate Clear. Sort uses English collator order
+(numeric, case-insensitive). Both reorder actions
 preserve IDs/images/active flags/duplicates, reset pagination and use the same autosave.
 All actions lock during draws. Shuffle uses unbiased Fisher-Yates/Web Crypto with the
 same 10,000-entry limit as the wheel; the old 200-entry RNG bound was corrected.

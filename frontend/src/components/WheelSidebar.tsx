@@ -1,15 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  ArrowDownAZ,
-  History,
-  Pencil,
-  Plus,
-  Settings2,
-  Shuffle,
-  Trash2,
-  Wifi,
-  WifiOff,
-} from 'lucide-react'
+import { ArrowDownAZ, History, Pencil, Plus, Shuffle, Trash2, Wifi, WifiOff } from 'lucide-react'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
@@ -23,7 +13,6 @@ export function WheelSidebar({
   edit,
   tab,
   setTab,
-  customize,
   openEditor,
   clear,
 }: {
@@ -32,7 +21,6 @@ export function WheelSidebar({
   edit: (patch: Partial<Pick<Wheel, 'options'>>) => void
   tab: 'entries' | 'results'
   setTab: (tab: 'entries' | 'results') => void
-  customize: () => void
   openEditor: () => void
   clear: (section: 'entries' | 'results') => void
 }) {
@@ -81,11 +69,12 @@ export function WheelSidebar({
           </button>
         ))}
       </div>
-      <fieldset className="sidebar-actions" disabled={disabled} aria-label={t.wheelActions}>
-        <button className="secondary" onClick={customize}>
-          <Settings2 size={14} />
-          {ct.title}
-        </button>
+      <fieldset
+        className="sidebar-actions"
+        disabled={disabled}
+        aria-label={t.wheelActions}
+        hidden={tab !== 'entries'}
+      >
         <button
           className="secondary"
           disabled={wheel.options.length < 2}
@@ -110,6 +99,18 @@ export function WheelSidebar({
           <ArrowDownAZ size={14} />
           {t.sort}
         </button>
+        <button
+          className="secondary"
+          aria-label={t.clearEntries}
+          disabled={!wheel.options.length}
+          onClick={() => {
+            clear('entries')
+            setPage(0)
+            setNewEntry('')
+          }}
+        >
+          <Trash2 size={14} /> {t.clear}
+        </button>
       </fieldset>
       <div
         role="tabpanel"
@@ -118,23 +119,9 @@ export function WheelSidebar({
         hidden={tab !== 'entries'}
         className="sidebar-panel"
       >
-        <div className="sidebar-list-heading">
-          <p className="sidebar-edit-hint" id="sidebar-edit-hint">
-            {t.editEntriesHint}
-          </p>
-          <button
-            className="text-button"
-            aria-label={t.clearEntries}
-            disabled={disabled || !wheel.options.length}
-            onClick={() => {
-              clear('entries')
-              setPage(0)
-              setNewEntry('')
-            }}
-          >
-            <Trash2 size={14} /> {t.clear}
-          </button>
-        </div>
+        <p className="sidebar-edit-hint" id="sidebar-edit-hint">
+          {t.editEntriesHint}
+        </p>
         <fieldset disabled={disabled}>
           <div className="sidebar-entry-list">
             {wheel.options

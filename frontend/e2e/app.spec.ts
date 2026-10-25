@@ -72,7 +72,10 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
-  for (const name of ['Customize', 'Shuffle', 'Sort'])
+  await expect(
+    page.locator('.wheel-tools').getByRole('button', { name: 'Customize' }),
+  ).toBeDisabled()
+  for (const name of ['Shuffle', 'Sort', 'Clear entries'])
     await expect(
       page.locator('.sidebar-actions').getByRole('button', { name, exact: true }),
     ).toBeDisabled()
@@ -276,11 +279,8 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(
       page.locator('.desktop-nav').getByRole('button', { name: 'Entries', exact: true }),
     ).toHaveCount(0)
-    await expect(page.locator('.sidebar-actions button')).toHaveText([
-      'Customize',
-      'Shuffle',
-      'Sort',
-    ])
+    await expect(page.locator('.sidebar-actions button')).toHaveText(['Shuffle', 'Sort', 'Clear'])
+    await expect(page.locator('.idle-toggle + button')).toHaveAttribute('aria-label', 'Customize')
     await page.getByRole('button', { name: 'Customize', exact: true }).click()
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')

@@ -12,6 +12,7 @@ import {
   Play,
   Plus,
   RefreshCw,
+  Settings,
   Settings2,
   Share2,
   Sun,
@@ -383,6 +384,15 @@ export default function App() {
                       </button>
                       <button
                         className="icon-button"
+                        aria-label={ct.title}
+                        title={ct.title}
+                        disabled={locked}
+                        onClick={() => setCustomOpen(true)}
+                      >
+                        <Settings size={18} />
+                      </button>
+                      <button
+                        className="icon-button"
                         aria-label={sound ? t.soundOff : t.soundOn}
                         onClick={() => {
                           if (sound) stopSounds()
@@ -517,7 +527,6 @@ export default function App() {
                   edit={edit}
                   tab={sidebarTab}
                   setTab={setSidebarTab}
-                  customize={() => setCustomOpen(true)}
                   openEditor={() => navigate('options')}
                   clear={(section) =>
                     run(async () => {
