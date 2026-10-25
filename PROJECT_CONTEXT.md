@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-24. Customization implementation and automated verification complete.
+Last updated: 2026-10-25. Home simplified; customization moved to Options.
 
 ## Product and implemented scope
 
@@ -17,6 +17,11 @@ palettes/themes, full-wheel/center/per-entry images, text policies, borders/shad
 presentation background/gradient. Global mute and reduced motion take precedence.
 Configuration/images survive refresh, copies, sharing, JSON and offline synchronization.
 Reference inspection, feature mapping and deliberate differences: `docs/customization.md`.
+
+The home screen now centers the wheel and spin button, with collapsed history. Editing,
+templates, save/share and the Customize button live in Options on desktop and mobile.
+The marketing intro, beta badge and redundant footer copy were removed. Offline status
+and PWA install/update controls remain available. Hidden editor state stays mounted.
 
 ## Architecture and important files
 
@@ -48,13 +53,19 @@ Cookie loss copies local work to a new isolated workspace; no cross-device recov
 
 ## Actual verification
 
-- Backend: 41 pytest passed (12.56 s), including ownership, invalid configurations/images,
+2026-10-25 layout change: TypeScript, ESLint and production build passed. All 30 existing
+E2E scenarios passed with the new navigation (2.9 minutes). Home screenshots inspected
+at 360/390/768/1440px and Options at mobile/desktop sizes, without horizontal overflow.
+Responsive checks now also verify hidden editor/templates on home and Options-to-Customize.
+
+- Backend (2026-10-24; unchanged by layout work): 41 pytest passed (12.56 s), including
+  ownership, invalid configurations/images,
   migration from the old DB, persistence across process restart, idempotency, sharing/
   revocation, 10,000-entry eligibility and last-entry no-repeat. Alembic check passed.
 - Frontend: TypeScript, ESLint and production build passed; 24 PWA precache entries,
-  approximately 903 KiB. Unit tests: 10 passed, including 6,600 projection/winner cases
+  approximately 903 KiB. Unit tests (2026-10-24): 10 passed, including 6,600 projection/winner cases
   and 20,100 original geometry positions.
-- Full Chromium production-PWA E2E: 30 passed together in 2.4 minutes. Covers all
+- Full Chromium production-PWA E2E (2026-10-25): 30 passed together in 2.9 minutes. Covers all
   customization tabs, cancel/refresh, real audio graph/volume/mute, image uploads,
   legacy IndexedDB, copies/JSON/shares, offline/resync, automatic/manual removal and
   conflict copies, 1,000 visible entries, palette/sizes/presentation, cookie loss,

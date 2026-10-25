@@ -69,6 +69,10 @@ Deleting a wheel atomically revokes all its shares. New links/revocation require
 
 ## Customization
 
+The wheel and editor are separate views at every viewport size. The home view focuses
+on spinning, with history collapsed; Options contains editing, customization, sharing
+and templates. The editor stays mounted while hidden to preserve unfinished input.
+
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
 `customization.ts` defines versioned settings and bounded raster image import;
 `customization.i18n.ts` contains its Greek UI copy. The same settings/images travel

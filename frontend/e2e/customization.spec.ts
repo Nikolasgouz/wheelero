@@ -1,3 +1,4 @@
+import { showScreen } from './navigation'
 import { expect, test, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import type { SavedState, Wheel } from '../src/types'
@@ -7,6 +8,7 @@ test.use({ actionTimeout: 15000 })
 
 async function ready(page: Page) {
   await page.goto('/')
+  await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeEnabled()
 }
 async function state(page: Page): Promise<SavedState> {
@@ -24,12 +26,15 @@ async function state(page: Page): Promise<SavedState> {
   })
 }
 async function customize(page: Page) {
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Προσαρμογή', exact: true }).click()
   return page.getByRole('dialog')
 }
 async function save(page: Page) {
   await page.getByRole('dialog').getByRole('button', { name: 'OK', exact: true }).click()
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
+  await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeEnabled()
 }
 
@@ -60,6 +65,7 @@ test('configuration and uploaded assets survive copy, JSON and public snapshot c
   await expect(page.locator('.wheel-card')).toHaveCount(4)
   expect((await state(page)).wheels[2].customization).toEqual(original.customization)
   await page.getByRole('button', { name: 'Τροχός', exact: true }).first().click()
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Κοινοποίηση', exact: true }).click()
   await page.getByRole('button', { name: 'Δημιουργία συνδέσμου' }).click()
   const link = page.getByRole('dialog').getByLabel('Κοινοποίηση', { exact: true })
@@ -156,6 +162,7 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   let dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()
   await dialog.getByRole('button', { name: 'Ακύρωση' }).click()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Ενεργοποίηση ήχου', exact: true }).click()
   dialog = await customize(page)
   await dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true }).click()
@@ -224,6 +231,7 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   await dialog.getByLabel('Ήχος περιστροφής', { exact: true }).selectOption('none')
   await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()
   await dialog.getByRole('button', { name: 'Ακύρωση' }).click()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Απενεργοποίηση ήχου', exact: true }).click()
   dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Αναπαραγωγή', exact: true })).toBeDisabled()
@@ -310,6 +318,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   expect((await state(page)).wheels[0].customization).toEqual(config)
   const remote: Wheel[] = await (await page.request.get('/api/wheels')).json()
   expect(remote[0].customization).toEqual(config)
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect(page.getByRole('dialog')).toHaveCount(0)
@@ -334,6 +343,7 @@ test('entry images, mode visibility, upload, replacement, removal and text polic
   page,
 }) => {
   await ready(page)
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Εικόνα: Πίτσα 🍕', exact: true }).click()
   await page.getByRole('button', { name: 'Εικόνα συλλογής 2' }).click()
   await page.getByRole('button', { name: 'Κλείσιμο', exact: true }).click()
@@ -382,7 +392,9 @@ test('automatic winner removal persists through refresh and is idempotent with m
     .check()
   await dialog.getByLabel('Εμφάνιση popup αποτελέσματος', { exact: true }).uncheck()
   await save(page)
+  await showScreen(page, 'options')
   await page.getByRole('switch', { name: 'Χωρίς επανάληψη', exact: true }).check()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
@@ -390,6 +402,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await page.reload()
   await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(5)
   expect((await state(page)).wheels[0].options.some((o) => o.id === winner.option_id)).toBe(false)
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await page
@@ -400,8 +413,11 @@ test('automatic winner removal persists through refresh and is idempotent with m
   expect((await state(page)).wheels[0].options.length).toBe(4)
   await page.waitForTimeout(5200)
   expect((await state(page)).wheels[0].options.length).toBe(4)
+  await showScreen(page, 'options')
   for (let i = 0; i < 3; i++) await page.locator('.remove-option').first().click()
+  await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeEnabled()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(0)
@@ -426,6 +442,7 @@ test('pending automatic removal follows the conflict copy without modifying the 
   const original = (await state(page)).wheels[0]
   const session = await (await page.request.get('/api/session')).json()
   await context.setOffline(true)
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
   const response = await page.request.put(`/api/wheels/${original.id}`, {
@@ -477,10 +494,12 @@ test('customization and embedded images work offline and synchronize once', asyn
       .locator('.wheel-center-image')
       .evaluate((img) => (img as HTMLImageElement).naturalWidth),
   ).toBeGreaterThan(0)
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('Τοπική κλήρωση')
   await page.getByRole('dialog').getByRole('button', { name: 'Κλείσιμο' }).click()
   await context.setOffline(false)
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
   await expect
     .poll(async () => {
@@ -498,6 +517,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   page,
 }) => {
   await ready(page)
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Μαζική προσθήκη', exact: true }).click()
   await page
     .locator('#bulk-options')
@@ -521,8 +541,9 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
       attributes: true,
     })
   })
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
-  await expect(page.getByRole('button', { name: 'Προσαρμογή', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Επιλογές', exact: true })).toBeDisabled()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   const data = await state(page)
   const winner = data.wheels[0].results[0]
@@ -586,15 +607,19 @@ test('palette, all center sizes and presentation background are applied to the r
       new RegExp(`width: ${percent}%`),
     )
   }
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Προβολή παρουσίασης', exact: true }).click()
   await expect(page.locator('.app.presenting')).toHaveCSS('background-color', 'rgb(17, 34, 51)')
   await expect(page.locator('.app.presenting')).toHaveCSS('background-image', 'none')
   await expect(page.locator('.wheel-title')).toHaveCSS('color', 'rgb(255, 255, 255)')
+  await page.getByRole('button', { name: 'Έξοδος παρουσίασης', exact: true }).click()
   dialog = await customize(page)
   await dialog.getByRole('tab', { name: 'Εμφάνιση', exact: true }).click()
   await dialog.getByLabel('Εμφάνιση χρωματικού gradient στη σελίδα', { exact: true }).check()
   await dialog.getByRole('button', { name: 'OK', exact: true }).click()
   await expect(dialog).toHaveCount(0)
+  await showScreen(page, 'wheel')
+  await page.getByRole('button', { name: 'Προβολή παρουσίασης', exact: true }).click()
   await expect(page.locator('.app.presenting')).toHaveCSS('background-image', /linear-gradient/)
   await page.getByRole('button', { name: 'Έξοδος παρουσίασης', exact: true }).click()
 })

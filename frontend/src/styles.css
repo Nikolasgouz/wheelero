@@ -40,6 +40,18 @@
 * {
   box-sizing: border-box;
 }
+[hidden] {
+  display: none !important;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 body {
   margin: 0;
   min-width: 320px;
@@ -260,11 +272,34 @@ button:hover:not(:disabled) {
   margin-bottom: 0;
 }
 .workspace {
-  display: grid;
-  grid-template-columns: 1.12fr 1fr;
-  gap: 64px;
-  max-width: 1060px;
-  margin: 0 auto;
+  max-width: 620px;
+  margin: 32px auto 0;
+}
+.options-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.options-toolbar h1 {
+  font-size: 24px;
+  margin: 0;
+}
+.history summary {
+  cursor: pointer;
+  min-height: 36px;
+}
+.history summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+.history summary::after {
+  content: '+';
+  margin-left: auto;
+}
+.history[open] summary::after {
+  content: '−';
 }
 .spinner-panel {
   min-width: 0;
@@ -483,13 +518,13 @@ button:hover:not(:disabled) {
   color: var(--muted);
   margin-bottom: 12px;
 }
-.history-heading h3 {
+.history-heading > span:first-of-type {
   font-size: 11px;
   font-weight: 600;
   margin: 0;
   color: var(--text);
 }
-.history-heading > span {
+.history-heading > span:last-of-type {
   margin-left: auto;
   font-size: 10px;
 }
@@ -799,7 +834,7 @@ button:hover:not(:disabled) {
   margin-bottom: 3px;
 }
 .templates-section {
-  max-width: 1060px;
+  max-width: 620px;
   margin: 43px auto 44px;
   padding-top: 27px;
   border-top: 1px solid var(--line);
@@ -821,7 +856,7 @@ button:hover:not(:disabled) {
 }
 .template-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 .template-card {
@@ -873,10 +908,9 @@ button:hover:not(:disabled) {
 footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 16px;
   padding: 25px 0 28px;
-  border-top: 1px solid var(--line);
   font-size: 9px;
   color: var(--muted);
 }
@@ -1139,7 +1173,7 @@ dialog::backdrop {
     padding-top: 55px;
   }
   .workspace {
-    gap: 80px;
+    margin-top: 40px;
   }
   .wheel-stage {
     max-width: 440px;
@@ -1151,10 +1185,6 @@ dialog::backdrop {
 @media (max-width: 1100px) {
   .app {
     padding: 0 30px;
-  }
-  .workspace {
-    gap: 30px;
-    grid-template-columns: 1fr 1fr;
   }
   .editor {
     padding: 21px 18px;
@@ -1228,7 +1258,7 @@ dialog::backdrop {
     margin-bottom: 10px;
   }
   .workspace {
-    display: block;
+    margin-top: 16px;
   }
   .spinner-panel {
     padding-top: 0;
@@ -1280,9 +1310,6 @@ dialog::backdrop {
     display: none;
   }
   .mobile-options .spinner-panel {
-    display: none;
-  }
-  .mobile-options + .templates-section {
     display: none;
   }
   .editor {

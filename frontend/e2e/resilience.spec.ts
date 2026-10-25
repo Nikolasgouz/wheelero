@@ -1,13 +1,17 @@
+import { showScreen } from './navigation'
 import { test, expect } from '@playwright/test'
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 test('typing in the middle of a title preserves text and caret position', async ({ page }) => {
   await page.goto('/')
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   const title = page.getByLabel('Τίτλος τροχού', { exact: true })
   await title.fill('ΑΒΓΔ')
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   await title.focus()
   await title.press('End')
@@ -17,7 +21,9 @@ test('typing in the middle of a title preserves text and caret position', async 
   await expect(title).toHaveValue('ΑΒΧΨΩΓΔ')
   const option = page.getByLabel('Επιλογή 1', { exact: true })
   await option.fill('ΑΒΓΔ')
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   await option.focus()
   await option.press('End')
@@ -25,7 +31,9 @@ test('typing in the middle of a title preserves text and caret position', async 
   await option.press('ArrowLeft')
   await option.pressSequentially('ΧΨΩ', { delay: 50 })
   await expect(option).toHaveValue('ΑΒΧΨΩΓΔ')
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   await page.reload()
   await expect(title).toHaveValue('ΑΒΧΨΩΓΔ')
@@ -37,14 +45,19 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
 }) => {
   const title = `${'α'.repeat(99)}🎲`
   await page.goto('/')
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
+  await showScreen(page, 'options')
   await page.getByLabel('Τίτλος τροχού', { exact: true }).fill(title)
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
   await page.getByRole('button', { name: 'Οι τροχοί μου', exact: true }).first().click()
   await page.getByRole('button', { name: `Αντίγραφο: ${title}`, exact: true }).click()
   await expect(page.locator('.wheel-card')).toHaveCount(2)
   await page.locator('.wheel-card-open').last().click()
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   const copies = await (await page.request.get('/api/wheels')).json()
   expect(copies.map((wheel: { title: string }) => wheel.title)).toContain(`${title} · Αντίγραφο`)
@@ -56,17 +69,21 @@ test('clearing the cookie preserves local work in a new isolated workspace', asy
   context,
 }) => {
   await page.goto('/')
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   const original = (await (await page.request.get('/api/wheels')).json())[0]
   await context.clearCookies()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.getByText('Η συνεδρία άλλαξε.', { exact: false })).toBeVisible()
+  await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeEnabled()
   const copies = await (await page.request.get('/api/wheels')).json()
   expect(copies).toHaveLength(1)
   expect(copies[0].id).not.toBe(original.id)
   expect(copies[0].options).toEqual(original.options)
   expect((await page.request.get(`/api/wheels/${original.id}`)).status()).toBe(404)
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
 })
@@ -75,12 +92,14 @@ test('lost draw response recovers the same server result without a second draw',
   page,
 }) => {
   await page.goto('/')
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
   await page.route('**/api/wheels/*/draws', async (route) => {
     const response = await route.fetch()
     expect(response.ok()).toBe(true)
     await route.abort('failed')
   })
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('Η απάντηση της κλήρωσης εκκρεμεί')
   await expect(page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true })).toBeDisabled()
@@ -97,7 +116,9 @@ test('export and import preserves a wheel and marks imported history as local', 
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
+  await showScreen(page, 'options')
   await expect(page.getByText('Αποθηκεύτηκε', { exact: true })).toBeVisible()
+  await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await page.getByRole('dialog').getByRole('button', { name: 'Κλείσιμο' }).click()
@@ -121,7 +142,9 @@ test('real service-worker update preserves saved and unsubmitted editor work', a
   })
   await page.reload()
   await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
+  await showScreen(page, 'options')
   await page.getByLabel('Τίτλος τροχού', { exact: true }).fill('Πριν την ενημέρωση')
+  await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Μαζική προσθήκη' }).click()
   await page.getByLabel('Μία επιλογή σε κάθε γραμμή').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
   try {

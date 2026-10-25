@@ -14,7 +14,6 @@ import {
   RefreshCw,
   Settings2,
   Share2,
-  Sparkles,
   Sun,
   Volume2,
   VolumeX,
@@ -282,15 +281,21 @@ export default function App() {
         <a className="brand" href="/" aria-label={t.brand}>
           <span className="brand-icon">✳</span>
           {t.brand}
-          <span className="beta">BETA</span>
         </a>
         <nav className="desktop-nav" aria-label={t.navigation}>
           <button
             disabled={locked}
-            className={screen !== 'library' ? 'selected' : ''}
+            className={screen === 'wheel' ? 'selected' : ''}
             onClick={() => navigate('wheel')}
           >
             {t.wheel}
+          </button>
+          <button
+            disabled={locked}
+            className={screen === 'options' ? 'selected' : ''}
+            onClick={() => navigate('options')}
+          >
+            {t.options}
           </button>
           <button
             disabled={locked}
@@ -301,10 +306,12 @@ export default function App() {
           </button>
         </nav>
         <div className="header-actions">
-          <span className={`connection ${online ? '' : 'offline'}`}>
-            <span />
-            {online ? t.online : t.offline}
-          </span>
+          {!online && (
+            <span className="connection offline">
+              <span />
+              {t.offline}
+            </span>
+          )}
           <button
             className="icon-button"
             aria-label={theme === 'light' ? t.dark : t.light}
@@ -355,30 +362,14 @@ export default function App() {
           />
         ) : (
           <>
-            <section className="intro">
-              <span className="eyebrow">
-                <Sparkles size={14} />
-                {t.eyebrow}
-              </span>
-              <h1>{t.headline}</h1>
-              <p>{t.subtitle}</p>
-            </section>
             <div className={`workspace mobile-${screen}`}>
-              <section className="spinner-panel" aria-label={t.wheel}>
+              <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
                 <div className="wheel-heading">
                   <span className="pill">
                     <span />
                     {t.count(wheel.options.length)}
                   </span>
                   <div className="wheel-tools">
-                    <button
-                      className="text-button"
-                      disabled={locked}
-                      onClick={() => setCustomOpen(true)}
-                    >
-                      <Settings2 size={17} />
-                      {ct.title}
-                    </button>
                     <button
                       className="icon-button"
                       aria-label={sound ? t.soundOff : t.soundOn}
@@ -409,7 +400,7 @@ export default function App() {
                     </button>
                   </div>
                 </div>
-                {config.show_title && <h2 className="wheel-title">{wheel.title}</h2>}
+                <h1 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h1>
                 <Spinner
                   options={displayed}
                   rotation={rotation}
@@ -481,9 +472,9 @@ export default function App() {
                     {spinning ? t.spinning : t.spin}
                     <ArrowRight size={19} />
                   </button>
-                  <p>
-                    {!enoughOptions ? t.insufficient : !available.length ? t.exhausted : t.spinHint}
-                  </p>
+                  {(!enoughOptions || !available.length) && (
+                    <p>{!enoughOptions ? t.insufficient : t.exhausted}</p>
+                  )}
                   {!available.length && wheel.options.length > 1 && (
                     <button
                       className="secondary"
@@ -496,12 +487,12 @@ export default function App() {
                     </button>
                   )}
                 </div>
-                <div className="history">
-                  <div className="history-heading">
+                <details className="history">
+                  <summary className="history-heading">
                     <History size={15} />
-                    <h3>{t.history}</h3>
+                    <span>{t.history}</span>
                     <span>{t.historyCount(wheel.results.length)}</span>
-                  </div>
+                  </summary>
                   {wheel.results.length ? (
                     <ol>
                       {(allHistory ? wheel.results : wheel.results.slice(0, 5)).map((r) => (
@@ -538,9 +529,20 @@ export default function App() {
                       {allHistory ? t.lessHistory : t.allHistory}
                     </button>
                   )}
-                </div>
+                </details>
               </section>
-              <div className="editor-column">
+              <div className="editor-column" hidden={screen !== 'options'}>
+                <div className="options-toolbar">
+                  <h1>{t.options}</h1>
+                  <button
+                    className="secondary"
+                    disabled={locked}
+                    onClick={() => setCustomOpen(true)}
+                  >
+                    <Settings2 size={17} />
+                    {ct.title}
+                  </button>
+                </div>
                 <Editor
                   key={wheel.id}
                   wheel={wheel}
@@ -586,7 +588,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <section className="templates-section">
+            <section className="templates-section" hidden={screen !== 'options'}>
               <div className="section-heading">
                 <div>
                   <h2>
@@ -623,12 +625,7 @@ export default function App() {
         )}
       </main>
       <footer>
-        <div>
-          <span className="footer-brand">{t.brand}</span>
-          <span>{t.footer}</span>
-        </div>
         <PwaControls busy={locked} report={setMessage} />
-        <span className="privacy">{t.privacy}</span>
       </footer>
       <nav className="mobile-nav" aria-label={t.mobileNavigation}>
         {(
