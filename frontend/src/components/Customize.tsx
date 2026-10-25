@@ -105,7 +105,7 @@ export function Customize({
             preview.current = playSound(
               draft[key],
               after ? draft.result_volume : draft.spin_volume,
-              !after,
+              after ? 0 : draft.duration,
             )
           }}
         >

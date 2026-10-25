@@ -201,7 +201,8 @@ export default function App() {
           ) +
             (config.slow_spin ? -3 : Math.max(0, Math.floor(config.duration / 2) - 5)) * 360,
         )
-        if (soundEnabled.current) stop = playSound(config.spin_sound, config.spin_volume, true)
+        if (soundEnabled.current)
+          stop = playSound(config.spin_sound, config.spin_volume, config.duration)
         await new Promise((resolve) =>
           setTimeout(
             resolve,

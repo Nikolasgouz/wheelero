@@ -44,6 +44,12 @@ No repeats, κοινοποίηση και πρότυπα.
 Κάθε τροχός κρατά δικές του ρυθμίσεις ήχου, διάρκειας, αποτελέσματος, χρωμάτων και εικόνων.
 Υπάρχουν **8 έτοιμοι ήχοι περιστροφής και 8 αποτελέσματος**, συν **No sound**,
 με προεπισκόπηση και ανεξάρτητη ένταση. Παράγονται τοπικά και λειτουργούν offline.
+Στο **During spin** υπάρχουν Wheel clicks, Suspense drumroll, Tension pulse,
+Roulette clicks, Spinning rattle, Racing heartbeat, Suspense countdown και Rising suspense.
+Τα κλικ αραιώνουν προς το τέλος· οι ρυθμοί αγωνίας επιταχύνονται και δυναμώνουν
+ανάλογα με τη διάρκεια. Στο **After spin** υπάρχουν Crowd applause, Winner chimes,
+Victory fanfare, Champion anthem, Celebration sparkle, Celebration bells, Jackpot!
+και Grand finale. Οι προεπιλογές είναι Wheel clicks και Crowd applause.
 Ο ήχος ξεκινά ενεργός σε κάθε άνοιγμα ή refresh, χωρίς να χρειάζεται Unmute.
 Το κουμπί σίγασης παραμένει διαθέσιμο για την τρέχουσα χρήση.
 Η ενεργή αρχική κατάσταση ελέγχθηκε με το audio E2E, typecheck, lint και production build.

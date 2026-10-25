@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Sound enabled on every app load/refresh.
+Last updated: 2026-10-25. Suspense spin scores and celebratory result sounds.
 
 ## Product and current UI
 
@@ -59,6 +59,11 @@ Global mute and reduced motion take precedence. Settings and private images surv
 refresh, sharing, copies, JSON and offline sync. See docs/customization.md for parity.
 App sound defaults to enabled on each load/refresh; manual mute is session-only.
 Per-wheel No sound/volume settings still apply. Audio starts on spin or preview actions.
+The 8 spin scores now emphasize suspense; click/rattle timing slows toward the end,
+drum/pulse rhythms build speed/intensity and the riser raises pitch. Timing follows
+spin duration, not individual sector crossings. The 8 result scores use stereo applause
+and major-key victory melodies/brass/bells. Existing sound IDs/defaults stay unchanged;
+new English labels describe the new scores. Preview uses the configured spin duration.
 Color-mode sectors now use unique colors: enabled palette colors first (deduplicated),
 then deterministic generated colors. Appending preserves existing positions' colors;
 colors follow positions, not IDs on sort/removal. `lib/presentation.ts:sectorColors`
@@ -92,6 +97,8 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
   uploads and renderer. OK waits for uploads and local durable storage.
 - `customization.ts`, `customization.i18n.ts`, `i18n.ts`: schemas/defaults and English labels.
 - `lib/audio.ts`: original local sound scores, finished nodes released while looping.
+  Duration-driven timeout scheduling, reusable percussion buffers, sustained brass and
+  3.8-second stereo applause; cleanup uses cue length rather than a fixed cutoff.
   `scripts/generate-gallery.mjs`: three original bundled WebP images.
 - `App.tsx`, `styles.css`: UI flow/layout; `vite.config.ts`: prompt-update PWA with
   shell/fonts/gallery precache. Private APIs never enter service-worker caches.
@@ -105,6 +112,15 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Suspense/celebration follow-up: typecheck, lint and production build passed. Three E2E
+passed (15.2s: all 16 sounds/volume/mute, offline customization, reduced motion); the
+audio E2E passed again after the final brass-envelope adjustment. OfflineAudioContext
+rendered all 8 result cues with nonzero samples and peaks below clipping at 100% volume
+(0.127–0.386). Real preview timing measured clicks slowing from ~71ms to ~374ms and
+drumroll accelerating from ~151ms to ~63ms, with automatic stop. Browser playback verified
+applause starts after the spin and mute releases nodes. Physical listening on speakers/
+headphones was not performed. No backend/schema change; pytest not rerun.
 
 Sound-default follow-up: typecheck, lint and production build passed. The existing
 audio E2E passed (8.9s), checking default enabled state, all 16 sounds, stop/volume,

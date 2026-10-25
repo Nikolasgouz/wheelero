@@ -122,6 +122,15 @@ per-wheel sound selection and volume still apply. Audio plays on spin/preview ac
 not automatically just from opening the page.
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
+`playSound` takes a spin duration (seconds; zero for a result/removal cue). Spin schedules
+use elapsed time: click/rattle intervals increase toward the end, suspense rhythms
+accelerate with a crescendo, and the riser increases pitch. This follows spin duration,
+not individual sector crossings. Preview uses the configured duration and stops itself.
+Result cues use major-key bell/brass melodies or 3.8-second stereo applause made from
+staggered noise impacts. Brass envelopes sustain; a low-pass filter softens harmonics.
+Each percussion buffer is built once per playback and reused. Cleanup follows actual
+cue length, so long applause/anthems are not cut off by the previous fixed 2.2s timeout.
+Saved sound IDs are unchanged; existing wheels get the new scores without migration.
 The desktop home uses the viewport width with a 340px sidebar 16px from the right edge.
 Its stage grows up to 960px, constrained by viewport height and sidebar space. A bounded
 left inset centers the wheel on the viewport when possible, keeping it clear of the
