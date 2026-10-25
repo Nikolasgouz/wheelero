@@ -1,6 +1,6 @@
 # SPINARO — context
 
-Last updated: 2026-10-25. Application renamed to SPINARO.
+Last updated: 2026-10-25. Home-page product explanation and feature sections.
 
 ## Product and current UI
 
@@ -18,6 +18,11 @@ editing/draws, conflict copies and uncertain-request recovery. No accounts or de
 
 New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
 templates, Customize, errors, installation text and HTML/manifest language are English.
+Below the working wheel, HomeInfo explains What is SPINARO for?, four use cases,
+three How it works steps and six Wheel features. Short fairness/browser-backup notes
+clarify duplicate entries and data portability. Original English copy is in i18n.ts
+under about; components/HomeInfo.tsx renders it. Responsive light/dark styling uses
+existing theme tokens. It appears only on the Wheel screen, outside presentation mode.
 IndexedDB v3 adds this example once to existing installations, preserving old wheels,
 settings, results and user-written messages. It selects the example unless a draw is
 pending. Close old app tabs if an upgrade-blocked message appears. No SQLite shape change.
@@ -149,6 +154,13 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Home information: typecheck, lint, production build and five relevant E2E passed
+(24.9s), including 360/390/768/1440px layout, keyboard, reduced motion and light/dark
+accessibility scans. Chromium verified the sections disappear in presentation mode,
+return on exit and load after an offline refresh. Desktop/mobile section screenshots
+visually inspected. Copy describes existing features only. No backend/schema change;
+pytest not rerun for this informational UI addition.
 
 SPINARO rename: frozen-lockfile install, typecheck, lint, production build and five
 relevant E2E passed (39.8s): draw/refresh/JSON backup plus responsive accessibility

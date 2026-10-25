@@ -1860,6 +1860,132 @@ input[type='color'] {
   color: var(--presentation-ink);
 }
 
+.home-info {
+  width: 100%;
+  max-width: 1080px;
+  margin: 64px auto 24px;
+  padding: 56px 0 24px;
+  border-top: 1px solid var(--line);
+}
+.home-info > section + section {
+  margin-top: 56px;
+}
+.info-heading {
+  max-width: 760px;
+  margin-bottom: 28px;
+}
+.home-info h2 {
+  margin: 0 0 16px;
+  font-size: clamp(25px, 3vw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+.home-info h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  line-height: 1.4;
+}
+.home-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+.info-heading > p {
+  font-size: 16px;
+}
+.info-heading .info-eyebrow {
+  margin-bottom: 12px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.info-uses,
+.info-features,
+.info-how ol,
+.info-notes {
+  display: grid;
+  gap: 20px;
+}
+.info-uses {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.info-uses article {
+  border-left: 3px solid var(--primary);
+  padding-left: 16px;
+}
+.info-how {
+  padding: 28px;
+  background: var(--tint);
+  border-radius: 20px;
+}
+.info-how ol {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+.info-how p {
+  color: var(--text);
+}
+.info-step {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--primary);
+  font-weight: 700;
+}
+.info-features {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.info-features article {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.info-features svg {
+  margin-bottom: 16px;
+  color: var(--primary);
+}
+.info-notes {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 900px) {
+  .info-uses,
+  .info-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .home-info {
+    margin-top: 40px;
+    padding-top: 32px;
+  }
+  .home-info > section + section {
+    margin-top: 36px;
+  }
+  .info-uses,
+  .info-features,
+  .info-how ol,
+  .info-notes {
+    grid-template-columns: 1fr;
+  }
+  .info-how {
+    padding: 22px;
+  }
+}
+
 /* Equal space above and below the wheel keeps its center in the viewport. */
 .home:not(.presenting) {
   padding-top: 0;

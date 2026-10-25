@@ -25,6 +25,7 @@ import { playSound, stopSounds } from './lib/audio'
 import { presentationOptions, textColor } from './lib/presentation'
 import { Dialog } from './components/Dialog'
 import { PwaControls } from './components/PwaControls'
+import { HomeInfo } from './components/HomeInfo'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
@@ -623,6 +624,7 @@ export default function App() {
             </section>
           </>
         )}
+        {screen === 'wheel' && !presenting && <HomeInfo />}
       </main>
       <footer>
         <PwaControls busy={locked} report={setMessage} />

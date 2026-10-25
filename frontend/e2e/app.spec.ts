@@ -297,6 +297,10 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
+    await expect(page.getByRole('heading', { name: 'What is SPINARO for?', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Wheel features', exact: true })).toBeVisible()
+    await expect(page.locator('.info-how li')).toHaveCount(3)
+    await expect(page.locator('.info-features article')).toHaveCount(6)
     await expect(page.getByRole('tab', { name: 'Entries', exact: true })).toHaveAttribute(
       'aria-selected',
       'true',
@@ -339,6 +343,7 @@ for (const width of [360, 390, 768, 1440]) {
     expect(await page.evaluate(() => document.activeElement !== document.body)).toBe(true)
     {
       await showScreen(page, 'options')
+      await expect(page.locator('.home-info')).toHaveCount(0)
       await expect(page.getByLabel('Wheel title', { exact: true })).toBeVisible()
       await expect(page.locator('.spinner-panel')).toBeHidden()
       await page.getByRole('button', { name: 'Customize', exact: true }).click()
@@ -357,6 +362,12 @@ for (const width of [360, 390, 768, 1440]) {
         nodes: v.nodes.map((n) => ({ target: n.target, detail: n.failureSummary })),
       })),
     ).toEqual([])
+    await showScreen(page, 'wheel')
+    const darkInfo = await new AxeBuilder({ page })
+      .include('.home-info')
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze()
+    expect(darkInfo.violations).toEqual([])
   })
 }
 

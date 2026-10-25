@@ -16,6 +16,9 @@ controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives
 `i18n.ts` and `customization.i18n.ts` in English; the app is branded SPINARO.
 The rename changes display metadata and export filenames only. Internal `gyrna`
 storage/cookie/lock/channel and backup format identifiers remain stable to retain data.
+`HomeInfo.tsx` renders the home-page use cases, three-step guide, feature cards and
+fairness/backup notes from `i18n.ts:about`. It sits below the interactive workspace
+and is omitted from other screens and presentation mode. It adds no storage or API calls.
 HTML/manifest language is English; history uses en-GB date/time formatting.
 Bundled templates support offline startup and are refreshed from the API. Both lists
 start with Pick a name (Alex, Emma, James, Olivia, Noah, Sofia).
