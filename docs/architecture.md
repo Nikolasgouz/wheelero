@@ -122,6 +122,9 @@ source, result UUID and entry UUID. No server request or new schema is needed.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
+Its default compact view shows core settings; a dialog-local More options/Fewer options
+toggle reveals the remaining controls across all three tabs. Hiding controls never resets
+their values or changes persisted configuration. Each new dialog starts compact.
 `customization.ts` defines versioned settings and bounded raster image import;
 `customization.i18n.ts` contains its English UI copy. The same settings/images travel
 through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON

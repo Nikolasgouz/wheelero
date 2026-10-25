@@ -18,6 +18,7 @@ export function Customize({
 }) {
   const [draft, setDraft] = useState(() => structuredClone(value))
   const [tab, setTab] = useState(0)
+  const [advanced, setAdvanced] = useState(false)
   const [saving, setSaving] = useState(false)
   const [uploads, setUploads] = useState(0)
   const [error, setError] = useState('')
@@ -187,21 +188,23 @@ export function Customize({
                 <>
                   {sound(false)}
                   {range('spin_volume', ct.spinVolume, 0, 100)}
-                  {check('show_duplicates', ct.duplicates)}
-                  {check('slow_spin', ct.slow)}
-                  {check('show_title', ct.showTitle)}
                   {range('duration', ct.duration, 1, 60)}
-                  {range('max_names', ct.maxNames, 4, 1000)}
-                  <p className="muted">{ct.fairness}</p>
+                  {advanced && (
+                    <div className="custom-extra">
+                      {check('show_duplicates', ct.duplicates)}
+                      {check('slow_spin', ct.slow)}
+                      {check('show_title', ct.showTitle)}
+                      {range('max_names', ct.maxNames, 4, 1000)}
+                      <p className="muted">{ct.fairness}</p>
+                    </div>
+                  )}
                 </>
               )}
               {tab === 1 && (
                 <>
                   {sound(true)}
                   {range('result_volume', ct.resultVolume, 0, 100)}
-                  {check('animate_winner', ct.animate)}
                   {check('confetti', ct.confetti)}
-                  {check('auto_remove', ct.autoRemove)}
                   {check('popup', ct.popup)}
                   <label>
                     {ct.message}
@@ -213,8 +216,14 @@ export function Customize({
                       onChange={(e) => patch({ popup_message: e.target.value })}
                     />
                   </label>
-                  {check('remove_button', ct.remove)}
-                  {check('removal_sound', ct.click)}
+                  {advanced && (
+                    <div className="custom-extra">
+                      {check('animate_winner', ct.animate)}
+                      {check('auto_remove', ct.autoRemove)}
+                      {check('remove_button', ct.remove)}
+                      {check('removal_sound', ct.click)}
+                    </div>
+                  )}
                 </>
               )}
               {tab === 2 && (
@@ -265,76 +274,78 @@ export function Customize({
                           ))}
                         </select>
                       </label>
-                      <fieldset>
-                        <legend>{ct.palette}</legend>
-                        <p className="muted">{ct.uniqueColors}</p>
-                        <div className="palette-editor">
-                          {draft.palette.map((color, index) => (
-                            <div key={index}>
-                              <input
-                                type="checkbox"
-                                aria-label={ct.activeColor(index + 1)}
-                                checked={color.enabled}
-                                disabled={
-                                  color.enabled &&
-                                  draft.palette.filter((c) => c.enabled).length === 1
-                                }
-                                onChange={(e) =>
-                                  patch({
-                                    palette: draft.palette.map((c, i) =>
-                                      i === index ? { ...c, enabled: e.target.checked } : c,
-                                    ),
-                                  })
-                                }
-                              />
-                              <input
-                                type="color"
-                                aria-label={ct.color(index + 1)}
-                                value={color.color}
-                                onChange={(e) =>
-                                  patch({
-                                    palette: draft.palette.map((c, i) =>
-                                      i === index ? { ...c, color: e.target.value } : c,
-                                    ),
-                                  })
-                                }
-                              />
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            className="secondary"
-                            disabled={draft.palette.length === 12}
-                            onClick={() =>
-                              patch({
-                                palette: [...draft.palette, { color: '#7650cc', enabled: true }],
-                              })
+                      <div className="custom-extra" hidden={!advanced}>
+                        <fieldset>
+                          <legend>{ct.palette}</legend>
+                          <p className="muted">{ct.uniqueColors}</p>
+                          <div className="palette-editor">
+                            {draft.palette.map((color, index) => (
+                              <div key={index}>
+                                <input
+                                  type="checkbox"
+                                  aria-label={ct.activeColor(index + 1)}
+                                  checked={color.enabled}
+                                  disabled={
+                                    color.enabled &&
+                                    draft.palette.filter((c) => c.enabled).length === 1
+                                  }
+                                  onChange={(e) =>
+                                    patch({
+                                      palette: draft.palette.map((c, i) =>
+                                        i === index ? { ...c, enabled: e.target.checked } : c,
+                                      ),
+                                    })
+                                  }
+                                />
+                                <input
+                                  type="color"
+                                  aria-label={ct.color(index + 1)}
+                                  value={color.color}
+                                  onChange={(e) =>
+                                    patch({
+                                      palette: draft.palette.map((c, i) =>
+                                        i === index ? { ...c, color: e.target.value } : c,
+                                      ),
+                                    })
+                                  }
+                                />
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              className="secondary"
+                              disabled={draft.palette.length === 12}
+                              onClick={() =>
+                                patch({
+                                  palette: [...draft.palette, { color: '#7650cc', enabled: true }],
+                                })
+                              }
+                            >
+                              {ct.addColor}
+                            </button>
+                          </div>
+                        </fieldset>
+                        <ImagePicker
+                          busyChanged={(busy) => setUploads((count) => count + (busy ? 1 : -1))}
+                          label={ct.center}
+                          value={draft.center_image}
+                          change={(center_image) => patch({ center_image })}
+                        />
+                        <label>
+                          {ct.size}
+                          <select
+                            aria-label={ct.size}
+                            value={draft.center_size}
+                            onChange={(e) =>
+                              patch({ center_size: e.target.value as Customization['center_size'] })
                             }
                           >
-                            {ct.addColor}
-                          </button>
-                        </div>
-                      </fieldset>
-                      <ImagePicker
-                        busyChanged={(busy) => setUploads((count) => count + (busy ? 1 : -1))}
-                        label={ct.center}
-                        value={draft.center_image}
-                        change={(center_image) => patch({ center_image })}
-                      />
-                      <label>
-                        {ct.size}
-                        <select
-                          aria-label={ct.size}
-                          value={draft.center_size}
-                          onChange={(e) =>
-                            patch({ center_size: e.target.value as Customization['center_size'] })
-                          }
-                        >
-                          {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                            <option key={size}>{size}</option>
-                          ))}
-                        </select>
-                      </label>
+                            {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                              <option key={size}>{size}</option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
                     </>
                   ) : (
                     <ImagePicker
@@ -344,35 +355,49 @@ export function Customize({
                       change={(wheel_image) => patch({ wheel_image })}
                     />
                   )}
-                  <label className="color-setting">
-                    {ct.page}
-                    <input
-                      type="color"
-                      value={draft.page_color}
-                      onChange={(e) => patch({ page_color: e.target.value })}
-                    />
-                  </label>
-                  {check('gradient', ct.gradient)}
-                  <label>
-                    {ct.text}
-                    <select
-                      aria-label={ct.text}
-                      value={draft.text}
-                      onChange={(e) => patch({ text: e.target.value as Customization['text'] })}
-                    >
-                      <option value="always">{ct.always}</option>
-                      <option value="never">{ct.never}</option>
-                      <option value="unless_image">{ct.unlessImage}</option>
-                    </select>
-                  </label>
-                  {check('borders', ct.borders)}
-                  {check('shadow', ct.shadow)}
-                  {check('pointer_changes', ct.pointer)}
+                  {advanced && (
+                    <div className="custom-extra">
+                      <label className="color-setting">
+                        {ct.page}
+                        <input
+                          type="color"
+                          value={draft.page_color}
+                          onChange={(e) => patch({ page_color: e.target.value })}
+                        />
+                      </label>
+                      {check('gradient', ct.gradient)}
+                      <label>
+                        {ct.text}
+                        <select
+                          aria-label={ct.text}
+                          value={draft.text}
+                          onChange={(e) => patch({ text: e.target.value as Customization['text'] })}
+                        >
+                          <option value="always">{ct.always}</option>
+                          <option value="never">{ct.never}</option>
+                          <option value="unless_image">{ct.unlessImage}</option>
+                        </select>
+                      </label>
+                      {check('borders', ct.borders)}
+                      {check('shadow', ct.shadow)}
+                      {check('pointer_changes', ct.pointer)}
+                    </div>
+                  )}
                 </>
               )}
             </div>
           </fieldset>
           <div className="custom-footer">
+            <button
+              type="button"
+              className="text-button custom-more"
+              aria-expanded={advanced}
+              aria-controls={`custom-panel-${tab}`}
+              disabled={saving}
+              onClick={() => setAdvanced(!advanced)}
+            >
+              {advanced ? ct.fewerOptions : ct.moreOptions}
+            </button>
             <button type="button" className="secondary" disabled={saving} onClick={close}>
               {ct.cancel}
             </button>

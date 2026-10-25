@@ -25,6 +25,8 @@ export const ct = {
   },
   themes: { gyrna: 'Γύρνα.', ocean: 'Ocean', sunset: 'Sunset', forest: 'Forest' },
   settings: 'Wheel settings',
+  moreOptions: 'More options',
+  fewerOptions: 'Fewer options',
   spinSound: 'Spin sound',
   resultSound: 'Result sound',
   spinVolume: 'Spin volume',

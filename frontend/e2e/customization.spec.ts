@@ -28,6 +28,7 @@ async function state(page: Page): Promise<SavedState> {
 async function customize(page: Page) {
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Customize', exact: true }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'More options', exact: true }).click()
   return page.getByRole('dialog')
 }
 async function save(page: Page) {
@@ -581,7 +582,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   })
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-    await expect(page.getByRole('button', { name: 'More options', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'More options', exact: true })).toBeDisabled()
   await expect(page.locator('.inline-result strong')).not.toBeEmpty()
   const data = await state(page)
   const winner = data.wheels[0].results[0]
@@ -667,6 +668,7 @@ for (const width of [360, 390, 768, 1440])
     await page.setViewportSize({ width, height: 900 })
     await ready(page)
     const dialog = await customize(page)
+    await dialog.getByRole('button', { name: 'Fewer options', exact: true }).click()
     for (const tab of ['During spin', 'After spin', 'Appearance']) {
       await dialog.getByRole('tab', { name: tab, exact: true }).click()
       expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
@@ -675,6 +677,18 @@ for (const width of [360, 390, 768, 1440])
         .withTags(['wcag2a', 'wcag2aa'])
         .analyze()
       expect(scan.violations).toEqual([])
+      await page.screenshot({
+        path: `../artifacts/customize-simple-${width}-${tab.replaceAll(' ', '-')}.png`,
+        fullPage: true,
+      })
+      await dialog.getByRole('button', { name: 'More options', exact: true }).click()
+      const expanded = await new AxeBuilder({ page })
+        .include('dialog')
+        .withTags(['wcag2a', 'wcag2aa'])
+        .analyze()
+      expect(expanded.violations).toEqual([])
+      expect(await dialog.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
+      await dialog.getByRole('button', { name: 'Fewer options', exact: true }).click()
     }
     await page.screenshot({ path: `../artifacts/customize-${width}.png`, fullPage: true })
     await dialog.getByRole('tab', { name: 'Appearance', exact: true }).focus()

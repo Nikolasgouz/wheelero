@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Removed Server draw badge from the winner popup.
+Last updated: 2026-10-25. Compact Customize menu with optional More options.
 
 ## Product and current UI
 
@@ -72,6 +72,13 @@ the winner before resuming decorative motion; stored results stay unchanged. No 
 occurs on idle. Hidden/share screens and uncertain pending draws still suspend idle.
 
 Customize has three transactional tabs: During spin / After spin / Appearance. Settings
+start in a compact 620px dialog: spin sound/volume/duration; result sound/volume,
+confetti/popup/message; appearance mode/theme or wheel image. More options reveals
+the remaining controls across tabs; Fewer options hides them without changing values.
+This is dialog-local UI state and resets on reopening. Existing configurations and
+draft Cancel/OK behavior are preserved; no schema migration. The live reference's three
+tabs were reinspected; our reduced initial control count is an intentional difference.
+All available settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
 Global mute and reduced motion take precedence. Settings and private images survive
@@ -131,6 +138,14 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Compact Customize: typecheck, lint, production build and all 14 customization E2E
+passed (1.9min), covering draft cancellation/save, sounds, images, legacy wheels,
+copies/shares/backups, offline sync, automatic removal and pointer agreement.
+Manual Chromium checks verified compact edits/cancellation, preserved hidden settings,
+collapsed state on reopening and offline refresh. Desktop/mobile screenshots inspected.
+The mobile sound controls now share one row; all four viewport/accessibility E2E
+passed again after that CSS adjustment (36.7s). No backend/schema change; pytest not rerun.
 
 Winner badge follow-up: typecheck, lint and production build passed. Chromium verified
 an actual server draw has no source badge in the winner popup and retains its stored
