@@ -134,6 +134,7 @@ contrast and the moving pointer. Image-background mode still displays its image.
 Generated colors are derived locally from the saved palette, so refresh/copy/share/offline
 need no new stored fields or migration. Large lists have unique RGB values, but nearby
 shades cannot all be visually distinguished at up to 1,000 displayed sectors.
+The circular rim clips the rotating SVG's square bounds to prevent horizontal overflow.
 Short viewports reduce its size; the sidebar scrolls independently without stretching
 the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
 The stationary center button starts the same guarded draw flow as result actions and
@@ -152,6 +153,11 @@ Completed draws snapshot their settings; an ID-based durable removal queue runs 
 five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
 Conflict/session-loss copies take their pending jobs with them; execution reads and
 changes the latest IndexedDB state under the same Web Lock to prevent stale-tab removals.
+Sidebar Clear actions use a locked local transaction and are disabled during a draw.
+Entries clears the option array; Results clears local history and pending uploads and
+sets `clear_history` for the next revisioned PUT. Both cancel queued auto-removals and
+reset the visible result. The server retains cleared draw records for idempotency but
+excludes them from history; new offline results after a clear are ingested after clearing.
 
 ## Upstream references
 

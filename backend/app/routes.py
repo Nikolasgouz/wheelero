@@ -3,7 +3,7 @@ import secrets
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Request, Response
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 
 from .config import settings
 from .models import Mutation, Option, Result, Share, Wheel, Workspace, now
@@ -84,6 +84,8 @@ def write_wheel(wheel_id: UUID, body: WheelWrite, response: Response, db: DB, ow
             wheel_id=wheel_id, id=str(option.id), label=option.label,
             active=option.active, position=position, image=option.image,
         ))
+    if body.clear_history:
+        db.execute(update(Result).where(Result.wheel_id == wheel_id).values(cleared=True))
     for result in body.results:
         existing = db.get(Result, (wheel_id, str(result.id)))
         data = result.model_dump(mode="json")
@@ -123,7 +125,7 @@ def draw(wheel_id: UUID, body: DrawRequest, db: DB, owner: Owner):
         select(Option).where(Option.wheel_id == wheel.id).order_by(Option.position)
     ).all()
     last_in_round = wheel.no_repeat and len(options) == 1 and db.scalar(
-        select(Result.id).where(Result.wheel_id == wheel.id).limit(1)
+        select(Result.id).where(Result.wheel_id == wheel.id, Result.cleared.is_(False)).limit(1)
     ) is not None
     if len(options) < 2 and not last_in_round:
         raise HTTPException(422, "At least two entries are required.")

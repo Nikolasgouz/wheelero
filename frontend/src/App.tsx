@@ -36,6 +36,7 @@ import { Library } from './screens/Library'
 import {
   activeOptions,
   addWheels,
+  clearWheel,
   editWheel,
   forkWheel,
   initialize,
@@ -520,6 +521,17 @@ export default function App() {
                   setTab={setSidebarTab}
                   customize={() => setCustomOpen(true)}
                   openEditor={() => navigate('options')}
+                  clear={(section) =>
+                    run(async () => {
+                      await clearWheel(wheel.id, section)
+                      setResult(null)
+                      setPopupOpen(false)
+                      setSpinOptions(null)
+                      setSpinConfig(null)
+                      setSidebarSnapshot(null)
+                      setRotation(0)
+                    })
+                  }
                 />
               </div>
               <div className="editor-column" hidden={screen !== 'options'}>

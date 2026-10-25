@@ -66,6 +66,7 @@ class Result(Base):
     source: Mapped[str] = mapped_column(String(10))
     created_at: Mapped[str] = mapped_column(default=now)
     request_revision: Mapped[int]
+    cleared: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0")
 
 
 class Mutation(Base):

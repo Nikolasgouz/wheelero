@@ -32,7 +32,9 @@ def wheel_data(db: Session, wheel: Wheel) -> dict:
         select(Option).where(Option.wheel_id == wheel.id).order_by(Option.position)
     ).all()
     results = db.scalars(
-        select(Result).where(Result.wheel_id == wheel.id).order_by(Result.created_at.desc())
+        select(Result).where(
+            Result.wheel_id == wheel.id, Result.cleared.is_(False),
+        ).order_by(Result.created_at.desc())
     ).all()
     return {
         "id": wheel.id, "title": wheel.title, "revision": wheel.revision,

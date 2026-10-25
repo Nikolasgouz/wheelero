@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Unique sector colors with automatic palette extension.
+Last updated: 2026-10-25. Independent Clear entries/results with durable offline sync.
 
 ## Product and current UI
 
@@ -35,6 +35,14 @@ case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, aut
 and lock during draws. Desktop navigation is Wheel/My wheels. More options opens the
 full editor (also reachable from mobile Entries) with sharing, templates and Customize.
 Both entry editors use distinct labels/draft keys and preserve incomplete input while hidden.
+Each sidebar tab has Clear. Entries removes options only; Results clears visible history
+and pending result uploads only. Both cancel queued auto-removals and reset result UI.
+Draw locks apply; no-repeat active flags survive history clearing. Empty lists can be saved.
+`state/store.ts:clearWheel` uses the existing local transaction/outbox; IndexedDB v4 adds
+`clear_history` to old wheels without duplicating the starter. Revisioned PUT clears
+before uploading newer offline draws. Migration d81e3a7b902f adds `results.cleared`;
+the server hides cleared rows but retains them for draw retry idempotency. This is not
+physical deletion of retry records. Conflicts retain the existing remote/copy behavior.
 
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
 guarded draw flow. Custom center images remain visible with a transparent hit area.
@@ -67,7 +75,7 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v3, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v4, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
   `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
@@ -93,6 +101,17 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Clear actions follow-up: 41 pytest tests passed (16.68s), Alembic check clean, typecheck,
+lint, 10 unit tests and production build passed. Full E2E: 28 passed, two exposed the
+rotating SVG's horizontal overflow. After clipping the rim, all 6 targeted responsive,
+reduced-motion and palette checks passed (27.3s), including both failed widths.
+Manual Chromium checks passed for independent entries/results clearing, keyboard use,
+draw locks, preserved no-repeat flags, online/offline refresh and clearing followed by
+a new offline draw/resync. Desktop/mobile screenshots visually inspected. v3→v4 upgrade
+keeps the active wheel without adding a starter. Isolated API checks verified migration
+of existing results, owner/CSRF/revision checks, clear/draw retries and SQLite reopen.
+The Windows launcher built, migrated and restarted this project's servers successfully.
 
 Unique-color follow-up: typecheck, lint, 10 existing unit tests, production build and
 6 relevant E2E passed (40.7s: four responsive/accessibility sizes, palette/center sizes,

@@ -5,7 +5,7 @@ import { makeWheel } from './wheel'
 import { templates } from './templates'
 import { t } from '../i18n'
 
-const database = openDB('gyrna', 3, {
+const database = openDB('gyrna', 4, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -25,9 +25,12 @@ const database = openDB('gyrna', 3, {
             wheel.options = wheel.options.map((option) => ({ ...option, image: null }))
           }
         }
-        const starter = makeWheel(templates[0].title, templates[0].options)
-        state.wheels.push(starter)
-        if (!state.pending_draw) state.active = starter.id
+        if (oldVersion < 3) {
+          const starter = makeWheel(templates[0].title, templates[0].options)
+          state.wheels.push(starter)
+          if (!state.pending_draw) state.active = starter.id
+        }
+        for (const wheel of state.wheels) wheel.clear_history = false
         await store.put(state, 'current')
       }
     }

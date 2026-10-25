@@ -64,3 +64,7 @@ the new store results would expose the winner and no-repeat marker before the wh
 The sidebar action row owns direct Customize/Shuffle/Sort access. Preserve option IDs,
 active flags and images on reordering; sorting must retain duplicate entries. The full
 editor remains reachable through More options; desktop navigation has no Entries button.
+Keep Clear entries/history independent and locked during draws. History clearing is a
+pending local mutation, not a local-only array reset. Preserve retry records server-side,
+apply clear before new offline uploads, and never reactivate no-repeat entries implicitly.
+IndexedDB v4 initializes the clear flag; new local wheels must initialize it as well.

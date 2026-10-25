@@ -49,7 +49,12 @@ export type Wheel = z.infer<typeof backupWheelSchema> & {
   deleted: boolean
   updated_at: string
 }
-export type LocalWheel = Wheel & { dirty: boolean; mutation_id: string; pending_results: string[] }
+export type LocalWheel = Wheel & {
+  dirty: boolean
+  mutation_id: string
+  pending_results: string[]
+  clear_history: boolean
+}
 export type Template = {
   id: string
   title: string

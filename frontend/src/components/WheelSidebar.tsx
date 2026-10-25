@@ -25,6 +25,7 @@ export function WheelSidebar({
   setTab,
   customize,
   openEditor,
+  clear,
 }: {
   wheel: LocalWheel
   disabled: boolean
@@ -33,6 +34,7 @@ export function WheelSidebar({
   setTab: (tab: 'entries' | 'results') => void
   customize: () => void
   openEditor: () => void
+  clear: (section: 'entries' | 'results') => void
 }) {
   const [newEntry, setNewEntry] = useState(
     () => localStorage.getItem(`sidebar-draft:${wheel.id}`) ?? '',
@@ -116,9 +118,23 @@ export function WheelSidebar({
         hidden={tab !== 'entries'}
         className="sidebar-panel"
       >
-        <p className="sidebar-edit-hint" id="sidebar-edit-hint">
-          {t.editEntriesHint}
-        </p>
+        <div className="sidebar-list-heading">
+          <p className="sidebar-edit-hint" id="sidebar-edit-hint">
+            {t.editEntriesHint}
+          </p>
+          <button
+            className="text-button"
+            aria-label={t.clearEntries}
+            disabled={disabled || !wheel.options.length}
+            onClick={() => {
+              clear('entries')
+              setPage(0)
+              setNewEntry('')
+            }}
+          >
+            <Trash2 size={14} /> {t.clear}
+          </button>
+        </div>
         <fieldset disabled={disabled}>
           <div className="sidebar-entry-list">
             {wheel.options
@@ -234,6 +250,17 @@ export function WheelSidebar({
             <History size={15} />
             <span>{t.history}</span>
             <span>{t.historyCount(wheel.results.length)}</span>
+            <button
+              className="text-button"
+              aria-label={t.clearResults}
+              disabled={disabled || !wheel.results.length}
+              onClick={() => {
+                clear('results')
+                setAllHistory(false)
+              }}
+            >
+              <Trash2 size={14} /> {t.clear}
+            </button>
           </div>
           {wheel.results.length ? (
             <ol>

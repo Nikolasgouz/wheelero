@@ -10,7 +10,13 @@ import { templates } from './templates'
 import { makeWheel } from './wheel'
 
 function localWheel(wheel: Wheel): LocalWheel {
-  return { ...wheel, dirty: false, mutation_id: crypto.randomUUID(), pending_results: [] }
+  return {
+    ...wheel,
+    dirty: false,
+    mutation_id: crypto.randomUUID(),
+    pending_results: [],
+    clear_history: false,
+  }
 }
 
 export function forkWheel(
@@ -151,6 +157,23 @@ export async function addWheels(wheels: LocalWheel[]) {
   })
 }
 
+export async function clearWheel(id: string, section: 'entries' | 'results') {
+  await transaction((state) => {
+    if (state.pending_draw?.wheel_id === id) throw new Error(t.uncertain)
+    const wheel = state.wheels.find((w) => w.id === id)!
+    if (section === 'entries') wheel.options = []
+    else {
+      wheel.results = []
+      wheel.pending_results = []
+      wheel.clear_history = true
+    }
+    state.removals = state.removals.filter((r) => r.wheel_id !== id)
+    wheel.dirty = true
+    wheel.mutation_id = crypto.randomUUID()
+    wheel.updated_at = new Date().toISOString()
+  })
+}
+
 export async function selectWheel(id: string) {
   await transaction((state) => {
     state.active = id
@@ -240,6 +263,7 @@ async function syncState(state: SavedState) {
           customization: wheel.customization,
           options: wheel.options,
           results: wheel.results.filter((r) => batch.includes(r.id)),
+          clear_history: wheel.clear_history,
         })
         const remaining = wheel.pending_results.filter((id) => !batch.includes(id))
         wheel = {

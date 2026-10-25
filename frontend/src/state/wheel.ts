@@ -15,6 +15,7 @@ export function makeWheel(title: string, labels: string[]): LocalWheel {
     dirty: true,
     mutation_id: crypto.randomUUID(),
     pending_results: [],
+    clear_history: false,
   }
 }
 
