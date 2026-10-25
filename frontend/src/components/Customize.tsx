@@ -267,6 +267,7 @@ export function Customize({
                       </label>
                       <fieldset>
                         <legend>{ct.palette}</legend>
+                        <p className="muted">{ct.uniqueColors}</p>
                         <div className="palette-editor">
                           {draft.palette.map((color, index) => (
                             <div key={index}>

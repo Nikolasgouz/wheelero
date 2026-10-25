@@ -126,6 +126,14 @@ The rim uses 96% of that stage with a thin border, leaving more area for the seg
 SVG label sizes depend on entry count and displayed label length; up to 10 entries use
 24-unit text when space permits. Long labels shrink, and the numbered large-list mode
 remains unchanged. Sector angles, palette settings and draw geometry are unchanged.
+`presentation.ts:sectorColors` deduplicates enabled palette colors and extends them
+with a deterministic sequence of unique RGB colors. Appending entries preserves the
+existing color prefix. Colors belong to displayed positions, not permanent entry IDs;
+sort/removal/projection can reassign them. The same memoized colors feed sectors, text
+contrast and the moving pointer. Image-background mode still displays its image.
+Generated colors are derived locally from the saved palette, so refresh/copy/share/offline
+need no new stored fields or migration. Large lists have unique RGB values, but nearby
+shades cannot all be visually distinguished at up to 1,000 displayed sectors.
 Short viewports reduce its size; the sidebar scrolls independently without stretching
 the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
 The stationary center button starts the same guarded draw flow as result actions and

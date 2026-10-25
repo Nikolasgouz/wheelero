@@ -47,7 +47,7 @@ motion και δεν επιλέγει αποτέλεσμα. Μετά την άφ
 | Click when removed, off | Click στη χειροκίνητη και αυτόματη πραγματική αφαίρεση | Audio / auto-removal E2E | Χρήση έντασης αποτελέσματος και συνολικής σίγασης |
 | One color per section / wheel background image | Αμοιβαία αποκλειόμενα πεδία | Image E2E | Καμία |
 | Apply theme | Γύρνα., Ωκεανός, Ηλιοβασίλεμα, Δάσος | Transactional E2E | Τέσσερα δικά μας θέματα αντί της μεγάλης συλλογής αναφοράς |
-| Customize colors / enabled colors / picker | 1–12 χρώματα, τουλάχιστον ένα ενεργό, native color picker | Schema / transactional E2E | Native picker αντί ειδικού HEX/RGB panel |
+| Customize colors / enabled colors / picker | 1–12 αρχικά χρώματα, τουλάχιστον ένα ενεργό, native color picker· αυτόματη επέκταση με μοναδικό χρώμα ανά φέτα | Schema / transactional E2E και έλεγχος μοναδικότητας έως 1000 φέτες | Κατόπιν αιτήματος, η παλέτα δεν επαναλαμβάνεται· ίδια αρχικά χρώματα χρησιμοποιούνται μία φορά. Native picker αντί ειδικού HEX/RGB panel |
 | Center image / size | Upload, συλλογή, αντικατάσταση, αφαίρεση· XS/S/M/L/XL/XXL, default S | Image / persistence E2E | Τα ποσοστά μεγέθους είναι δικά μας (10/16/24/32/42/54%) |
 | Wheel image / upload / gallery | Raster upload και τρεις δικές μας εικόνες | Image / offline E2E | Δεν περιλαμβάνει Unsplash ή αναζήτηση στο internet |
 | Page background / gradient, on | Φόντο λειτουργίας παρουσίασης, επιλογή gradient | Appearance E2E | Το κύριο περιβάλλον διατηρεί light/dark ταυτότητα |

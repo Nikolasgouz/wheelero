@@ -47,6 +47,7 @@ export const ct = {
   theme: 'Apply a theme',
   chooseTheme: 'Choose a theme',
   palette: 'Customize palette',
+  uniqueColors: 'Each entry gets a different color. Extra colors are added automatically.',
   addColor: '+ Color',
   center: 'Center image',
   size: 'Center image size',

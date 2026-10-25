@@ -1,7 +1,7 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, type RefObject } from 'react'
 import { freezeWheel } from '../lib/motion'
 import { indexAtPointer, sectorPath } from '../lib/geometry'
-import { textColor } from '../lib/presentation'
+import { sectorColors, textColor } from '../lib/presentation'
 import type { Customization } from '../customization'
 import { t } from '../i18n'
 import type { Option } from '../types'
@@ -31,8 +31,7 @@ export function Wheel({
   const pointer = useRef<HTMLDivElement>(null)
   const count = options.length
   const centerImage = config.mode === 'colors' && config.center_image
-  const colors = config.palette.filter((color) => color.enabled).map((color) => color.color)
-  const paletteKey = colors.join(',')
+  const colors = useMemo(() => sectorColors(count, config.palette), [count, config.palette])
   useEffect(() => {
     if (!idle) return
     const node = svg.current!
@@ -54,17 +53,16 @@ export function Wheel({
   }, [idle, rotation, svg])
   useEffect(() => {
     if (!spinning || !config.pointer_changes) return
-    const palette = paletteKey.split(',')
     let frame: number
     const tick = () => {
       const matrix = new DOMMatrixReadOnly(getComputedStyle(svg.current!).transform)
       const angle = ((Math.atan2(matrix.b, matrix.a) * 180) / Math.PI + 360) % 360
-      pointer.current!.style.background = palette[indexAtPointer(angle, count) % palette.length]
+      pointer.current!.style.background = colors[indexAtPointer(angle, count)]
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [spinning, config.pointer_changes, count, paletteKey, svg])
+  }, [spinning, config.pointer_changes, count, colors, svg])
   return (
     <div className={`wheel-stage ${spinning ? 'is-spinning' : ''}`}>
       <span className="orbit-dot dot-one" />
@@ -121,7 +119,7 @@ export function Wheel({
             const showText =
               config.text !== 'never' && !(config.text === 'unless_image' && option.image)
             const selected = winnerId === option.id && !spinning && config.animate_winner
-            const fill = colors[i % colors.length]
+            const fill = colors[i]
             return (
               <g
                 key={option.id}

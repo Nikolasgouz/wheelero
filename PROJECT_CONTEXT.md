@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Sidebar Customize/Shuffle/Sort toolbar and simpler top navigation.
+Last updated: 2026-10-25. Unique sector colors with automatic palette extension.
 
 ## Product and current UI
 
@@ -49,6 +49,10 @@ include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/
 popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
 Global mute and reduced motion take precedence. Settings and private images survive
 refresh, sharing, copies, JSON and offline sync. See docs/customization.md for parity.
+Color-mode sectors now use unique colors: enabled palette colors first (deduplicated),
+then deterministic generated colors. Appending preserves existing positions' colors;
+colors follow positions, not IDs on sort/removal. `lib/presentation.ts:sectorColors`
+is shared by sector fills and animated pointer colors. No schema/data migration.
 
 ## Architecture and important files
 
@@ -89,6 +93,14 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Unique-color follow-up: typecheck, lint, 10 existing unit tests, production build and
+6 relevant E2E passed (40.7s: four responsive/accessibility sizes, palette/center sizes,
+1,000-entry winning projection). Direct checks verified 1,000 unique colors and stable
+append prefixes for every theme, duplicate-color and single-color palettes. Chromium
+verified 19 unique rendered fills, unchanged previous colors on append, online/offline
+refresh persistence and mobile overflow; desktop screenshot visually inspected.
+No backend changes; pytest not rerun. Build retains the two upstream Zod warnings.
 
 Sidebar toolbar follow-up: typecheck, lint, 10 unit tests and production build passed.
 Full E2E run: 29 passed; one navigation-helper race timed out after template selection.
