@@ -18,12 +18,19 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   page,
 }) => {
   await ready(page)
+  await page.getByLabel('Συμμετοχή 1', { exact: true }).fill('Πίτσα παρέας 🍕')
+  await page.getByLabel('Νέα συμμετοχή…', { exact: true }).fill('Παγωτό 🍦')
+  await page.getByRole('button', { name: 'Προσθήκη συμμετοχής', exact: true }).click()
+  await expect(page.locator('.sidebar-entry')).toHaveCount(7)
+  await page.getByRole('button', { name: 'Διαγραφή συμμετοχής: Παγωτό 🍦', exact: true }).click()
+  await expect(page.locator('.sidebar-entry')).toHaveCount(6)
   await showScreen(page, 'options')
   await page.getByLabel('Τίτλος τροχού', { exact: true }).fill('Η παρέα μας 🎲')
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Αποθήκευση', exact: true }).click()
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Γύρνα τον τροχό', exact: true }).click()
+  await expect(page.getByLabel('Συμμετοχή 1', { exact: true })).toBeDisabled()
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.locator('.winner')).not.toBeEmpty()
@@ -50,7 +57,13 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   })
   expect(agreement).toBe(true)
   await dialog.getByRole('button', { name: 'Κλείσιμο' }).click()
+  await expect(page.getByRole('tab', { name: 'Αποτελέσματα', exact: true })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  )
+  await expect(page.locator('#sidebar-results .history li')).toBeVisible()
   await page.reload()
+  await expect(page.getByLabel('Συμμετοχή 1', { exact: true })).toHaveValue('Πίτσα παρέας 🍕')
   await expect(page.getByLabel('Τίτλος τροχού', { exact: true })).toHaveValue('Η παρέα μας 🎲')
   await expect(page.locator('.history li')).toHaveCount(1)
   await page.getByRole('button', { name: 'Οι τροχοί μου', exact: true }).first().click()
@@ -193,10 +206,29 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(page.locator('.editor-column')).toBeHidden()
     await expect(page.getByRole('button', { name: 'Προσαρμογή', exact: true })).toHaveCount(0)
     await expect(page.locator('.templates-section')).toBeHidden()
-    await expect(page.locator('.history')).not.toHaveAttribute('open')
+    await expect(page.getByRole('tab', { name: 'Επιλογές', exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
     const wheelBounds = (await page.locator('.wheel-stage').boundingBox())!
-    expect(Math.abs(wheelBounds.x + wheelBounds.width / 2 - width / 2)).toBeLessThan(2)
-    expect(Math.abs(wheelBounds.y + wheelBounds.height / 2 - 500)).toBeLessThan(6)
+    const wheelPanel = (await page.locator('.spinner-panel').boundingBox())!
+    const sidebar = (await page.locator('.wheel-sidebar').boundingBox())!
+    expect(
+      Math.abs(wheelBounds.x + wheelBounds.width / 2 - wheelPanel.x - wheelPanel.width / 2),
+    ).toBeLessThan(2)
+    if (width >= 1024) {
+      expect(sidebar.x).toBeGreaterThan(wheelBounds.x + wheelBounds.width)
+      expect(wheelBounds.width).toBeGreaterThan(600)
+    } else {
+      expect(sidebar.y).toBeGreaterThan(wheelBounds.y + wheelBounds.height)
+    }
+    await page.getByRole('tab', { name: 'Επιλογές', exact: true }).focus()
+    await page.keyboard.press('ArrowRight')
+    await expect(page.getByRole('tab', { name: 'Αποτελέσματα', exact: true })).toBeFocused()
+    await expect(page.locator('#sidebar-results')).toBeVisible()
+    await page.keyboard.press('ArrowLeft')
+    await expect(page.locator('#sidebar-entries')).toBeVisible()
+    await page.evaluate(() => window.scrollTo(0, 0))
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: `../artifacts/light-${width}.png`, fullPage: true })
     const scan = await new AxeBuilder({ page })

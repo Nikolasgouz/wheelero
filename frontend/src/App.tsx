@@ -6,7 +6,6 @@ import {
   ChevronRight,
   CircleDot,
   Copy,
-  History,
   LayoutGrid,
   Maximize2,
   Moon,
@@ -17,8 +16,6 @@ import {
   Sun,
   Volume2,
   VolumeX,
-  Wifi,
-  WifiOff,
   X,
 } from 'lucide-react'
 import { api, NetworkError } from './api/client'
@@ -32,6 +29,7 @@ import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
 import { Editor } from './screens/Editor'
+import { WheelSidebar } from './components/WheelSidebar'
 import { Library } from './screens/Library'
 import {
   activeOptions,
@@ -76,7 +74,7 @@ export default function App() {
   const [shares, setShares] = useState<Share[]>([])
   const [shared, setShared] = useState<SharedWheel | null>(null)
   const [templates, setTemplates] = useState<Template[]>(bundledTemplates)
-  const [allHistory, setAllHistory] = useState(false)
+  const [sidebarTab, setSidebarTab] = useState<'entries' | 'results'>('entries')
   const soundEnabled = useRef(sound)
   soundEnabled.current = sound
   const operation = useRef(false)
@@ -206,6 +204,7 @@ export default function App() {
         )
         stop()
         setResult(outcome.result)
+        setSidebarTab('results')
         setPopupOpen(config.popup)
         if (soundEnabled.current) playSound(config.result_sound, config.result_volume)
         if (config.auto_remove) await scheduleRemoval(wheel!.id, outcome.result, config)
@@ -226,6 +225,7 @@ export default function App() {
   }
   function navigate(next: Screen) {
     setScreen(next)
+    setSidebarTab('entries')
     setSpinOptions(null)
     setSpinConfig(null)
     setRotation(0)
@@ -492,51 +492,18 @@ export default function App() {
                       </button>
                     )}
                   </div>
-                  <details className="history">
-                    <summary className="history-heading">
-                      <History size={15} />
-                      <span>{t.history}</span>
-                      <span>{t.historyCount(wheel.results.length)}</span>
-                    </summary>
-                    {wheel.results.length ? (
-                      <ol>
-                        {(allHistory ? wheel.results : wheel.results.slice(0, 5)).map((r) => (
-                          <li key={r.id}>
-                            <span className="history-marker" />
-                            <strong>{r.label}</strong>
-                            <span
-                              className="result-source"
-                              title={r.source === 'server' ? t.server : t.offlineResult}
-                            >
-                              {r.source === 'server' ? (
-                                <Wifi size={12} aria-label={t.server} />
-                              ) : (
-                                <WifiOff size={12} aria-label={t.offlineResult} />
-                              )}
-                            </span>
-                            <time
-                              dateTime={r.created_at}
-                              title={new Date(r.created_at).toLocaleString('el-GR')}
-                            >
-                              {new Date(r.created_at).toLocaleTimeString('el-GR', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </time>
-                          </li>
-                        ))}
-                      </ol>
-                    ) : (
-                      <p className="empty-history">{t.noHistory}</p>
-                    )}
-                    {wheel.results.length > 5 && (
-                      <button className="text-button" onClick={() => setAllHistory(!allHistory)}>
-                        {allHistory ? t.lessHistory : t.allHistory}
-                      </button>
-                    )}
-                  </details>
                 </div>
               </section>
+              <div className="wheel-sidebar-column" hidden={screen !== 'wheel'}>
+                <WheelSidebar
+                  key={wheel.id}
+                  wheel={wheel}
+                  disabled={locked}
+                  edit={edit}
+                  tab={sidebarTab}
+                  setTab={setSidebarTab}
+                />
+              </div>
               <div className="editor-column" hidden={screen !== 'options'}>
                 <div className="options-toolbar">
                   <h1>{t.options}</h1>

@@ -1,133 +1,99 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Windows launcher now rebuilds and bypasses stale PWA HTML.
+Last updated: 2026-10-25. Larger wheel with Entries/Results sidebar implemented and verified.
 
-## Product and implemented scope
+## Product and current UI
 
 Greek anonymous decision spinner, responsive installable PWA. FastAPI/SQLAlchemy/Alembic/
-SQLite backend; React/TypeScript/Vite/Bun frontend. Includes editing/reordering/bulk input,
-templates, multiple wheels, history/no-repeat, JSON backups, revocable public snapshots,
-offline editing/draws, conflict copies and uncertain-request recovery. Supports 10,000
-entries; display projects at most 1,000 without changing eligibility or winning ID.
+SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
+multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
+editing/draws, conflict copies and uncertain-request recovery. No accounts or deployment.
 
-Customize has During spin / After spin / Appearance tabs, temporary drafts, durable OK,
-cancel, independent audio/preview/volume, duration/slow motion, duplicates/title visibility,
-result popup/message/actions, confetti/animation, durable automatic winner removal,
-palettes/themes, full-wheel/center/per-entry images, text policies, borders/shadow and
-presentation background/gradient. Global mute and reduced motion take precedence.
-Configuration/images survive refresh, copies, sharing, JSON and offline synchronization.
-Reference inspection, feature mapping and deliberate differences: `docs/customization.md`.
+Home now has a wheel up to 760px and an Entries/Results sidebar on the right (>=1024px).
+Below 1024px the sidebar sits underneath; on phones the wheel section uses compact flow.
+Entries support edit/add/delete with 100-row pagination, shared autosave and draw locks.
+Results show source/time, recent/all history and become selected after a completed draw.
+Options remains a separate full editor with Customize, sharing and templates. Both entry
+editors use distinct labels/draft keys and preserve incomplete input while hidden.
 
-The home screen now centers the wheel and spin button, with collapsed history. Editing,
-templates, save/share and the Customize button live in Options on desktop and mobile.
-The marketing intro, beta badge and redundant footer copy were removed. Offline status
-and PWA install/update controls remain available. Hidden editor state stays mounted.
-Home now uses equal flexible rows around the wheel, centered horizontally and vertically
-between header/bottom reservations; small-height screens shrink the wheel to keep actions
-accessible. Eight built-in spin sounds and eight result sounds are synthesized locally.
-Existing sound defaults/mute remain unchanged. New allowed IDs keep configuration version 1:
-no JSON structure or SQL schema changed, so no data migration is required.
+Customize has three transactional tabs: During spin / After spin / Appearance. Settings
+include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
+popup/confetti/winner actions, durable auto-removal, palettes/images/text/shadow/borders.
+Global mute and reduced motion take precedence. Settings and private images survive
+refresh, sharing, copies, JSON and offline sync. See docs/customization.md for parity.
 
 ## Architecture and important files
 
-- `START_GYRNA.bat`, `STOP_GYRNA.bat`, `scripts/start-gyrna.ps1`: always build before
-  startup, verify listener ownership, restart only this project, migrate and launch hidden
-  servers with logs. Browser entry `/api/launch` in `backend/app/main.py` serves the latest
-  built HTML with no-store headers through the existing /api proxy. Old service workers
-  exclude /api navigation, so stale HTML cannot intercept this entry. Same-origin browser
-  data stays intact; no cache/IndexedDB/cookie deletion or forced reload of existing tabs.
-
-- `backend/app/routes.py`, `schemas.py`, `security.py`: atomic revisioned API, validation,
-  ownership/CSRF/Origin checks. `/docs` provides generated OpenAPI documentation.
+- `START_GYRNA.bat`, `STOP_GYRNA.bat`, `scripts/start-gyrna.ps1`: always build, verify
+  listener ownership, restart only this project, migrate and launch hidden servers.
+  Open `/api/launch` (backend/app/main.py) for latest no-store HTML, bypassing stale PWA
+  navigation caches on the same origin. No browser storage deletion or forced tab reload.
+- `backend/app/routes.py`, `schemas.py`, `security.py`: revisioned API, validation,
+  ownership/CSRF/Origin checks. `/docs` is generated OpenAPI documentation.
 - `models.py`, `database.py`, `migrations/`: SQLite WAL/foreign keys, serialized writes;
   DB dependencies commit before success responses. No startup table creation.
-- `customization.py`: version 1 configuration and bounded raster validation. Migration
-  `c72f1a9e4b02` preserves old wheels/results/shares and adds defaults/images/new limits.
-- `services.py`: secure server RNG; immutable result snapshots survive entry removal.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v2, revisions, UUID outbox,
-  Web Locks/BroadcastChannel, conflict/session-loss copies and durable removal jobs.
-  Jobs follow conflict copies; manual and automatic removal share an atomic ID-based path.
-- `lib/random.ts`, `geometry.ts`, `presentation.ts`: separate RNG, geometry and display
-  projection. The projected wheel always contains the backend-selected entry ID.
-- `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: transactional settings,
-  bounded uploads, actual renderer. OK waits for uploads and local durable storage.
-- `customization.ts`, `customization.i18n.ts`: frontend schema/defaults and Greek labels.
-- `lib/audio.ts`: original procedural sounds; `scripts/generate-gallery.mjs`: three
-  original bundled WebP images. No third-party recordings or copied reference assets.
-- `App.tsx`, `screens/`: application flow; `vite.config.ts`: prompt-update PWA with
-  shell/fonts/gallery precache. Private APIs are never cached by the service worker.
+- `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
+  preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
+- `services.py`: secure server RNG and immutable result snapshots.
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v2, revisions/UUID outbox,
+  Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
+  Removal jobs follow conflict/session-loss copies and share the manual removal path.
+- `lib/random.ts`, `geometry.ts`, `presentation.ts`: independent RNG, geometry and visual
+  projection of at most 1,000 entries. All eligible entries retain their probability;
+  the displayed wheel always contains the winning ID.
+- `components/WheelSidebar.tsx`: home entries and history; `screens/Editor.tsx`: full editor.
+- `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: draft settings, bounded
+  uploads and renderer. OK waits for uploads and local durable storage.
+- `customization.ts`, `customization.i18n.ts`, `i18n.ts`: schemas/defaults and Greek labels.
+- `lib/audio.ts`: original local sound scores, finished nodes released while looping.
+  `scripts/generate-gallery.mjs`: three original bundled WebP images.
+- `App.tsx`, `styles.css`: UI flow/layout; `vite.config.ts`: prompt-update PWA with
+  shell/fonts/gallery precache. Private APIs never enter service-worker caches.
 
-Private images are embedded PNG/JPEG/WebP or known gallery paths, not public uploads.
-Uploads <=10 MB become <=1024px/512 KB; wheel payload <=8 MB UTF-8; archives <=100 MB.
-No-repeat allows a last single entry after winner removal if the wheel already has history.
-A new one-entry draft cannot draw. Client/imported results remain explicitly offline.
-Cookie loss copies local work to a new isolated workspace; no cross-device recovery.
+Private images are embedded PNG/JPEG/WebP or known gallery paths. Uploads <=10 MB become
+<=1024px/512 KB; wheel schema <=8 MB UTF-8; archives <=100 MB. No-repeat allows a last
+single entry after removals if history exists; a new one-entry draft cannot draw.
+Client/imported results remain explicitly offline. Cookie loss copies local work to a
+new isolated workspace; no cross-device recovery.
 
 ## Actual verification
 
-Latest launcher change (2026-10-25): executed the real BAT via cmd.exe, including fresh
-build, migration, backend/frontend startup and browser-open command; exit code 0.
-STOP_GYRNA.bat successfully stopped its servers. Existing project listeners were also
-replaced during the initial restart check. Fixed a Windows PowerShell localhost timeout
-by probing 127.0.0.1 while retaining localhost for the browser's existing storage.
-Chromium verification deliberately replaced the real PWA's cached index with an old
-screen: `/` showed that cached screen; `/api/launch` loaded current centered UI and all
-16 sound presets with the saved private wheel intact. HTTP 200/no-store verified.
-No new full pytest/E2E suite was run for this launcher-only change; prior results below.
+Sidebar work: TypeScript, ESLint and production build passed (24 precached assets).
+Full browser run: 28 passed, 2 timed out during bulk-input/mobile navigation. A targeted
+rerun passed all 6 checks (both timeouts and all four responsive sizes) after compacting
+phone spacing. All 30 distinct E2E cases therefore passed across these runs, including
+sidebar edit/add/delete, draw locking, automatic Results selection, refresh persistence,
+offline sync and real PWA updates. No timeout increases or backend changes were needed.
+Screenshots inspected at 360/390/768/1440px; no horizontal overflow. At 1440x900 the
+wheel stage increased from 440px to 580px; at 768x1000 it measures 680px.
 
-Latest sounds/centering change (2026-10-25): 41 pytest passed (23.96 s), Alembic check,
-TypeScript, ESLint and production build passed. Nine targeted production E2E passed
-(36.8 s): all 16 audio presets/stop/volume/mute, new sound persistence after reload,
-copy/JSON/share, offline synchronization, reduced motion, presentation and responsive
-accessibility at 360/390/768/1440px. The responsive checks assert actual wheel-center
-coordinates. Additional browser measurements/screenshots verified 360x640, 390x900,
-768x1000 and 1440x900; wheel/button remain visible on the short mobile viewport.
-The earlier full 30-test run below predates this sound/centering change.
+- Latest backend run (2026-10-25, before sidebar-only work): 41 pytest passed in 23.96 s;
+  Alembic check passed. Includes ownership, validation, old migration, process restart,
+  idempotency/shares, 10,000-entry eligibility and no-repeat exhaustion.
+- Unit baseline (2026-10-24): 10 passed, 6,600 projection and 20,100 geometry cases.
+- Previous browser baseline: 30 E2E passed for simplified home; 9 targeted checks passed
+  after adding all 16 sounds and centering, including audio graph, mute/stop/persistence.
+- Launcher verified via cmd.exe: build, migration, startup, stop and browser-open command.
+  Chromium cache test showed an old cached root page but current `/api/launch`, preserving
+  private data and exposing all sounds. Probes use 127.0.0.1 to avoid PowerShell IPv6 timeout;
+  browser URL stays localhost. Physical double-click/profile behavior is not automated.
 
-2026-10-25 layout change: TypeScript, ESLint and production build passed. All 30 existing
-E2E scenarios passed with the new navigation (2.9 minutes). Home screenshots inspected
-at 360/390/768/1440px and Options at mobile/desktop sizes, without horizontal overflow.
-Responsive checks now also verify hidden editor/templates on home and Options-to-Customize.
+## Limits and next steps
 
-- Backend (latest rerun 2026-10-25): 41 pytest passed (23.96 s), including
-  ownership, invalid configurations/images,
-  migration from the old DB, persistence across process restart, idempotency, sharing/
-  revocation, 10,000-entry eligibility and last-entry no-repeat. Alembic check passed.
-- Frontend: TypeScript, ESLint and production build passed; 24 PWA precache entries,
-  approximately 905 KiB. Unit tests (2026-10-24): 10 passed, including 6,600 projection/winner cases
-  and 20,100 original geometry positions.
-- Full Chromium production-PWA E2E (2026-10-25): 30 passed together in 2.9 minutes. Covers all
-  customization tabs, cancel/refresh, real audio graph/volume/mute, image uploads,
-  legacy IndexedDB, copies/JSON/shares, offline/resync, automatic/manual removal and
-  conflict copies, 1,000 visible entries, palette/sizes/presentation, cookie loss,
-  lost draw responses and actual waiting-service-worker update without lost editor work.
-- Keyboard, reduced motion and axe WCAG A/AA scans passed at 360/390/768/1440px;
-  screenshots at all four widths and dark mode inspected in ignored `artifacts/`.
-- Python lines <=100 and Git diff checks passed. Secrets, databases, dependencies,
-  screenshots and build outputs stay ignored. No remote push or deployment performed.
-- The BAT startup and browser-open command were executed through cmd.exe; physical
-  double-click interaction and the user's browser profile are not automated checks.
-
-## Differences, limits and next steps
-
-No known failing tested path. Smaller original sound/image/theme collections than Wheel
-of Names; no Unsplash integration. Duplicates collapse only visually, preserving required
-probabilities. Above 48 entries the renderer uses numbered sectors plus a full-name legend.
-Animation curves/center-size proportions are ours; native color picker, popup limit 200.
+Smaller original sound/image/theme collections than Wheel of Names; no Unsplash.
+Duplicate collapse affects display only. Above 48 entries use numbered sectors and a
+full-name legend. Animation/size proportions and native color picker are ours.
 Human listening, real screen-reader use and physical iOS/Android installation/keyboard/
-safe-area behavior remain unverified. These are the next validation steps.
-Large archives load in memory; history pagination/quotas remain future work. Upstream
-Starlette/httpx deprecation and two Rollup/Zod PURE warnings do not prevent checks.
-Before public hosting: HTTPS/Secure cookie, exact origins, persistent SQLite volume,
-consistent backups and deployment-specific rate limits. See deployment.md and roadmap.md.
-Accounts, live rooms, payments, AI and app-store distribution remain outside this version.
+safe-area checks remain next. Large archives load in memory; history quotas/pagination
+remain future work. Starlette/httpx and two Rollup/Zod annotation warnings are upstream.
+Before public hosting: HTTPS/Secure cookie, exact origins, persistent SQLite, backups and
+hosting rate limits. Accounts/live rooms/payments/AI/app stores stay outside this version.
 
 ## Run and continue
 
-Use `START_GYRNA.bat` from the root or the exact README commands. Backend port **8017**
-(8000 belongs to another project); frontend dev 5173, production preview 4173.
-The launcher always rebuilds and opens http://localhost:4173/api/launch to bypass stale
-PWA HTML. Use STOP_GYRNA.bat to stop its hidden servers. Logs: artifacts/launcher-*.log.
-Normal preview/PWA entry remains http://localhost:4173. No Windows service was installed.
-Keep backend/frontend schemas aligned, add migrations for schema changes and update this
-file with actual results. AGENTS.md contains stable conventions and check commands.
+Double-click START_GYRNA.bat; STOP_GYRNA.bat stops its hidden servers. Logs are in ignored
+artifacts/launcher-*.log. Latest-build URL: http://localhost:4173/api/launch.
+Normal PWA entry: http://localhost:4173. Backend port 8017 (8000 is another project), dev
+frontend 5173. No Windows service, remote push or public deployment was installed.
+Keep schemas aligned, add migrations for structural changes and update docs with actual
+results. AGENTS.md and README contain stable conventions and exact commands.

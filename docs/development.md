@@ -48,3 +48,8 @@ they share the output directory. Current verified counts are in PROJECT_CONTEXT.
 
 Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
 deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.
+
+The home sidebar uses the same `editWheel` path as the full editor. Keep its mutation
+controls disabled during draws, preserve entry IDs/images, and keep its draft key/labels
+distinct from the full editor. Lists are paged at 100 entries; Results selects automatically
+after a completed draw. Presentation hides the sidebar; below 1024px it stacks under the wheel.

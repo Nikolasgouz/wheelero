@@ -78,9 +78,14 @@ ordinary production/PWA entry when hosting the frontend separately.
 
 ## Customization
 
-The wheel and editor are separate views at every viewport size. The home view focuses
-on spinning, with history collapsed; Options contains editing, customization, sharing
-and templates. The editor stays mounted while hidden to preserve unfinished input.
+Home has a larger wheel with a right-hand Entries/Results sidebar at widths >=1024px;
+on smaller screens the sidebar sits below the wheel. `components/WheelSidebar.tsx`
+provides inline entry editing/add/remove, 100-entry pagination and result history with
+source/time indicators. It uses the same revisioned edit path as the full editor and
+locks all mutations during a draw. A completed draw selects Results automatically.
+Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
+The separate Options view retains the full editor, customization, sharing and templates.
+Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
 `customization.ts` defines versioned settings and bounded raster image import;
@@ -91,8 +96,9 @@ settings and optional option images. IndexedDB version 2 migrates old local whee
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
 The home wheel uses equal flexible rows above and below the wheel itself, centering it
-vertically between the header and the reserved bottom area. Short viewports reduce the
-wheel size; long results/history can grow the page instead of overlapping controls.
+within its column, with diameter up to 760px according to available width/height.
+Short viewports reduce its size; the sidebar scrolls independently without stretching
+the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel layout.
 Completed draws snapshot their settings; an ID-based durable removal queue runs after
 five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
 Conflict/session-loss copies take their pending jobs with them; execution reads and
