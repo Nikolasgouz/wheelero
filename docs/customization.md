@@ -17,7 +17,7 @@
 
 | Επιλογή αναφοράς | Δική μας υλοποίηση | Έλεγχος | Τυχόν διαφορά |
 | --- | --- | --- | --- |
-| During spin / After spin / Appearance | Ίδια σειρά, ελληνικές καρτέλες, native modal, Ακύρωση / OK | E2E transactional, keyboard/layout | Ταυτότητα Γύρνα. |
+| During spin / After spin / Appearance | Ίδια σειρά, αγγλικές καρτέλες, native modal, Cancel / OK | E2E transactional, keyboard/layout | Ταυτότητα Γύρνα. |
 | Sound during spin, none, preview | 8 έτοιμοι ήχοι, χωρίς ήχο, έναρξη/διακοπή προεπισκόπησης | Audio E2E | Δικοί μας συνθετικοί ήχοι, μικρότερη συλλογή |
 | Spin volume 0–100%, default 50% | Ανεξάρτητο gain, συνολική σίγαση υπερισχύει | Schema / audio E2E | Καμία στη ρύθμιση |
 | Display duplicates, on | Σύμπτυξη ίδιου ονόματος + εικόνας μόνο στην προβολή | Exhaustive projection tests | Η αναφορά αφαιρεί διπλότυπα από την εσωτερική λίστα του τροχού. Εδώ διατηρούνται όλες οι πιθανότητες, όπως απαιτήθηκε |
@@ -51,7 +51,7 @@
   όριο 10.000 συμμετοχών. Διατηρεί υπάρχοντες τροχούς, αποτελέσματα και share tokens.
   Τα παλιά snapshots αποκτούν defaults. Το downgrade απαιτεί επαναφορά backup για
   να μη χαθούν ρυθμίσεις ή εγγραφές πάνω από το παλιό όριο.
-- IndexedDB version 2 αναβαθμίζει παλιά δεδομένα. Οι αλλαγές του modal βρίσκονται
+- IndexedDB version 3 διατηρεί τις παλιές ρυθμίσεις και προσθέτει μία φορά το νέο παράδειγμα ονομάτων. Οι αλλαγές του modal βρίσκονται
   μόνο στο React draft· αποθηκεύονται με μία αλλαγή στο OK, όχι από το autosave.
   Το OK περιμένει να ολοκληρωθούν uploads και εγγραφή στο IndexedDB πριν κλείσει.
 - Οι εικόνες είναι είτε γνωστά bundled gallery paths είτε embedded PNG/JPEG/WebP.

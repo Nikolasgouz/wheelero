@@ -10,13 +10,13 @@ from .models import Option, Result, Wheel
 def owned_wheel(db: Session, wheel_id: str, owner_id: str) -> Wheel:
     wheel = db.get(Wheel, wheel_id)
     if wheel is None or wheel.workspace_id != owner_id:
-        raise HTTPException(404, "Ο τροχός δεν βρέθηκε.")
+        raise HTTPException(404, "Wheel not found.")
     return wheel
 
 
 def check_revision(wheel: Wheel, revision: int):
     if wheel.deleted or wheel.revision != revision:
-        raise HTTPException(409, "Ο τροχός άλλαξε. Απαιτείται συγχρονισμός.")
+        raise HTTPException(409, "The wheel changed. Please sync.")
 
 
 def result_data(result: Result) -> dict:

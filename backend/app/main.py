@@ -19,7 +19,7 @@ app.add_middleware(
 @app.middleware("http")
 async def response_headers(request: Request, call_next):
     if int(request.headers.get("content-length", "0")) > 2_000_000:
-        return JSONResponse({"detail": "Το αίτημα είναι πολύ μεγάλο."}, status_code=413)
+        return JSONResponse({"detail": "The request is too large."}, status_code=413)
     response = await call_next(request)
     response.headers["Cache-Control"] = "no-store"
     response.headers["X-Content-Type-Options"] = "nosniff"
@@ -31,7 +31,7 @@ async def response_headers(request: Request, call_next):
 async def validation_error(_request, exc):
     # Do not echo private input values or Pydantic exception objects.
     return JSONResponse(status_code=422, content={
-        "detail": "Μη έγκυρα δεδομένα.",
+        "detail": "Invalid data.",
         "errors": [{"loc": e["loc"], "msg": e["msg"]} for e in exc.errors()],
     })
 

@@ -20,3 +20,8 @@ Migration c72f1a9e4b02 preserves old data and public tokens, adds defaults to ex
 wheels/shares, and increases option/result constraints. Private images are embedded
 in the owner's snapshot; public snapshots explicitly copy them. No public upload store
 or independent asset endpoint exists. See customization.md for limits and validation.
+
+English UI/default messages do not change the SQLite schema or rewrite user content.
+IndexedDB v3 adds a new local names starter once when upgrading existing v1/v2 state;
+it is uploaded through the normal revisioned API. Existing IDs, settings, history and
+pending operations remain intact. A pending draw keeps its current active wheel.

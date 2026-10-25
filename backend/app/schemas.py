@@ -20,7 +20,7 @@ class OptionInput(StrictModel):
     @classmethod
     def nonblank(cls, value):
         if not value.strip():
-            raise ValueError("Η επιλογή δεν μπορεί να είναι κενή.")
+            raise ValueError("The entry cannot be blank.")
         return value
 
 
@@ -54,7 +54,7 @@ class WheelWrite(StrictModel):
     @classmethod
     def nonblank(cls, value):
         if not value.strip():
-            raise ValueError("Ο τίτλος δεν μπορεί να είναι κενός.")
+            raise ValueError("The title cannot be blank.")
         return value
 
     @model_validator(mode="after")

@@ -1,19 +1,26 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Larger wheel with Entries/Results sidebar implemented and verified.
+Last updated: 2026-10-25. English interface and names starter implemented.
 
 ## Product and current UI
 
-Greek anonymous decision spinner, responsive installable PWA. FastAPI/SQLAlchemy/Alembic/
+English anonymous decision spinner, responsive installable PWA; Γύρνα. branding retained.
+FastAPI/SQLAlchemy/Alembic/
 SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
 multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
 editing/draws, conflict copies and uncertain-request recovery. No accounts or deployment.
+
+New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
+templates, Customize, errors, installation text and HTML/manifest language are English.
+IndexedDB v3 adds this example once to existing installations, preserving old wheels,
+settings, results and user-written messages. It selects the example unless a draw is
+pending. Close old app tabs if an upgrade-blocked message appears. No SQLite shape change.
 
 Home now has a wheel up to 760px and an Entries/Results sidebar on the right (>=1024px).
 Below 1024px the sidebar sits underneath; on phones the wheel section uses compact flow.
 Entries support edit/add/delete with 100-row pagination, shared autosave and draw locks.
 Results show source/time, recent/all history and become selected after a completed draw.
-Options remains a separate full editor with Customize, sharing and templates. Both entry
+Entries remains a separate full editor with Customize, sharing and templates. Both entry
 editors use distinct labels/draft keys and preserve incomplete input while hidden.
 
 Customize has three transactional tabs: During spin / After spin / Appearance. Settings
@@ -35,16 +42,17 @@ refresh, sharing, copies, JSON and offline sync. See docs/customization.md for p
 - `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v2, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v3, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
+  `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
 - `lib/random.ts`, `geometry.ts`, `presentation.ts`: independent RNG, geometry and visual
   projection of at most 1,000 entries. All eligible entries retain their probability;
   the displayed wheel always contains the winning ID.
 - `components/WheelSidebar.tsx`: home entries and history; `screens/Editor.tsx`: full editor.
 - `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: draft settings, bounded
   uploads and renderer. OK waits for uploads and local durable storage.
-- `customization.ts`, `customization.i18n.ts`, `i18n.ts`: schemas/defaults and Greek labels.
+- `customization.ts`, `customization.i18n.ts`, `i18n.ts`: schemas/defaults and English labels.
 - `lib/audio.ts`: original local sound scores, finished nodes released while looping.
   `scripts/generate-gallery.mjs`: three original bundled WebP images.
 - `App.tsx`, `styles.css`: UI flow/layout; `vite.config.ts`: prompt-update PWA with
@@ -58,25 +66,24 @@ new isolated workspace; no cross-device recovery.
 
 ## Actual verification
 
-Sidebar work: TypeScript, ESLint and production build passed (24 precached assets).
-Full browser run: 28 passed, 2 timed out during bulk-input/mobile navigation. A targeted
-rerun passed all 6 checks (both timeouts and all four responsive sizes) after compacting
-phone spacing. All 30 distinct E2E cases therefore passed across these runs, including
-sidebar edit/add/delete, draw locking, automatic Results selection, refresh persistence,
-offline sync and real PWA updates. No timeout increases or backend changes were needed.
-Screenshots inspected at 360/390/768/1440px; no horizontal overflow. At 1440x900 the
-wheel stage increased from 440px to 580px; at 768x1000 it measures 680px.
+English/names release (2026-10-25): TypeScript, ESLint, 10 unit tests, 41 pytest tests
+(19.17s), production build and all 30 E2E tests passed (2.7min). PWA precaches 24 assets.
+Windows launcher rebuilt, migrated SQLite and restarted only this project's servers.
+E2E covers English navigation/Customize, draws/pointer agreement, sharing, refresh,
+Unicode editing, offline resync, conflict handling and real service-worker updates.
+Existing legacy-v1 E2E verifies preserved entries and a single names starter after refresh.
+A separate browser check verified v2 upgrade preserving entries/custom settings, one-time
+starter creation and recovery after closing an old tab that blocked the upgrade.
+English screenshots captured at 360/390/768/1440px, with no horizontal overflow;
+390/1440px visually inspected. Automated accessibility/keyboard checks passed at all four
+sizes, including Customize; reduced-motion behavior passed.
 
-- Latest backend run (2026-10-25, before sidebar-only work): 41 pytest passed in 23.96 s;
-  Alembic check passed. Includes ownership, validation, old migration, process restart,
-  idempotency/shares, 10,000-entry eligibility and no-repeat exhaustion.
-- Unit baseline (2026-10-24): 10 passed, 6,600 projection and 20,100 geometry cases.
-- Previous browser baseline: 30 E2E passed for simplified home; 9 targeted checks passed
-  after adding all 16 sounds and centering, including audio graph, mute/stop/persistence.
-- Launcher verified via cmd.exe: build, migration, startup, stop and browser-open command.
-  Chromium cache test showed an old cached root page but current `/api/launch`, preserving
-  private data and exposing all sounds. Probes use 127.0.0.1 to avoid PowerShell IPv6 timeout;
-  browser URL stays localhost. Physical double-click/profile behavior is not automated.
+Backend coverage includes ownership, validation, old migration, process restart,
+idempotency/shares, 10,000-entry eligibility and no-repeat exhaustion. Unit coverage
+includes 6,600 projection and 20,100 geometry cases. Existing Alembic check passed before
+this release; SQLite models/schema were unchanged by localization.
+Launcher uses `/api/launch` to bypass stale cached HTML without deleting private data.
+Physical Windows double-click/browser-profile behavior is not automated.
 
 ## Limits and next steps
 

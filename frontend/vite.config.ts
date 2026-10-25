@@ -10,10 +10,10 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Γύρνα. — Μια στροφή, μια απόφαση',
+        name: 'Γύρνα. — One spin, one decision',
         short_name: 'Γύρνα.',
-        lang: 'el',
-        description: 'Οι μικρές αποφάσεις γίνονται παιχνίδι.',
+        lang: 'en',
+        description: 'Turn little decisions into a game.',
         start_url: '/',
         scope: '/',
         display: 'standalone',

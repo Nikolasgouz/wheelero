@@ -53,7 +53,7 @@ class Customization(BaseModel):
     confetti: bool = True
     auto_remove: bool = False
     popup: bool = True
-    popup_message: str = Field(default="Η ΤΥΧΗ ΔΙΑΛΕΞΕ", min_length=1, max_length=200)
+    popup_message: str = Field(default="WE HAVE A WINNER", min_length=1, max_length=200)
     remove_button: bool = True
     removal_sound: bool = False
     mode: Literal["colors", "image"] = "colors"

@@ -2,28 +2,12 @@ import { useSyncExternalStore } from 'react'
 import { api, ApiError, NetworkError, setCsrf } from '../api/client'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
-import { defaults, type Customization } from '../customization'
+import { type Customization } from '../customization'
 import { randomIndex } from '../lib/random'
 import type { DrawResult, LocalWheel, Option, SavedState, Wheel } from '../types'
 import { readState, writeState } from './storage'
 import { templates } from './templates'
-
-export function makeWheel(title: string, labels: string[]): LocalWheel {
-  return {
-    id: crypto.randomUUID(),
-    title,
-    revision: 0,
-    no_repeat: false,
-    customization: structuredClone(defaults),
-    deleted: false,
-    updated_at: new Date().toISOString(),
-    options: labels.map((label) => ({ id: crypto.randomUUID(), label, active: true, image: null })),
-    results: [],
-    dirty: true,
-    mutation_id: crypto.randomUUID(),
-    pending_results: [],
-  }
-}
+import { makeWheel } from './wheel'
 
 function localWheel(wheel: Wheel): LocalWheel {
   return { ...wheel, dirty: false, mutation_id: crypto.randomUUID(), pending_results: [] }

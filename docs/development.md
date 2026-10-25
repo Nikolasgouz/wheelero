@@ -49,6 +49,12 @@ they share the output directory. Current verified counts are in PROJECT_CONTEXT.
 Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
 deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.
 
+The UI, templates and API messages are English. Keep copy in the two i18n modules;
+preserve user-authored content in any language. Keep bundled/API template lists aligned.
+`state/wheel.ts` supplies the factory shared by the store and IndexedDB v3 migration.
+Do not reset user wheels to change a starter example. Existing E2E locators use English;
+Greek input fixtures intentionally remain to check Unicode editing and preservation.
+
 The home sidebar uses the same `editWheel` path as the full editor. Keep its mutation
 controls disabled during draws, preserve entry IDs/images, and keep its draft key/labels
 distinct from the full editor. Lists are paged at 100 entries; Results selects automatically

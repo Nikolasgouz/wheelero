@@ -1,19 +1,33 @@
 import { openDB } from 'idb'
 import type { SavedState } from '../types'
 import { defaults } from '../customization'
+import { makeWheel } from './wheel'
+import { templates } from './templates'
+import { t } from '../i18n'
 
-const database = openDB('gyrna', 2, {
+const database = openDB('gyrna', 3, {
+  blocked() {
+    window.alert(t.closeOldTabs)
+  },
+  blocking() {
+    void database.then((db) => db.close())
+  },
   async upgrade(db, oldVersion, _newVersion, transaction) {
     if (oldVersion === 0) db.createObjectStore('state')
     else {
       const store = transaction.objectStore('state')
       const state: SavedState | undefined = await store.get('current')
       if (state) {
-        state.removals = []
-        for (const wheel of state.wheels) {
-          wheel.customization = structuredClone(defaults)
-          wheel.options = wheel.options.map((option) => ({ ...option, image: null }))
+        if (oldVersion < 2) {
+          state.removals = []
+          for (const wheel of state.wheels) {
+            wheel.customization = structuredClone(defaults)
+            wheel.options = wheel.options.map((option) => ({ ...option, image: null }))
+          }
         }
+        const starter = makeWheel(templates[0].title, templates[0].options)
+        state.wheels.push(starter)
+        if (!state.pending_draw) state.active = starter.id
         await store.put(state, 'current')
       }
     }

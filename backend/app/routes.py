@@ -63,13 +63,13 @@ def write_wheel(wheel_id: UUID, body: WheelWrite, response: Response, db: DB, ow
         mutation = db.get(Mutation, (wheel_id, str(body.mutation_id)))
         if mutation:
             if mutation.digest != digest:
-                raise HTTPException(409, "Το ID αιτήματος χρησιμοποιήθηκε ήδη.")
+                raise HTTPException(409, "This request ID has already been used.")
             return wheel_data(db, wheel)
         check_revision(wheel, body.revision)
         wheel.revision += 1
     else:
         if body.revision != 0:
-            raise HTTPException(409, "Ο αρχικός τροχός δεν υπάρχει.")
+            raise HTTPException(409, "The original wheel does not exist.")
         wheel = Wheel(id=wheel_id, workspace_id=owner.id, title=body.title, revision=1)
         db.add(wheel)
         db.flush()
@@ -89,7 +89,7 @@ def write_wheel(wheel_id: UUID, body: WheelWrite, response: Response, db: DB, ow
         data = result.model_dump(mode="json")
         if existing:
             if result_data(existing) != data:
-                raise HTTPException(409, "Το ID αποτελέσματος χρησιμοποιήθηκε ήδη.")
+                raise HTTPException(409, "This result ID has already been used.")
         else:
             db.add(Result(**data, wheel_id=wheel_id, request_revision=body.revision))
     db.add(Mutation(wheel_id=wheel_id, id=str(body.mutation_id), digest=digest))
@@ -116,7 +116,7 @@ def draw(wheel_id: UUID, body: DrawRequest, db: DB, owner: Owner):
     existing = db.get(Result, (wheel.id, str(body.id)))
     if existing:
         if existing.source != "server" or existing.request_revision != body.revision:
-            raise HTTPException(409, "Το ID κλήρωσης χρησιμοποιήθηκε ήδη.")
+            raise HTTPException(409, "This draw ID has already been used.")
         return {"wheel": wheel_data(db, wheel), "result": result_data(existing)}
     check_revision(wheel, body.revision)
     options = db.scalars(
@@ -126,10 +126,10 @@ def draw(wheel_id: UUID, body: DrawRequest, db: DB, owner: Owner):
         select(Result.id).where(Result.wheel_id == wheel.id).limit(1)
     ) is not None
     if len(options) < 2 and not last_in_round:
-        raise HTTPException(422, "Χρειάζονται τουλάχιστον δύο επιλογές.")
+        raise HTTPException(422, "At least two entries are required.")
     active = [o for o in options if o.active or not wheel.no_repeat]
     if not active:
-        raise HTTPException(422, "Οι επιλογές εξαντλήθηκαν. Ξεκίνα νέο γύρο.")
+        raise HTTPException(422, "No entries remain. Start a new round.")
     index = choose_index(len(active))
     selected = active[index]
     result = Result(
@@ -183,5 +183,5 @@ def revoke_share(wheel_id: UUID, token: str, db: DB, owner: Owner):
 def public_share(token: str, db: DB):
     share = db.get(Share, token)
     if share is None:
-        raise HTTPException(404, "Ο σύνδεσμος δεν υπάρχει ή ανακλήθηκε.")
+        raise HTTPException(404, "This link does not exist or has been revoked.")
     return share.snapshot

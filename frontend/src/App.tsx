@@ -37,7 +37,6 @@ import {
   editWheel,
   forkWheel,
   initialize,
-  makeWheel,
   removeWinner,
   removeDueWinners,
   scheduleRemoval,
@@ -45,6 +44,7 @@ import {
   synchronize,
   useStore,
 } from './state/store'
+import { makeWheel } from './state/wheel'
 import { templates as bundledTemplates } from './state/templates'
 import type { DrawResult, Option, Share, Template, Wheel } from './types'
 

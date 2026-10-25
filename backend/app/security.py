@@ -21,13 +21,13 @@ def token_hash(token: str) -> str:
 def workspace(request: Request, db: DB) -> Workspace:
     identity = db.get(Workspace, token_hash(request.cookies.get(COOKIE, "")))
     if identity is None:
-        raise HTTPException(401, "Η συνεδρία έληξε. Συνδέσου ξανά.")
+        raise HTTPException(401, "Your session expired. Reconnect to continue.")
     if request.method in {"POST", "PUT", "DELETE"}:
         origin = request.headers.get("origin")
         if origin and origin not in settings.allowed_origins.split(","):
-            raise HTTPException(403, "Μη επιτρεπόμενη προέλευση.")
+            raise HTTPException(403, "Origin not allowed.")
         if not secrets.compare_digest(request.headers.get("x-csrf-token", ""), identity.csrf):
-            raise HTTPException(403, "Μη έγκυρο CSRF token.")
+            raise HTTPException(403, "Invalid CSRF token.")
     return identity
 
 

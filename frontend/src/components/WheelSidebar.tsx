@@ -186,9 +186,9 @@ export function WheelSidebar({
                   </span>
                   <time
                     dateTime={r.created_at}
-                    title={new Date(r.created_at).toLocaleString('el-GR')}
+                    title={new Date(r.created_at).toLocaleString('en-GB')}
                   >
-                    {new Date(r.created_at).toLocaleTimeString('el-GR', {
+                    {new Date(r.created_at).toLocaleTimeString('en-GB', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

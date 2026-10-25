@@ -13,7 +13,10 @@ flowchart LR
 
 `screens/` contains the editor and library; `components/` holds wheel, dialog and PWA
 controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives in
-`i18n.ts`. Bundled templates support offline startup and are refreshed from the API.
+`i18n.ts` and `customization.i18n.ts` in English; the Γύρνα. brand is unchanged.
+HTML/manifest language is English; history uses en-GB date/time formatting.
+Bundled templates support offline startup and are refreshed from the API. Both lists
+start with Pick a name (Alex, Emma, James, Olivia, Noah, Sofia).
 Greek/Latin Noto Sans variable fonts are bundled locally and precached, with no external
 font request. Platform emoji fonts render emojis.
 `lib/random.ts` uses Web Crypto rejection sampling; `lib/geometry.ts` independently
@@ -33,6 +36,12 @@ is sent, including when the process is terminated immediately after the response
 
 `state/store.ts` coordinates one IndexedDB document containing wheels, dirty flags,
 mutation UUIDs, pending result IDs, workspace identity and any uncertain online draw.
+IndexedDB v3 atomically adds a names starter to existing v1/v2 data exactly once,
+using the shared factory in `state/wheel.ts`. Existing wheels and their content are
+preserved. The starter becomes active unless a draw is pending. A blocked upgrade asks
+the user to close older app tabs; connections created by this version close on upgrade.
+New installations create just the names starter. This is a local data migration;
+SQLite/API shapes are unchanged and existing customized popup messages are preserved.
 Web Locks serialize operations across tabs; BroadcastChannel updates their views.
 An in-memory overlay displays edits synchronously to preserve input caret position;
 each overlay is removed only after its corresponding IndexedDB write completes, so
@@ -84,14 +93,14 @@ provides inline entry editing/add/remove, 100-entry pagination and result histor
 source/time indicators. It uses the same revisioned edit path as the full editor and
 locks all mutations during a draw. A completed draw selects Results automatically.
 Keyboard-operable tabs preserve their panels; unfinished add text is stored locally.
-The separate Options view retains the full editor, customization, sharing and templates.
+The separate Entries view retains the full editor, customization, sharing and templates.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
 `customization.ts` defines versioned settings and bounded raster image import;
-`customization.i18n.ts` contains its Greek UI copy. The same settings/images travel
+`customization.i18n.ts` contains its English UI copy. The same settings/images travel
 through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON
-settings and optional option images. IndexedDB version 2 migrates old local wheels.
+settings and optional option images. IndexedDB version 3 includes both local migrations.
 `lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
 Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.

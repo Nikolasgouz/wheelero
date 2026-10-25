@@ -1,3 +1,5 @@
+import { t } from '../i18n'
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -27,12 +29,12 @@ export async function api<T>(path: string, method = 'GET', body?: unknown): Prom
       error instanceof TypeError ||
       (error instanceof DOMException && error.name === 'TimeoutError')
     ) {
-      throw new NetworkError('Δεν είναι διαθέσιμη η σύνδεση με τον server.')
+      throw new NetworkError(t.connectionUnavailable)
     }
     throw error
   }
   if (!response.ok) {
-    if (response.status >= 500) throw new NetworkError('Ο server δεν είναι διαθέσιμος.')
+    if (response.status >= 500) throw new NetworkError(t.serverUnavailable)
     const data = await response.json()
     throw new ApiError(response.status, data.detail)
   }

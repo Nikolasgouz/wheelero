@@ -98,7 +98,7 @@ export const defaults: Customization = {
   confetti: true,
   auto_remove: false,
   popup: true,
-  popup_message: 'Η ΤΥΧΗ ΔΙΑΛΕΞΕ',
+  popup_message: 'WE HAVE A WINNER',
   remove_button: true,
   removal_sound: false,
   mode: 'colors',

@@ -2,7 +2,8 @@ import { Copy, Download, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useRef } from 'react'
 import { t } from '../i18n'
 import { backupSchema, type LocalWheel } from '../types'
-import { addWheels, deleteWheel, forkWheel, makeWheel, selectWheel } from '../state/store'
+import { addWheels, deleteWheel, forkWheel, selectWheel } from '../state/store'
+import { makeWheel } from '../state/wheel'
 
 export function Library({
   wheels,
