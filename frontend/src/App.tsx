@@ -427,7 +427,13 @@ export default function App() {
                   config={config}
                   winnerId={result?.option_id ?? null}
                   idle={
-                    canSpin && !idlePaused && !result && screen === 'wheel' && !shareOpen && !shared
+                    !spinning &&
+                    !idlePaused &&
+                    displayed.length > 0 &&
+                    !data.pending_draw &&
+                    screen === 'wheel' &&
+                    !shareOpen &&
+                    !shared
                   }
                   canSpin={canSpin}
                   onSpin={spin}

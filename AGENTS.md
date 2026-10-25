@@ -26,7 +26,8 @@ Enforce ownership and CSRF on private writes. No tokens or private payloads in l
 Offline results are client-reported; never label them as server-verified.
 Preserve revisions, idempotency and conflict copies when changing sync.
 Keep backend/frontend customization schemas aligned and versioned. Display projection
-must never change draw eligibility; the winning entry ID must remain under the pointer.
+must never change draw eligibility; the wheel must land on the winning entry ID.
+Post-result idle motion is decorative and must never change the recorded result.
 Modal settings stay temporary until OK completes durable storage; removal jobs follow copies.
 Do not commit databases, secrets, virtualenvs, dependencies, screenshots or build outputs.
 Keep lockfiles, .env.example and migrations tracked. Make coherent local commits;

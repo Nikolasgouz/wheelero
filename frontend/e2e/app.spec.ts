@@ -92,6 +92,20 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   })
   expect(agreement).toBe(true)
   await dialog.getByRole('button', { name: 'Close' }).click()
+  await expect
+    .poll(() =>
+      page
+        .locator('.wheel-svg')
+        .evaluate((svg) =>
+          svg.getAnimations().some((animation) => animation.playState === 'running'),
+        ),
+    )
+    .toBe(true)
+  await page.getByRole('button', { name: 'Pause idle rotation', exact: true }).click()
+  await expect
+    .poll(() => page.locator('.wheel-svg').evaluate((svg) => svg.getAnimations().length))
+    .toBe(0)
+  await page.getByRole('button', { name: 'Resume idle rotation', exact: true }).click()
   await expect(page.getByRole('tab', { name: 'Results', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',

@@ -124,12 +124,15 @@ the wheel's layout. Presentation hides the sidebar and keeps its dedicated wheel
 The stationary center button starts the same guarded draw flow as result actions and
 supports native keyboard activation. With a custom center image its hit area is
 transparent and its label sits just below the image, keeping small images visible.
-When eligible and awaiting a first draw, `Wheel.tsx` uses Web Animations for a silent
+While awaiting the next spin, `Wheel.tsx` uses Web Animations for a silent
 120-second idle revolution without React updates each frame. Pause/resume and live
-reduced-motion changes are respected; hidden screens/dialogs and operations stop idle
+reduced-motion changes are respected; hidden screens/share dialogs and pending draws stop idle
 motion. `lib/motion.ts` captures the actual rendered angle before cancelling idle motion.
 The draw animation starts from that angle, still targeting the backend/offline winner.
-Results stay stationary until another spin or edit; idle animation never selects a winner.
+After landing on the winner, idle motion resumes immediately, including behind the
+result popup and while background sync runs. The recorded result/history never changes
+because of idle motion. A wheel with visible entries can idle even when its draw button
+is disabled; the next real draw captures its current angle as before.
 Completed draws snapshot their settings; an ID-based durable removal queue runs after
 five seconds, deferring while another draw is busy. Manual removal clears matching jobs.
 Conflict/session-loss copies take their pending jobs with them; execution reads and

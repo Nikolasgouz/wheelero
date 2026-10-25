@@ -1,6 +1,6 @@
 ﻿# Γύρνα. — context
 
-Last updated: 2026-10-25. Easier inline name editing and results revealed after animation.
+Last updated: 2026-10-25. Idle rotation resumes after every completed spin.
 
 ## Product and current UI
 
@@ -35,9 +35,11 @@ editors use distinct labels/draft keys and preserve incomplete input while hidde
 
 Click to spin is a real center button (mouse/touch/Enter/Space), using the existing
 guarded draw flow. Custom center images remain visible with a transparent hit area.
-Eligible wheels idle silently at one turn per 120 seconds. Pause/resume is in the
-wheel toolbar; live reduced-motion changes disable idle animation. Results remain
-stationary; editing/selecting a wheel resumes idle motion. No selection occurs on idle.
+Visible wheels idle silently at one turn per 120 seconds before and after every draw,
+including behind the result popup and during background sync. Pause/resume is in the
+wheel toolbar; live reduced-motion changes disable idle animation. The wheel lands on
+the winner before resuming decorative motion; stored results stay unchanged. No selection
+occurs on idle. Hidden/share screens and uncertain pending draws still suspend idle.
 
 Customize has three transactional tabs: During spin / After spin / Appearance. Settings
 include duration/visibility, 8 built-in spin sounds and 8 result sounds, volume/preview,
@@ -84,6 +86,12 @@ new isolated workspace; no cross-device recovery.
 
 ## Actual verification
 
+Continuous-idle follow-up: typecheck, lint, build and 5 relevant E2E passed (1.1min).
+Verified post-result idle restart, pause/resume, landing agreement, reduced motion,
+offline draws, no-repeat exhaustion and 1,000-entry projection. A separate two-spin
+online/offline browser check confirmed idle movement after each result while history
+stays unchanged and the next result still waits until spin completion.
+
 Inline-edit/result-reveal follow-up: typecheck, lint and production build passed;
 9 relevant E2E passed (1.1min), including pencil replacement/persistence and a stored
 server result remaining absent from Results/count during animation. Direct name-click
@@ -97,7 +105,7 @@ All 30 E2E passed (3.2min). After making the center-image hit area transparent, 
 image/palette/copy/offline checks passed again. The final build precaches 24 assets.
 Browser inspection verified idle/pause/resume, live reduced-motion changes, a continuous
 start from the current angle, a real 10-second transition, one draw request and an
-actual rendered pointer matching the stationary winner. Enter and Space both work.
+actual rendered pointer matching the winner on landing. Enter and Space both work.
 An XS center image stays visible even on hover, with its button label below it.
 Responsive/accessibility checks passed at 360/390/768/1440px; manual layout measurements
 also passed at 1024/1366/1920px. Desktop/mobile screenshots visually inspected, no
