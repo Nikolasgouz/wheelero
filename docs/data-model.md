@@ -35,3 +35,9 @@ pending operations remain intact. A pending draw keeps its current active wheel.
 IndexedDB v4 initializes each wheel's pending `clear_history` flag to false; v3 upgrades
 do not add another starter. Clears cancel that wheel's queued auto-removals. Clearing
 entries preserves history; clearing results preserves entries and no-repeat active flags.
+
+Migration f03a5c9d124b and IndexedDB v6 localize the original Greek example wheels:
+recognized default titles/entry labels/result labels and generated Copy suffixes become
+English. This one-time data migration preserves IDs, positions, active flags, revisions
+and source; custom labels remain unchanged. Published snapshots remain immutable.
+Dirty local payloads changed by localization receive a fresh mutation ID.

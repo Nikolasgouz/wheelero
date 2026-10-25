@@ -1,12 +1,12 @@
 # SPINARO — context
 
-Last updated: 2026-10-25. Home-page product explanation and feature sections.
+Last updated: 2026-10-25. English legacy examples in My wheels and Notepad TXT export.
 
 ## Product and current UI
 
 English anonymous decision spinner, responsive installable PWA; brand is SPINARO.
 Renamed header/accessibility label, browser/PWA title, default theme label, update text,
-API docs, package metadata, launcher messages and JSON/CSV download filenames.
+API docs, package metadata, launcher messages and download filenames.
 Storage DB/cookie/lock/channel names and the JSON format identifier remain `gyrna`
 to preserve saved data and backups; these are internal identifiers, not display labels.
 START_GYRNA.bat / STOP_GYRNA.bat retain their filenames so existing launch paths work.
@@ -15,6 +15,11 @@ FastAPI/SQLAlchemy/Alembic/
 SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
 multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
 editing/draws, conflict copies and uncertain-request recovery. No accounts or deployment.
+UI/API/templates are English, including My wheels. Migration f03a5c9d124b and IndexedDB
+v6 translate recognized original Greek example titles/options/results and generated
+Copy suffixes. Custom text and public snapshots stay unchanged. IDs/revisions/removal
+jobs remain stable; changed dirty local wheels receive a fresh mutation ID. Translation
+is a one-time data upgrade, not a runtime translation layer for user content or imports.
 
 New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
 templates, Customize, errors, installation text and HTML/manifest language are English.
@@ -44,7 +49,7 @@ Results show source/time, recent/all history and become selected after a complet
 The winner popup offers only Close and Remove winner (unless removal is hidden in
 Customize). It has no respin/copy/New round actions; these remain on the main screen.
 Server draws no longer show a source badge in the popup; offline draws retain their
-label. History and CSV still preserve the draw source.
+label. History and TXT export still preserve the draw source.
 Default popup/inline message: `And The Winner is...`. SQLite data migration
 `e92f4b8c013a` and IndexedDB v5 replace the English/Greek old defaults on existing
 private wheels, preserving custom messages, revisions and pending history clears.
@@ -55,10 +60,11 @@ All three controls use the draw/pending-operation lock and show a not-allowed cu
 while disabled, restoring after completion. Entries
 has Shuffle/Sort/Clear directly below the tabs; Results has Sort/Clear/Export results.
 Result Sort toggles natural A-Z/newest-first display, remembers preference in localStorage
-per wheel and never rewrites draw records. CSV exports all visible-history records for
+per wheel and never rewrites draw records. TXT exports all visible-history records for
 the current wheel in the selected order (not just five recent rows), retaining duplicates.
-`lib/results.ts` quotes CSV cells, emits UTF-8 BOM/CRLF, UTC timestamps, source and IDs,
-and prefixes formula-like text with an apostrophe for safe spreadsheet opening. Export
+`lib/results.ts` emits a numbered plain-text list with wheel title, count, UTF-8 BOM/CRLF,
+UTC timestamps and source. Open the downloaded .txt in Notepad; no native app launch.
+Original labels, emojis and duplicate wins are preserved; JSON backups retain IDs. Export
 works offline and locks during draws; Clear uses the existing durable history reset.
 The entry toolbar is hidden while Results is selected. Shuffle and numeric,
 case-insensitive A-Z sort preserve IDs, images, active flags and duplicates, autosave
@@ -124,7 +130,7 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `customization.py`: version 1 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v5, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v6, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
   `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
@@ -154,6 +160,17 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+English library/TXT export: typecheck, lint, production build, 41 pytest (12.72s) and
+six relevant E2E passed (36.2s: draw/library/backup, legacy upgrade and four responsive
+widths). Chromium with Greek browser locale verified English navigation, My wheels,
+editor and all Customize tabs. Seeded v5 state upgraded its legacy example/copy while
+keeping a custom Greek wheel; seven-result TXT exports included all history despite
+five visible rows, Unicode, duplicate names, original formula-like text, UTC/source,
+sorted order and offline refresh/download. Isolated SQLite migration preserved IDs,
+revisions and public snapshots. Object-property-name titles/labels were checked directly.
+Launcher migrated/restarted the project. Native Notepad launching was not implemented;
+the browser downloads a UTF-8 .txt for the user to open with their text editor.
 
 Home information: typecheck, lint, production build and five relevant E2E passed
 (24.9s), including 360/390/768/1440px layout, keyboard, reduced motion and light/dark

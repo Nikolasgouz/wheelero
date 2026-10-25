@@ -14,7 +14,7 @@ import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
 import { shuffled } from '../lib/random'
-import { resultsCsv } from '../lib/results'
+import { resultsText } from '../lib/results'
 
 const alphabetical = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
@@ -170,11 +170,11 @@ export function WheelSidebar({
           disabled={!results.length}
           onClick={() => {
             const url = URL.createObjectURL(
-              new Blob([resultsCsv(wheel.title, results)], { type: 'text/csv;charset=utf-8' }),
+              new Blob([resultsText(wheel.title, results)], { type: 'text/plain;charset=utf-8' }),
             )
             const link = document.createElement('a')
             link.href = url
-            link.download = `spinaro-results-${wheel.id}-${new Date().toISOString().slice(0, 10)}.csv`
+            link.download = `spinaro-results-${wheel.id}-${new Date().toISOString().slice(0, 10)}.txt`
             document.body.append(link)
             link.click()
             link.remove()

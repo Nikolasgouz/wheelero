@@ -4,8 +4,9 @@ import { defaults } from '../customization'
 import { makeWheel } from './wheel'
 import { templates } from './templates'
 import { t } from '../i18n'
+import { translateEnglishDefaults } from './englishDefaults'
 
-const database = openDB('gyrna', 5, {
+const database = openDB('gyrna', 6, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -33,11 +34,16 @@ const database = openDB('gyrna', 5, {
         if (oldVersion < 4) {
           for (const wheel of state.wheels) wheel.clear_history = false
         }
-        for (const wheel of state.wheels) {
-          if (['WE HAVE A WINNER', 'Η ΤΥΧΗ ΔΙΑΛΕΞΕ'].includes(wheel.customization.popup_message)) {
-            wheel.customization.popup_message = defaults.popup_message
+        if (oldVersion < 5) {
+          for (const wheel of state.wheels) {
+            if (
+              ['WE HAVE A WINNER', 'Η ΤΥΧΗ ΔΙΑΛΕΞΕ'].includes(wheel.customization.popup_message)
+            ) {
+              wheel.customization.popup_message = defaults.popup_message
+            }
           }
         }
+        for (const wheel of state.wheels) translateEnglishDefaults(wheel)
         await store.put(state, 'current')
       }
     }

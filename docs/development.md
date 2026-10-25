@@ -73,6 +73,10 @@ Keep Clear entries/history independent and locked during draws. History clearing
 pending local mutation, not a local-only array reset. Preserve retry records server-side,
 apply clear before new offline uploads, and never reactivate no-repeat entries implicitly.
 IndexedDB v4 initializes the clear flag; new local wheels must initialize it as well.
-Result sort changes display only. CSV export must include the whole current wheel history,
-retain duplicate wins, quote newlines/commas/quotes and protect formula-like user input.
+Result sort changes display only. TXT export must include the whole current wheel history,
+retain duplicate wins and original Unicode text, and use UTF-8 BOM/CRLF for Notepad.
 Keep export disabled during draws; never bypass the pre-draw sidebar snapshot.
+
+Migration f03a5c9d124b and IndexedDB v6 translate only recognized legacy example labels,
+default titles and generated copy suffixes. Preserve custom text, IDs, revisions and
+published snapshots. A changed dirty local payload needs a fresh mutation ID.

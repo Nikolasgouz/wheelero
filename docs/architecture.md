@@ -121,9 +121,10 @@ The full editor also retains its Customize shortcut.
 Results sorting is a local display preference per wheel, toggling A-Z/newest-first without
 changing result IDs, source or stored chronology. Export uses that full ordered history,
 not the five-row preview, and is disabled during a draw to preserve the result reveal.
-`lib/results.ts` serializes CSV with UTF-8 BOM, quoted cells/escaped quotes and CRLF;
-formula-like text gets a leading apostrophe. Downloads include title, label, UTC date,
-source, result UUID and entry UUID. No server request or new schema is needed.
+`lib/results.ts` serializes a plain-text numbered list with UTF-8 BOM and CRLF for
+Notepad. Downloads include wheel title, result count, labels, UTC dates and source.
+No CSV escaping is applied to plain text. JSON backups retain complete records/IDs.
+The browser downloads a .txt file; it does not launch local programs.
 Both editors stay mounted while hidden, using distinct labels/IDs and draft keys.
 
 `components/Customize.tsx` holds a temporary draft until OK; cancellation discards it.
