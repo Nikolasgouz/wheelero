@@ -1,16 +1,43 @@
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { pages } from './src/site'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { generatePages } from './scripts/pages'
 
-const proxy = { '/api': 'http://127.0.0.1:8017' }
 export default defineConfig({
+  appType: 'mpa',
   plugins: [
     react(),
+    {
+      name: 'wheelero-public-pages',
+      apply: 'build',
+      closeBundle: { order: 'pre', sequential: true, handler: generatePages },
+    },
+    {
+      name: 'wheelero-static-preview',
+      configurePreviewServer(server) {
+        server.middlewares.use((request, response, next) => {
+          const path = new URL(request.url!, 'http://preview').pathname
+          if (path in pages && path !== '/404') {
+            request.url = path === '/' ? '/index.html' : `${path}/index.html`
+            next()
+          } else if (existsSync(resolve('dist', '.' + path))) next()
+          else {
+            response.statusCode = 404
+            response.setHeader('Content-Type', 'text/html; charset=utf-8')
+            response.end(readFileSync('dist/404.html'))
+          }
+        })
+      },
+    },
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['wheelero.svg', 'wheelero-192.png', 'wheelero-512.png', 'wheelero-180.png'],
       manifest: {
-        name: 'Wheelero — One spin, one decision',
+        id: '/',
+        name: 'Wheelero',
         short_name: 'Wheelero',
         lang: 'en',
         description: 'Turn little decisions into a game.',
@@ -26,7 +53,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallbackDenylist: [/^\/api/],
+        navigateFallbackAllowlist: [
+          /^\/$/,
+          /^\/(random-name-picker|yes-no-wheel|random-number-wheel|random-team-generator|about|privacy)\/?$/,
+        ],
         globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,wav}'],
       },
     }),
@@ -40,7 +70,6 @@ export default defineConfig({
       },
     },
   },
-  server: { proxy },
-  preview: { proxy },
+  server: { open: false },
   test: { include: ['src/**/*.test.ts'] },
 })

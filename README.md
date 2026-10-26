@@ -1,216 +1,103 @@
 # Wheelero
 
-Public preview from another device: run
-`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1`
-from this folder and open the HTTPS URL it prints. Keep this computer awake and online.
-Stop with the same command plus `-Stop`. The preview uses a separate database;
-local saved wheels are not automatically shared. See [deployment details](docs/deployment.md).
+**One spin, one decision.** A static React/TypeScript/Bun/Vite website and offline PWA.
+The current application has **no backend, API calls, server sessions or SQLite dependency**.
 
-The header, browser tab and installed app share the Wheelero W-and-wheel mark.
-Artwork source and icon regeneration: [docs/branding.md](docs/branding.md).
+## Local storage
 
-There are **12 editable wheel templates**, available through **More options** (Entries
-on mobile): names, food, evening plans, yes/no, turn order, movies, weekends, exercise,
-chores, breakfast, desserts and creative breaks. All twelve work offline.
+Wheels, images, customization, results and removed entries live in **IndexedDB** on the
+user's device. This offers substantially more capacity than localStorage; the actual quota
+depends on the browser/device. localStorage holds small preferences and editor drafts.
+My wheels > Protect local storage requests persistent storage where supported. The browser
+may decline; even a grant cannot protect data from the user clearing browser storage.
 
-The default Wheelero palette now uses vivid violet, coral, turquoise, gold, blue and
-magenta, with higher-saturation colors for additional entries and contrasting text.
-Existing private wheels using the exact old default palette upgrade automatically;
-custom palettes and published snapshots keep their colors.
+Old browser databases migrate to IndexedDB v10. The migration retains a recovery copy of
+the previous record. No names are uploaded. Existing server-only records are not fetched
+or erased. The historical backend and ignored SQLite files remain on disk for recovery.
 
-Μια στροφή, μια απόφαση. Εφαρμογή Decision Spinner με πολυγλωσσικά μενού για κινητό, tablet και
-desktop, με εγκαταστάσιμη PWA, ανώνυμη ιδιωτική αποθήκευση και offline λειτουργία.
+Use **Export JSON** for backups or moving between devices/domains. Import validates the
+file and preserves customization/images/history. TXT result export works in Notepad.
+Do not clear browser site data without a backup.
 
-Η αρχική εμφανίζει τον τροχό **Pick a name** με Alex, Emma, James, Olivia, Noah και Sofia,
-και στα δεξιά καρτέλες **Entries / Results**. Το όνομα της εφαρμογής είναι **Wheelero**.
-Η μετονομασία διατηρεί τους αποθηκευμένους τροχούς και τα παλιά JSON backups.
-Επάνω δεξιά υπάρχει επιλογή γλώσσας: English, Ελληνικά, Español, Français, Deutsch,
-Italiano, Português, Nederlands, Polski, Türkçe, Русский, Română, 日本語 και 简体中文.
-Το κουμπί γλώσσας ανοίγει επιλογές με πραγματικές εικόνες σημαιών, και στα Windows.
-Τα μενού (μαζί με My wheels και
-Customize), τα βασικά μηνύματα και οι ετικέτες ήχων αλλάζουν χωρίς επαναφόρτωση.
-Η επιλογή διατηρείται σε αυτόν τον browser και λειτουργεί offline. Αρχική γλώσσα: English.
-Προσωπικά ονόματα/τίτλοι/μηνύματα δεν μεταφράζονται. Οι ενημερωτικές ενότητες κάτω
-από τον τροχό, ορισμένα ονόματα θεμάτων/εικόνων, τα πρότυπα και τα σφάλματα API παραμένουν αγγλικά.
-Η παλιότερη αναβάθμιση μεταφράζει και
-τα αναγνωρισμένα ελληνικά έτοιμα παραδείγματα παλιότερων εκδόσεων, διατηρώντας
-προσωπικούς τίτλους/εγγραφές, IDs και ιστορικό. Τα ήδη κοινόχρηστα snapshots δεν αλλάζουν.
-Κάτω από τον τροχό υπάρχουν οι αγγλικές ενότητες **What is Wheelero for?**,
-**How it works** και **Wheel features**, με παραδείγματα χρήσης, οδηγίες τριών βημάτων
-και πληροφορίες για ισοπίθανες συμμετοχές και backups. Στη λειτουργία παρουσίασης κρύβονται.
-Κάθε φέτα έχει διαφορετικό χρώμα. Όταν οι συμμετοχές ξεπερνούν τα ενεργά χρώματα
-του Customize, προστίθενται αυτόματα νέα, χωρίς επανάληψη της παλέτας.
-Το spin λειτουργεί και με **ένα μόνο entry**, online και offline. Χωρίς entries το
-κουμπί παραμένει ανενεργό, χωρίς το παλιό μήνυμα ελάχιστων συμμετοχών.
-Ο τροχός αξιοποιεί περισσότερο χώρο (έως 960px ανάλογα με την οθόνη), με λεπτότερο
-εξωτερικό πλαίσιο και μεγαλύτερα ονόματα που προσαρμόζονται στο μήκος της εγγραφής.
-Στον υπολογιστή βρίσκεται κοντά στο κέντρο της οθόνης, με τα **Entries / Results**
-τέρμα δεξιά. Πατήστε **Click to spin** στο κέντρο του τροχού ή χρησιμοποιήστε
-Enter/Space όταν το κουμπί έχει εστίαση. Όσο περιμένει το επόμενο spin, περιστρέφεται
-αργά και αθόρυβα, με μία πλήρη στροφή ανά 30 δευτερόλεπτα. Δεν υπάρχει κουμπί Pause.
-Η αργή κίνηση συνεχίζεται και μετά από κάθε αποτέλεσμα, χωρίς να αλλάζει τον νικητή
-στο **Results**. Με reduced motion δεν υπάρχει αργή περιστροφή.
-Στις υπάρχουσες εγκαταστάσεις προστίθεται μία φορά αυτός ο τροχός. Οι παλιοί τροχοί,
-οι συμμετοχές, τα μηνύματα και το ιστορικό παραμένουν ανέπαφα στο **My wheels**.
-Αν εμφανιστεί μήνυμα αναβάθμισης, κλείστε τις άλλες παλιές καρτέλες/παράθυρα της εφαρμογής.
-Μπορείτε να προσθέτετε, να αλλάζετε και να διαγράφετε συμμετοχές απευθείας από εκεί.
-Πατήστε το όνομα ή το μολύβι για επιλογή του κειμένου και εύκολη αντικατάσταση.
-Οι αλλαγές αποθηκεύονται αυτόματα· το Enter ολοκληρώνει την επεξεργασία.
-Κατά την κλήρωση το **Results** δείχνει μόνο το προηγούμενο ιστορικό. Το νέο αποτέλεσμα
-και ο μετρητής ενημερώνονται αφού ολοκληρωθεί η περιστροφή, ακόμη και χωρίς popup.
-Μετά την κλήρωση εμφανίζονται τα αποτελέσματα. Σε πλάτος κάτω από 1024px το πλαίσιο
-τοποθετείται κάτω από τον τροχό για άνετη χρήση.
-Το popup αποτελέσματος έχει **Close** και **Remove winner**, χωρίς Spin again.
-Δεν υπάρχει μόνιμο μήνυμα νικητή κάτω από τον τροχό. Ο νικητής παραμένει στα
-**Results**, ακόμη και όταν το popup είναι απενεργοποιημένο.
-Η ένδειξη **Server draw** δεν εμφανίζεται στο popup του νικητή.
-Το προεπιλεγμένο μήνυμα είναι **And The Winner is...**. Η αναβάθμιση ενημερώνει
-τα παλιά προεπιλεγμένα μηνύματα στους αποθηκευμένους τροχούς, διατηρώντας τα δικά σας.
-Το Close το κλείνει, ενώ το Remove winner αφαιρεί τη νικήτρια συμμετοχή και το κλείνει.
-Η ρύθμιση απόκρυψης του κουμπιού αφαίρεσης εξακολουθεί να ισχύει.
-Επάνω από τον τροχό υπάρχουν τα εικονίδια **Customize**, ήχου και fullscreen.
-Κατά το spin κλειδώνονται και εμφανίζουν δείκτη ποντικιού **not-allowed**.
-Στα **Entries** υπάρχουν **Shuffle / Sort / Clear**, ενώ στα **Results** υπάρχουν
-**Sort / Clear / Export results**. Το Shuffle ανακατεύει όλες τις εγγραφές και το Sort τις ταξινομεί A–Z,
-με φυσική σειρά αριθμών (Name 2 πριν από Name 10), διατηρώντας διπλότυπα και εικόνες.
-Το επάνω μενού περιέχει **Wheel / My wheels**.
-Κάθε καρτέλα **Entries / Results** έχει δικό της **Clear**: αδειάζει
-αντίστοιχα τις συμμετοχές ή το ιστορικό του τρέχοντος τροχού. Ο καθαρισμός λειτουργεί
-offline, αποθηκεύεται μετά από refresh και συγχρονίζεται όταν επανέλθει η σύνδεση.
-Δεν αλλάζει την άλλη λίστα ή άλλους τροχούς. Το Clear results δεν επανενεργοποιεί
-χρησιμοποιημένες συμμετοχές του No repeats· για αυτό υπάρχει **New round**.
-Το Sort στα Results αλλάζει την προβολή σε A–Z· δεύτερο πάτημα επαναφέρει τη χρονική
-σειρά. Η επιλογή διατηρείται τοπικά ανά τροχό μετά από refresh. Το Export results
-κατεβάζει **.txt για το Notepad** με **όλα** τα αποτελέσματα του τροχού, στη σειρά της
-επιλεγμένης προβολής, με αρίθμηση και τίτλο τροχού, χωρίς ημερομηνίες ή Server draw / Offline draw.
-Ανοίξτε το αρχείο
-που κατέβηκε με το Notepad. Η ιστοσελίδα δεν εκκινεί τοπικά προγράμματα. Υποστηρίζει ελληνικά, emojis,
-διπλότυπα και offline χρήση. Ο καθαρισμός και η εξαγωγή κλειδώνονται κατά το spin.
-Από **More options** ανοίγει η πλήρης επεξεργασία με τίτλο, μαζική προσθήκη,
-No repeats, κοινοποίηση και πρότυπα.
-Το **Customize** ανοίγει απευθείας τις καρτέλες **During spin**,
-**After spin** και **Appearance**. Οι αλλαγές εφαρμόζονται μόνο με **OK**.
-Όλες οι ρυθμίσεις εμφανίζονται εξαρχής στην αντίστοιχη καρτέλα, με κύλιση όπου χρειάζεται.
-Το Customize δεν έχει κουμπί More options/Fewer options· στο κάτω μέρος έχει Cancel και OK.
-Το **Center image** και το μέγεθός του έχουν αφαιρεθεί πλήρως. Στο κέντρο παραμένει
-το **Click to spin**. Οι αποθηκευμένοι τροχοί και τα παλιά JSON backups αναβαθμίζονται
-χωρίς την κεντρική εικόνα, διατηρώντας το φόντο τροχού και τις εικόνες των εγγραφών.
-Το **One color per segment → Apply a theme** διαθέτει **16 θέματα**. Το
-**Wheel background image** διαθέτει **12 πρωτότυπες εικόνες** με ονομαστικές μικρογραφίες
-και κύλιση. Όλη η συλλογή είναι διαθέσιμη offline μετά την ολοκλήρωση του caching.
-Κάθε τροχός κρατά δικές του ρυθμίσεις ήχου, διάρκειας, αποτελέσματος, χρωμάτων και εικόνων.
-Υπάρχουν **8 έτοιμοι ήχοι περιστροφής και 8 αποτελέσματος**, συν **No sound**,
-με προεπισκόπηση και ανεξάρτητη ένταση. Όλοι περιλαμβάνονται στην εφαρμογή και λειτουργούν offline.
-Το **Crowd applause** είναι πλέον πραγματική στερεοφωνική ηχογράφηση έξι δευτερολέπτων,
-με ομαλό σβήσιμο, αντί για συνθετικά χτυπήματα. Παίζει μετά την ολοκλήρωση της περιστροφής.
-Προεπισκόπηση: **Customize → After spin → Result sound → Crowd applause → Play**.
-Πηγή και άδεια CC0: [applause credits](frontend/public/audio/CREDITS.txt).
-Στο **During spin** υπάρχουν Wheel clicks, Suspense drumroll, Tension pulse,
-Roulette clicks, Spinning rattle, Racing heartbeat, Suspense countdown και Rising suspense.
-Τα κλικ αραιώνουν προς το τέλος· οι ρυθμοί αγωνίας επιταχύνονται και δυναμώνουν
-ανάλογα με τη διάρκεια. Στο **After spin** υπάρχουν Crowd applause, Winner chimes,
-Victory fanfare, Champion anthem, Celebration sparkle, Celebration bells, Jackpot!
-και Grand finale. Οι προεπιλογές είναι Wheel clicks και Crowd applause.
-Ο ήχος ξεκινά ενεργός σε κάθε άνοιγμα ή refresh, χωρίς να χρειάζεται Unmute.
-Το κουμπί σίγασης παραμένει διαθέσιμο για την τρέχουσα χρήση.
-Η ενεργή αρχική κατάσταση ελέγχθηκε με το audio E2E, typecheck, lint και production build.
-Οι προσωπικές εικόνες αποθηκεύονται μαζί με
-τον τροχό και περιλαμβάνονται σε αντιγραφή, κοινοποίηση και JSON backup.
-Η αντιστοίχιση με το Wheel of Names και οι διαφορές καταγράφονται στο
-[docs/customization.md](docs/customization.md).
+## Features
 
-## Προϋποθέσεις
+- 1-10,000 entries per wheel, inline editing, Excel/line paste, shuffle/sort, duplicates,
+  templates, saved wheels, no-repeat rounds, result history and restoration of winners.
+- Unbiased Web Crypto selection, pointer/result agreement, optional sound, themes/images,
+  customizable duration, fullscreen, keyboard support and reduced motion.
+- Name picker, yes/no, number-range and balanced-team tools, plus About, Privacy and FAQ.
+- Share a copy in a URL fragment, without uploading it. History/other wheels are excluded.
+  Links cannot be revoked. Wheels exceeding the 16,000-character payload limit use JSON
+  files instead. Some messaging apps may truncate long links; JSON is the reliable option.
+- Pre-rendered HTML, canonical/OG metadata, robots, sitemap, original icons/social image,
+  actual 404 handling and installable/offline PWA.
 
-- Python 3.12+ (τοπικά χρησιμοποιήθηκε 3.14), Git.
-- Bun 1.3+ και Node.js 22.12+ για Vite/Playwright.
-- Σύγχρονος browser με Web Crypto, IndexedDB και Web Locks.
-- HTTPS στην παραγωγή· το localhost επιτρέπεται για ανάπτυξη/PWA.
+## Install and run
 
-## Εγκατάσταση (PowerShell, από τη ρίζα)
+Requires Bun 1.4.2+ and a modern browser. Python is not needed for the current app.
 
 ```powershell
-python -m venv .venv
-./.venv/Scripts/python -m pip install -r backend/requirements.lock
-Copy-Item .env.example .env
 cd frontend
 bun install --frozen-lockfile
-bunx playwright install chromium
-cd ../backend
-../.venv/Scripts/python -m alembic upgrade head
-cd ..
-```
-
-Σε Linux/macOS χρησιμοποιήστε `.venv/bin/python` αντί για `.venv/Scripts/python`.
-Τα `backend/requirements.lock` και `frontend/bun.lock` κλειδώνουν τις εξαρτήσεις.
-Ο Chromium χρειάζεται μόνο για E2E tests.
-
-## Εκκίνηση
-
-**Στα Windows:** κάντε διπλό κλικ στο `START_GYRNA.bat` στη ρίζα του project.
-Δημιουργεί **πάντα νέο production build**, εφαρμόζει τις migrations, επανεκκινεί
-τους servers αυτού του project και ανοίγει το `http://localhost:4173/api/launch`.
-Αυτή η σελίδα φορτώνει την τελευταία έκδοση ακόμη και αν η PWA κρατά παλιά σελίδα
-στην cache. Δεν διαγράφει τροχούς, cookies ή IndexedDB και κρατά το ίδιο origin.
-Οι servers λειτουργούν στο παρασκήνιο. Για τερματισμό κάντε διπλό κλικ στο
-**`STOP_GYRNA.bat`**. Αν κάποια θύρα ανήκει σε άλλη εφαρμογή, δεν την κλείνει.
-Τα logs βρίσκονται στο `artifacts/launcher-*.log`. Αφήστε ανοιχτό το παράθυρο
-εκκίνησης μέχρι να εμφανιστεί ο browser. Η πρώτη εκκίνηση μπορεί να πάρει λίγο χρόνο.
-
-Εναλλακτικά, για ανάπτυξη:
-
-Πρώτο terminal:
-
-```powershell
-cd backend
-../.venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8017 --reload --no-access-log
-```
-
-Δεύτερο terminal:
-
-```powershell
-cd frontend
 bun run dev
 ```
 
-Ανοίξτε **http://localhost:5173**. Το Vite προωθεί το `/api` στη θύρα 8017.
-Η 8000 αποφεύγεται γιατί χρησιμοποιούνταν ήδη από άλλο project.
+Development URL: http://localhost:5173. For the production-style local preview, double-click
+**START_GYRNA.bat** in the project root. It builds and starts only the static frontend on
+http://localhost:4173/launch.html. STOP_GYRNA.bat stops its owned processes. Existing filenames
+and browser origin stay unchanged to preserve shortcuts and local data. The launcher also
+stops the old project backend if it is still listening on 8017; it never restarts Python.
 
-OpenAPI: [Swagger UI](http://localhost:8017/docs), [ReDoc](http://localhost:8017/redoc),
-[JSON](http://localhost:8017/openapi.json). Οι επιλογές τροχού αντικαθίστανται ατομικά
-μέσω `PUT /api/wheels/{id}`, μαζί με τίτλο, σειρά και ρυθμίσεις.
-
-## Περιβάλλον και βάση
-
-Το backend διαβάζει το `.env` στη ρίζα όταν εκτελείται από το `backend/`:
-
-| Μεταβλητή | Τοπική τιμή | Χρήση |
-| --- | --- | --- |
-| `DATABASE_URL` | `sqlite:///./gyrna.db` | Αρχείο στο backend· production: απόλυτη διαδρομή σε μόνιμο volume |
-| `ALLOWED_ORIGINS` | localhost και 127.0.0.1 στις θύρες 5173/4173 | Ρητή λίστα στο `.env.example`, χωρίς κενά |
-| `COOKIE_SECURE` | `false` | `true` υποχρεωτικά σε production HTTPS |
-
-Μην καταγράφετε cookies, CSRF/share tokens ή ιδιωτικά δεδομένα. Το `--no-access-log`
-αποφεύγει την καταγραφή share tokens μέσα στα paths.
-
-Από `backend/`, αρχικοποίηση/αναβάθμιση και έλεγχος migration:
+Manual preview:
 
 ```powershell
-../.venv/Scripts/python -m alembic upgrade head
-../.venv/Scripts/python -m alembic check
+cd frontend
+bun run build
+bun run preview --port 4173 --strictPort
 ```
 
-Δεν δημιουργούνται πίνακες κατά την εκκίνηση. Αλλαγές μοντέλων απαιτούν migration:
-`alembic revision --autogenerate -m "description"`, έλεγχο κώδικα και `upgrade head`.
-Πριν από αναβάθμιση παραγωγής κρατήστε συνεπές backup μέσω του SQLite backup API.
-Η απλή αντιγραφή ενεργού `.db` χωρίς το WAL δεν είναι ασφαλές backup.
+`launch.html` bypasses stale PWA navigation caches. Normal browsing/PWA start uses `/`.
+Use Save & update in old installed tabs; close old tabs if the storage upgrade requests it.
 
-## Έλεγχοι
+## Static production build
+
+Only copy `.env.example` to `.env` if no local configuration exists. Build settings:
+
+| Variable | Purpose |
+| --- | --- |
+| PUBLIC_URL | Final HTTPS origin, used at build time for canonical URLs/OG/sitemap |
+| PUBLIC_INDEXING | false for previews, true after final domain verification |
+| SITE_HOST | Optional Docker/Caddy hostname; must match PUBLIC_URL |
 
 ```powershell
-cd backend
-../.venv/Scripts/python -m pytest -q
-../.venv/Scripts/python -m alembic check
-cd ../frontend
+$env:PUBLIC_URL = 'https://wheelero.com'
+$env:PUBLIC_INDEXING = 'true'
+cd frontend
+bun run build
+```
+
+Use wheelero.com only after confirming ownership/DNS. Upload **frontend/dist/** to static
+hosting. No secrets belong in build variables. Static hosting can replace a Droplet entirely.
+Alternatively, the included Docker/Caddy deployment serves files and HTTPS only; it contains
+no Python process or application database. See [deployment](docs/deployment.md).
+
+Source: [Nikolasgouz/wheelero](https://github.com/Nikolasgouz/wheelero). The GitHub Actions
+workflow checks/builds the static site on `main`. Publishing requires the owner to enable
+GitHub Pages, set its custom domain to wheelero.com and add `PAGES_ENABLED=true` as an
+Actions repository variable. Exact steps and Papaki DNS records are in the deployment
+guide. SSH repository access alone cannot configure Pages or DNS.
+
+## PWA
+
+Use Install when offered, or the browser install menu. On iPhone/iPad: Safari > Share >
+Add to Home Screen. Wait for Ready to use offline before testing without internet.
+Save & update waits for local writes and is disabled during spins; activation from another
+tab never forces a mid-spin reload. This is not App Store/Google Play publication.
+
+## Checks
+
+```powershell
+cd frontend
 bun run typecheck
 bun run lint
 bun run test
@@ -218,123 +105,21 @@ bun run build
 bun run e2e
 ```
 
-Το Playwright χρησιμοποιεί το production build. Εκκινεί backend με `e2e.db` και preview
-server αν οι θύρες 8017/4173 δεν εξυπηρετούν ήδη την εφαρμογή. Κάθε test έχει ξεχωριστή
-browser session. Screenshots: αγνοημένος φάκελος `artifacts/`. Τα πραγματικά αποτελέσματα
-και οι περιορισμοί καταγράφονται στο `PROJECT_CONTEXT.md`.
+Install Chromium if needed with `bunx playwright install chromium`. E2E starts only the
+static preview. Do not build during E2E: its update test temporarily modifies dist/sw.js.
+Actual results/limitations are in [PROJECT_CONTEXT](PROJECT_CONTEXT.md).
 
-Τελευταίος πλήρης έλεγχος (24/10/2026): 41 backend tests, 10 unit tests και 30 E2E
-πέρασαν, όπως και typecheck, lint, production build και έλεγχος Alembic.
-Περιλαμβάνονται πραγματικό audio graph, uploads, ακύρωση/αποθήκευση ρυθμίσεων,
-παλιά δεδομένα, offline επανασυγχρονισμός, conflict copies και αυτόματη αφαίρεση.
-Η αντιστοίχιση με το Customize και οι συγκεκριμένες διαφορές βρίσκονται στο
-[docs/customization.md](docs/customization.md).
-Η εγκατάσταση και η χρήση σε πραγματικές συσκευές iOS/Android παραμένουν προς έλεγχο.
-
-Επανέλεγχος διεπαφής (25/10/2026): μετά την απλοποίηση της αρχικής πέρασαν ξανά
-και τα 30 E2E, typecheck, lint και production build. Η νέα πλοήγηση ελέγχθηκε
-στα 360/390/768/1440px. Αν παραμένει η παλιά εγκατεστημένη έκδοση, ανανεώστε
-τη σελίδα και πατήστε **Save & update** όταν εμφανιστεί στο κάτω μέρος.
-
-Μετά την προσθήκη των 16 έτοιμων ήχων και το κατακόρυφο κεντράρισμα (25/10/2026),
-πέρασαν 41 backend tests και 9 στοχευμένοι E2E, μαζί με typecheck, lint, build και
-Alembic check. Ελέγχθηκαν όλοι οι ήχοι, η αποθήκευση, η σίγαση και η θέση του τροχού.
-
-Με τον μεγαλύτερο τροχό και τις δεξιές καρτέλες (25/10/2026), πέρασαν typecheck,
-lint και build. Στην πλήρη εκτέλεση πέρασαν 28 E2E και δύο έληξαν λόγω χρονικού ορίου.
-Ο στοχευμένος επανέλεγχος πέρασε και τα 6 σχετικά σενάρια, καλύπτοντας τις δύο
-περιπτώσεις και τα τέσσερα πλάτη οθόνης. Ελέγχθηκαν επεξεργασία συμμετοχών από την
-αρχική, κλείδωμα κατά την κλήρωση, ιστορικό και διατήρηση αλλαγών μετά από refresh.
-
-Η αγγλική έκδοση με το παράδειγμα ονομάτων (25/10/2026) πέρασε **41 backend tests,
-10 unit tests και 30 E2E**, μαζί με typecheck, lint και production build.
-Ελέγχθηκαν οι αναβαθμίσεις IndexedDB v1/v2, η διατήρηση παλιών δεδομένων, το offline
-και η πραγματική ενημέρωση PWA. Το BAT αναδημιούργησε και εκκίνησε τη νέα έκδοση.
-
-Μετά τη μεγέθυνση τροχού/ονομάτων πέρασαν ξανά typecheck, lint, 10 unit tests, build
-και 9 σχετικά E2E (responsive, προσβασιμότητα, δείκτης, εικόνες και μεγάλες λίστες).
-
-Για το κεντρικό **Click to spin**, τη νέα διάταξη και την αργή περιστροφή πέρασαν
-ξανά και τα **30 E2E**, τα 10 unit tests, lint, typecheck και build. Μετά την τελική
-προσαρμογή των κεντρικών εικόνων πέρασαν επιπλέον οι 4 σχετικοί επανέλεγχοι.
-Ελέγχθηκαν η παύση, το reduced motion, Enter/Space, η συνέχεια της κίνησης και
-η συμφωνία του πραγματικού δείκτη με το αποτέλεσμα.
-
-Για την εύκολη επεξεργασία ονομάτων και την εμφάνιση Results μετά την περιστροφή,
-πέρασαν 9 σχετικά E2E, typecheck, lint και build. Ελέγχθηκαν επιπλέον οι κληρώσεις
-online/offline με κλειστό popup και ενεργό No repeats.
-
-Για τη συνεχή αργή περιστροφή μετά από κάθε αποτέλεσμα πέρασαν 5 σχετικά E2E,
-typecheck, lint και build. Ελέγχθηκαν δύο διαδοχικά spins online/offline, με σταθερό
-ιστορικό κατά την αργή κίνηση και σωστή εμφάνιση του επόμενου αποτελέσματος στο τέλος.
-
-## Production preview και PWA
-
-Για τη νέα σειρά **Customize / Shuffle / Sort** πέρασαν typecheck, lint, 10 unit tests
-και production build. Στην πλήρη εκτέλεση πέρασαν 29 E2E· ο ένας έλεγχος πλοήγησης που
-έληξε χρονικά πέρασε μετά τη διόρθωση της αναμονής του test. Ελέγχθηκαν τα τέσσερα πλάτη
-360/390/768/1440px και ταξινόμηση/ανακάτεμα 211 συμμετοχών offline, μετά από refresh και
-επανασυγχρονισμό, με διατήρηση IDs, διπλοτύπων και εικόνων.
-
-Η αυτόματη επέκταση χρωμάτων ελέγχθηκε έως 1.000 μοναδικές φέτες, με διατήρηση των
-προηγούμενων χρωμάτων κατά την προσθήκη και μετά από refresh online/offline.
-Πέρασαν typecheck, lint, 10 unit tests, build και 6 σχετικά E2E (25/10/2026).
-
-Για τα **Clear entries / results** πέρασαν 41 backend tests, 10 unit tests, typecheck,
-lint, build και Alembic check. Στην πλήρη εκτέλεση πέρασαν 28 E2E· δύο εντόπισαν
-οριζόντιο scroll από τον περιστρεφόμενο SVG. Μετά τη διόρθωση πέρασαν και οι 6 σχετικοί
-επανέλεγχοι. Ελέγχθηκαν επιπλέον ο καθαρισμός offline με νέο spin πριν τον συγχρονισμό,
-refresh, απομόνωση των δύο λιστών, idempotency και η αναβάθμιση IndexedDB v3→v4.
-Το BAT εφαρμόζει αυτόματα τη νέα migration SQLite χωρίς απώλεια παλιού ιστορικού.
-
-Για το spin με μία συμμετοχή πέρασαν 41 backend tests, 10 unit tests, typecheck, lint
-και build, μαζί με 3 σχετικά E2E. Ελέγχθηκαν στον browser επαναλαμβανόμενα spins, No repeats/New round,
-refresh, offline χρήση και συγχρονισμός μετά από καθαρισμό ιστορικού.
-
-Με το backend ανοιχτό:
+## Public preview
 
 ```powershell
-cd frontend
-bun run build
-bun run preview --port 4173
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1 -Stop
 ```
 
-Ανοίξτε **http://localhost:4173**, περιμένετε **Ready to use offline**, ανανεώστε
-μία φορά και ενεργοποιήστε Offline στα DevTools. Δοκιμάστε επεξεργασία, περιστροφή και
-refresh. Επαναφέρετε τη σύνδεση και πατήστε **Save** για άμεσο συγχρονισμό.
-Συγχρονισμός γίνεται επίσης στην επανασύνδεση και περιοδικά όταν η εφαρμογή είναι ήρεμη.
-Ο development server δεν εγκαθιστά service worker.
+The temporary Cloudflare URL requires this PC awake/online. Its state is in ignored
+artifacts/public-preview.json. No database is created. Restarting the tunnel changes the
+origin; export JSON before moving between origins.
 
-Εμφανίζεται install prompt μόνο όταν το παρέχει ο browser· αλλιώς δίνονται οδηγίες.
-Οι ενημερώσεις εφαρμόζονται με κουμπί αφού ολοκληρωθούν οι τοπικές εγγραφές. Η πρώτη
-φόρτωση και το caching απαιτούν σύνδεση.
-
-## Δεδομένα και χρήση
-
-Η επεξεργασία αποθηκεύεται αυτόματα στη συσκευή. Η επιλογή γίνεται στον server όταν
-είναι διαθέσιμος και με Web Crypto offline. Κάθε γραμμή έχει ίση πιθανότητα, ακόμη κι
-αν επαναλαμβάνεται το ίδιο κείμενο. Τα τοπικά/εισαγμένα αποτελέσματα διακρίνονται από
-τις κληρώσεις server. Σε σύγκρουση revisions δημιουργείται ξεχωριστό αντίγραφο.
-
-Μια αβέβαιη online κλήρωση ανακτάται με το ίδιο ID στην επανασύνδεση. Τα share links
-είναι ανεξάρτητα στιγμιότυπα χωρίς ιστορικό και ανακαλούνται από την κοινοποίηση.
-
-Η συνεδρία συνδέεται με αυτόν τον browser μέσω HttpOnly cookie. Η διαγραφή του cookie
-αφαιρεί την πρόσβαση στον προηγούμενο χώρο· οι εναπομείναντες τοπικοί τροχοί αντιγράφονται
-σε νέο χώρο. Δεν υπάρχει λογαριασμός ή ανάκτηση από άλλη συσκευή. Χρησιμοποιείτε JSON
-backups· η διαγραφή όλων των browser δεδομένων σβήνει και τα τοπικά αντίγραφα.
-
-Εισαγωγή: format 1, έως 100 MB, 100 τροχοί, 10.000 επιλογές και 10.000 αποτελέσματα ανά
-τροχό. Τα εισαγμένα αποτελέσματα χαρακτηρίζονται τοπικά, χωρίς πιστοποίηση server.
-Snapshot τροχού έως 8 MB. Εικόνες PNG/JPEG/WebP έως 10 MB μετατρέπονται τοπικά σε
-WebP έως 1024px και 512 KB. Η προβολή περιορίζεται σε 4–1000 εγγραφές, αλλά όλες οι
-ενεργές συμμετοχές διατηρούν ίση πιθανότητα. Πάνω από 48 ορατές εγγραφές χρησιμοποιούνται
-αριθμημένες φέτες και λίστα πλήρων ονομάτων.
-
-## Τεκμηρίωση
-
-- [Architecture](docs/architecture.md), [Data model](docs/data-model.md)
-- [Development](docs/development.md), [Deployment](docs/deployment.md)
-- [Roadmap](docs/roadmap.md), [Context για συνέχεια](PROJECT_CONTEXT.md)
-
-Δεν έχει γίνει δημόσιο deployment ή push σε remote repository.
+The `backend/` folder is historical and excluded from deployment. Its old tests and SQLite
+backup script are retained for recovery; they are not part of the current runtime checks.
+GitHub publication setup and domain requirements are documented in docs/deployment.md.

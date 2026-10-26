@@ -1,4 +1,4 @@
-import type { LocalWheel } from '../types'
+import type { LegacyWheel } from './storage'
 
 // Frozen translation of the original bundled examples, used by the v6 data migration.
 const examples: Record<string, { title: string; labels: Record<string, string> }> = {
@@ -34,7 +34,7 @@ const examples: Record<string, { title: string; labels: Record<string, string> }
   'Ο νέος μου τροχός': { title: 'My new wheel', labels: {} },
 }
 
-export function translateEnglishDefaults(wheel: LocalWheel) {
+export function translateEnglishDefaults(wheel: LegacyWheel) {
   const [title, ...suffixes] = wheel.title.split(' · ')
   if (suffixes.some((suffix) => suffix !== 'Αντίγραφο' && suffix !== 'Copy')) return
   const example = Object.hasOwn(examples, title) ? examples[title] : undefined

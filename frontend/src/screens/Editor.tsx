@@ -14,6 +14,7 @@ import { Dialog } from '../components/Dialog'
 import { ImagePicker } from '../components/ImagePicker'
 import { t } from '../i18n'
 import { colors } from '../lib/geometry'
+import { parseEntries } from '../lib/entries'
 import { shuffled } from '../lib/random'
 import type { LocalWheel, Option, Wheel } from '../types'
 
@@ -124,10 +125,7 @@ export function Editor({
               className="secondary small"
               onClick={() =>
                 add(
-                  bulk
-                    .split(/\r?\n/)
-                    .map((s) => s.trim())
-                    .filter(Boolean),
+                  parseEntries(bulk),
                 )
               }
             >

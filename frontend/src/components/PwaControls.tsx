@@ -18,11 +18,25 @@ export function PwaControls({
 }) {
   const [install, setInstall] = useState<InstallEvent | null>(null)
   const [standalone, setStandalone] = useState(matchMedia('(display-mode: standalone)').matches)
+  const [activated, setActivated] = useState(false)
+  const [updateRequested, setUpdateRequested] = useState(false)
   const {
     needRefresh: [needRefresh],
     offlineReady: [offlineReady],
     updateServiceWorker,
-  } = useRegisterSW()
+  } = useRegisterSW({ onNeedReload: () => setActivated(true) })
+  useEffect(() => {
+    if (!activated || !updateRequested || busy) return
+    let cancelled = false
+    void flushStorage()
+      .then(() => {
+        if (!cancelled) location.reload()
+      })
+      .catch((error) => report(error.message))
+    return () => {
+      cancelled = true
+    }
+  }, [activated, updateRequested, busy, report])
   useEffect(() => {
     const prompt = (event: Event) => {
       event.preventDefault()
@@ -42,13 +56,16 @@ export function PwaControls({
   return (
     <div className="pwa-controls">
       {offlineReady && <span className="offline-ready">{t.offlineReady}</span>}
-      {needRefresh && (
+      {(needRefresh || activated) && (
         <button
           className="secondary"
           disabled={busy}
           onClick={() => {
             void flushStorage()
-              .then(() => updateServiceWorker(true))
+              .then(() => {
+                setUpdateRequested(true)
+                if (!activated) return updateServiceWorker(true)
+              })
               .catch((error) => report(error.message))
           }}
         >

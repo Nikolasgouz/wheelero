@@ -1,89 +1,40 @@
 # Development
 
-Run commands from the directories in README. Use Bun for frontend packages/scripts and
-retain `bun.lock`. Python inputs are in `requirements.in`; the pinned environment is
-`requirements.lock` (`python -m pip freeze`). TypeScript is strict; Python lines <=100.
+Use Bun for dependencies/scripts; preserve bun.lock. The active app is static React/TS.
+Run bun install --frozen-lockfile, bun run dev from frontend/. No Python environment or
+database migration is needed. START_GYRNA.bat builds and starts Vite preview at localhost:4173.
+It stops only verified project listeners; unrelated processes/data are left alone.
 
-Windows users can double-click `START_GYRNA.bat` for the production preview on 4173.
-It delegates to `scripts/start-gyrna.ps1`, always rebuilds, validates process ownership
-on 8017/4173, restarts this project's servers, migrates and opens `/api/launch`.
-This network-only HTML entry bypasses old PWA navigation caches at the same origin;
-normal `/` and installed-PWA offline behavior remain unchanged. It does not delete
-browser storage or force-reload existing tabs. Use `STOP_GYRNA.bat` to stop the hidden
-servers. Logs are in ignored `artifacts/launcher-*.log`. `START_GYRNA.bat -NoBrowser`
-performs the same startup without opening the user's browser, for automation.
-Readiness probes use 127.0.0.1 to avoid Windows PowerShell localhost/IPv6 timeouts;
-the browser URL stays localhost to retain the user's existing storage and cookies.
+Checks from frontend/: typecheck, lint, test, build, e2e. Playwright starts only Vite preview.
+Do not rebuild while the worker-update test runs: it temporarily changes dist/sw.js and
+restores it in finally. Browser emulation does not validate real iOS/Android installation.
 
-Daily checks: pytest, Alembic check, typecheck, lint, unit tests, build and E2E. Tests
-were explicitly requested for initial implementation. Surface failures; no broad catches.
-The process-restart persistence test preserves session cookies but creates a fresh HTTP
-client for each server process; a keepalive connection cannot survive server termination.
+## Storage changes
 
-Schema changes: edit models, generate and review a new Alembic migration, apply it to a
-temporary DB and check drift. Never create tables during API startup. Do not edit released
-migrations. Keep business logic independent of HTTP and wheel geometry independent of RNG.
+Keep the existing IndexedDB name. Bump its version and implement a transactionally safe
+migration when changing stored schema. Keep backups/import validation aligned. Never reset
+stored wheels to change the default example. Preserve entry IDs/images on edits/reordering.
+Do not add API requests or hidden cloud sync: local-only storage is an explicit user choice.
 
-API experimentation: use `/docs`; request `/api/session` first, keep its cookie and pass
-`X-CSRF-Token` on writes. Atomic wheel PUT includes ordered options, title and settings.
-Wrong-owner access returns 404. The server never accepts client results as server-certified.
+store.ts is the only writer for wheels. Use Web Locks and write before publishing success;
+surface quota errors without losing the previous saved record. Recovery backup export is
+available on startup errors. Small language/theme/sound/editor preferences use localStorage.
 
-Playwright uses Chromium and the built PWA. Its backend runner uses ignored `e2e.db`.
-Do not reuse unrelated services on configured ports. Screenshots/traces remain untracked.
-Emulation does not verify real Safari installation, OS audio or fullscreen support.
-Customization regressions live in `e2e/customization.spec.ts`; they exercise the actual
-audio graph, image uploads, all tabs, durable OK/cancel, legacy storage and timed removal.
-In addition to bulk fills,
-the typing regression inserts Greek text in the middle of both title and option inputs
-and verifies caret position and persistence. SW update tests serve a changed worker file,
-exercise its real waiting/activation lifecycle, then restore the original generated file.
+Customization drafts stay temporary until OK completes a durable write. Preserve result
+timing, pointer agreement, global mute, reduced motion and the pre-spin sidebar snapshot.
+Keep input/toolbar changes locked during a draw. TXT exports include numbered winner names,
+UTF-8 BOM and CRLF, with no dates/source labels; JSON preserves full history metadata.
 
-Customization schemas must remain aligned in `backend/app/customization.py` and
-`frontend/src/customization.ts`. Keep selection independent of `lib/presentation.ts`:
-it projects eligible entries for rendering and must always retain the winning ID.
-Change settings only through the modal draft and commit after uploads complete.
-Generate the original bundled gallery with `bun scripts/generate-gallery.mjs`.
-Keep gallery paths in `customization.i18n.ts` aligned with backend `validate_image`;
-Vite's WebP precache glob includes all bundled gallery files. Theme keys/labels must
-match the palettes in `customization.ts`; saved wheels store the actual colors.
-Run the build to completion before starting E2E; avoid concurrent Playwright runs because
-they share the output directory. Current verified counts are in PROJECT_CONTEXT.md.
+## Public pages and links
 
-Git: focused local commits, no databases/secrets/dependencies/build artifacts; no push or
-deployment without instruction. Update PROJECT_CONTEXT and relevant docs before handoff.
+src/site.ts owns public content. scripts/pages.tsx emits HTML before Workbox. PUBLIC_URL and
+PUBLIC_INDEXING are read at build time; build again after changing them. New routes need
+matching static output, PWA allowlist and useful functionality/content. Keep real 404s.
 
-The UI, templates and API messages are English. Keep copy in the two i18n modules;
-preserve user-authored content in any language. Keep bundled/API template lists aligned.
-`state/wheel.ts` supplies the factory shared by the store and IndexedDB v3 migration.
-Do not reset user wheels to change a starter example. Existing E2E locators use English;
-Greek input fixtures intentionally remain to check Unicode editing and preservation.
+Share links embed validated payloads in a fragment. Do not send the fragment to a service,
+claim encryption or offer revocation. Large payloads use JSON export. Keep bundled assets
+local with their licenses. Existing fourteen-language menus remain; editorial copy is English.
 
-The home sidebar uses the same `editWheel` path as the full editor. Keep its mutation
-controls disabled during draws, preserve entry IDs/images, and keep its draft key/labels
-distinct from the full editor. Lists are paged at 100 entries; Results selects automatically
-after a completed draw. Presentation hides the sidebar; below 1024px it stacks under the wheel.
-Keep the pre-draw sidebar snapshot until animation completion: subscribing directly to
-the new store results would expose the winner and no-repeat marker before the wheel stops.
-The wheel toolbar contains Customize, sound and fullscreen; all must stay disabled with
-the not-allowed cursor during draws/pending operations. There is no Pause. The Entries action
-row holds Shuffle/Sort/Clear and hides on Results, which has Sort/Clear/Export results. Preserve option IDs,
-active flags and images on reordering; sorting must retain duplicate entries. The full
-editor remains reachable through More options; desktop navigation has no Entries button.
-Keep Clear entries/history independent and locked during draws. History clearing is a
-pending local mutation, not a local-only array reset. Preserve retry records server-side,
-apply clear before new offline uploads, and never reactivate no-repeat entries implicitly.
-IndexedDB v4 initializes the clear flag; new local wheels must initialize it as well.
-Result sort changes display only. TXT export must include the whole current wheel history,
-retain duplicate wins and original Unicode text, and use UTF-8 BOM/CRLF for Notepad.
-TXT exports contain numbered winner names, without timestamps or draw-source labels;
-keep full metadata in internal history and JSON backups.
-Keep export disabled during draws; never bypass the pre-draw sidebar snapshot.
-
-Migration f03a5c9d124b and IndexedDB v6 translate only recognized legacy example labels,
-default titles and generated copy suffixes. Preserve custom text, IDs, revisions and
-published snapshots. A changed dirty local payload needs a fresh mutation ID.
-
-Menu localization is independent of those data migrations. See [localization.md](localization.md).
-Keep catalogs in src/locales aligned, preserve user-authored content and avoid reloading
-or remounting App on language changes. Test localized Customize at narrow widths: longer
-labels must wrap and mobile sound controls use a separate full-width select row.
+Update README/PROJECT_CONTEXT/docs before handoff. Keep backend/ and ignored historical
+databases intact for recovery. Do not commit, push or publish unless the user authorizes it;
+the current instruction explicitly says no commit.

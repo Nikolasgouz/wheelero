@@ -48,16 +48,9 @@ export type Option = z.infer<typeof optionSchema>
 export type DrawResult = z.infer<typeof resultSchema>
 export type Wheel = z.infer<typeof backupWheelSchema> & {
   id: string
-  revision: number
-  deleted: boolean
   updated_at: string
 }
-export type LocalWheel = Wheel & {
-  dirty: boolean
-  mutation_id: string
-  pending_results: string[]
-  clear_history: boolean
-}
+export type LocalWheel = Wheel
 export type Template = {
   id: string
   title: string
@@ -65,11 +58,12 @@ export type Template = {
   category: string
   options: string[]
 }
-export type PendingDraw = { wheel_id: string; id: string; revision: number }
 export type SavedState = {
+  version: 1
+  tool_wheels: Record<string, string>
+  removed: { wheel_id: string; option: Option; position: number }[]
   wheels: LocalWheel[]
   active: string
-  pending_draw: PendingDraw | null
   removals: {
     wheel_id: string
     option_id: string
@@ -78,6 +72,4 @@ export type SavedState = {
     sound: boolean
     volume: number
   }[]
-  workspace_id: string
 }
-export type Share = { token: string; created_at: string }

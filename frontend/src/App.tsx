@@ -24,7 +24,8 @@ import {
   VolumeX,
   X,
 } from 'lucide-react'
-import { api, NetworkError } from './api/client'
+import { createShareLink, readSharedWheel } from './lib/sharing'
+import { exportLegacyBackup } from './state/storage'
 import { Customize } from './components/Customize'
 import { defaults, type Customization } from './customization'
 import { getLanguage, subscribeLanguage } from './locale'
@@ -34,6 +35,9 @@ import { presentationOptions, textColor } from './lib/presentation'
 import { Dialog } from './components/Dialog'
 import { PwaControls } from './components/PwaControls'
 import { HomeInfo } from './components/HomeInfo'
+import { SiteIntro, SiteDetails, SiteFooter } from './components/SiteContent'
+import { NumberRange, TeamGenerator } from './components/Tools'
+import { pages, currentPath } from './site'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
@@ -48,23 +52,27 @@ import {
   editWheel,
   forkWheel,
   initialize,
+  restoreEntries,
   removeWinner,
   removeDueWinners,
   scheduleRemoval,
   spinWheel,
-  synchronize,
+  flushStorage,
   useStore,
 } from './state/store'
 import { makeWheel } from './state/wheel'
 import { templates as bundledTemplates } from './state/templates'
-import type { DrawResult, LocalWheel, Option, Share, Template, Wheel } from './types'
+import type { DrawResult, LocalWheel, Option, Wheel } from './types'
+
+const sitePath = currentPath(location.pathname.replace(/\/$/, '') || '/')
 
 type Screen = 'wheel' | 'options' | 'library'
 type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
 
 export default function App() {
   const language = useSyncExternalStore(subscribeLanguage, getLanguage)
-  const { data, online, notice } = useStore()
+  const { data, notice } = useStore()
+  const [online, setOnline] = useState(navigator.onLine)
   const [screen, setScreen] = useState<Screen>('wheel')
   const [busy, setBusy] = useState(false)
   const [spinning, setSpinning] = useState(false)
@@ -74,6 +82,7 @@ export default function App() {
   const [spinOptions, setSpinOptions] = useState<Option[] | null>(null)
   const [result, setResult] = useState<DrawResult | null>(null)
   const [message, setMessage] = useState('')
+  const [storageMessage, setStorageMessage] = useState('')
   const [error, setError] = useState('')
   const [theme, setTheme] = useState(
     localStorage.getItem('theme') ??
@@ -82,17 +91,17 @@ export default function App() {
   const [customOpen, setCustomOpen] = useState(false)
   const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
   const [popupOpen, setPopupOpen] = useState(false)
-  const [sound, setSound] = useState(true)
+  const [sound, setSound] = useState(localStorage.getItem('wheelero-sound') === 'true')
   const [presenting, setPresenting] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
-  const [shares, setShares] = useState<Share[]>([])
+  const [shareUrl, setShareUrl] = useState('')
   const [shared, setShared] = useState<SharedWheel | null>(null)
-  const [templates, setTemplates] = useState<Template[]>(bundledTemplates)
+  const templates = bundledTemplates
   const [sidebarTab, setSidebarTab] = useState<'entries' | 'results'>('entries')
   const soundEnabled = useRef(sound)
   soundEnabled.current = sound
   const operation = useRef(false)
-  const wheel = data?.wheels.find((w) => w.id === data.active && !w.deleted)
+  const wheel = data?.wheels.find((w) => w.id === data.active)
 
   const reportError = useCallback((error: unknown) => {
     setError(error instanceof Error ? error.message : String(error))
@@ -114,35 +123,31 @@ export default function App() {
   )
 
   useEffect(() => {
-    void initialize().catch(reportError)
-    void prepareApplause().catch(reportError)
-    void api<Template[]>('/templates')
-      .then(setTemplates)
-      .catch((error) => {
-        if (!(error instanceof NetworkError)) reportError(error)
-      })
-    const token = new URLSearchParams(location.search).get('share')
-    if (token)
-      void api<SharedWheel>(`/shares/${encodeURIComponent(token)}`)
-        .then(setShared)
-        .catch(reportError)
+    void initialize(sitePath).catch(reportError)
+    const fragment = new URLSearchParams(location.hash.slice(1)).get('wheel')
+    if (fragment) {
+      try {
+        setShared(readSharedWheel(fragment))
+      } catch (error) {
+        reportError(error)
+      }
+    } else if (new URLSearchParams(location.search).has('share')) {
+      setError('This is an old server share link. Ask the sender for a new link or a JSON export.')
+    }
   }, [reportError])
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('theme', theme)
   }, [theme])
   useEffect(() => {
-    if (!data || busy) return
-    const sync = () => run(synchronize)
-    const interval = window.setInterval(sync, 20000)
-    window.addEventListener('online', sync)
-    window.addEventListener('offline', sync)
+    const update = () => setOnline(navigator.onLine)
+    window.addEventListener('online', update)
+    window.addEventListener('offline', update)
     return () => {
-      clearInterval(interval)
-      window.removeEventListener('online', sync)
-      window.removeEventListener('offline', sync)
+      window.removeEventListener('online', update)
+      window.removeEventListener('offline', update)
     }
-  }, [data, busy, run])
+  }, [])
   useEffect(() => {
     const change = () => {
       if (!document.fullscreenElement) setPresenting(false)
@@ -168,7 +173,11 @@ export default function App() {
   }
   useEffect(() => () => stopSounds(), [])
   useEffect(() => {
-    if (!data || busy || data.pending_draw) return
+    localStorage.setItem('wheelero-sound', String(sound))
+    if (sound) void prepareApplause().catch(reportError)
+  }, [sound, reportError])
+  useEffect(() => {
+    if (!data || busy) return
     const timer = window.setInterval(() => {
       const due = data.removals.filter((removal) => removal.due <= Date.now())
       if (!due.length) return
@@ -266,14 +275,19 @@ export default function App() {
         <span className="brand">{t.brand}</span>
         <p>{error || t.loading}</p>
         {error && (
-          <button className="primary" onClick={() => run(initialize)}>
-            {t.retry}
-          </button>
+          <>
+            <button className="primary" onClick={() => run(() => initialize(sitePath))}>
+              {t.retry}
+            </button>
+            <button className="secondary" onClick={() => run(exportLegacyBackup)}>
+              Export previous browser data
+            </button>
+          </>
         )}
       </main>
     )
   const available = activeOptions(wheel)
-  const locked = busy || !!data.pending_draw
+  const locked = busy
   const valid =
     wheel.title.trim().length > 0 && wheel.options.every((o) => o.label.trim().length > 0)
   const canSpin = available.length > 0 && valid && !locked
@@ -281,7 +295,6 @@ export default function App() {
   const winnerMessage =
     config.popup_message === defaults.popup_message ? t.selected : config.popup_message
   const displayed = spinOptions ?? presentationOptions(available, config, null)
-  const sharedUrl = (token: string) => `${location.origin}/?share=${encodeURIComponent(token)}`
 
   return (
     <div
@@ -302,22 +315,24 @@ export default function App() {
           <img className="brand-icon" src="/wheelero.svg" alt="" width="34" height="34" />
           {t.brand}
         </a>
-        <nav className="desktop-nav" aria-label={t.navigation}>
-          <button
-            disabled={locked}
-            className={screen === 'wheel' ? 'selected' : ''}
-            onClick={() => navigate('wheel')}
-          >
-            {t.wheel}
-          </button>
-          <button
-            disabled={locked}
-            className={screen === 'library' ? 'selected' : ''}
-            onClick={() => navigate('library')}
-          >
-            {t.library}
-          </button>
-        </nav>
+        {pages[sitePath].kind === 'wheel' && (
+          <nav className="desktop-nav" aria-label={t.navigation}>
+            <button
+              disabled={locked}
+              className={screen === 'wheel' ? 'selected' : ''}
+              onClick={() => navigate('wheel')}
+            >
+              {t.wheel}
+            </button>
+            <button
+              disabled={locked}
+              className={screen === 'library' ? 'selected' : ''}
+              onClick={() => navigate('library')}
+            >
+              {t.library}
+            </button>
+          </nav>
+        )}
         <div className="header-actions">
           <LanguageMenu language={language} disabled={locked} />
           {!online && (
@@ -336,7 +351,11 @@ export default function App() {
         </div>
       </header>
 
-      <main>
+      <main id="main-content">
+        {!presenting && <SiteIntro path={sitePath} />}
+        <p className="sr-only" role="status" aria-live="polite">
+          {!spinning && result ? `${winnerMessage} ${result.label}` : ''}
+        </p>
         {error && (
           <div className="notice error" role="alert">
             <span>{error}</span>
@@ -358,24 +377,63 @@ export default function App() {
             {notice}
           </p>
         )}
-        {data.pending_draw && (
-          <div className="notice warning">
-            <span>{t.uncertain}</span>
-            <button disabled={busy} onClick={() => run(synchronize)}>
-              {t.sync}
-            </button>
-          </div>
-        )}
-
-        {screen === 'library' ? (
-          <Library
-            wheels={data.wheels.filter((w) => !w.deleted)}
-            active={data.active}
-            run={run}
-            openEditor={() => navigate('options')}
-          />
+        {pages[sitePath].kind === 'information' ? (
+          <SiteDetails path={sitePath} />
+        ) : pages[sitePath].kind === 'teams' ? (
+          <TeamGenerator />
+        ) : screen === 'library' ? (
+          <>
+            <section className="sync-controls card" lang="en">
+              <h2>Stored in your browser</h2>
+              <p>
+                Wheels, settings and results are saved in IndexedDB on this device. Export JSON
+                before clearing browser data or moving to another device.
+              </p>
+              {'storage' in navigator && 'persist' in navigator.storage && (
+                <button
+                  className="secondary"
+                  disabled={locked}
+                  onClick={() =>
+                    run(async () => {
+                      const granted = await navigator.storage.persist()
+                      setStorageMessage(
+                        granted
+                          ? 'Persistent storage is enabled. Keep JSON backups too; clearing browser data still deletes your wheels.'
+                          : 'The browser did not grant persistent storage. Your wheels are still saved locally; keep JSON backups.',
+                      )
+                    })
+                  }
+                >
+                  Protect local storage
+                </button>
+              )}
+              {storageMessage && <p role="status">{storageMessage}</p>}
+            </section>
+            <Library
+              wheels={data.wheels}
+              active={data.active}
+              run={run}
+              openEditor={() => navigate('options')}
+            />
+          </>
         ) : (
           <>
+            {sitePath === '/random-number-wheel' && (
+              <NumberRange
+                disabled={locked}
+                apply={(labels) =>
+                  edit({
+                    title: `Numbers ${labels[0]} to ${labels[labels.length - 1]}`,
+                    options: labels.map((label) => ({
+                      id: crypto.randomUUID(),
+                      label,
+                      active: true,
+                      image: null,
+                    })),
+                  })
+                }
+              />
+            )}
             <div className={`workspace mobile-${screen}`}>
               <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
                 <div className="wheel-top">
@@ -426,7 +484,7 @@ export default function App() {
                       </button>
                     </div>
                   </div>
-                  <h1 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h1>
+                  <h2 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h2>
                 </div>
                 <Spinner
                   svg={wheelSvg}
@@ -436,12 +494,7 @@ export default function App() {
                   config={config}
                   winnerId={result?.option_id ?? null}
                   idle={
-                    !spinning &&
-                    displayed.length > 0 &&
-                    !data.pending_draw &&
-                    screen === 'wheel' &&
-                    !shareOpen &&
-                    !shared
+                    !spinning && displayed.length > 0 && screen === 'wheel' && !shareOpen && !shared
                   }
                   canSpin={canSpin}
                   onSpin={spin}
@@ -515,7 +568,7 @@ export default function App() {
               </div>
               <div className="editor-column" hidden={screen !== 'options'}>
                 <div className="options-toolbar">
-                  <h1>{t.options}</h1>
+                  <h2>{t.options}</h2>
                   <button
                     className="secondary"
                     disabled={locked}
@@ -532,10 +585,27 @@ export default function App() {
                   edit={edit}
                   report={setError}
                 />
+                <button
+                  className="secondary"
+                  disabled={
+                    locked ||
+                    (!data.removed.some((item) => item.wheel_id === wheel.id) &&
+                      wheel.options.every((option) => option.active))
+                  }
+                  onClick={() =>
+                    run(async () => {
+                      await restoreEntries(wheel.id)
+                      setResult(null)
+                      setSpinOptions(null)
+                    })
+                  }
+                >
+                  Restore entries
+                </button>
                 <div className="save-bar">
                   <span>
                     <Check size={14} />
-                    {wheel.dirty ? t.pending : t.saved}
+                    {t.saved}
                   </span>
                   <div>
                     <button
@@ -543,7 +613,7 @@ export default function App() {
                       disabled={locked || !valid}
                       onClick={() =>
                         run(async () => {
-                          await synchronize()
+                          await flushStorage()
                           setMessage(t.autoSave)
                         })
                       }
@@ -556,9 +626,7 @@ export default function App() {
                       disabled={locked}
                       onClick={() =>
                         run(async () => {
-                          if (!online) throw new Error(t.shareOffline)
-                          const activeId = await synchronize()
-                          setShares(await api<Share[]>(`/wheels/${activeId}/shares`))
+                          setShareUrl('')
                           setShareOpen(true)
                         })
                       }
@@ -605,30 +673,38 @@ export default function App() {
             </section>
           </>
         )}
-        {screen === 'wheel' && !presenting && <HomeInfo />}
+        {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && (
+          <>
+            <HomeInfo />
+            <SiteDetails path={sitePath} />
+          </>
+        )}
       </main>
       <footer>
+        {!presenting && <SiteFooter />}
         <PwaControls busy={locked} report={setMessage} />
       </footer>
-      <nav className="mobile-nav" aria-label={t.mobileNavigation}>
-        {(
-          [
-            ['wheel', CircleDot, t.wheel],
-            ['options', Settings2, t.options],
-            ['library', LayoutGrid, t.library],
-          ] as const
-        ).map(([key, Icon, label]) => (
-          <button
-            disabled={locked}
-            key={key}
-            className={screen === key ? 'selected' : ''}
-            onClick={() => navigate(key)}
-          >
-            <Icon size={21} />
-            <span>{label}</span>
-          </button>
-        ))}
-      </nav>
+      {pages[sitePath].kind === 'wheel' && (
+        <nav className="mobile-nav" aria-label={t.mobileNavigation}>
+          {(
+            [
+              ['wheel', CircleDot, t.wheel],
+              ['options', Settings2, t.options],
+              ['library', LayoutGrid, t.library],
+            ] as const
+          ).map(([key, Icon, label]) => (
+            <button
+              disabled={locked}
+              key={key}
+              className={screen === key ? 'selected' : ''}
+              onClick={() => navigate(key)}
+            >
+              <Icon size={21} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
 
       {customOpen && (
         <Customize
@@ -651,7 +727,6 @@ export default function App() {
           <div className="result-display">
             <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
-            {result.source === 'offline' && <span className="pill">{t.offlineResult}</span>}
           </div>
           <div className="result-actions">
             <button className="secondary" onClick={closeResult}>
@@ -672,34 +747,28 @@ export default function App() {
 
       {shareOpen && (
         <Dialog title={t.shareHeading} close={() => setShareOpen(false)}>
-          <p className="muted">{t.shareHint}</p>
+          <p className="muted">
+            This link contains the title, entries, images and settings of this wheel. Results and
+            other wheels are excluded. No upload is made. Anyone with the link can read and copy it.
+            Links cannot be revoked; use JSON export for large wheels.
+          </p>
           <button
             className="primary full-width"
-            disabled={busy}
+            disabled={busy || !valid}
             onClick={() =>
               run(async () => {
-                const activeId = await synchronize()
-                const latest = await api<Wheel>(`/wheels/${activeId}`)
-                await api<Share>(`/wheels/${activeId}/shares`, 'POST', {
-                  revision: latest.revision,
-                })
-                setShares(await api<Share[]>(`/wheels/${activeId}/shares`))
+                setShareUrl(createShareLink(wheel))
               })
             }
           >
             <Plus size={18} />
             {t.createLink}
           </button>
-          {!shares.length && <p className="muted">{t.noShares}</p>}
-          {shares.map((share) => (
-            <div className="share-row" key={share.token}>
-              <input aria-label={t.share} readOnly value={sharedUrl(share.token)} />
+          {shareUrl && (
+            <div className="share-row">
+              <input aria-label={t.share} readOnly value={shareUrl} />
               <div>
-                <button
-                  className="text-button"
-                  disabled={busy}
-                  onClick={() => copy(sharedUrl(share.token))}
-                >
+                <button className="text-button" disabled={busy} onClick={() => copy(shareUrl)}>
                   {t.copyLink}
                 </button>
                 {'share' in navigator && (
@@ -708,28 +777,16 @@ export default function App() {
                     disabled={busy}
                     onClick={() =>
                       run(async () => {
-                        await navigator.share({ title: wheel.title, url: sharedUrl(share.token) })
+                        await navigator.share({ title: wheel.title, url: shareUrl })
                       })
                     }
                   >
                     {t.nativeShare}
                   </button>
                 )}
-                <button
-                  className="text-button danger"
-                  disabled={busy}
-                  onClick={() =>
-                    run(async () => {
-                      await api(`/wheels/${wheel.id}/shares/${share.token}`, 'DELETE')
-                      setShares((current) => current.filter((s) => s.token !== share.token))
-                    })
-                  }
-                >
-                  {t.revoke}
-                </button>
               </div>
             </div>
-          ))}
+          )}
         </Dialog>
       )}
 

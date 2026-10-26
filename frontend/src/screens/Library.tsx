@@ -21,7 +21,7 @@ export function Library({
     <section className="library-screen">
       <div className="section-heading">
         <div>
-          <h1>{t.library}</h1>
+          <h2>{t.library}</h2>
           <p>{t.autoSave}</p>
         </div>
         <button

@@ -78,7 +78,11 @@ class Mutation(Base):
 
 class Share(Base):
     __tablename__ = "shares"
+    __table_args__ = (UniqueConstraint("workspace_id", "request_id"),)
     token: Mapped[str] = mapped_column(String(64), primary_key=True)
-    wheel_id: Mapped[str] = mapped_column(ForeignKey("wheels.id"), index=True)
+    wheel_id: Mapped[str | None] = mapped_column(ForeignKey("wheels.id"), index=True)
+    workspace_id: Mapped[str] = mapped_column(ForeignKey("workspaces.id"), index=True)
+    client_wheel_id: Mapped[str] = mapped_column(String(36), index=True)
+    request_id: Mapped[str | None] = mapped_column(String(36))
     snapshot: Mapped[dict] = mapped_column(JSON)
     created_at: Mapped[str] = mapped_column(default=now)

@@ -73,5 +73,24 @@ class DrawRequest(StrictModel):
     revision: int = Field(ge=1)
 
 
+class SnapshotWrite(StrictModel):
+    request_id: UUID
+    client_wheel_id: UUID
+    title: str = Field(min_length=1, max_length=120)
+    no_repeat: bool = False
+    customization: Customization
+    options: list[OptionInput] = Field(min_length=1, max_length=10000)
+
+    @model_validator(mode="after")
+    def valid_snapshot(self):
+        if not self.title.strip():
+            raise ValueError("The title cannot be blank.")
+        if len({item.id for item in self.options}) != len(self.options):
+            raise ValueError("Duplicate entry IDs")
+        if len(self.model_dump_json().encode("utf-8")) > 8_000_000:
+            raise ValueError("Snapshot exceeds 8 MB")
+        return self
+
+
 class RevisionRequest(StrictModel):
     revision: int = Field(ge=1)

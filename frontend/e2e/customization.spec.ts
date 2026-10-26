@@ -1,30 +1,17 @@
-import { showScreen } from './navigation'
+import { showScreen, readSavedState } from './navigation'
 import { expect, test, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import type { SavedState, Wheel } from '../src/types'
 import { readFile } from 'node:fs/promises'
 
 test.use({ actionTimeout: 15000 })
 
 async function ready(page: Page) {
   await page.goto('/')
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
-async function state(page: Page): Promise<SavedState> {
-  return page.evaluate(async () => {
-    const db = await new Promise<IDBDatabase>((resolve) => {
-      const request = indexedDB.open('gyrna')
-      request.onsuccess = () => resolve(request.result)
-    })
-    const data = await new Promise<SavedState>((resolve) => {
-      const request = db.transaction('state').objectStore('state').get('current')
-      request.onsuccess = () => resolve(request.result)
-    })
-    db.close()
-    return data
-  })
-}
+const state = readSavedState
 async function customize(page: Page) {
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Customize', exact: true }).click()
@@ -129,7 +116,12 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
   expect(migrated.removals).toEqual([])
   expect(migrated.wheels).toHaveLength(2)
   expect(migrated.wheels[1].options.map((o) => o.label)).toEqual([
-    'Alex', 'Emma', 'James', 'Olivia', 'Noah', 'Sofia',
+    'Alex',
+    'Emma',
+    'James',
+    'Olivia',
+    'Noah',
+    'Sofia',
   ])
   await page.reload()
   await expect(page.locator('.wheel-title')).toHaveText('Pick a name')
@@ -167,6 +159,7 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
     }
   })
   await ready(page)
+  await page.getByRole('button', { name: 'Unmute sound', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
   let dialog = await customize(page)
@@ -281,11 +274,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
 }) => {
   await ready(page)
   let dialog = await customize(page)
-  await expect(dialog.getByRole('tab')).toHaveText([
-    'During spin',
-    'After spin',
-    'Appearance',
-  ])
+  await expect(dialog.getByRole('tab')).toHaveText(['During spin', 'After spin', 'Appearance'])
   await expect(dialog.getByLabel('Spin duration (seconds) — value')).toHaveValue('10')
   await expect(dialog.getByLabel('Maximum visible names — value')).toHaveValue('1000')
   await dialog.getByLabel('Spin duration (seconds) — value').fill('60')
@@ -354,7 +343,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   await expect(page.locator('.wheel-center-image')).toHaveCount(0)
   await expect(page.locator('.wheel-rim')).toHaveCSS('box-shadow', 'none')
   expect((await state(page)).wheels[0].customization).toEqual(config)
-  const remote: Wheel[] = await (await page.request.get('/api/wheels')).json()
+  const remote = (await state(page)).wheels
   expect(remote[0].customization).toEqual(config)
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
@@ -363,9 +352,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   await expect(page.locator('.inline-result')).toHaveCount(0)
   await expect(page.locator('.confetti')).toHaveCount(0)
   await expect(page.locator('.winning-sector')).toHaveCount(1)
-  await expect(page.getByRole('button', { name: 'Remove winner', exact: true })).toHaveCount(
-    0,
-  )
+  await expect(page.getByRole('button', { name: 'Remove winner', exact: true })).toHaveCount(0)
   const data = await state(page)
   const winner = data.wheels[0].results[0]
   const selected = await page.locator('.wheel-svg').evaluate((svg) => {
@@ -426,9 +413,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await ready(page)
   let dialog = await customize(page)
   await dialog.getByRole('tab', { name: 'After spin' }).click()
-  await dialog
-    .getByLabel('Automatically remove winner after 5 seconds', { exact: true })
-    .check()
+  await dialog.getByLabel('Automatically remove winner after 5 seconds', { exact: true }).check()
   await dialog.getByLabel('Show winner popup', { exact: true }).uncheck()
   await save(page)
   await showScreen(page, 'options')
@@ -448,10 +433,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('#sidebar-results .history strong').first()).toBeVisible()
-  await page
-    .getByRole('dialog')
-    .getByRole('button', { name: 'Remove winner', exact: true })
-    .click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Remove winner', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(0)
   expect((await state(page)).wheels[0].options.length).toBe(4)
   await page.waitForTimeout(5200)
@@ -471,53 +453,27 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await dialog.getByRole('button', { name: 'Cancel' }).click()
 })
 
-test('pending automatic removal follows the conflict copy without modifying the newer original', async ({
-  page,
-  context,
-}) => {
+test('automatic removal remains scoped to its original wheel after a copy', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await ready(page)
   const dialog = await customize(page)
   await dialog.getByRole('tab', { name: 'After spin' }).click()
-  await dialog
-    .getByLabel('Automatically remove winner after 5 seconds', { exact: true })
-    .check()
+  await dialog.getByLabel('Automatically remove winner after 5 seconds', { exact: true }).check()
   await dialog.getByLabel('Show winner popup', { exact: true }).uncheck()
   await save(page)
   const original = (await state(page)).wheels[0]
-  const session = await (await page.request.get('/api/session')).json()
-  await context.setOffline(true)
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
-  const response = await page.request.put(`/api/wheels/${original.id}`, {
-    headers: { 'X-CSRF-Token': session.csrf },
-    data: {
-      revision: original.revision,
-      mutation_id: crypto.randomUUID(),
-      title: 'Νεότερος αρχικός τροχός',
-      no_repeat: original.no_repeat,
-      customization: original.customization,
-      options: original.options,
-      results: [],
-    },
-  })
-  expect(response.ok()).toBe(true)
-  await context.setOffline(false)
-  await expect.poll(async () => (await state(page)).active).not.toBe(original.id)
-  await expect
-    .poll(async () => {
-      const data = await state(page)
-      return data.wheels.find((wheel) => wheel.id === data.active)!.options.length
-    })
-    .toBe(5)
-  expect((await state(page)).removals).toHaveLength(0)
-  const remote: Wheel = await (await page.request.get(`/api/wheels/${original.id}`)).json()
-  expect(remote.options).toHaveLength(6)
-  expect(remote.title).toBe('Νεότερος αρχικός τροχός')
+  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
+  await page.getByRole('button', { name: `Copy: ${original.title}`, exact: true }).click()
+  await expect.poll(async () => (await state(page)).removals.length).toBe(0)
+  const stored = await state(page)
+  expect(stored.wheels.find((wheel) => wheel.id === original.id)!.options).toHaveLength(5)
+  expect(stored.wheels.find((wheel) => wheel.id !== original.id)!.options).toHaveLength(6)
 })
 
-test('customization and embedded images work offline and synchronize once', async ({
+test('customization and embedded images persist locally across offline use', async ({
   page,
   context,
 }) => {
@@ -535,29 +491,22 @@ test('customization and embedded images work offline and synchronize once', asyn
   await page.reload()
   await expect(page.locator('.wheel-svg > image')).toHaveAttribute('href', '/images/nebula.webp')
   expect(
-    await page
-      .locator('.wheel-svg > image')
-      .evaluate(async (svg) => {
-        const img = new Image()
-        img.src = svg.getAttribute('href')!
-        await img.decode()
-        return img.naturalWidth
-      }),
+    await page.locator('.wheel-svg > image').evaluate(async (svg) => {
+      const img = new Image()
+      img.src = svg.getAttribute('href')!
+      await img.decode()
+      return img.naturalWidth
+    }),
   ).toBeGreaterThan(0)
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('dialog')).toContainText('Offline draw')
+  await expect(page.getByRole('dialog').locator('.winner')).not.toBeEmpty()
   await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await context.setOffline(false)
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await expect
-    .poll(async () => {
-      const wheels: Wheel[] = await (await page.request.get('/api/wheels')).json()
-      return wheels[0].customization.wheel_image
-    })
-    .toBe('/images/nebula.webp')
-  const wheels: Wheel[] = await (await page.request.get('/api/wheels')).json()
+  const wheels = (await state(page)).wheels
+  expect(wheels[0].customization.wheel_image).toBe('/images/nebula.webp')
   expect(wheels[0].results).toHaveLength(1)
   dialog = await customize(page)
   await dialog.getByRole('button', { name: 'Cancel' }).click()
@@ -615,9 +564,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   await expect(page.locator('.confetti i')).toHaveCount(40)
 })
 
-test('palette and presentation background are applied to the renderer', async ({
-  page,
-}) => {
+test('palette and presentation background are applied to the renderer', async ({ page }) => {
   await ready(page)
   let dialog = await customize(page)
   await dialog.getByRole('tab', { name: 'Appearance', exact: true }).click()

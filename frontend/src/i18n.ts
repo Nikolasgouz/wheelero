@@ -63,7 +63,7 @@ function messages() {
     history: translate('Recent spins'),
     noHistory: translate('Your first decision is waiting.'),
     server: translate('Server draw'),
-    offlineResult: translate('Offline draw / import'),
+    offlineResult: translate('Device draw / import'),
     allHistory: translate('Show all history'),
     lessHistory: translate('Recent only'),
     navigation: translate('Main navigation'),
@@ -80,7 +80,7 @@ function messages() {
     copy: translate('Copy'),
     delete: translate('Delete'),
     rename: translate('Rename'),
-    deleteConfirm: translate('Delete this wheel and revoke its shared links?'),
+    deleteConfirm: translate('Delete this wheel from this browser? Export a backup first if you need it.'),
     export: translate('Export JSON'),
     import: translate('Import JSON'),
     importInvalid: translate('Invalid backup (version 1, up to 100 wheels / 10,000 entries).'),
@@ -182,7 +182,7 @@ function messages() {
         },
         {
           title: 'Share a wheel',
-          text: 'Send a snapshot that others can copy and use. Your results stay private, and you can revoke the link.',
+          text: 'Send a copy inside a link or JSON file. Your results stay private. Shared copies cannot be revoked.',
         },
         {
           title: 'Take it anywhere',

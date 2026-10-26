@@ -5,6 +5,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $artifacts = Join-Path $projectRoot 'artifacts'
 $statePath = Join-Path $artifacts 'public-preview.json'
 $pythonPath = Join-Path $projectRoot '.venv\Scripts\python.exe'
+$bunPath = (Get-Command bun -CommandType Application).Source
 $tunnelPath = Join-Path $artifacts 'tools\cloudflared.exe'
 
 function Stop-PreviewProcess([int]$processId) {
@@ -12,6 +13,20 @@ function Stop-PreviewProcess([int]$processId) {
     if (!$process) { return }
     if ($process.ExecutablePath -eq $tunnelPath) {
         Stop-Process -Id $processId
+        return
+    }
+    if ($process.ExecutablePath -eq $bunPath -and $process.CommandLine -match 'run.*preview.*8018') {
+        foreach ($listener in @(Get-NetTCPConnection -State Listen -LocalPort 8018 -ErrorAction SilentlyContinue)) {
+            $server = Get-CimInstance Win32_Process -Filter "ProcessId = $($listener.OwningProcess)"
+            if (!$server.CommandLine.Contains($projectRoot) -or $server.CommandLine -notmatch 'vite.*preview') {
+                throw 'Port 8018 no longer belongs to this preview; it was not stopped.'
+            }
+            Stop-Process -Id $server.ProcessId -ErrorAction SilentlyContinue
+        }
+        Get-CimInstance Win32_Process -Filter "ParentProcessId = $processId" |
+            Where-Object { $_.CommandLine -match 'vite.*preview' -and $_.CommandLine.Contains($projectRoot) } |
+            ForEach-Object { Stop-Process -Id $_.ProcessId }
+        Stop-Process -Id $processId -ErrorAction SilentlyContinue
         return
     }
     if ($process.ExecutablePath -ne $pythonPath -or
@@ -50,10 +65,6 @@ if ((Get-FileHash -LiteralPath $tunnelPath -Algorithm SHA256).Hash -ne $expected
     throw 'cloudflared checksum does not match the pinned official release.'
 }
 
-Set-Location -LiteralPath (Join-Path $projectRoot 'frontend')
-& bun run build
-if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
-
 $state = @{ processIds = @(); url = '' }
 try {
     $tunnel = Start-Process -FilePath $tunnelPath -PassThru -WindowStyle Hidden `
@@ -73,32 +84,32 @@ try {
     }
     if (!$state.url) { throw 'Tunnel did not return a URL within 30 seconds.' }
 
-    $env:DATABASE_URL = 'sqlite:///' + (Join-Path $artifacts 'public-preview.db').Replace('\','/')
-    $env:COOKIE_SECURE = 'true'
-    $env:ALLOWED_ORIGINS = $state.url
-    Set-Location -LiteralPath (Join-Path $projectRoot 'backend')
-    & $pythonPath -m alembic upgrade head
-    if ($LASTEXITCODE -ne 0) { throw 'Preview database migration failed.' }
-    $server = Start-Process -FilePath $pythonPath -PassThru -WindowStyle Hidden `
-        -ArgumentList '-m','uvicorn','app.preview:app','--host','127.0.0.1','--port','8018','--no-access-log' `
-        -WorkingDirectory (Join-Path $projectRoot 'backend') `
-        -RedirectStandardOutput (Join-Path $artifacts 'public-backend.log') `
-        -RedirectStandardError (Join-Path $artifacts 'public-backend-error.log')
+    $env:PUBLIC_URL = $state.url
+    $env:__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS = ([uri]$state.url).Host
+    $env:PUBLIC_INDEXING = 'false'
+    Set-Location -LiteralPath (Join-Path $projectRoot 'frontend')
+    & $bunPath run build
+    if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
+    $server = Start-Process -FilePath $bunPath -PassThru -WindowStyle Hidden `
+        -ArgumentList 'run','preview','--host','127.0.0.1','--port','8018','--strictPort' `
+        -WorkingDirectory (Join-Path $projectRoot 'frontend') `
+        -RedirectStandardOutput (Join-Path $artifacts 'public-static.log') `
+        -RedirectStandardError (Join-Path $artifacts 'public-static-error.log')
     $state.processIds += $server.Id
     $state | ConvertTo-Json | Set-Content -LiteralPath $statePath
     $ready = $false
     for ($attempt = 0; $attempt -lt 30; $attempt++) {
         try {
-            $health = Invoke-RestMethod 'http://127.0.0.1:8018/api/health' -TimeoutSec 2 `
+            $health = Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:8018/' -TimeoutSec 2 `
                 -Headers @{ Host = ([uri]$state.url).Host }
-            if ($health.status -eq 'ok') { $ready = $true; break }
+            if ($health.StatusCode -eq 200) { $ready = $true; break }
         } catch [System.Net.WebException] {
             # Connection refused is expected while the preview server starts.
         }
-        if ($server.HasExited) { throw 'Preview server exited. See public-backend-error.log.' }
+        if ($server.HasExited) { throw 'Preview server exited. See public-static-error.log.' }
         Start-Sleep -Milliseconds 500
     }
-    if (!$ready) { throw 'Preview backend did not become ready.' }
+    if (!$ready) { throw 'Static preview did not become ready.' }
     Write-Host "Public preview: $($state.url)"
     Write-Host 'Keep this computer awake and online. Stop with scripts/public-preview.ps1 -Stop.'
 } catch {

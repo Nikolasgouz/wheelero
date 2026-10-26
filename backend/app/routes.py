@@ -7,7 +7,7 @@ from sqlalchemy import delete, select, update
 
 from .config import settings
 from .models import Mutation, Option, Result, Share, Wheel, Workspace, now
-from .schemas import DrawRequest, RevisionRequest, WheelWrite
+from .schemas import DrawRequest, RevisionRequest, WheelWrite, SnapshotWrite
 from .security import COOKIE, DB, Owner, token_hash
 from .services import check_revision, choose_index, owned_wheel, result_data, wheel_data
 from .templates import TEMPLATES
@@ -153,7 +153,8 @@ def create_share(wheel_id: UUID, body: RevisionRequest, db: DB, owner: Owner):
     wheel = owned_wheel(db, str(wheel_id), owner.id)
     check_revision(wheel, body.revision)
     data = wheel_data(db, wheel)
-    share = Share(token=secrets.token_urlsafe(32), wheel_id=wheel.id, snapshot={
+    share = Share(token=secrets.token_urlsafe(32), wheel_id=wheel.id,
+                  workspace_id=owner.id, client_wheel_id=wheel.id, snapshot={
         "title": wheel.title, "no_repeat": wheel.no_repeat, "options": data["options"],
         "customization": wheel.customization,
     })
@@ -182,3 +183,45 @@ def public_share(token: str, db: DB):
     if share is None:
         raise HTTPException(404, "This link does not exist or has been revoked.")
     return share.snapshot
+
+
+@router.post("/shares", status_code=201, tags=["sharing"])
+def publish_snapshot(body: SnapshotWrite, db: DB, owner: Owner):
+    snapshot = body.model_dump(mode="json", exclude={"request_id", "client_wheel_id"})
+    share = db.scalar(select(Share).where(
+        Share.workspace_id == owner.id, Share.request_id == str(body.request_id)
+    ))
+    if share:
+        if share.snapshot != snapshot or share.client_wheel_id != str(body.client_wheel_id):
+            raise HTTPException(409, "This request ID already belongs to another snapshot.")
+    else:
+        share = Share(token=secrets.token_urlsafe(32), workspace_id=owner.id,
+                      client_wheel_id=str(body.client_wheel_id), request_id=str(body.request_id),
+                      snapshot=snapshot)
+        db.add(share)
+        db.flush()
+    return {"token": share.token, "created_at": share.created_at}
+
+
+@router.get("/shares", tags=["sharing"])
+def my_snapshots(wheel_id: UUID, db: DB, owner: Owner):
+    return [{"token": s.token, "created_at": s.created_at} for s in db.scalars(
+        select(Share).where(Share.workspace_id == owner.id, Share.client_wheel_id == str(wheel_id))
+    )]
+
+
+@router.delete("/shares/{token}", status_code=204, tags=["sharing"])
+def revoke_snapshot(token: str, db: DB, owner: Owner):
+    share = db.get(Share, token)
+    if share is None or share.workspace_id != owner.id:
+        raise HTTPException(404, "Snapshot not found.")
+    db.delete(share)
+
+
+@router.delete("/session/data", status_code=204, tags=["privacy"])
+def delete_server_data(db: DB, owner: Owner):
+    wheel_ids = select(Wheel.id).where(Wheel.workspace_id == owner.id)
+    db.execute(delete(Share).where(Share.workspace_id == owner.id))
+    for model in (Mutation, Result, Option):
+        db.execute(delete(model).where(model.wheel_id.in_(wheel_ids)))
+    db.execute(delete(Wheel).where(Wheel.workspace_id == owner.id))

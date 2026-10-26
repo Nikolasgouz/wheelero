@@ -1,54 +1,41 @@
-# Data model
+# Current browser data model
 
-Workspace owns wheels; wheel owns ordered options, immutable results and share snapshots.
-Revisions detect conflicting writes; UUID client identifiers make retries idempotent.
+IndexedDB database name: gyrna (stable to preserve existing data), schema version **10**.
+Object stores:
 
-Tables: workspaces (hashed bearer cookie + CSRF secret), wheels (owner/revision/title/
-no_repeat/customization JSON/deleted tombstone), options (composite wheel+UUID key,
-unique order, optional embedded raster image), results
-(composite wheel+client UUID, label/index/count snapshot, source, request_revision),
-mutations (composite wheel+UUID, payload digest), shares (random public token + JSON snapshot).
-Results intentionally have no option FK: deleting an option preserves history.
-Migration d81e3a7b902f adds `results.cleared` (false for existing rows). Clearing history
-marks rows instead of deleting retry records: the original draw UUID still returns its
-original result, without restoring it to visible history. History/export responses exclude
-cleared rows. This is a visible-history reset, not permanent erasure of SQLite records.
-`PUT /api/wheels/{id}` accepts `clear_history`: after ownership/revision/idempotency checks,
-it marks existing history before ingesting the request's new offline results. Retrying the
-same mutation cannot erase later draws. A conflicting revision follows the existing copy flow.
-Draft wheels may be empty; draws require at least one active entry from 1–10,000 options.
-A fresh one-entry wheel can draw without previous history; its result has index 0/count 1.
-No-repeat exhausts that entry after one draw, and New round reactivates it.
-Draws increment wheel revision even when
-no-repeat is off, preventing a concurrent edit/draw from silently losing history.
+- state/current: version-1 SavedState.
+- legacy-backup/previous: original pre-v10 record, retained for recovery on upgrade.
 
-Customization has schema version 2 and is part of the atomic revisioned snapshot.
-Migration c72f1a9e4b02 preserves old data and public tokens, adds defaults to existing
-wheels/shares, and increases option/result constraints. Private images are embedded
-in the owner's snapshot; public snapshots explicitly copy them. No public upload store
-or independent asset endpoint exists. See customization.md for limits and validation.
+SavedState contains wheels, active wheel ID, tool_wheels route mappings, scheduled removals
+and removed-entry snapshots with their original positions. Wheels contain ID/title, ordered
+entries, result history, no_repeat, customization version 2 and updated_at. Entries carry
+UUID/label/active/image; results retain UUID, chosen entry ID/label/index/count/date/source.
 
-English UI/default messages do not change the SQLite schema or rewrite user content.
-IndexedDB v3 adds a new local names starter once when upgrading existing v1/v2 state;
-it is uploaded through the normal revisioned API. Existing IDs, settings, history and
-pending operations remain intact. A pending draw keeps its current active wheel.
-IndexedDB v4 initializes each wheel's pending `clear_history` flag to false; v3 upgrades
-do not add another starter. Clears cancel that wheel's queued auto-removals. Clearing
-entries preserves history; clearing results preserves entries and no-repeat active flags.
+Each active entry has equal probability. Duplicate labels remain separate UUID entries.
+Image data stays embedded in IndexedDB/exported wheel JSON. Local history retains old
+source='server' values when migrating; new results use the stable source='offline' value
+(displayed as Device draw / import, regardless of network availability).
 
-Migration f03a5c9d124b and IndexedDB v6 localize the original Greek example wheels:
-recognized default titles/entry labels/result labels and generated Copy suffixes become
-English. This one-time data migration preserves IDs, positions, active flags, revisions
-and source; custom labels remain unchanged. Published snapshots remain immutable.
-Dirty local payloads changed by localization receive a fresh mutation ID.
+## Migration
 
-Migration a14b6d0e235c removes center_image/center_size from wheels and shared snapshots,
-and sets customization.version to 2. This explicit feature-removal upgrade preserves
-IDs, revisions, results, wheel backgrounds and entry images. IndexedDB v7 mirrors it,
-renewing dirty payload mutation IDs. Version 1 JSON backups are validated and migrated
-once at import by customizationMigration.ts; the API accepts only version 2 settings.
+The v10 upgrade preserves the original record, applies existing v1-v9 data migrations,
+then removes server-only metadata from active storage: revisions, mutations, outboxes,
+workspace/session identifiers, sync flags and deletion tombstones. Active wheel IDs,
+settings/images/results and removal jobs survive. The migration is one IndexedDB upgrade
+transaction. Failure does not partially replace the old database.
 
-Migration b25c7e1f346d and IndexedDB v8 refresh the exact original default palette on
-private wheels. Custom palettes, disabled colors, IDs and revisions remain unchanged;
-published snapshots retain their original colors. Dirty local payloads receive a fresh
-mutation ID. No schema version change: these are palette-value updates within version 2.
+An unfinished old server request cannot be recovered without that server; the upgrade
+reports it without inventing a result. Its original record remains in the recovery copy.
+Historical SQLite data is untouched, never silently fetched or erased.
+
+## Backups and links
+
+JSON format gyrna/version 1 remains stable; validated imports create fresh wheel/result IDs.
+Per-wheel payload limit is 8 MB, 10,000 entries/results; import allows up to 100 wheels and
+100 MB per file. Browser quota can be lower than the combined application limits.
+
+Fragment-share payload version 1 includes only title, ordered options, no_repeat and
+customization, with results fixed to []. It excludes private wheel IDs, history and other
+wheels. Link content is readable by its holder and cannot be recalled.
+
+Historical SQLAlchemy models/Alembic migrations remain under backend/ for recovery only.

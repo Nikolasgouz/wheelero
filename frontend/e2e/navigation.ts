@@ -10,3 +10,20 @@ export async function showScreen(page: Page, screen: 'wheel' | 'options') {
       .click()
   await expect(page.locator(panel)).toBeVisible()
 }
+
+export async function readSavedState(page: Page): Promise<import('../src/types').SavedState> {
+  return page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('gyrna')
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    const state = await new Promise<import('../src/types').SavedState>((resolve, reject) => {
+      const request = db.transaction('state').objectStore('state').get('current')
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    db.close()
+    return state
+  })
+}

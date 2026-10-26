@@ -1,17 +1,12 @@
-import { showScreen } from './navigation'
+import { showScreen, readSavedState } from './navigation'
 import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
 async function ready(page: Page) {
   await page.goto('/')
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
-  await expect
-    .poll(async () => {
-      const response = await page.request.get('/api/wheels')
-      return response.ok() && (await response.json()).length > 0
-    })
-    .toBe(true)
 }
 
 test('edit, spin, pointer agreement, refresh persistence, JSON backup and library', async ({
@@ -69,13 +64,13 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
-  for (const name of ['Customize', 'Mute sound', 'Presentation mode']) {
+  for (const name of ['Customize', 'Unmute sound', 'Presentation mode']) {
     const button = page.locator('.wheel-tools').getByRole('button', { name, exact: true })
     await expect(button).toBeDisabled()
     await expect(button).toHaveCSS('cursor', 'not-allowed')
     await button.evaluate((node: HTMLButtonElement) => node.click())
   }
-  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
   await expect(page.locator('.home')).not.toHaveClass(/presenting/)
   for (const name of ['Shuffle', 'Sort', 'Clear entries'])
     await expect(
@@ -83,12 +78,6 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
         .locator('.sidebar-actions:not(.result-toolbar)')
         .getByRole('button', { name, exact: true }),
     ).toBeDisabled()
-  await expect
-    .poll(async () => {
-      const response = await page.request.get('/api/wheels')
-      return (await response.json())[0].results.length
-    })
-    .toBe(1)
   await page.getByRole('tab', { name: 'Results', exact: true }).click()
   for (const button of await page.locator('.result-toolbar button').all()) {
     await expect(button).toBeDisabled()
@@ -158,7 +147,7 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await expect(page.getByRole('alert')).toContainText('Invalid backup')
 })
 
-test('share snapshot, copy into isolated session and revoke', async ({ page, browser }) => {
+test('share fragment copies a wheel without a server or revocation', async ({ page, browser }) => {
   await ready(page)
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Share', exact: true }).click()
@@ -172,13 +161,12 @@ test('share snapshot, copy into isolated session and revoke', async ({ page, bro
   await expect(other.getByRole('dialog')).toContainText('Someone shared')
   await other.getByRole('button', { name: 'Save your own copy' }).click()
   await expect(other.getByRole('dialog')).toHaveCount(0)
-  await page.getByRole('button', { name: 'Revoke', exact: true }).click()
-  await other.goto(url)
-  await expect(other.getByRole('alert')).toContainText('revoked')
+  expect(new URL(url).hash).toMatch(/^#wheel=/)
+  await expect(page.getByRole('dialog')).toContainText('Links cannot be revoked')
   await recipient.close()
 })
 
-test('production service worker: offline reload, edit, draw and idempotent resync', async ({
+test('production service worker: offline reload, edit, draw and local persistence after reconnect', async ({
   page,
   context,
 }) => {
@@ -196,7 +184,7 @@ test('production service worker: offline reload, edit, draw and idempotent resyn
   await page.getByLabel('Wheel title', { exact: true }).fill('Χωρίς σύνδεση 🏕️')
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('dialog')).toContainText('Offline draw')
+  await expect(page.getByRole('dialog').locator('.winner')).not.toBeEmpty()
   await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await page.reload()
   await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue('Χωρίς σύνδεση 🏕️')
@@ -206,41 +194,25 @@ test('production service worker: offline reload, edit, draw and idempotent resyn
   await expect(page.getByText('Saved', { exact: true })).toBeVisible()
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
-  const wheels = await page.request.get('/api/wheels')
-  const stored = (await wheels.json()).find(
-    (w: { title: string }) => w.title === 'Χωρίς σύνδεση 🏕️',
-  )
+  const stored = (await readSavedState(page)).wheels[0]
   expect(stored.results).toHaveLength(1)
   expect(stored.results[0].source).toBe('offline')
 })
 
-test('revision conflict preserves local changes in a new wheel', async ({ page, context }) => {
+test('two tabs preserve edits to different fields', async ({ page, context }) => {
   await ready(page)
-  const wheels = await (await page.request.get('/api/wheels')).json()
-  const wheel = wheels[0]
-  const session = await (await page.request.get('/api/session')).json()
-  await context.setOffline(true)
+  const other = await context.newPage()
+  await other.goto('/')
   await showScreen(page, 'options')
-  await page.getByLabel('Wheel title', { exact: true }).fill('Τοπική αλλαγή')
-  // APIRequestContext is independent of browser offline emulation.
-  const response = await page.request.put(`/api/wheels/${wheel.id}`, {
-    headers: { 'X-CSRF-Token': session.csrf },
-    data: {
-      revision: wheel.revision,
-      mutation_id: crypto.randomUUID(),
-      title: 'Νεότερη αλλαγή server',
-      no_repeat: wheel.no_repeat,
-      options: wheel.options,
-      results: [],
-    },
-  })
-  expect(response.ok()).toBe(true)
-  await context.setOffline(false)
-  await expect(page.getByText('A newer version was found.', { exact: false })).toBeVisible()
-  const synced = await (await page.request.get('/api/wheels')).json()
-  expect(synced.map((w: { title: string }) => w.title)).toEqual(
-    expect.arrayContaining(['Νεότερη αλλαγή server', 'Τοπική αλλαγή · Copy']),
-  )
+  await showScreen(other, 'options')
+  await page.getByLabel('Wheel title', { exact: true }).fill('Shared local title')
+  await other.getByLabel('Option 1', { exact: true }).fill('Edited in another tab')
+  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await other.getByRole('button', { name: 'Save', exact: true }).click()
+  const stored = (await readSavedState(page)).wheels[0]
+  expect(stored.title).toBe('Shared local title')
+  expect(stored.options[0].label).toBe('Edited in another tab')
+  await other.close()
 })
 
 test('bulk blanks, duplicate removal, 200 entries and no-repeat exhaustion', async ({ page }) => {
@@ -297,7 +269,9 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'What is Wheelero for?', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'What is Wheelero for?', exact: true }),
+    ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Wheel features', exact: true })).toBeVisible()
     await expect(page.locator('.info-how li')).toHaveCount(3)
     await expect(page.locator('.info-features article')).toHaveCount(6)

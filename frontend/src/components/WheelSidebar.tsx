@@ -8,7 +8,7 @@ import {
   Shuffle,
   Trash2,
   Wifi,
-  WifiOff,
+  Laptop,
 } from 'lucide-react'
 import { t } from '../i18n'
 import { ct } from '../customization.i18n'
@@ -322,7 +322,7 @@ export function WheelSidebar({
                     {r.source === 'server' ? (
                       <Wifi size={12} aria-label={t.server} />
                     ) : (
-                      <WifiOff size={12} aria-label={t.offlineResult} />
+                      <Laptop size={12} aria-label={t.offlineResult} />
                     )}
                   </span>
                   <time

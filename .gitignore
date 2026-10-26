@@ -1,4 +1,7 @@
 .venv/
+ssh_keys/
+*.pem
+*.key
 __pycache__/
 .pytest_cache/
 .ruff_cache/

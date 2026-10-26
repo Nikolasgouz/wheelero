@@ -1,4 +1,4 @@
-import { showScreen } from './navigation'
+import { showScreen, readSavedState } from './navigation'
 import { test, expect } from '@playwright/test'
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
@@ -45,6 +45,7 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
 }) => {
   const title = `${'α'.repeat(99)}🎲`
   await page.goto('/')
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'options')
   await expect(page.getByText('Saved', { exact: true })).toBeVisible()
   await showScreen(page, 'options')
@@ -59,56 +60,36 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
   await expect(page.getByText('Saved', { exact: true })).toBeVisible()
-  const copies = await (await page.request.get('/api/wheels')).json()
+  const copies = (await readSavedState(page)).wheels
   expect(copies.map((wheel: { title: string }) => wheel.title)).toContain(`${title} · Copy`)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('clearing the cookie preserves local work in a new isolated workspace', async ({
+test('clearing cookies leaves local wheels and IDs unchanged', async ({ page, context }) => {
+  await page.goto('/')
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
+  const original = (await readSavedState(page)).wheels[0]
+  await context.clearCookies()
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
+  expect((await readSavedState(page)).wheels[0]).toEqual(original)
+})
+
+test('browser draw completes once even when the server is unreachable', async ({
   page,
   context,
 }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
-  await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
-  const original = (await (await page.request.get('/api/wheels')).json())[0]
-  await context.clearCookies()
-  await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByText('Your session changed.', { exact: false })).toBeVisible()
-  await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
-  const copies = await (await page.request.get('/api/wheels')).json()
-  expect(copies).toHaveLength(1)
-  expect(copies[0].id).not.toBe(original.id)
-  expect(copies[0].options).toEqual(original.options)
-  expect((await page.request.get(`/api/wheels/${original.id}`)).status()).toBe(404)
-  await showScreen(page, 'wheel')
+  await context.setOffline(true)
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('dialog')).toBeVisible()
-})
-
-test('lost draw response recovers the same server result without a second draw', async ({
-  page,
-}) => {
-  await page.goto('/')
-  await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
-  await page.route('**/api/wheels/*/draws', async (route) => {
-    const response = await route.fetch()
-    expect(response.ok()).toBe(true)
-    await route.abort('failed')
-  })
-  await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('alert')).toContainText('The draw response is pending')
-  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
-  await page.unroute('**/api/wheels/*/draws')
-  await page.getByRole('button', { name: 'Sync', exact: true }).click()
+  await expect(page.getByRole('dialog').locator('.winner')).not.toBeEmpty()
+  await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
   await expect(page.locator('.history li')).toHaveCount(1)
-  const wheels = await (await page.request.get('/api/wheels')).json()
-  expect(wheels[0].results).toHaveLength(1)
-  expect(wheels[0].results[0].source).toBe('server')
+  await context.setOffline(false)
+  await page.reload()
+  await expect(page.locator('.history li')).toHaveCount(1)
 })
 
 test('export and import preserves a wheel and marks imported history as local', async ({
@@ -130,7 +111,7 @@ test('export and import preserves a wheel and marks imported history as local', 
   await expect(page.locator('.wheel-card')).toHaveCount(2)
   await page.locator('.wheel-card-open').last().click()
   await expect(page.locator('.history li')).toHaveCount(1)
-  await expect(page.locator('.history li').getByLabel('Offline draw / import')).toHaveCount(1)
+  await expect(page.locator('.history li').getByLabel('Device draw / import')).toHaveCount(1)
 })
 
 test('real service-worker update preserves saved and unsubmitted editor work', async ({ page }) => {
@@ -154,14 +135,28 @@ test('real service-worker update preserves saved and unsubmitted editor work', a
     })
     const update = page.getByRole('button', { name: 'Save & update' })
     await expect(update).toBeVisible()
+    await showScreen(page, 'wheel')
+    await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
+    await expect(update).toBeDisabled()
+    const otherTab = await page.context().newPage()
+    await otherTab.goto('/privacy')
+    await otherTab.evaluate(async () => {
+      const registration = await navigator.serviceWorker.ready
+      if (!registration.waiting) throw new Error('Expected a waiting worker')
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+    })
+    await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
+    await expect(page.getByRole('dialog').locator('.winner')).toBeVisible()
+    await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+    await showScreen(page, 'options')
+    await expect(update).toBeEnabled()
     await update.click()
     await expect(update).toHaveCount(0)
-    await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(
-      'Πριν την ενημέρωση',
-    )
+    await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue('Πριν την ενημέρωση')
     await expect(page.getByLabel('One entry per line')).toHaveValue(
       'Πρόχειρη ιδέα που δεν προστέθηκε',
     )
+    await otherTab.close()
   } finally {
     await writeFile(workerPath, original)
   }
