@@ -1,56 +1,116 @@
-# Deployment
+# Static deployment
 
-An explicitly requested temporary public preview is available through Cloudflare Quick
-Tunnels. This runs on the user's computer; no permanent hosted deployment was made.
+Wheelero now requires static file hosting only. There is no application backend, server
+database, session cookie, API proxy or background worker to deploy. GitHub can hold the
+source; GitHub Pages or another static host can serve the built files. A Droplet is optional.
 
-From the repository root on Windows:
+## Build for the real origin
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1
-# Stop only the public tunnel and its separate backend:
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1 -Stop
+After confirming ownership of the domain, set PUBLIC_URL=https://wheelero.com and
+PUBLIC_INDEXING=true, then run from frontend/:
+
+```sh
+bun install --frozen-lockfile
+bun run build
 ```
 
-The launcher verifies pinned cloudflared 2026.10.3 against its official SHA-256, builds
-the frontend, obtains a random HTTPS URL, migrates a separate database and starts
-`app.preview:app` on 127.0.0.1:8018. It uses Secure/HttpOnly cookies, the exact public
-origin for CORS/CSRF, and an exact Host allowlist. Only `frontend/dist/` is served as
-static content; the repository and SQLite files are not served. Access logs are disabled.
-The original local services (8017/4173) and their database are unchanged.
+Upload the contents of frontend/dist, including route directories, 404.html, robots.txt,
+sitemap.xml, manifest, worker and assets. Serve directory index files and a genuine 404
+status for unknown paths; avoid a blanket SPA rewrite to index.html. Use HTTPS for Web
+Crypto/PWA. Set sw.js and HTML to revalidate rather than caching them indefinitely.
 
-The current URL/process IDs are in ignored `artifacts/public-preview.json`; data is
-in `artifacts/public-preview.db`, logs in `artifacts/public-*.log`. Keep the computer
-awake and online. Stopping/restarting creates a new URL and thus a new browser origin;
-export wheels before ending a preview if they need to be carried to the next URL.
-Each browser gets its own anonymous workspace; local wheels do not automatically appear
-on another device. Import a JSON backup or use an explicit public-preview share snapshot.
-`STOP_GYRNA.bat` stops only the local services, not this public preview.
-See [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/)
-for the temporary URL lifecycle and testing-only service limitations.
+PUBLIC_URL is built into metadata, not replaced by a server. Keep PUBLIC_INDEXING=false
+for temporary previews. Local builds can leave PUBLIC_URL empty (relative metadata).
+The user supplied wheelero.com as the intended domain. No registrar/DNS changes or
+domain purchase have been performed by this work.
 
-For permanent hosting, serve Vite `dist/` and FastAPI under one HTTPS origin,
-proxying `/api` to Python. The API URL is relative; Vite's port 8017 proxy is development only.
+## GitHub Pages setup
 
-- Persistent local volume for SQLite, writable only by the backend user.
-- Absolute `DATABASE_URL` (Unix example: `sqlite:////data/gyrna.db`), outside static assets.
-- `COOKIE_SECURE=true` and explicit HTTPS `ALLOWED_ORIGINS`.
-- Apply `alembic upgrade head` before starting the upgraded backend.
-- One backend instance with local SQLite. WAL improves readers; only one writer operates
-  at a time. Network filesystems and horizontal replicas are not supported.
-- Proxy body limit 9 MB for API requests (validated wheel snapshots are limited to 8 MB),
-  request timeout >10 seconds and TLS. User images are embedded in private SQLite snapshots.
-- SPA fallback to `index.html`, never for `/api`; revalidate HTML, service worker and
-  manifest. Hashed assets may be immutable. CSP should permit self assets, `data:` images
-  and dynamic styles. Gallery WebP assets are part of the offline precache.
-- Disable/redact access logs containing share-token paths and sensitive headers. Keep
-  useful startup/error logs. Never expose SQLite files through the web server.
-- Use consistent SQLite backups (backup API or snapshot including WAL); verify restoration.
+Source repository: https://github.com/Nikolasgouz/wheelero, branch `main`.
+`.github/workflows/pages.yml` installs locked dependencies with Bun 1.4.2, runs typecheck,
+lint, 16 unit tests, production build and the existing Chromium E2E suite. Only
+frontend/dist is uploaded; historical Python code, keys and local data are not deployed.
+Actions are pinned to verified commit SHAs. Pull requests run checks without deployment.
 
-Outside localhost, Web Crypto, service workers and Web Locks require HTTPS. Native sharing,
-install prompts and fullscreen vary by browser; copy-link/instructions provide alternatives.
-The cookie is the anonymous access credential; clearing it loses access to the old space.
-Local remaining data is copied to a new workspace. There is no cross-device recovery.
+The provided SSH deploy key authenticates to this repository only. It cannot change
+Pages settings, repository variables, account plans or registrar DNS. No noninteractive
+GitHub API credential was available. Complete these settings using the owner account:
 
-Before opening a public service, choose appropriate edge rate limits, storage quotas and
-session/data retention. Anonymous writes consume disk. Account recovery, abuse operations
-and multi-instance deployment belong to later versions.
+1. Repository Settings > Pages > Build and deployment > Source: **GitHub Actions**.
+2. Set **Custom domain: wheelero.com** in Pages. The build uses root-relative URLs,
+   so the default `/wheelero/` project URL is not a substitute for this custom domain.
+   With Actions deployment, a CNAME file does not configure the domain.
+3. Settings > Secrets and variables > Actions > Variables: add `PAGES_ENABLED=true`.
+   Until then, the workflow builds/checks/uploads the site and skips deployment.
+4. Actions > Verify and deploy Wheelero > Run workflow on `main`.
+5. Once GitHub accepts the domain, set DNS below, wait for validation/certificate
+   provisioning, then enable **Enforce HTTPS** in Pages. Verify the actual HTTPS site.
+
+GitHub Pages requires a public repository on GitHub Free, or an eligible paid plan for
+a private repository. Repository visibility has not been changed. Do not buy a plan or
+make private source public automatically. If unavailable, use the included static Caddy
+deployment on an existing Droplet instead; its IP/server access would be needed.
+
+### DNS at Papaki
+
+Observed 2026-10-26: nameservers `dns1.papaki.gr` and `dns2.papaki.gr`; apex A currently
+points to `195.110.124.140`. **Keep the existing nameservers** for GitHub Pages. After
+configuring the domain in Pages, replace the website A record with these four records:
+
+| Type | Host | Value |
+| --- | --- | --- |
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| CNAME | www | nikolasgouz.github.io |
+
+Preserve unrelated email/MX/TXT records. Remove conflicting old website A/AAAA/CNAME
+records only at the apex/www. No registrar credentials were supplied, so none were
+changed. The GitHub Pages addresses above do not apply to a DigitalOcean Droplet.
+Optional domain verification under GitHub account Settings > Pages provides a
+user-specific TXT value; use the actual value GitHub displays, never invent one.
+
+References: [GitHub custom domains](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site),
+[Actions deployment](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+## Optional DigitalOcean / Docker / Caddy
+
+On an existing host, create an untracked root .env with SITE_HOST=wheelero.com and
+PUBLIC_INDEXING=true after DNS points to that host. Then:
+
+```sh
+docker compose config
+docker compose up -d --build
+```
+
+The image builds with Bun, then Caddy serves /srv with HTTPS. Only certificate/config
+volumes persist; there is no SQLite volume. Do not delete any old wheelero_data volume:
+it may contain historical server uploads. Docker/TLS execution remains unverified here
+because Docker/host/DNS access is unavailable. Review the image on the target host.
+
+## Existing public preview
+
+scripts/public-preview.ps1 builds for its temporary Cloudflare URL and starts a static
+Vite preview on 127.0.0.1:8018. It no longer creates/migrates SQLite or starts FastAPI.
+It adds only that exact hostname to Vite's allowed hosts; arbitrary hosts remain blocked.
+The script can stop previously recorded Python preview processes during transition.
+Local START/STOP scripts control only localhost:4173 and any old owned 8017 listener.
+Keep the PC awake/online; restarting the tunnel changes its origin.
+The previous tunnel expired on 2026-10-26 and was replaced. The current verified URL is
+https://fuzzy-market-model-demonstration.trycloudflare.com (see PROJECT_CONTEXT for checks).
+
+## Data and backups
+
+Wheels belong to each browser's IndexedDB. User JSON export/import is the backup and
+device/domain transfer mechanism. IndexedDB v10 preserves a recovery record when upgrading
+old installations. Persistent storage requests reduce eviction risk when granted but do
+not prevent user deletion. No new server backups of names are needed or performed.
+
+Historical backend/SQLite files are untouched. scripts/database.py remains available for
+consistent historical backup/restore into a new file, never over a live database. Existing
+server-only links will not resolve in the static app; ask their author for a JSON/new link.
+
+Before permanent launch, add operator identity/privacy contact and final provider details
+to About/Privacy. Verify canonical URLs, 404, sharing, offline reload and installation on
+real devices. Browser data does not transfer automatically between domains.

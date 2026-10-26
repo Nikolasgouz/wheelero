@@ -63,10 +63,34 @@ Keep PC awake/online; state/process IDs: ignored artifacts/public-preview.json.
 ## Limits / next steps
 
 Docker/TLS hosting and physical iOS/Android installation remain unverified.
-Domain/hosting ownership and operator/privacy contact are not supplied.
-No purchases, permanent deployment or store submission occurred.
+Operator identity/privacy contact and Pages/DNS administration access are not supplied.
+No purchases, permanent live deployment or store submission occurred.
 
 Browser quota varies and is not unlimited. Persistent storage may be refused. Data is
 origin-specific: JSON is the device/domain transfer mechanism. Old server-only uploads
 are not accessible in the static app; historical files remain for operator recovery.
 Android TWA/Bubblewrap and iOS Capacitor are separate future work.
+
+## GitHub setup, 2026-10-26
+
+- User supplied an SSH deploy key for https://github.com/Nikolasgouz/wheelero. Fixed its
+  Windows ACL, verified GitHub's host key against official docs, ignored ssh_keys/.
+  Key contents were never printed/committed. History/working-tree secret-pattern scan passed.
+- Initially empty remote now has main, including the preserved earlier Git history and
+  local-first application commit 7483620. Push and remote HEAD were verified over SSH.
+- .github/workflows/pages.yml prepares pinned-action CI: Bun 1.4.2, locked install,
+  typecheck/lint/unit/build/Chromium E2E, then a static Pages artifact. Deployment is gated
+  on repository variable PAGES_ENABLED=true and custom domain wheelero.com.
+- SSH key cannot administer Pages/DNS; no noninteractive GitHub API credential available.
+  Owner must enable Pages with GitHub Actions, set the custom domain, set PAGES_ENABLED,
+  then run the workflow. GitHub Actions execution/Pages deployment is not yet verified.
+- DNS still uses dns1.papaki.gr/dns2.papaki.gr; apex A 195.110.124.140, www CNAME wheelero.com.
+  No DNS changes made. Keep Papaki nameservers and use the A/CNAME values in deployment.md
+  after adding the domain to Pages. wheelero.com has not been verified as serving Wheelero.
+- This deployment pass: typecheck/lint/16 unit tests and production build passed;
+  wheelero.com metadata/indexing/manifest/404 checked. All 36 Chromium E2E tests passed
+  again (3.7m), including offline/mobile/storage/update checks. actionlint passed for
+  the new workflow. GitHub-hosted CI has not been observed with the provided SSH access.
+- Next: owner-side Pages eligibility/settings (private repositories require eligible plan),
+  DNS records, verify HTTPS/custom domain/offline app on the live site, add real operator
+  contact. Never change repository visibility or purchase hosting without instructions.
