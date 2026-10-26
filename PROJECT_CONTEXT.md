@@ -104,6 +104,12 @@ Android TWA/Bubblewrap and iOS Capacitor are separate future work.
   wheelero.com metadata/indexing/manifest/404 checked. All 36 Chromium E2E tests passed
   again (3.7m), including offline/mobile/storage/update checks. actionlint passed for
   the new workflow. After the update fix, typecheck/lint/build and five consecutive PWA
-  regression runs passed. Full rerun and GitHub deployment verification are in progress.
+  regression runs passed. Full local rerun passed all 36 tests in 2.2m with two local
+  workers. GitHub run 40381218184 passed three shards; the fourth stalled downloading
+  Ubuntu 26 font packages from azure.archive.ubuntu.com (owner supplied log).
+- CI now uses Ubuntu 24.04 runners and the official Playwright 1.64.1 Noble container
+  pinned by verified OCI digest. It matches bun.lock and needs no apt/browser installation.
+  New pushes cancel older runs on the same branch. actionlint passed; new CI/deployment
+  verification is pending.
 - Next: verify the new CI run, then HTTPS/custom domain/offline on the actual live site;
   add real operator contact. Do not purchase hosting or change visibility without instructions.

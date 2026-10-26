@@ -32,6 +32,9 @@ lint, 16 unit tests and production build. Four parallel browser jobs each run tw
 (eight total) against the same build artifact, split into four shards. The service-worker
 update regression runs alone after all four jobs pass. Only then can Pages deploy. Only
 frontend/dist is uploaded; historical Python code, keys and local data are not deployed.
+Browser jobs use a digest-pinned Playwright 1.64.1 Noble image matching bun.lock. This
+avoids apt downloads from the Azure Ubuntu mirror, which stalled an earlier run.
+Runner OS is pinned to Ubuntu 24.04. New pushes replace older runs on the same branch.
 Actions are pinned to verified commit SHAs. Every push to main (including a merged pull
 request) automatically runs checks and deploys only if they all pass. Local commits need
 to be pushed first. Pull requests run checks without deployment. Manual runs remain

@@ -12,11 +12,11 @@ permissions:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     defaults:
       run:
@@ -45,7 +45,10 @@ jobs:
 
   browser:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:47b510dd9230bf0b9bfc9b20102241e577ea7a99334ab4c3ca19f19770e9b8ea
+      options: --ipc=host
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -66,7 +69,6 @@ jobs:
         with:
           name: static-build
           path: frontend/dist
-      - run: bunx playwright install --with-deps chromium
       - name: Run browser shard with two workers (eight total)
         run: bun run e2e --project=browser --workers=2 --shard=${{ matrix.shard }}/4
       - name: Keep failure traces
@@ -79,7 +81,10 @@ jobs:
 
   service-worker-update:
     needs: [build, browser]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:47b510dd9230bf0b9bfc9b20102241e577ea7a99334ab4c3ca19f19770e9b8ea
+      options: --ipc=host
     timeout-minutes: 10
     defaults:
       run:
@@ -96,7 +101,6 @@ jobs:
         with:
           name: static-build
           path: frontend/dist
-      - run: bunx playwright install --with-deps chromium
       - run: bun run e2e --project=service-worker-update --no-deps
       - name: Keep failure traces
         if: failure()
@@ -114,7 +118,7 @@ jobs:
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: service-worker-update
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       pages: write
