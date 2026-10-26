@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "spinaro",
+      "name": "wheelero",
       "dependencies": {
         "@fontsource-variable/noto-sans": "^5.3.0",
         "idb": "^8.0.3",

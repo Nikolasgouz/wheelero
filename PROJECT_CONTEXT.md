@@ -1,11 +1,11 @@
-# SPINARO — context
+# Wheelero — context
 
-Last updated: 2026-10-26. Removed the persistent winner panel below the wheel.
+Last updated: 2026-10-26. Renamed the application to Wheelero.
 
 ## Product and current UI
 
 Anonymous decision spinner with English default and fourteen-language menus; responsive PWA,
-brand SPINARO. Header language selector updates navigation, My wheels, Customize,
+brand Wheelero. Header language selector updates navigation, My wheels, Customize,
 sound labels, client messages and the default winner heading immediately, preserving
 drafts and custom content. Selection is browser-local (spinaro-language), works offline,
 updates HTML lang and locks during draws. locale.ts and locales/*.json own translations;
@@ -20,6 +20,9 @@ Renamed header/accessibility label, browser/PWA title, default theme label, upda
 API docs, package metadata, launcher messages and download filenames.
 Storage DB/cookie/lock/channel names and the JSON format identifier remain `gyrna`
 to preserve saved data and backups; these are internal identifiers, not display labels.
+The `spinaro-language` preference key also remains stable. Wheelero appears in all
+fourteen-language update messages, header, home copy, theme label, exports, browser/PWA
+metadata, API title and launcher messages. No database or storage migration is needed.
 START_GYRNA.bat / STOP_GYRNA.bat retain their filenames so existing launch paths work.
 Existing installed PWA name refresh is controlled by the browser's manifest update cycle.
 FastAPI/SQLAlchemy/Alembic/
@@ -35,7 +38,7 @@ is a one-time data upgrade, not a runtime translation layer for user content or 
 New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
 templates remain English. Customize, client errors and installation text follow the
 selected UI language; HTML lang updates while the installed manifest stays English.
-Below the working wheel, HomeInfo explains What is SPINARO for?, four use cases,
+Below the working wheel, HomeInfo explains What is Wheelero for?, four use cases,
 three How it works steps and six Wheel features. Short fairness/browser-backup notes
 clarify duplicate entries and data portability. Original English copy is in i18n.ts
 under about; components/HomeInfo.tsx renders it. Responsive light/dark styling uses
@@ -135,7 +138,7 @@ new English labels describe the new scores. Preview uses the configured spin dur
 Color-mode sectors now use unique colors: enabled palette colors first (deduplicated),
 then deterministic generated colors. Appending preserves existing positions' colors;
 colors follow positions, not IDs on sort/removal. `lib/presentation.ts:sectorColors`
-is shared by sector fills and animated pointer colors. The SPINARO default is now vivid
+is shared by sector fills and animated pointer colors. The Wheelero default is now vivid
 violet/coral/turquoise/gold/blue/magenta; generated extensions use higher saturation.
 Labels choose black or white for contrast. Migration b25c7e1f346d and IndexedDB v8
 replace only the exact original six-color enabled palette on private wheels, preserving
@@ -189,6 +192,13 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Wheelero rename (2026-10-26): frozen-lockfile install, typecheck, lint and production
+build passed. Two existing E2E passed (18.7s): edit/spin/pointer/refresh/export/library
+and 390px layout/keyboard/accessibility. Browser checks verified header/title, manifest,
+API title, retained French preference and offline shell. Launcher rebuilt and restarted
+the preview. Backend tests/full E2E were not repeated for display-name changes; installed
+PWA OS-label refresh remains browser-controlled and was not tested on a physical device.
 
 Winner-panel removal (2026-10-26): typecheck, lint and production build passed; launcher
 updated the running preview. Three affected existing E2E passed: settings/popup-off
@@ -260,7 +270,7 @@ return on exit and load after an offline refresh. Desktop/mobile section screens
 visually inspected. Copy describes existing features only. No backend/schema change;
 pytest not rerun for this informational UI addition.
 
-SPINARO rename: frozen-lockfile install, typecheck, lint, production build and five
+Previous SPINARO rename: frozen-lockfile install, typecheck, lint, production build and five
 relevant E2E passed (39.8s): draw/refresh/JSON backup plus responsive accessibility
 at 360/390/768/1440px. Chromium verified the header, browser title, manifest name and
 short_name, and running OpenAPI title; mobile screenshot inspected. Launcher rebuilt

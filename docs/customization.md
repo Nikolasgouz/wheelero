@@ -1,6 +1,6 @@
 # Προσαρμογή τροχού
 
-Η προεπιλεγμένη παλέτα SPINARO χρησιμοποιεί πλέον έντονο μωβ, κοραλί, τιρκουάζ,
+Η προεπιλεγμένη παλέτα Wheelero χρησιμοποιεί πλέον έντονο μωβ, κοραλί, τιρκουάζ,
 χρυσαφί, μπλε και φούξια. Τα πρόσθετα μοναδικά χρώματα έχουν μεγαλύτερο κορεσμό,
 με μαύρο ή λευκό κείμενο ανάλογα με την αντίθεση. Οι παλιοί ιδιωτικοί τροχοί με
 ακριβώς την αρχική παλέτα αναβαθμίζονται μέσω Alembic b25c7e1f346d / IndexedDB v8.
@@ -60,7 +60,7 @@ motion και δεν επιλέγει αποτέλεσμα. Μετά την άφ
 
 | Επιλογή αναφοράς | Δική μας υλοποίηση | Έλεγχος | Τυχόν διαφορά |
 | --- | --- | --- | --- |
-| During spin / After spin / Appearance | Ίδια σειρά, αγγλικές καρτέλες, native modal, Cancel / OK | E2E transactional, keyboard/layout | Ταυτότητα SPINARO |
+| During spin / After spin / Appearance | Ίδια σειρά, αγγλικές καρτέλες, native modal, Cancel / OK | E2E transactional, keyboard/layout | Ταυτότητα Wheelero |
 | Sound during spin, none, preview | 8 έτοιμοι ήχοι, χωρίς ήχο, έναρξη/διακοπή προεπισκόπησης | Audio E2E | Δικοί μας συνθετικοί ήχοι, μικρότερη συλλογή |
 | Spin volume 0–100%, default 50% | Ανεξάρτητο gain, συνολική σίγαση υπερισχύει | Schema / audio E2E | Καμία στη ρύθμιση |
 | Display duplicates, on | Σύμπτυξη ίδιου ονόματος + εικόνας μόνο στην προβολή | Exhaustive projection tests | Η αναφορά αφαιρεί διπλότυπα από την εσωτερική λίστα του τροχού. Εδώ διατηρούνται όλες οι πιθανότητες, όπως απαιτήθηκε |
@@ -77,7 +77,7 @@ motion και δεν επιλέγει αποτέλεσμα. Μετά την άφ
 | Display Remove button, on | Κρύβεται στο popup | Transactional E2E | Καμία |
 | Click when removed, off | Click στη χειροκίνητη και αυτόματη πραγματική αφαίρεση | Audio / auto-removal E2E | Χρήση έντασης αποτελέσματος και συνολικής σίγασης |
 | One color per section / wheel background image | Αμοιβαία αποκλειόμενα πεδία | Image E2E | Καμία |
-| Apply theme | 16 θέματα: SPINARO, Ocean, Sunset, Forest, Rainbow, Candy, Tropical, Lavender, Rose garden, Midnight, Neon, Autumn, Ice, Earth tones, Coral reef, Retro | Transactional E2E / validation και μοναδικότητα χρωμάτων | Δική μας συλλογή |
+| Apply theme | 16 θέματα: Wheelero, Ocean, Sunset, Forest, Rainbow, Candy, Tropical, Lavender, Rose garden, Midnight, Neon, Autumn, Ice, Earth tones, Coral reef, Retro | Transactional E2E / validation και μοναδικότητα χρωμάτων | Δική μας συλλογή |
 | Customize colors / enabled colors / picker | 1–12 αρχικά χρώματα, τουλάχιστον ένα ενεργό, native color picker· αυτόματη επέκταση με μοναδικό χρώμα ανά φέτα | Schema / transactional E2E και έλεγχος μοναδικότητας έως 1000 φέτες | Κατόπιν αιτήματος, η παλέτα δεν επαναλαμβάνεται· ίδια αρχικά χρώματα χρησιμοποιούνται μία φορά. Native picker αντί ειδικού HEX/RGB panel |
 | Center image / size | Αφαιρέθηκε πλήρως κατόπιν αιτήματος | Migration / import / renderer checks | Δεν προσφέρεται πλέον· παραμένει το Click to spin |
 | Wheel image / upload / gallery | Raster upload και 12 δικές μας εικόνες, ονομαστικές μικρογραφίες με κύλιση | Image / offline E2E | Δεν περιλαμβάνει Unsplash ή αναζήτηση στο internet |

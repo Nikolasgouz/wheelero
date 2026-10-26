@@ -1,4 +1,4 @@
-# Working in SPINARO
+# Working in Wheelero
 
 Use Python/FastAPI, SQLAlchemy, Alembic and SQLite in backend; React/TypeScript,
 Vite and Bun in frontend. Never replace this stack or introduce hosted dependencies.
@@ -8,7 +8,7 @@ Inline single-use helpers unless they clarify substantial logic. Python lines <=
 Validate external inputs at boundaries; keep internal invariants explicit.
 English is the default UI language; menus support fourteen languages through src/locale.ts
 and src/locales/*.json. Keep UI labels centralized and translate interface text only.
-Retain the SPINARO brand and all user-authored content. Templates and API messages
+Retain the Wheelero brand and all user-authored content. Templates and API messages
 remain English; keep bundled/backend templates aligned.
 Keep flag/audio assets local and preserve their credits/licenses under public/.
 Do not add tests unless requested (the initial implementation explicitly requests tests).

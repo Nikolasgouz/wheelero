@@ -2,9 +2,9 @@ import { translate, translateCount, subscribeLanguage } from './locale'
 
 function messages() {
   return {
-    brand: translate('SPINARO'),
+    brand: translate('Wheelero'),
     closeOldTabs: translate(
-      'Close other SPINARO tabs or app windows to finish this update. Your saved wheels will be kept.',
+      'Close other Wheelero tabs or app windows to finish this update. Your saved wheels will be kept.',
     ),
     connectionUnavailable: translate('Cannot connect to the server.'),
     serverUnavailable: translate('The server is unavailable.'),
@@ -125,9 +125,9 @@ function messages() {
     privacy: translate('No account needed. Go at your own pace.'),
     about: {
       eyebrow: 'A little help with the next decision',
-      title: 'What is SPINARO for?',
+      title: 'What is Wheelero for?',
       intro:
-        'SPINARO is a random name picker and decision wheel. Add names, ideas or choices, then give the wheel a spin. From choosing who goes first to deciding what to do next, turn an everyday decision into a little moment of excitement.',
+        'Wheelero is a random name picker and decision wheel. Add names, ideas or choices, then give the wheel a spin. From choosing who goes first to deciding what to do next, turn an everyday decision into a little moment of excitement.',
       uses: [
         {
           title: 'In the classroom',
@@ -186,7 +186,7 @@ function messages() {
         },
         {
           title: 'Take it anywhere',
-          text: 'Use your phone, tablet or computer. Install SPINARO where supported, and spin offline once the app is ready for offline use.',
+          text: 'Use your phone, tablet or computer. Install Wheelero where supported, and spin offline once the app is ready for offline use.',
         },
       ],
       fairnessTitle: 'An equal chance for every entry',

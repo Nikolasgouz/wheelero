@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from .config import settings
 from .routes import router
 
-app = FastAPI(title="SPINARO API", version="1.0.0")
+app = FastAPI(title="Wheelero API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=settings.allowed_origins.split(","),
     allow_credentials=True, allow_methods=["GET", "POST", "PUT", "DELETE"],

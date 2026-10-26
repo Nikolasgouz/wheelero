@@ -147,7 +147,7 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await expect(page.locator('.wheel-card')).toHaveCount(1)
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export JSON' }).click()
-  expect((await download).suggestedFilename()).toMatch(/spinaro.*\.json/)
+  expect((await download).suggestedFilename()).toMatch(/wheelero.*\.json/)
   await page.getByRole('button', { name: 'Copy: Η παρέα μας 🎲', exact: true }).click()
   await expect(page.locator('.wheel-card')).toHaveCount(2)
   await page.locator('input[type=file]').setInputFiles({
@@ -297,7 +297,7 @@ for (const width of [360, 390, 768, 1440]) {
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
-    await expect(page.getByRole('heading', { name: 'What is SPINARO for?', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'What is Wheelero for?', exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Wheel features', exact: true })).toBeVisible()
     await expect(page.locator('.info-how li')).toHaveCount(3)
     await expect(page.locator('.info-features article')).toHaveCount(6)

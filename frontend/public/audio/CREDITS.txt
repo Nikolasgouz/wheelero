@@ -1,4 +1,4 @@
-SPINARO Crowd applause
+Wheelero Crowd applause
 
 Source: "Applause in a large hall or church" by eXpl0it3r (2019-04-08).
 https://opengameart.org/content/applause-in-a-large-hall-or-church
@@ -8,7 +8,7 @@ https://opengameart.org/sites/default/files/applause-clapping-church-crowd-immer
 License: CC0 1.0 Universal, as stated on the source page (checked 2026-10-26).
 https://creativecommons.org/publicdomain/zero/1.0/
 
-SPINARO adaptation: six-second excerpt from 00:02 to 00:08, peak normalization
+Wheelero adaptation: six-second excerpt from 00:02 to 00:08, peak normalization
 to 94%, 15 ms fade-in and 800 ms fade-out. Stereo PCM16 WAV, 44.1 kHz.
 Prepared with frontend/scripts/prepare-applause.py. No synthetic clap layers.
-The remaining synthesized sound scores are original SPINARO code.
+The remaining synthesized sound scores are original Wheelero code.

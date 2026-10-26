@@ -27,7 +27,7 @@ function messages() {
       gong: translate('Grand finale'),
     },
     themes: {
-      gyrna: translate('SPINARO'),
+      gyrna: translate('Wheelero'),
       ocean: translate('Ocean'),
       sunset: translate('Sunset'),
       forest: translate('Forest'),

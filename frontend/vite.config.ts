@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'SPINARO — One spin, one decision',
-        short_name: 'SPINARO',
+        name: 'Wheelero — One spin, one decision',
+        short_name: 'Wheelero',
         lang: 'en',
         description: 'Turn little decisions into a game.',
         start_url: '/',

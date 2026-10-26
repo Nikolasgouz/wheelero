@@ -1,6 +1,6 @@
-# SPINARO
+# Wheelero
 
-The default SPINARO palette now uses vivid violet, coral, turquoise, gold, blue and
+The default Wheelero palette now uses vivid violet, coral, turquoise, gold, blue and
 magenta, with higher-saturation colors for additional entries and contrasting text.
 Existing private wheels using the exact old default palette upgrade automatically;
 custom palettes and published snapshots keep their colors.
@@ -9,7 +9,7 @@ custom palettes and published snapshots keep their colors.
 desktop, με εγκαταστάσιμη PWA, ανώνυμη ιδιωτική αποθήκευση και offline λειτουργία.
 
 Η αρχική εμφανίζει τον τροχό **Pick a name** με Alex, Emma, James, Olivia, Noah και Sofia,
-και στα δεξιά καρτέλες **Entries / Results**. Το όνομα της εφαρμογής είναι **SPINARO**.
+και στα δεξιά καρτέλες **Entries / Results**. Το όνομα της εφαρμογής είναι **Wheelero**.
 Η μετονομασία διατηρεί τους αποθηκευμένους τροχούς και τα παλιά JSON backups.
 Επάνω δεξιά υπάρχει επιλογή γλώσσας: English, Ελληνικά, Español, Français, Deutsch,
 Italiano, Português, Nederlands, Polski, Türkçe, Русский, Română, 日本語 και 简体中文.
@@ -22,7 +22,7 @@ Customize), τα βασικά μηνύματα και οι ετικέτες ήχ
 Η παλιότερη αναβάθμιση μεταφράζει και
 τα αναγνωρισμένα ελληνικά έτοιμα παραδείγματα παλιότερων εκδόσεων, διατηρώντας
 προσωπικούς τίτλους/εγγραφές, IDs και ιστορικό. Τα ήδη κοινόχρηστα snapshots δεν αλλάζουν.
-Κάτω από τον τροχό υπάρχουν οι αγγλικές ενότητες **What is SPINARO for?**,
+Κάτω από τον τροχό υπάρχουν οι αγγλικές ενότητες **What is Wheelero for?**,
 **How it works** και **Wheel features**, με παραδείγματα χρήσης, οδηγίες τριών βημάτων
 και πληροφορίες για ισοπίθανες συμμετοχές και backups. Στη λειτουργία παρουσίασης κρύβονται.
 Κάθε φέτα έχει διαφορετικό χρώμα. Όταν οι συμμετοχές ξεπερνούν τα ενεργά χρώματα

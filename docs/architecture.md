@@ -13,9 +13,10 @@ flowchart LR
 
 `screens/` contains the editor and library; `components/` holds wheel, dialog and PWA
 controls. `App.tsx` composes the screens and share/result dialogs. UI copy lives in
-`i18n.ts` and `customization.i18n.ts` in English; the app is branded SPINARO.
+`i18n.ts` and `customization.i18n.ts` in English; the app is branded Wheelero.
 The rename changes display metadata and export filenames only. Internal `gyrna`
 storage/cookie/lock/channel and backup format identifiers remain stable to retain data.
+The existing `spinaro-language` key retains language preference after the Wheelero rename.
 `HomeInfo.tsx` renders the home-page use cases, three-step guide, feature cards and
 fairness/backup notes from `i18n.ts:about`. It sits below the interactive workspace
 and is omitted from other screens and presentation mode. It adds no storage or API calls.
