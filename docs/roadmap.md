@@ -6,4 +6,5 @@ AI suggestions, App Store/Google Play distribution. None is part of v1.
 Before public launch: physical iOS/Android installation and keyboard tests, human
 screen-reader review, storage/retention policy and hosting-specific edge rate limits.
 Next product refinements: history pagination for very large archives, optional retention
-controls, additional languages through the central UI dictionary, and drag ordering.
+controls and drag ordering. Ten menu languages are available. Next localization work:
+native-speaker review, editorial/template/API-error translation and RTL language layouts.

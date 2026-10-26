@@ -221,6 +221,49 @@ button:hover:not(:disabled) {
   align-items: center;
   gap: 20px;
 }
+.language-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+.language-picker select {
+  max-width: 132px;
+  min-height: 44px;
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px;
+  background: var(--surface);
+  color: var(--text);
+}
+.language-picker select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.language-picker select:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+@media (max-width: 600px) {
+  .topbar .header-actions {
+    gap: 6px;
+  }
+  .language-picker {
+    gap: 3px;
+  }
+  .language-picker select {
+    max-width: 100px;
+  }
+  .language-picker > svg {
+    display: none;
+  }
+  .header-actions .connection {
+    font-size: 0;
+    gap: 0;
+  }
+}
 .connection {
   display: flex;
   align-items: center;
@@ -1540,6 +1583,7 @@ dialog:has(.customization) {
 }
 .custom-panel {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   padding: 24px 0;
   min-height: 260px;
@@ -1580,7 +1624,7 @@ dialog:has(.customization) {
   flex-shrink: 0;
 }
 .custom-range {
-  grid-template-columns: 1fr 76px;
+  grid-template-columns: minmax(0, 1fr) 76px;
   align-items: center;
 }
 .custom-range output {
@@ -1799,6 +1843,13 @@ input[type='color'] {
   }
   .custom-panel {
     gap: 16px;
+  }
+  .sound-setting {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sound-setting label {
+    grid-column: 1 / -1;
   }
   .wheel-tools {
     gap: 1px;

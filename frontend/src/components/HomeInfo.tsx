@@ -5,7 +5,7 @@ const featureIcons = [Palette, FolderHeart, Repeat2, FileDown, Share2, WifiOff]
 
 export function HomeInfo() {
   return (
-    <div className="home-info">
+    <div className="home-info" lang="en">
       <section aria-labelledby="about-title">
         <header className="info-heading">
           <p className="info-eyebrow">{t.about.eyebrow}</p>

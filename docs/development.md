@@ -80,3 +80,8 @@ Keep export disabled during draws; never bypass the pre-draw sidebar snapshot.
 Migration f03a5c9d124b and IndexedDB v6 translate only recognized legacy example labels,
 default titles and generated copy suffixes. Preserve custom text, IDs, revisions and
 published snapshots. A changed dirty local payload needs a fresh mutation ID.
+
+Menu localization is independent of those data migrations. See [localization.md](localization.md).
+Keep catalogs in src/locales aligned, preserve user-authored content and avoid reloading
+or remounting App on language changes. Test localized Customize at narrow widths: longer
+labels must wrap and mobile sound controls use a separate full-width select row.

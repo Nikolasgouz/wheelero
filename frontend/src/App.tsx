@@ -1,11 +1,19 @@
 import { ct } from './customization.i18n'
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+} from 'react'
 import {
   Check,
   ChevronRight,
   CircleDot,
   Copy,
   LayoutGrid,
+  Languages,
   Maximize2,
   Moon,
   Plus,
@@ -20,7 +28,15 @@ import {
 } from 'lucide-react'
 import { api, NetworkError } from './api/client'
 import { Customize } from './components/Customize'
-import type { Customization } from './customization'
+import { defaults, type Customization } from './customization'
+import {
+  getLanguage,
+  languages,
+  setLanguage,
+  subscribeLanguage,
+  translate,
+  type Language,
+} from './locale'
 import { playSound, stopSounds } from './lib/audio'
 import { presentationOptions, textColor } from './lib/presentation'
 import { Dialog } from './components/Dialog'
@@ -55,6 +71,7 @@ type Screen = 'wheel' | 'options' | 'library'
 type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
 
 export default function App() {
+  const language = useSyncExternalStore(subscribeLanguage, getLanguage)
   const { data, online, notice } = useStore()
   const [screen, setScreen] = useState<Screen>('wheel')
   const [busy, setBusy] = useState(false)
@@ -268,6 +285,8 @@ export default function App() {
     wheel.title.trim().length > 0 && wheel.options.every((o) => o.label.trim().length > 0)
   const canSpin = available.length > 0 && valid && !locked
   const config = spinConfig ?? wheel.customization
+  const winnerMessage =
+    config.popup_message === defaults.popup_message ? t.selected : config.popup_message
   const displayed = spinOptions ?? presentationOptions(available, config, null)
   const sharedUrl = (token: string) => `${location.origin}/?share=${encodeURIComponent(token)}`
 
@@ -307,8 +326,23 @@ export default function App() {
           </button>
         </nav>
         <div className="header-actions">
+          <label className="language-picker">
+            <Languages size={18} aria-hidden="true" />
+            <span className="sr-only">{translate('Language')}</span>
+            <select
+              value={language}
+              disabled={locked}
+              onChange={(event) => setLanguage(event.target.value as Language)}
+            >
+              {languages.map(({ code, name }) => (
+                <option key={code} value={code} lang={code}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </label>
           {!online && (
-            <span className="connection offline">
+            <span className="connection offline" title={t.offline}>
               <span />
               {t.offline}
             </span>
@@ -452,7 +486,7 @@ export default function App() {
                       className={`inline-result ${config.animate_winner ? 'winner-animation' : ''}`}
                       aria-live="polite"
                     >
-                      <span>{config.popup_message}</span>
+                      <span>{winnerMessage}</span>
                       <strong>{result.label}</strong>
                       <div className="result-actions">
                         <button className="text-button" disabled={!canSpin} onClick={spin}>
@@ -666,7 +700,7 @@ export default function App() {
         />
       )}
       {result && popupOpen && (
-        <Dialog title={config.popup_message} close={closeResult} headerClose={false}>
+        <Dialog title={winnerMessage} close={closeResult} headerClose={false}>
           <div className="result-display">
             <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>

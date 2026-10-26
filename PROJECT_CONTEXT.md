@@ -1,10 +1,16 @@
 # SPINARO — context
 
-Last updated: 2026-10-25. Center image feature removed; customization version 2.
+Last updated: 2026-10-26. Ten-language menu selector; customization remains version 2.
 
 ## Product and current UI
 
-English anonymous decision spinner, responsive installable PWA; brand is SPINARO.
+Anonymous decision spinner with English default and ten-language menus; responsive PWA,
+brand SPINARO. Header language selector updates navigation, My wheels, Customize,
+sound labels, client messages and the default winner heading immediately, preserving
+drafts and custom content. Selection is browser-local (spinaro-language), works offline,
+updates HTML lang and locks during draws. locale.ts and locales/*.json own translations;
+i18n.ts/customization.i18n.ts refresh their message objects on language changes.
+Editorial HomeInfo copy, most asset/theme names, templates and backend errors remain English.
 Renamed header/accessibility label, browser/PWA title, default theme label, update text,
 API docs, package metadata, launcher messages and download filenames.
 Storage DB/cookie/lock/channel names and the JSON format identifier remain `gyrna`
@@ -15,14 +21,15 @@ FastAPI/SQLAlchemy/Alembic/
 SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
 multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
 editing/draws, conflict copies and uncertain-request recovery. No accounts or deployment.
-UI/API/templates are English, including My wheels. Migration f03a5c9d124b and IndexedDB
+API/templates remain English; My wheels follows the UI language. Migration f03a5c9d124b and IndexedDB
 v6 translate recognized original Greek example titles/options/results and generated
 Copy suffixes. Custom text and public snapshots stay unchanged. IDs/revisions/removal
 jobs remain stable; changed dirty local wheels receive a fresh mutation ID. Translation
 is a one-time data upgrade, not a runtime translation layer for user content or imports.
 
 New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
-templates, Customize, errors, installation text and HTML/manifest language are English.
+templates remain English. Customize, client errors and installation text follow the
+selected UI language; HTML lang updates while the installed manifest stays English.
 Below the working wheel, HomeInfo explains What is SPINARO for?, four use cases,
 three How it works steps and six Wheel features. Short fairness/browser-backup notes
 clarify duplicate entries and data portability. Original English copy is in i18n.ts
@@ -164,6 +171,19 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Menu languages (2026-10-25–26): typecheck, lint, production build and 10 unit tests passed.
+Browser checks exercised all ten languages in navigation, My wheels and all Customize
+tabs without reloading or losing the entry draft. Refresh persistence, Greek/German
+offline switching and a localized offline winner passed. Language selection locks
+during live draws. Native keyboard selection retains focus and updates its accessible
+label; invalid stored codes fall back to English. Header axe WCAG A/AA and localized
+layout checks passed at 360/390/768/1440px; mobile screenshots visually inspected.
+All nine catalogs have matching menu keys and intact placeholders. Backend/schema
+unchanged; pytest not rerun for this frontend-only change.
+The full E2E run passed 28/30; bulk textarea filling and the 390px Appearance tab hit
+15-second action timeouts. Both passed unchanged on a focused rerun (17.2s), including
+1,000-entry pointer agreement and mobile accessibility. No timeouts were increased.
 
 Center-image removal (2026-10-25): typecheck, lint, production build, 10 unit tests,
 41 pytest tests and all 14 customization E2E tests passed (2.1min). Responsive/axe
