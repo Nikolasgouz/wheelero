@@ -23,6 +23,9 @@ and is omitted from other screens and presentation mode. It adds no storage or A
 HTML/manifest language is English; history uses en-GB date/time formatting.
 Bundled templates support offline startup and are refreshed from the API. Both lists
 start with Pick a name (Alex, Emma, James, Olivia, Noah, Sofia).
+The catalog contains 12 templates (an even total); seven additional categories cover
+movies, weekends, exercise, chores, breakfast, desserts and creative breaks. Selection
+creates a new editable wheel; updating the catalog never rewrites saved wheels.
 Greek/Latin Noto Sans variable fonts are bundled locally and precached, with no external
 font request. Platform emoji fonts render emojis.
 `lib/random.ts` uses Web Crypto rejection sampling; `lib/geometry.ts` independently

@@ -1,6 +1,6 @@
 # Wheelero — context
 
-Last updated: 2026-10-26. Unified Wheelero header, favicon and PWA identity.
+Last updated: 2026-10-26. Expanded the editable template catalog to 12 (even total).
 
 ## Product and current UI
 
@@ -40,7 +40,12 @@ jobs remain stable; changed dirty local wheels receive a fresh mutation ID. Tran
 is a one-time data upgrade, not a runtime translation layer for user content or imports.
 
 New home example: Pick a name — Alex, Emma, James, Olivia, Noah, Sofia. Bundled/API
-templates remain English. Customize, client errors and installation text follow the
+template catalogs now contain 12 entries: the original five plus movies, weekends,
+exercise, chores, breakfast, desserts and creative breaks. `state/templates.ts` and
+`backend/app/templates.py` must stay identical. New templates each have six entries;
+the starter and existing saved wheels are unchanged. Access through More options or
+mobile Entries; selection creates an editable wheel through the existing autosave flow.
+Templates remain English. Customize, client errors and installation text follow the
 selected UI language; HTML lang updates while the installed manifest stays English.
 Below the working wheel, HomeInfo explains What is Wheelero for?, four use cases,
 three How it works steps and six Wheel features. Short fairness/browser-backup notes
@@ -196,6 +201,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Template expansion (2026-10-26): typecheck, lint and production build passed; launcher
+updated the preview. Browser checks verified 12 unique matching API/bundled templates,
+all seven new templates' titles/entries, refresh persistence, no overflow at 390/1440px,
+and offline catalog/creation/spin. No schema or draw-logic changes; full suites were
+not rerun for this catalog-only update.
 
 Unified logo (2026-10-26): typecheck, lint, production build and two existing responsive/
 keyboard/accessibility E2E passed (360/390px, 8.7s). Inspected generated 192px artwork

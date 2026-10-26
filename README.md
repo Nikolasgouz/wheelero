@@ -3,6 +3,10 @@
 The header, browser tab and installed app share the Wheelero W-and-wheel mark.
 Artwork source and icon regeneration: [docs/branding.md](docs/branding.md).
 
+There are **12 editable wheel templates**, available through **More options** (Entries
+on mobile): names, food, evening plans, yes/no, turn order, movies, weekends, exercise,
+chores, breakfast, desserts and creative breaks. All twelve work offline.
+
 The default Wheelero palette now uses vivid violet, coral, turquoise, gold, blue and
 magenta, with higher-saturation colors for additional entries and contrasting text.
 Existing private wheels using the exact old default palette upgrade automatically;
