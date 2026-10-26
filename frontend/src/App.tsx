@@ -299,7 +299,7 @@ export default function App() {
     >
       <header className="topbar">
         <a className="brand" href="/" aria-label={t.brand}>
-          <span className="brand-icon">✳</span>
+          <img className="brand-icon" src="/wheelero.svg" alt="" width="34" height="34" />
           {t.brand}
         </a>
         <nav className="desktop-nav" aria-label={t.navigation}>

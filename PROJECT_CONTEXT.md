@@ -1,6 +1,6 @@
 # Wheelero — context
 
-Last updated: 2026-10-26. Renamed the application to Wheelero.
+Last updated: 2026-10-26. Unified Wheelero header, favicon and PWA identity.
 
 ## Product and current UI
 
@@ -25,6 +25,10 @@ fourteen-language update messages, header, home copy, theme label, exports, brow
 metadata, API title and launcher messages. No database or storage migration is needed.
 START_GYRNA.bat / STOP_GYRNA.bat retain their filenames so existing launch paths work.
 Existing installed PWA name refresh is controlled by the browser's manifest update cycle.
+The original white W/open wheel/coral pointer mark uses the purple brand tile.
+`public/wheelero.svg` is shared by header and favicon; `scripts/icons.mjs` generates
+the 180/192/512px PNGs used by Apple/PWA icons. All variants are precached. Old generic
+icon assets were removed. See docs/branding.md for artwork and regeneration rules.
 FastAPI/SQLAlchemy/Alembic/
 SQLite backend; React/TypeScript/Vite/Bun frontend. Up to 10,000 entries, templates,
 multiple wheels, history/no-repeat, JSON backups, revocable public snapshots, offline
@@ -192,6 +196,12 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Unified logo (2026-10-26): typecheck, lint, production build and two existing responsive/
+keyboard/accessibility E2E passed (360/390px, 8.7s). Inspected generated 192px artwork
+and real header screenshots at 390/1440px. Browser checks verified header and favicon
+use the same SVG and all four icon variants load offline. Launcher updated the preview.
+No backend changes/tests; physical installed-app icon refresh was not tested.
 
 Wheelero rename (2026-10-26): frozen-lockfile install, typecheck, lint and production
 build passed. Two existing E2E passed (18.7s): edit/spin/pointer/refresh/export/library

@@ -1,5 +1,8 @@
 # Wheelero
 
+The header, browser tab and installed app share the Wheelero W-and-wheel mark.
+Artwork source and icon regeneration: [docs/branding.md](docs/branding.md).
+
 The default Wheelero palette now uses vivid violet, coral, turquoise, gold, blue and
 magenta, with higher-saturation colors for additional entries and contrasting text.
 Existing private wheels using the exact old default palette upgrade automatically;

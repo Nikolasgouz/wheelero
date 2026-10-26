@@ -177,16 +177,10 @@ button:hover:not(:disabled) {
   letter-spacing: -1.7px;
 }
 .brand-icon {
-  display: inline-grid;
-  place-items: center;
-  background: var(--primary);
-  color: var(--surface);
+  display: block;
+  flex-shrink: 0;
   width: 34px;
   height: 34px;
-  border-radius: 11px;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1;
 }
 .beta {
   align-self: center;
@@ -1296,7 +1290,6 @@ dialog::backdrop {
   .brand-icon {
     width: 30px;
     height: 30px;
-    font-size: 26px;
   }
   .beta {
     font-size: 7px;

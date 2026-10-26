@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'],
+      includeAssets: ['wheelero.svg', 'wheelero-192.png', 'wheelero-512.png', 'wheelero-180.png'],
       manifest: {
         name: 'Wheelero — One spin, one decision',
         short_name: 'Wheelero',
@@ -20,9 +20,9 @@ export default defineConfig({
         theme_color: '#7650cc',
         background_color: '#f8f7fc',
         icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/wheelero-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/wheelero-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/wheelero-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
