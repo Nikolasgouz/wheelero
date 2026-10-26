@@ -64,7 +64,7 @@ class Customization(BaseModel):
     mode: Literal["colors", "image"] = "colors"
     palette: list[PaletteColor] = Field(default_factory=lambda: [
         PaletteColor(color=color)
-        for color in ("#ded2f6", "#f6d5c4", "#cbe5dc", "#f4e6b7", "#cddff2", "#edcfe1")
+        for color in ("#8b5cf6", "#ff5b6e", "#14c8a2", "#ffbf24", "#32b5ff", "#ed62d4")
     ], min_length=1, max_length=12)
     wheel_image: Image | None = None
     pointer_changes: bool = True

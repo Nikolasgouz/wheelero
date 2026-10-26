@@ -47,3 +47,8 @@ and sets customization.version to 2. This explicit feature-removal upgrade prese
 IDs, revisions, results, wheel backgrounds and entry images. IndexedDB v7 mirrors it,
 renewing dirty payload mutation IDs. Version 1 JSON backups are validated and migrated
 once at import by customizationMigration.ts; the API accepts only version 2 settings.
+
+Migration b25c7e1f346d and IndexedDB v8 refresh the exact original default palette on
+private wheels. Custom palettes, disabled colors, IDs and revisions remain unchanged;
+published snapshots retain their original colors. Dirty local payloads receive a fresh
+mutation ID. No schema version change: these are palette-value updates within version 2.

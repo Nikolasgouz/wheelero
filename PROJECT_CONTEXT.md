@@ -1,6 +1,6 @@
 # SPINARO — context
 
-Last updated: 2026-10-26. Flags, fourteen languages, recorded applause and clean TXT exports.
+Last updated: 2026-10-26. Vivid default wheel colors and readable labels.
 
 ## Product and current UI
 
@@ -132,7 +132,12 @@ new English labels describe the new scores. Preview uses the configured spin dur
 Color-mode sectors now use unique colors: enabled palette colors first (deduplicated),
 then deterministic generated colors. Appending preserves existing positions' colors;
 colors follow positions, not IDs on sort/removal. `lib/presentation.ts:sectorColors`
-is shared by sector fills and animated pointer colors. No schema/data migration.
+is shared by sector fills and animated pointer colors. The SPINARO default is now vivid
+violet/coral/turquoise/gold/blue/magenta; generated extensions use higher saturation.
+Labels choose black or white for contrast. Migration b25c7e1f346d and IndexedDB v8
+replace only the exact original six-color enabled palette on private wheels, preserving
+custom/disabled palettes, revisions and public snapshots. Dirty changed local payloads
+receive fresh mutation IDs. Configuration schema remains version 2.
 
 ## Architecture and important files
 
@@ -147,7 +152,7 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `customization.py`: version 2 configuration/raster validation. Migration c72f1a9e4b02
   preserves old wheels/results/shares. New sound enum values need no SQL/schema migration.
 - `services.py`: secure server RNG and immutable result snapshots.
-- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v7, revisions/UUID outbox,
+- `frontend/src/state/store.ts`, `storage.ts`: IndexedDB v8, revisions/UUID outbox,
   Web Locks/BroadcastChannel, conflict copies and durable ID-based winner removal.
   Removal jobs follow conflict/session-loss copies and share the manual removal path.
   `state/wheel.ts` supplies the shared wheel factory for creation and local migration.
@@ -181,6 +186,15 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Vivid palette (2026-10-26): 41 backend tests, frontend typecheck/lint, 10 unit tests
+and production build passed. Isolated SQLite migration and browser IndexedDB v7-to-v8
+upgrade/sync preserve custom/disabled palettes; SQLite revisions stay unchanged.
+Checked 10,000 unique colors, stable append prefixes and minimum black/white text
+contrast 4.580:1. Inspected Chromium screenshots at 390/1440px, no horizontal overflow;
+offline refresh retains the new palette. Windows launcher rebuilt, migrated and restarted
+the app successfully. Existing palette/presentation E2E passed (1 test, 1.1m).
+Full E2E suite was not rerun for this color change.
 
 Flags/applause/export follow-up (2026-10-26): typecheck, lint, 10 unit tests and production
 build passed; 49 assets precached, including the six-second stereo WAV and 14 flag SVGs.

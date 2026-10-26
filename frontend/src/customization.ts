@@ -20,7 +20,7 @@ export const imageSchema = z
   })
 const color = z.string().regex(/^#[0-9a-fA-F]{6}$/)
 export const palettes = {
-  gyrna: ['#ded2f6', '#f6d5c4', '#cbe5dc', '#f4e6b7', '#cddff2', '#edcfe1'],
+  gyrna: ['#8b5cf6', '#ff5b6e', '#14c8a2', '#ffbf24', '#32b5ff', '#ed62d4'],
   ocean: ['#164e63', '#0e7490', '#67e8f9', '#cffafe'],
   sunset: ['#7c3aed', '#e879a4', '#fb923c', '#fde68a'],
   forest: ['#14532d', '#4d7c0f', '#a3e635', '#ecfccb'],

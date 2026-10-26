@@ -7,7 +7,7 @@ import { t } from '../i18n'
 import { translateEnglishDefaults } from './englishDefaults'
 import { upgradeCustomization } from './customizationMigration'
 
-const database = openDB('gyrna', 7, {
+const database = openDB('gyrna', 8, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -47,9 +47,24 @@ const database = openDB('gyrna', 7, {
         if (oldVersion < 6) {
           for (const wheel of state.wheels) translateEnglishDefaults(wheel)
         }
-        for (const wheel of state.wheels) {
-          wheel.customization = upgradeCustomization(wheel.customization)
-          if (wheel.dirty) wheel.mutation_id = crypto.randomUUID()
+        if (oldVersion < 7) {
+          for (const wheel of state.wheels) {
+            wheel.customization = upgradeCustomization(wheel.customization)
+            if (wheel.dirty) wheel.mutation_id = crypto.randomUUID()
+          }
+        }
+        if (oldVersion < 8) {
+          const pastel = ['#ded2f6', '#f6d5c4', '#cbe5dc', '#f4e6b7', '#cddff2', '#edcfe1']
+          for (const wheel of state.wheels) {
+            const palette = wheel.customization.palette
+            if (
+              palette.length === pastel.length &&
+              palette.every((item, index) => item.enabled && item.color === pastel[index])
+            ) {
+              wheel.customization.palette = structuredClone(defaults.palette)
+              if (wheel.dirty) wheel.mutation_id = crypto.randomUUID()
+            }
+          }
         }
         await store.put(state, 'current')
       }

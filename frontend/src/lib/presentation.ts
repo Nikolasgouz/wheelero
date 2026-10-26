@@ -7,8 +7,8 @@ export function sectorColors(count: number, palette: Customization['palette']): 
   const colors = new Set(palette.filter((c) => c.enabled).map((c) => c.color.toLowerCase()))
   for (let step = 0; colors.size < count; step++) {
     const hue = (20 + step * 137.508) % 360
-    const saturation = 0.62 + (step % 3) * 0.09
-    const lightness = 0.6 + (step % 5) * 0.045
+    const saturation = 0.78 + (step % 3) * 0.08
+    const lightness = 0.52 + (step % 5) * 0.035
     const amplitude = saturation * Math.min(lightness, 1 - lightness)
     const hex = [0, 8, 4]
       .map((channel) => {
@@ -30,7 +30,7 @@ export function textColor(background: string): string {
   )
   const linear = channels.map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
   return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722 > 0.179
-    ? '#161322'
+    ? '#000000'
     : '#ffffff'
 }
 

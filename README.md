@@ -1,5 +1,10 @@
 # SPINARO
 
+The default SPINARO palette now uses vivid violet, coral, turquoise, gold, blue and
+magenta, with higher-saturation colors for additional entries and contrasting text.
+Existing private wheels using the exact old default palette upgrade automatically;
+custom palettes and published snapshots keep their colors.
+
 Μια στροφή, μια απόφαση. Εφαρμογή Decision Spinner με πολυγλωσσικά μενού για κινητό, tablet και
 desktop, με εγκαταστάσιμη PWA, ανώνυμη ιδιωτική αποθήκευση και offline λειτουργία.
 
