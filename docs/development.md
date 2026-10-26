@@ -16,6 +16,8 @@ CI emits GitHub test annotations and keeps failure traces for seven days.
 Browser jobs use the official Playwright 1.64.1 Noble container pinned by digest, matching
 bun.lock, with browsers/system dependencies preinstalled. Update the image together with
 Playwright dependency upgrades. New pushes cancel older workflow runs for the same branch.
+The container bootstraps Bun with npm's global Bun package, avoiding setup-bun's unzip
+requirement on a cache miss; all frontend dependencies and scripts still use Bun.
 Do not rebuild while the worker-update test runs: it temporarily changes dist/sw.js and
 restores it in finally. Browser emulation does not validate real iOS/Android installation.
 
