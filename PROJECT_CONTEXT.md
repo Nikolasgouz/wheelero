@@ -1,6 +1,6 @@
 # Wheelero — context
 
-Last updated: 2026-10-26. Expanded the editable template catalog to 12 (even total).
+Last updated: 2026-10-26. User-authorized public HTTPS preview via Cloudflare Quick Tunnel.
 
 ## Product and current UI
 
@@ -201,6 +201,14 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Public preview (2026-10-26): production build and 41 backend tests passed. Real Chromium
+at the public HTTPS origin verified a 390px page, Secure/HttpOnly cookie, server draw,
+history after refresh, private wheel 404 from another session, foreign-Origin write 403
+and private file 404s. An invalid Host returns 400. Startup/migrations and stop/restart
+were exercised: 8018 closes, local 8017/4173 remain running. The restarted public URL
+passed the same browser checks. Initial public sync exceeded a 5-second test wait;
+the 30-second wait passed. No physical second-device or permanent-host uptime test.
 
 Template expansion (2026-10-26): typecheck, lint and production build passed; launcher
 updated the preview. Browser checks verified 12 unique matching API/bundled templates,
@@ -466,9 +474,18 @@ hosting rate limits. Accounts/live rooms/payments/AI/app stores stay outside thi
 
 ## Run and continue
 
+`scripts/public-preview.ps1` starts a user-authorized temporary public HTTPS preview;
+`-Stop` stops its own cloudflared and Python processes (including Windows venv child).
+Pinned cloudflared 2026.10.3 SHA-256 is checked. `backend/app/preview.py` mounts only the
+production dist and enforces the public hostname. Preview has separate SQLite at
+artifacts/public-preview.db, Secure cookies, exact origin and no access logs on port 8018.
+Current URL/process IDs are in artifacts/public-preview.json, not committed. Keep the PC
+awake/online; restarting changes the URL/browser origin. Local data is not shared with
+preview sessions. This is temporary testing, not a permanent hosted deployment.
+
 Double-click START_GYRNA.bat; STOP_GYRNA.bat stops its hidden servers. Logs are in ignored
 artifacts/launcher-*.log. Latest-build URL: http://localhost:4173/api/launch.
 Normal PWA entry: http://localhost:4173. Backend port 8017 (8000 is another project), dev
-frontend 5173. No Windows service, remote push or public deployment was installed.
+frontend 5173. No Windows service, remote push or permanent hosting was installed.
 Keep schemas aligned, add migrations for structural changes and update docs with actual
 results. AGENTS.md and README contain stable conventions and exact commands.

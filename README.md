@@ -1,5 +1,11 @@
 # Wheelero
 
+Public preview from another device: run
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1`
+from this folder and open the HTTPS URL it prints. Keep this computer awake and online.
+Stop with the same command plus `-Stop`. The preview uses a separate database;
+local saved wheels are not automatically shared. See [deployment details](docs/deployment.md).
+
 The header, browser tab and installed app share the Wheelero W-and-wheel mark.
 Artwork source and icon regeneration: [docs/branding.md](docs/branding.md).
 

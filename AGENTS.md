@@ -23,6 +23,10 @@ Unix: use `.venv/bin/python` instead of `.venv/Scripts/python`.
 Windows launcher: `START_GYRNA.bat` always builds and opens `/api/launch` to bypass stale
 PWA HTML; `STOP_GYRNA.bat` stops its servers. Never kill unrelated listeners or clear
 browser storage to update the app. Launcher logs stay in ignored `artifacts/`.
+Public preview is explicit opt-in: `powershell -NoProfile -ExecutionPolicy Bypass -File
+scripts/public-preview.ps1`; add `-Stop` to stop it. It uses port 8018, its own SQLite
+and a temporary Cloudflare URL. Local START/STOP batch files do not control the tunnel.
+Do not publish a new preview unless requested. Read docs/deployment.md for lifecycle.
 
 All schema changes require explicit Alembic migrations. Never create tables at app startup.
 Enforce ownership and CSRF on private writes. No tokens or private payloads in logs.
