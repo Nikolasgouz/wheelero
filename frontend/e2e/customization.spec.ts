@@ -209,7 +209,7 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
         .observedAudio,
   )
   expect(observed.starts).toBeGreaterThan(stopped)
-  expect(observed.volumes.at(-1)).toBeCloseTo(0.35)
+  expect(observed.volumes.at(-1)).toBeCloseTo(1)
   expect(observed.stops).toBeGreaterThan(0)
   for (const choice of [
     'applause',

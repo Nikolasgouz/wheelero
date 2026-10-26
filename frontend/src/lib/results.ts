@@ -9,10 +9,7 @@ export function resultsText(title: string, results: DrawResult[]): string {
       `${t.title}: ${title}`,
       t.historyCount(results.length),
       '',
-      ...results.map(
-        (result, index) =>
-          `${index + 1}. ${result.label}\r\n   ${new Date(result.created_at).toISOString()} | ${result.source === 'server' ? t.server : t.offlineResult}\r\n`,
-      ),
+      ...results.map((result, index) => `${index + 1}. ${result.label}`),
     ].join('\r\n')
   )
 }

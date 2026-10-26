@@ -27,10 +27,19 @@ export default defineConfig({
       },
       workbox: {
         navigateFallbackDenylist: [/^\/api/],
-        globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,wav}'],
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('/src/locales/')) return 'translations'
+        },
+      },
+    },
+  },
   server: { proxy },
   preview: { proxy },
   test: { include: ['src/**/*.test.ts'] },

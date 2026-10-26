@@ -134,18 +134,23 @@ footer. Appearance still shows the controls relevant to the selected color/image
 `customization.i18n.ts` contains its English UI copy. The same settings/images travel
 through the existing revisioned outbox, sharing and backup paths. SQLite stores JSON
 settings and optional option images. IndexedDB version 3 includes both local migrations.
-`lib/audio.ts` synthesizes original sounds and provides immediate global mute/stop.
+`lib/audio.ts` synthesizes original scores, plays bundled recorded applause and provides global mute/stop.
 App sound starts enabled on every load. Manual mute applies to the current app session;
 per-wheel sound selection and volume still apply. Audio plays on spin/preview actions,
 not automatically just from opening the page.
-Eight spin sounds and eight result sounds use local tone/noise scores; completed audio
+Eight spin sounds and seven result sounds use local tone/noise scores; completed audio
 nodes are disconnected and removed while looping, keeping resource use bounded.
 `playSound` takes a spin duration (seconds; zero for a result/removal cue). Spin schedules
 use elapsed time: click/rattle intervals increase toward the end, suspense rhythms
 accelerate with a crescendo, and the riser increases pitch. This follows spin duration,
 not individual sector crossings. Preview uses the configured duration and stops itself.
-Result cues use major-key bell/brass melodies or 3.8-second stereo applause made from
-staggered noise impacts. Brass envelopes sustain; a low-pass filter softens harmonics.
+Result cues use major-key bell/brass melodies or a six-second stereo recording of real
+applause (CC0, public/audio/CREDITS.txt). The recording bypasses the synth low-pass filter;
+its volume is linear from 0 to 1, while generated scores retain their 0.35 master factor.
+prepareApplause preloads/decodes once and retries after errors. Playback returns a stop
+callback immediately, even while loading; stop/mute/unmount prevents delayed playback.
+Load failures reach the existing UI error handlers. Recording cleanup follows onended.
+Brass envelopes sustain; a low-pass filter softens synthesized harmonics.
 Each percussion buffer is built once per playback and reused. Cleanup follows actual
 cue length, so long applause/anthems are not cut off by the previous fixed 2.2s timeout.
 Saved sound IDs are unchanged; existing wheels get the new scores without migration.

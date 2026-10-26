@@ -13,7 +13,6 @@ import {
   CircleDot,
   Copy,
   LayoutGrid,
-  Languages,
   Maximize2,
   Moon,
   Plus,
@@ -29,15 +28,9 @@ import {
 import { api, NetworkError } from './api/client'
 import { Customize } from './components/Customize'
 import { defaults, type Customization } from './customization'
-import {
-  getLanguage,
-  languages,
-  setLanguage,
-  subscribeLanguage,
-  translate,
-  type Language,
-} from './locale'
-import { playSound, stopSounds } from './lib/audio'
+import { getLanguage, subscribeLanguage } from './locale'
+import { LanguageMenu } from './components/LanguageMenu'
+import { playSound, prepareApplause, stopSounds } from './lib/audio'
 import { presentationOptions, textColor } from './lib/presentation'
 import { Dialog } from './components/Dialog'
 import { PwaControls } from './components/PwaControls'
@@ -123,6 +116,7 @@ export default function App() {
 
   useEffect(() => {
     void initialize().catch(reportError)
+    void prepareApplause().catch(reportError)
     void api<Template[]>('/templates')
       .then(setTemplates)
       .catch((error) => {
@@ -181,12 +175,12 @@ export default function App() {
       if (!due.length) return
       run(async () => {
         for (const removal of await removeDueWinners()) {
-          if (soundEnabled.current && removal.sound) playSound('click', removal.volume)
+          if (soundEnabled.current && removal.sound) playSound('click', removal.volume, reportError)
         }
       })
     }, 250)
     return () => clearInterval(timer)
-  }, [data, busy, run])
+  }, [data, busy, run, reportError])
   function spin() {
     if (operation.current) return
     const startAngle = freezeWheel(wheelSvg.current!)
@@ -218,7 +212,7 @@ export default function App() {
             (config.slow_spin ? -3 : Math.max(0, Math.floor(config.duration / 2) - 5)) * 360,
         )
         if (soundEnabled.current)
-          stop = playSound(config.spin_sound, config.spin_volume, config.duration)
+          stop = playSound(config.spin_sound, config.spin_volume, reportError, config.duration)
         await new Promise((resolve) =>
           setTimeout(
             resolve,
@@ -231,7 +225,7 @@ export default function App() {
         setResult(outcome.result)
         setSidebarTab('results')
         setPopupOpen(config.popup)
-        if (soundEnabled.current) playSound(config.result_sound, config.result_volume)
+        if (soundEnabled.current) playSound(config.result_sound, config.result_volume, reportError)
         if (config.auto_remove) await scheduleRemoval(wheel!.id, outcome.result, config)
       } finally {
         stop()
@@ -245,7 +239,7 @@ export default function App() {
     run(async () => {
       const removed = await removeWinner(wheel.id, result.option_id)
       if (removed && soundEnabled.current && (spinConfig ?? wheel.customization).removal_sound)
-        playSound('click', (spinConfig ?? wheel.customization).result_volume)
+        playSound('click', (spinConfig ?? wheel.customization).result_volume, reportError)
       setPopupOpen(false)
     })
   }
@@ -326,21 +320,7 @@ export default function App() {
           </button>
         </nav>
         <div className="header-actions">
-          <label className="language-picker">
-            <Languages size={18} aria-hidden="true" />
-            <span className="sr-only">{translate('Language')}</span>
-            <select
-              value={language}
-              disabled={locked}
-              onChange={(event) => setLanguage(event.target.value as Language)}
-            >
-              {languages.map(({ code, name }) => (
-                <option key={code} value={code} lang={code}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <LanguageMenu language={language} disabled={locked} />
           {!online && (
             <span className="connection offline" title={t.offline}>
               <span />

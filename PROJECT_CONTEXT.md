@@ -1,15 +1,20 @@
 # SPINARO — context
 
-Last updated: 2026-10-26. Ten-language menu selector; customization remains version 2.
+Last updated: 2026-10-26. Flags, fourteen languages, recorded applause and clean TXT exports.
 
 ## Product and current UI
 
-Anonymous decision spinner with English default and ten-language menus; responsive PWA,
+Anonymous decision spinner with English default and fourteen-language menus; responsive PWA,
 brand SPINARO. Header language selector updates navigation, My wheels, Customize,
 sound labels, client messages and the default winner heading immediately, preserving
 drafts and custom content. Selection is browser-local (spinaro-language), works offline,
 updates HTML lang and locks during draws. locale.ts and locales/*.json own translations;
 i18n.ts/customization.i18n.ts refresh their message objects on language changes.
+LanguageMenu.tsx uses the existing focus-trapped Dialog and native-name buttons with
+local flag SVGs (MIT, public/flags/LICENSE.txt). New locales: ru, ro, ja, zh. Flags appear
+both in the picker and beside the selected language, including on Windows. The thirteen
+JSON catalogs share 196 menu messages; pl/ru/ro include extra plural forms. Catalogs are
+bundled separately; all flags/translations are precached. Editorial copy stays English.
 Editorial HomeInfo copy, most asset/theme names, templates and backend errors remain English.
 Renamed header/accessibility label, browser/PWA title, default theme label, update text,
 API docs, package metadata, launcher messages and download filenames.
@@ -69,8 +74,9 @@ has Shuffle/Sort/Clear directly below the tabs; Results has Sort/Clear/Export re
 Result Sort toggles natural A-Z/newest-first display, remembers preference in localStorage
 per wheel and never rewrites draw records. TXT exports all visible-history records for
 the current wheel in the selected order (not just five recent rows), retaining duplicates.
-`lib/results.ts` emits a numbered plain-text list with wheel title, count, UTF-8 BOM/CRLF,
-UTC timestamps and source. Open the downloaded .txt in Notepad; no native app launch.
+`lib/results.ts` emits a numbered plain-text winner list with wheel title, count and
+UTF-8 BOM/CRLF, without timestamps or draw-source labels. Open the downloaded .txt
+in Notepad; no native app launch. Internal history and JSON backups retain metadata.
 Original labels, emojis and duplicate wins are preserved; JSON backups retain IDs. Export
 works offline and locks during draws; Clear uses the existing durable history reset.
 The entry toolbar is hidden while Results is selected. Shuffle and numeric,
@@ -155,12 +161,16 @@ is shared by sector fills and animated pointer colors. No schema/data migration.
 - `components/Customize.tsx`, `ImagePicker.tsx`, `Wheel.tsx`: draft settings, bounded
   uploads and renderer. OK waits for uploads and local durable storage.
 - `customization.ts`, `customization.i18n.ts`, `i18n.ts`: schemas/defaults and English labels.
-- `lib/audio.ts`: original local sound scores, finished nodes released while looping.
-  Duration-driven timeout scheduling, reusable percussion buffers, sustained brass and
-  3.8-second stereo applause; cleanup uses cue length rather than a fixed cutoff.
+- `lib/audio.ts`: original local sound scores plus six-second recorded applause.
+  public/audio/applause.wav is a CC0 stereo excerpt credited to eXpl0it3r, with source
+  and processing in CREDITS.txt / scripts/prepare-applause.py. prepareApplause preloads
+  and caches decoded audio; failures are reported and can retry. Stopped pending loads
+  cannot play later. Recording bypasses the synth low-pass, respects volume/mute and
+  cleans up at onended. Existing applause IDs/defaults still work without migrations.
+  Other scores retain duration-driven schedules and bounded node cleanup.
   `scripts/generate-gallery.mjs`: 12 original bundled WebP images (800×800).
 - `App.tsx`, `styles.css`: UI flow/layout; `vite.config.ts`: prompt-update PWA with
-  shell/fonts/gallery precache. Private APIs never enter service-worker caches.
+  shell/fonts/gallery/flags/WAV precache. Private APIs never enter service-worker caches.
 
 Private images are embedded PNG/JPEG/WebP or known gallery paths. Uploads <=10 MB become
 <=1024px/512 KB; wheel schema <=8 MB UTF-8; archives <=100 MB. A fresh one-entry wheel
@@ -171,6 +181,20 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Flags/applause/export follow-up (2026-10-26): typecheck, lint, 10 unit tests and production
+build passed; 49 assets precached, including the six-second stereo WAV and 14 flag SVGs.
+Three relevant existing E2E passed (15.8s): audio/volume/mute, transactional settings and
+offline settings/assets/resync. Browser checks verified all four new locales, every
+flag loaded offline, language persistence, keyboard/focus, modal axe WCAG A/AA and no
+horizontal overflow at 360/390/768/1440px; the 390px screenshot was visually inspected.
+Recorded applause starts after landing, decodes to stereo without clipping, previews,
+stops/mutes, finishes naturally, and cannot play after Stop during a pending load.
+Failed audio loading reports an error and retry works. Real TXT download verified BOM,
+CRLF and winner-only rows; fixture checks preserve Greek/emojis/duplicates without date
+or source metadata. Thirteen catalogs have matching keys/placeholders. No backend/schema
+changes; pytest and the full E2E suite were not rerun. No physical speaker listening or
+native-speaker translation review was performed.
 
 Menu languages (2026-10-25–26): typecheck, lint, production build and 10 unit tests passed.
 Browser checks exercised all ten languages in navigation, My wheels and all Customize

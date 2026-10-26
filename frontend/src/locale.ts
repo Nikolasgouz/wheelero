@@ -7,18 +7,26 @@ import pt from './locales/pt.json'
 import nl from './locales/nl.json'
 import pl from './locales/pl.json'
 import tr from './locales/tr.json'
+import ru from './locales/ru.json'
+import ro from './locales/ro.json'
+import ja from './locales/ja.json'
+import zh from './locales/zh.json'
 
 export const languages = [
-  { code: 'en', name: 'English' },
-  { code: 'el', name: 'Ελληνικά' },
-  { code: 'es', name: 'Español' },
-  { code: 'fr', name: 'Français' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'it', name: 'Italiano' },
-  { code: 'pt', name: 'Português' },
-  { code: 'nl', name: 'Nederlands' },
-  { code: 'pl', name: 'Polski' },
-  { code: 'tr', name: 'Türkçe' },
+  { code: 'en', name: 'English', country: 'gb' },
+  { code: 'el', name: 'Ελληνικά', country: 'gr' },
+  { code: 'es', name: 'Español', country: 'es' },
+  { code: 'fr', name: 'Français', country: 'fr' },
+  { code: 'de', name: 'Deutsch', country: 'de' },
+  { code: 'it', name: 'Italiano', country: 'it' },
+  { code: 'pt', name: 'Português', country: 'pt' },
+  { code: 'nl', name: 'Nederlands', country: 'nl' },
+  { code: 'pl', name: 'Polski', country: 'pl' },
+  { code: 'tr', name: 'Türkçe', country: 'tr' },
+  { code: 'ru', name: 'Русский', country: 'ru' },
+  { code: 'ro', name: 'Română', country: 'ro' },
+  { code: 'ja', name: '日本語', country: 'jp' },
+  { code: 'zh', name: '简体中文', country: 'cn' },
 ] as const
 export type Language = (typeof languages)[number]['code']
 
@@ -33,6 +41,10 @@ const catalogs: Record<Language, Record<string, string>> = {
   nl,
   pl,
   tr,
+  ru,
+  ro,
+  ja,
+  zh,
 }
 const saved = typeof window === 'undefined' ? null : localStorage.getItem('spinaro-language')
 let language: Language = languages.find(({ code }) => code === saved)?.code ?? 'en'
@@ -60,6 +72,10 @@ export function translate(text: string): string {
 export function translateCount(count: number, singular: string, plural: string): string {
   const rule = new Intl.PluralRules(language).select(count)
   const key =
-    rule === 'one' ? singular : language === 'pl' && rule === 'few' ? `${plural}.few` : plural
+    rule === 'one'
+      ? singular
+      : ['pl', 'ru', 'ro'].includes(language) && rule === 'few'
+        ? `${plural}.few`
+        : plural
   return `${count} ${translate(key)}`
 }

@@ -1,0 +1,5 @@
+Flag SVGs from flag-icons by Panayiotis Lipiridis and contributors.
+https://github.com/lipis/flag-icons
+Revision: ac7e0eb3259eb62aa6100c435607e2fe03896a97
+Unmodified flags/4x3 assets. License: MIT (see LICENSE.txt).
+Downloaded 2026-10-26.

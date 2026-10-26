@@ -75,6 +75,8 @@ apply clear before new offline uploads, and never reactivate no-repeat entries i
 IndexedDB v4 initializes the clear flag; new local wheels must initialize it as well.
 Result sort changes display only. TXT export must include the whole current wheel history,
 retain duplicate wins and original Unicode text, and use UTF-8 BOM/CRLF for Notepad.
+TXT exports contain numbered winner names, without timestamps or draw-source labels;
+keep full metadata in internal history and JSON backups.
 Keep export disabled during draws; never bypass the pre-draw sidebar snapshot.
 
 Migration f03a5c9d124b and IndexedDB v6 translate only recognized legacy example labels,

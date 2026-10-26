@@ -227,8 +227,8 @@ button:hover:not(:disabled) {
   gap: 6px;
   color: var(--text);
 }
-.language-picker select {
-  max-width: 132px;
+.language-trigger {
+  max-width: 168px;
   min-height: 44px;
   font: inherit;
   font-size: 13px;
@@ -238,11 +238,39 @@ button:hover:not(:disabled) {
   background: var(--surface);
   color: var(--text);
 }
-.language-picker select:focus-visible {
+.language-trigger span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.language-picker img {
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.language-grid button {
+  justify-content: flex-start;
+  min-height: 48px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 14px;
+}
+.language-grid button[aria-pressed='true'] {
+  background: var(--tint);
+  border-color: var(--primary);
+}
+.language-trigger:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
-.language-picker select:disabled {
+.language-trigger:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
@@ -253,10 +281,17 @@ button:hover:not(:disabled) {
   .language-picker {
     gap: 3px;
   }
-  .language-picker select {
-    max-width: 100px;
+  .language-trigger {
+    max-width: 114px;
   }
-  .language-picker > svg {
+  .language-trigger > svg {
+    display: none;
+  }
+  .language-grid button {
+    font-size: 13px;
+    padding: 8px;
+  }
+  .language-grid button > svg {
     display: none;
   }
   .header-actions .connection {

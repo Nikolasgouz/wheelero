@@ -105,6 +105,7 @@ export function Customize({
             preview.current = playSound(
               draft[key],
               after ? draft.result_volume : draft.spin_volume,
+              (error) => setError(error instanceof Error ? error.message : String(error)),
               after ? 0 : draft.duration,
             )
           }}

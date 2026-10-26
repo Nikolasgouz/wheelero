@@ -1,6 +1,6 @@
 ﻿import type { Customization } from '../customization'
 
-// Original scores, synthesized locally. No recordings or external downloads.
+// Original synthesized scores plus the bundled CC0 crowd recording (audio/CREDITS.txt).
 type Tone = {
   notes: number[]
   step: number
@@ -105,19 +105,71 @@ const tones: Record<Exclude<Sound, 'none' | 'applause' | 'shaker'>, Tone> = {
   },
 }
 let context: AudioContext | null = null
+let applause: Promise<AudioBuffer> | null = null
 const playing = new Set<() => void>()
+export async function prepareApplause(): Promise<AudioBuffer> {
+  context ??= new AudioContext()
+  const audio = context
+  applause ??= fetch('/audio/applause.wav')
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`Could not load applause (HTTP ${response.status}).`)
+      return audio.decodeAudioData(await response.arrayBuffer())
+    })
+    .catch((error) => {
+      applause = null
+      throw error
+    })
+  return applause
+}
+
 export function stopSounds() {
   for (const stop of playing) stop()
 }
 // A positive duration plays a spin score; zero plays a complete result/removal cue.
-export function playSound(sound: Sound, volume: number, spinDuration = 0): () => void {
+export function playSound(
+  sound: Sound,
+  volume: number,
+  reportError: (error: unknown) => void,
+  spinDuration = 0,
+): () => void {
   if (sound === 'none' || volume === 0) return () => {}
   context ??= new AudioContext()
   const audio = context
-  void audio.resume()
+  void audio.resume().catch(reportError)
   const output = audio.createGain()
-  output.gain.value = (volume / 100) * 0.35
+  output.gain.value = (volume / 100) * (sound === 'applause' ? 1 : 0.35)
   output.connect(audio.destination)
+  if (sound === 'applause') {
+    let stopped = false
+    let source: AudioBufferSourceNode | null = null
+    const stop = () => {
+      if (stopped) return
+      stopped = true
+      if (source) {
+        source.onended = null
+        source.stop()
+        source.disconnect()
+      }
+      output.disconnect()
+      playing.delete(stop)
+    }
+    playing.add(stop)
+    void prepareApplause()
+      .then((buffer) => {
+        if (stopped) return
+        source = audio.createBufferSource()
+        source.buffer = buffer
+        // Keep the recording's room sound and high-frequency handclap detail intact.
+        source.connect(output)
+        source.onended = stop
+        source.start()
+      })
+      .catch((error) => {
+        stop()
+        reportError(error)
+      })
+    return stop
+  }
   const filter = audio.createBiquadFilter()
   filter.type = 'lowpass'
   filter.frequency.value = 3200
@@ -136,33 +188,16 @@ export function playSound(sound: Sound, volume: number, spinDuration = 0): () =>
   }
   // Reuse the percussion buffer through the spin, instead of allocating on every tick.
   let noise: AudioBuffer | null = null
-  if (['applause', 'shaker', 'drum', 'ticking', 'woodblock'].includes(sound)) {
-    const duration = sound === 'applause' ? 3.8 : sound === 'drum' ? 0.09 : 0.04
+  if (['shaker', 'drum', 'ticking', 'woodblock'].includes(sound)) {
+    const duration = sound === 'drum' ? 0.09 : 0.04
     noise = audio.createBuffer(2, Math.ceil(audio.sampleRate * duration), audio.sampleRate)
     let seed = 98123
     for (let channel = 0; channel < 2; channel++) {
       const samples = noise.getChannelData(channel)
-      if (sound === 'applause') {
-        // Staggered stereo handclaps, each with a short double impact and a decaying tail.
-        for (let clap = 0; clap < 64; clap++) {
-          seed = (1664525 * seed + 1013904223) >>> 0
-          const start = Math.floor(
-            (clap / 19 + (seed / 2 ** 32) * 0.045 + channel * 0.009) * audio.sampleRate,
-          )
-          for (let i = 0; i < Math.min(audio.sampleRate * 0.14, samples.length - start); i++) {
-            seed = (1664525 * seed + 1013904223) >>> 0
-            const t = i / audio.sampleRate
-            const envelope = Math.exp(-t * 38) + 0.5 * Math.exp(-Math.abs(t - 0.012) * 240)
-            const fade = Math.min(1, (64 - clap) / 15)
-            samples[start + i] += (seed / 2147483648 - 1) * envelope * 0.38 * fade
-          }
-        }
-      } else {
-        for (let i = 0; i < samples.length; i++) {
-          seed = (1664525 * seed + 1013904223) >>> 0
-          const t = i / audio.sampleRate
-          samples[i] = (seed / 2147483648 - 1) * Math.exp(-t * 65) * 0.65
-        }
+      for (let i = 0; i < samples.length; i++) {
+        seed = (1664525 * seed + 1013904223) >>> 0
+        const t = i / audio.sampleRate
+        samples[i] = (seed / 2147483648 - 1) * Math.exp(-t * 65) * 0.65
       }
     }
   }
@@ -189,7 +224,7 @@ export function playSound(sound: Sound, volume: number, spinDuration = 0): () =>
       nodes.add(source)
       source.start()
     }
-    if (sound !== 'applause' && sound !== 'shaker') {
+    if (sound !== 'shaker') {
       const tone = tones[sound]
       tone.notes.forEach((frequency, i) => {
         const start = now + i * tone.step
@@ -220,7 +255,7 @@ export function playSound(sound: Sound, volume: number, spinDuration = 0): () =>
       })
     }
     if (spinDuration) {
-      const repeat = sound === 'shaker' ? 80 : sound === 'applause' ? 4000 : tones[sound].repeat
+      const repeat = sound === 'shaker' ? 80 : tones[sound].repeat
       const wheelClicks = ['ticking', 'woodblock', 'shaker'].includes(sound)
       const delay = wheelClicks ? repeat + 600 * progress ** 2 : repeat * (1 - progress * 0.65)
       timer = window.setTimeout(
@@ -233,11 +268,9 @@ export function playSound(sound: Sound, volume: number, spinDuration = 0): () =>
   play()
   if (!spinDuration) {
     const duration =
-      sound === 'applause'
-        ? 3.8
-        : sound === 'shaker'
-          ? 0.04
-          : tones[sound].step * (tones[sound].notes.length - 1) + tones[sound].duration
+      sound === 'shaker'
+        ? 0.04
+        : tones[sound].step * (tones[sound].notes.length - 1) + tones[sound].duration
     timer = window.setTimeout(stop, (duration + 0.1) * 1000)
   }
   return stop

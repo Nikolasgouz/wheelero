@@ -117,13 +117,23 @@ Spin again, αντιγραφή και New round παραμένουν στην κ
 
 ## Assets και περιορισμοί επαλήθευσης
 
+Έλεγχος ηχογράφησης 26/10/2026: typecheck/lint/build, 10 unit tests και 3 σχετικά E2E
+πέρασαν. Επιβεβαιώθηκαν πραγματικό στερεοφωνικό buffer έξι δευτερολέπτων χωρίς clipping,
+έναρξη μετά την περιστροφή, offline χρήση, ένταση, προεπισκόπηση, φυσικό τέλος και σίγαση.
+Η διακοπή πριν ολοκληρωθεί το download δεν επιτρέπει καθυστερημένη αναπαραγωγή·
+αποτυχία φόρτωσης εμφανίζει σφάλμα και επιτρέπει νέα προσπάθεια. Δεν έγινε ανθρώπινη ακρόαση.
+
 Έτοιμοι ήχοι περιστροφής: Wheel clicks, Suspense drumroll, Tension pulse, Roulette clicks,
 Spinning rattle, Racing heartbeat, Suspense countdown και Rising suspense. Τα κλικ
 αραιώνουν προς το τέλος, οι ρυθμοί αγωνίας επιταχύνονται με crescendo και το riser ανεβάζει
 τόνο. Ακολουθούν τη διάρκεια της περιστροφής, όχι κάθε πέρασμα φέτας από τον δείκτη.
 Αποτελέσματος: Crowd applause, Winner chimes, Victory fanfare, Champion anthem,
-Celebration sparkle, Celebration bells, Jackpot! και Grand finale. Το χειροκρότημα
-συντίθεται από στερεοφωνικά χτυπήματα και οι μελωδίες νίκης χρησιμοποιούν μείζονες συγχορδίες.
+Celebration sparkle, Celebration bells, Jackpot! και Grand finale. Από 26/10/2026 το
+Crowd applause χρησιμοποιεί πραγματική στερεοφωνική ηχογράφηση έξι δευτερολέπτων,
+με fade-out. Πηγή: [eXpl0it3r / OpenGameArt, CC0](https://opengameart.org/content/applause-in-a-large-hall-or-church).
+Το ID applause δεν αλλάζει. Η ηχογράφηση αποθηκεύεται τοπικά, precache-άρεται και
+φορτώνεται πριν χρειαστεί. Η διακοπή ακυρώνει και εκκρεμή αναπαραγωγή κατά τη φόρτωση.
+Τα υπόλοιπα μουσικά cues παραμένουν συνθετικά, με τις υπάρχουσες ρυθμίσεις έντασης.
 Τα υπάρχοντα IDs διατηρούνται, με νέες συνθέσεις αντί απλής μετονομασίας. Δεν απαιτείται upload.
 Επανέλεγχος νέων συνθέσεων: typecheck/lint/build και 3 σχετικά E2E πέρασαν, με επιπλέον
 επανέλεγχο audio μετά την τελική ρύθμιση έντασης. Παρήχθησαν πραγματικά samples και για
@@ -143,7 +153,8 @@ Celebration sparkle, Celebration bells, Jackpot! και Grand finale. Το χε�
 Οι 12 εικόνες (Aurora, Sunset, Confetti, Ocean waves, Starry night, Mountains,
 Tropical, Candy swirl, Nebula, Golden glow, Mosaic, Blossom) παράγονται από δικά μας γεωμετρικά σχέδια στο
 `frontend/scripts/generate-gallery.mjs`. Οι ήχοι παράγονται από Web Audio στο
-`frontend/src/lib/audio.ts`. Δεν υπάρχουν τρίτες άδειες προς μεταβίβαση για αυτά τα assets.
+`frontend/src/lib/audio.ts`, εκτός από την ηχογράφηση Crowd applause. Τα στοιχεία της
+ηχογράφησης και η άδεια βρίσκονται στο `frontend/public/audio/CREDITS.txt`.
 Τα gallery assets precache-άρονται από την PWA· τα προσωπικά παραμένουν στο IndexedDB.
 Η ίδια συλλογή είναι διαθέσιμη και για εικόνες εγγραφών. Η κεντρική εικόνα έχει αφαιρεθεί.
 Οι νέες διαδρομές επιτρέπονται ρητά στο backend και στο frontend. Δεν αλλάζει το
