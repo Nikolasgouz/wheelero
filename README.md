@@ -82,10 +82,12 @@ Alternatively, the included Docker/Caddy deployment serves files and HTTPS only;
 no Python process or application database. See [deployment](docs/deployment.md).
 
 Source: [Nikolasgouz/wheelero](https://github.com/Nikolasgouz/wheelero). The GitHub Actions
-workflow checks/builds the static site on `main`. Publishing requires the owner to enable
-GitHub Pages, set its custom domain to wheelero.com and add `PAGES_ENABLED=true` as an
-Actions repository variable. Exact steps and Papaki DNS records are in the deployment
-guide. SSH repository access alone cannot configure Pages or DNS.
+workflow automatically checks, builds and deploys after each push to `main`, including
+merged pull requests. Failed checks prevent deployment; pull requests only run checks.
+No `PAGES_ENABLED` variable or manual workflow run is required. A local commit must be
+pushed to GitHub to trigger deployment. The owner must first enable GitHub Pages with
+GitHub Actions and set its custom domain to wheelero.com. Exact steps and Papaki DNS
+records are in the deployment guide. SSH access alone cannot configure Pages or DNS.
 
 ## PWA
 

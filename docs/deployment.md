@@ -30,7 +30,10 @@ Source repository: https://github.com/Nikolasgouz/wheelero, branch `main`.
 `.github/workflows/pages.yml` installs locked dependencies with Bun 1.4.2, runs typecheck,
 lint, 16 unit tests, production build and the existing Chromium E2E suite. Only
 frontend/dist is uploaded; historical Python code, keys and local data are not deployed.
-Actions are pinned to verified commit SHAs. Pull requests run checks without deployment.
+Actions are pinned to verified commit SHAs. Every push to main (including a merged pull
+request) automatically runs checks and deploys only if they all pass. Local commits need
+to be pushed first. Pull requests run checks without deployment. Manual runs remain
+available, but deployment/artifact upload is restricted to main.
 
 The provided SSH deploy key authenticates to this repository only. It cannot change
 Pages settings, repository variables, account plans or registrar DNS. No noninteractive
@@ -40,9 +43,10 @@ GitHub API credential was available. Complete these settings using the owner acc
 2. Set **Custom domain: wheelero.com** in Pages. The build uses root-relative URLs,
    so the default `/wheelero/` project URL is not a substitute for this custom domain.
    With Actions deployment, a CNAME file does not configure the domain.
-3. Settings > Secrets and variables > Actions > Variables: add `PAGES_ENABLED=true`.
-   Until then, the workflow builds/checks/uploads the site and skips deployment.
-4. Actions > Verify and deploy Wheelero > Run workflow on `main`.
+3. No repository variable is required. The former `PAGES_ENABLED` gate has been removed;
+   any existing variable with that name is unused and may be deleted.
+4. Push to `main` to deploy automatically. To retry after fixing Pages/DNS settings,
+   use Actions > Verify and deploy Wheelero > Run workflow on `main`.
 5. Once GitHub accepts the domain, set DNS below, wait for validation/certificate
    provisioning, then enable **Enforce HTTPS** in Pages. Verify the actual HTTPS site.
 
