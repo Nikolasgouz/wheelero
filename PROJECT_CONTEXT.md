@@ -64,6 +64,7 @@ Keep PC awake/online; state/process IDs: ignored artifacts/public-preview.json.
 
 Docker/TLS hosting and physical iOS/Android installation remain unverified.
 Operator identity/privacy contact and Pages/DNS administration access are not supplied.
+The owner has configured DNS to GitHub Pages; public workflow status is now readable.
 No purchases, permanent live deployment or store submission occurred.
 
 Browser quota varies and is not unlimited. Persistent storage may be refused. Data is
@@ -78,22 +79,31 @@ Android TWA/Bubblewrap and iOS Capacitor are separate future work.
   Key contents were never printed/committed. History/working-tree secret-pattern scan passed.
 - Initially empty remote now has main, including the preserved earlier Git history and
   local-first application commit 7483620. Push and remote HEAD were verified over SSH.
-- .github/workflows/pages.yml prepares pinned-action CI: Bun 1.4.2, locked install,
-  typecheck/lint/unit/build/Chromium E2E, then a static Pages artifact. Every push to main
-  automatically deploys after successful checks. User requested automatic deployment;
-  PAGES_ENABLED gate removed. PRs check only; manual deployment is also restricted to main.
-  The custom-domain check for wheelero.com remains.
+- .github/workflows/pages.yml uses Bun 1.4.2 and pinned actions. Build/typecheck/lint/unit
+  checks precede four browser shards with two workers each (eight total, user's final
+  preference). The @exclusive PWA update test runs alone after every shard passes.
+  All jobs use the same build artifact. Every push to main deploys only after all checks;
+  PAGES_ENABLED is unused. PRs check only. Custom domain must be wheelero.com.
+- Local Playwright defaults to eight workers; --workers=2 reduces local resource use.
+  Sixteen overloaded this PC and were stopped; eight initially yielded 33 passes/two
+  timing failures/one dependent test not run. The spin-lock test now pauses its clock
+  while asserting controls, avoiding dependence on CPU speed. CI spreads eight workers
+  over four machines instead of saturating one runner. GitHub reporter exposes failures
+  as annotations; failure traces are uploaded with seven-day retention.
+- GitHub run 40378516624 failed before deployment: 35 passes, PWA update test failed as
+  Save & update stayed visible. The click now checks registration.waiting directly after
+  flushing writes, handling activation by another tab without relying on a delayed event.
+  Reload still requires explicit consent and waits until the wheel is idle.
 - SSH key cannot administer Pages/DNS; no noninteractive GitHub API credential available.
-  Owner must enable Pages with GitHub Actions and set the custom domain. No repository
-  variable is needed. GitHub Actions execution/Pages deployment is not yet verified.
-- DNS still uses dns1.papaki.gr/dns2.papaki.gr; apex A 195.110.124.140, www CNAME wheelero.com.
-  No DNS changes made. Keep Papaki nameservers and use the A/CNAME values in deployment.md
-  after adding the domain to Pages. wheelero.com has not been verified as serving Wheelero.
+  Owner manages Pages settings. No repository variable is needed. Public API now permits
+  reading job status, but raw log downloads return 403 without an account token.
+- Authoritative DNS now verifies all four Pages A records and www CNAME
+  nikolasgouz.github.io, retaining dns1.papaki.gr/dns2.papaki.gr. No agent DNS changes made.
+  HTTPS reaches GitHub with a valid certificate; before deployment it returns GitHub 404.
 - This deployment pass: typecheck/lint/16 unit tests and production build passed;
   wheelero.com metadata/indexing/manifest/404 checked. All 36 Chromium E2E tests passed
   again (3.7m), including offline/mobile/storage/update checks. actionlint passed for
-  the new workflow, including the automatic-deploy change. Application tests were not
-  rerun for the workflow-only change. GitHub-hosted CI has not been observed with SSH access.
-- Next: owner-side Pages eligibility/settings (private repositories require eligible plan),
-  DNS records, verify HTTPS/custom domain/offline app on the live site, add real operator
-  contact. Never change repository visibility or purchase hosting without instructions.
+  the new workflow. After the update fix, typecheck/lint/build and five consecutive PWA
+  regression runs passed. Full rerun and GitHub deployment verification are in progress.
+- Next: verify the new CI run, then HTTPS/custom domain/offline on the actual live site;
+  add real operator contact. Do not purchase hosting or change visibility without instructions.

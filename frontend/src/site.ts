@@ -145,7 +145,7 @@ export const information = {
     ],
     [
       'Hosting and network requests',
-      'Loading the website sends normal network information such as IP address and user agent to the hosting provider. The temporary preview uses Cloudflare Tunnel. There are no third-party trackers or application session cookies. Hosting providers may keep operational logs.',
+      'Loading the website sends normal network information such as IP address and user agent to the hosting provider. The production website uses GitHub Pages; temporary previews may use Cloudflare Tunnel. There are no third-party trackers or application session cookies. Hosting providers may keep operational logs.',
     ],
     [
       'Before permanent publication',

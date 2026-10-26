@@ -62,9 +62,12 @@ export function PwaControls({
           disabled={busy}
           onClick={() => {
             void flushStorage()
-              .then(() => {
+              .then(async () => {
+                const registration = await navigator.serviceWorker.ready
                 setUpdateRequested(true)
-                if (!activated) return updateServiceWorker(true)
+                if (registration.waiting) return updateServiceWorker(true)
+                // Another tab may have activated it before this tab received the event.
+                setActivated(true)
               })
               .catch((error) => report(error.message))
           }}

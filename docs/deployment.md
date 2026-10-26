@@ -28,7 +28,9 @@ domain purchase have been performed by this work.
 
 Source repository: https://github.com/Nikolasgouz/wheelero, branch `main`.
 `.github/workflows/pages.yml` installs locked dependencies with Bun 1.4.2, runs typecheck,
-lint, 16 unit tests, production build and the existing Chromium E2E suite. Only
+lint, 16 unit tests and production build. Four parallel browser jobs each run two workers
+(eight total) against the same build artifact, split into four shards. The service-worker
+update regression runs alone after all four jobs pass. Only then can Pages deploy. Only
 frontend/dist is uploaded; historical Python code, keys and local data are not deployed.
 Actions are pinned to verified commit SHAs. Every push to main (including a merged pull
 request) automatically runs checks and deploys only if they all pass. Local commits need
@@ -57,9 +59,10 @@ deployment on an existing Droplet instead; its IP/server access would be needed.
 
 ### DNS at Papaki
 
-Observed 2026-10-26: nameservers `dns1.papaki.gr` and `dns2.papaki.gr`; apex A currently
-points to `195.110.124.140`. **Keep the existing nameservers** for GitHub Pages. After
-configuring the domain in Pages, replace the website A record with these four records:
+Verified 2026-10-26 after the owner's DNS changes: nameservers remain `dns1.papaki.gr`
+and `dns2.papaki.gr`; apex A now has the four GitHub Pages addresses below and www has
+the correct GitHub CNAME. HTTPS reaches GitHub; successful deployment still needs to
+pass all workflow checks. **Keep the existing nameservers** and these records:
 
 | Type | Host | Value |
 | --- | --- | --- |

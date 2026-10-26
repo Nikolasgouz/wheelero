@@ -114,7 +114,7 @@ test('export and import preserves a wheel and marks imported history as local', 
   await expect(page.locator('.history li').getByLabel('Device draw / import')).toHaveCount(1)
 })
 
-test('real service-worker update preserves saved and unsubmitted editor work', async ({ page }) => {
+test('real service-worker update preserves saved and unsubmitted editor work', { tag: '@exclusive' }, async ({ page }) => {
   const workerPath = path.resolve('dist/sw.js')
   const original = await readFile(workerPath, 'utf8')
   await page.goto('/')

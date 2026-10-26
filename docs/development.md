@@ -6,6 +6,13 @@ database migration is needed. START_GYRNA.bat builds and starts Vite preview at 
 It stops only verified project listeners; unrelated processes/data are left alone.
 
 Checks from frontend/: typecheck, lint, test, build, e2e. Playwright starts only Vite preview.
+The browser project runs independent tests fully parallel with 8 workers, as requested.
+The service-worker-update project depends on browser and runs @exclusive tests with one
+worker, preventing shared dist/sw.js changes while other tests run. Each browser test
+retains its own isolated context/storage. Use `bun run e2e --workers=2` for a smaller run.
+GitHub CI distributes eight browser workers across four jobs (two per shard), avoiding
+eight Chromium processes competing on one runner. PWA checks wait for every shard.
+CI emits GitHub test annotations and keeps failure traces for seven days.
 Do not rebuild while the worker-update test runs: it temporarily changes dist/sw.js and
 restores it in finally. Browser emulation does not validate real iOS/Android installation.
 
@@ -36,5 +43,5 @@ claim encryption or offer revocation. Large payloads use JSON export. Keep bundl
 local with their licenses. Existing fourteen-language menus remain; editorial copy is English.
 
 Update README/PROJECT_CONTEXT/docs before handoff. Keep backend/ and ignored historical
-databases intact for recovery. Do not commit, push or publish unless the user authorizes it;
-the current instruction explicitly says no commit.
+databases intact for recovery. The user authorized GitHub pushes and automatic deployment
+on main. Preserve the checks before deployment; never commit secrets or local data.

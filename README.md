@@ -108,7 +108,11 @@ bun run e2e
 ```
 
 Install Chromium if needed with `bunx playwright install chromium`. E2E starts only the
-static preview. Do not build during E2E: its update test temporarily modifies dist/sw.js.
+static preview. Independent E2E tests run with 8 workers. The @exclusive service-worker
+update test runs alone after they pass, because it temporarily modifies dist/sw.js.
+Do not build during E2E. Override locally with `bun run e2e --workers=2` when needed.
+GitHub uses four parallel shards with two workers each (eight total), then the isolated
+PWA update check. Deployment waits for all checks; failures include annotations/traces.
 Actual results/limitations are in [PROJECT_CONTEXT](PROJECT_CONTEXT.md).
 
 ## Public preview

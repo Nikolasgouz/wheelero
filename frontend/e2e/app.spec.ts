@@ -12,6 +12,7 @@ async function ready(page: Page) {
 test('edit, spin, pointer agreement, refresh persistence, JSON backup and library', async ({
   page,
 }) => {
+  await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') })
   await ready(page)
   await expect(page.locator('.wheel-tools button')).toHaveCount(3)
   await expect(page.getByRole('button', { name: 'Pause idle rotation' })).toHaveCount(0)
@@ -61,6 +62,7 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'wheel')
+  await page.clock.pauseAt(new Date('2026-01-01T01:00:00Z'))
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
@@ -86,6 +88,7 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
   await expect(page.locator('#sidebar-results .history li')).toHaveCount(0)
   await expect(page.locator('#sidebar-tab-results .count-badge')).toHaveText('0')
+  await page.clock.resume()
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.locator('.winner')).not.toBeEmpty()
