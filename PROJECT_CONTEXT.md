@@ -1,6 +1,6 @@
 # SPINARO — context
 
-Last updated: 2026-10-26. Vivid default wheel colors and readable labels.
+Last updated: 2026-10-26. Removed the persistent winner panel below the wheel.
 
 ## Product and current UI
 
@@ -59,10 +59,13 @@ until the animation finishes, hiding the new result/count and no-repeat marker w
 preserving previous history. Backend/IndexedDB persistence still happens immediately.
 Results show source/time, recent/all history and become selected after a completed draw.
 The winner popup offers only Close and Remove winner (unless removal is hidden in
-Customize). It has no respin/copy/New round actions; these remain on the main screen.
+Customize). The persistent inline winner panel and its respin/remove/copy actions have
+been removed. Spin again via the center button; New round remains when exhausted.
+Results retains the winner after landing, including with the popup disabled. Winner
+sector animation and confetti are unchanged; unused inline-panel CSS was removed.
 Server draws no longer show a source badge in the popup; offline draws retain their
 label. History and TXT export still preserve the draw source.
-Default popup/inline message: `And The Winner is...`. SQLite data migration
+Default popup message: `And The Winner is...`. SQLite data migration
 `e92f4b8c013a` and IndexedDB v5 replace the English/Greek old defaults on existing
 private wheels, preserving custom messages, revisions and pending history clears.
 Published snapshots retain their original message. New frontend/backend defaults agree.
@@ -186,6 +189,13 @@ Client/imported results remain explicitly offline. Cookie loss copies local work
 new isolated workspace; no cross-device recovery.
 
 ## Actual verification
+
+Winner-panel removal (2026-10-26): typecheck, lint and production build passed; launcher
+updated the running preview. Three affected existing E2E passed: settings/popup-off
+history, automatic/manual removal and the 1,000-entry winning projection. Assertions now
+use Results; manual removal uses the popup. The initial removal test needed to close
+its newly enabled popup before opening Customize; corrected and rerun successfully.
+No backend changes; backend/full-suite checks were not repeated for this UI-only edit.
 
 Vivid palette (2026-10-26): 41 backend tests, frontend typecheck/lint, 10 unit tests
 and production build passed. Isolated SQLite migration and browser IndexedDB v7-to-v8

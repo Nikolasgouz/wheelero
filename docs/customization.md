@@ -48,13 +48,15 @@ motion και δεν επιλέγει αποτέλεσμα. Μετά την άφ
 
 Κατόπιν αιτήματος, το popup νικητή περιέχει μόνο **Close / Remove winner**.
 Δεν εμφανίζει το **Server draw**. Η ένδειξη offline διατηρείται για τοπικές κληρώσεις.
-Το προεπιλεγμένο μήνυμα είναι πλέον **And The Winner is...** (και στο inline αποτέλεσμα).
+Το προεπιλεγμένο μήνυμα του popup είναι **And The Winner is...**.
 Η migration `e92f4b8c013a` και το IndexedDB v5 αντικαθιστούν μόνο τα παλιά defaults
 `WE HAVE A WINNER` / `Η ΤΥΧΗ ΔΙΑΛΕΞΕ` στους υπάρχοντες ιδιωτικούς τροχούς.
 Τα προσαρμοσμένα μηνύματα και τα ήδη δημοσιευμένα στιγμιότυπα παραμένουν ως έχουν.
 Το Close κλείνει το παράθυρο και το Remove winner αφαιρεί τη συγκεκριμένη εγγραφή
 και κλείνει το παράθυρο. Η ρύθμιση Remove button εξακολουθεί να το κρύβει.
-Spin again, αντιγραφή και New round παραμένουν στην κύρια οθόνη.
+Το μόνιμο inline αποτέλεσμα και οι ενέργειές του αφαιρέθηκαν κατόπιν αιτήματος.
+Η επόμενη περιστροφή ξεκινά από το κέντρο του τροχού. Το ιστορικό στα Results
+παραμένει διαθέσιμο ακόμη και χωρίς popup. Το New round διατηρείται στην εξάντληση.
 
 | Επιλογή αναφοράς | Δική μας υλοποίηση | Έλεγχος | Τυχόν διαφορά |
 | --- | --- | --- | --- |
@@ -71,8 +73,8 @@ Spin again, αντιγραφή και New round παραμένουν στην κ
 | Animate winning entry, off | Τονισμός φέτας και ονόματος | Transactional E2E | Δικό μας animation |
 | Launch confetti, on | Σωματίδια με χρώματα παλέτας | Result E2E | Χωρίς κίνηση όταν ζητείται reduced motion |
 | Auto-remove after 5s, off | Ανθεκτική τοπική ουρά, ID εγγραφής, μία αφαίρεση | E2E με refresh, χειροκίνητη αφαίρεση, εξάντληση no-repeat και conflict copy | Αν εκτελείται άλλη κλήρωση, αναμένει την ολοκλήρωσή της |
-| Display popup / editable message, on | Popup, μήνυμα, inline αποτέλεσμα και ιστορικό | Transactional / result E2E | Μήνυμα έως 200 χαρακτήρες αντί 100 |
-| Display Remove button, on | Κρύβεται και στο popup και στο inline αποτέλεσμα | Transactional E2E | Καμία |
+| Display popup / editable message, on | Popup, μήνυμα και ιστορικό στα Results | Transactional / result E2E | Μήνυμα έως 200 χαρακτήρες αντί 100· χωρίς μόνιμο inline αποτέλεσμα |
+| Display Remove button, on | Κρύβεται στο popup | Transactional E2E | Καμία |
 | Click when removed, off | Click στη χειροκίνητη και αυτόματη πραγματική αφαίρεση | Audio / auto-removal E2E | Χρήση έντασης αποτελέσματος και συνολικής σίγασης |
 | One color per section / wheel background image | Αμοιβαία αποκλειόμενα πεδία | Image E2E | Καμία |
 | Apply theme | 16 θέματα: SPINARO, Ocean, Sunset, Forest, Rainbow, Candy, Tropical, Lavender, Rose garden, Midnight, Neon, Autumn, Ice, Earth tones, Coral reef, Retro | Transactional E2E / validation και μοναδικότητα χρωμάτων | Δική μας συλλογή |

@@ -1788,23 +1788,6 @@ input[type='color'] {
 .editor-pages button {
   color: var(--primary);
 }
-.inline-result {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
-  display: grid;
-  gap: 8px;
-  text-align: center;
-}
-.inline-result > strong {
-  font-size: 30px;
-  overflow-wrap: anywhere;
-}
-.inline-result > span {
-  font-size: 12px;
-  color: var(--muted);
-}
 .display-note {
   font-size: 12px;
   text-align: center;
@@ -1820,17 +1803,9 @@ input[type='color'] {
 .winning-sector {
   animation: winner-glow 0.7s ease-in-out 6 alternate;
 }
-.winner-animation > strong {
-  animation: winner-pop 0.6s ease 3;
-}
 @keyframes winner-glow {
   to {
     filter: brightness(1.25);
-  }
-}
-@keyframes winner-pop {
-  50% {
-    transform: scale(1.08);
   }
 }
 .spinner-panel {
@@ -1899,7 +1874,6 @@ input[type='color'] {
 }
 @media (prefers-reduced-motion: reduce) {
   .winning-sector,
-  .winner-animation > strong,
   .confetti i {
     animation: none !important;
   }

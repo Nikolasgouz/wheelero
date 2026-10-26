@@ -11,7 +11,6 @@ import {
   Check,
   ChevronRight,
   CircleDot,
-  Copy,
   LayoutGrid,
   Maximize2,
   Moon,
@@ -460,38 +459,6 @@ export default function App() {
                         ))}
                       </ol>
                     </details>
-                  )}
-                  {result && (
-                    <section
-                      className={`inline-result ${config.animate_winner ? 'winner-animation' : ''}`}
-                      aria-live="polite"
-                    >
-                      <span>{winnerMessage}</span>
-                      <strong>{result.label}</strong>
-                      <div className="result-actions">
-                        <button className="text-button" disabled={!canSpin} onClick={spin}>
-                          {t.again}
-                        </button>
-                        {config.remove_button && (
-                          <button
-                            className="text-button"
-                            disabled={
-                              locked || !wheel.options.some((o) => o.id === result.option_id)
-                            }
-                            onClick={removeResult}
-                          >
-                            {t.removeWinner}
-                          </button>
-                        )}
-                        <button
-                          className="icon-button"
-                          aria-label={t.copyResult}
-                          onClick={() => copy(result.label)}
-                        >
-                          <Copy size={18} />
-                        </button>
-                      </div>
-                    </section>
                   )}
                   {result && config.confetti && (
                     <div key={result.id} className="confetti" aria-hidden="true">
