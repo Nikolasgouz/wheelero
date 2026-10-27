@@ -94,6 +94,7 @@
   "Install app": "アプリをインストール",
   "How do I install it?": "インストール方法",
   "Ready to use offline.": "オフラインで使用できます。",
+  "Save & update": "保存して更新",
   "Getting your wheel ready…": "ルーレットを準備中…",
   "Try again": "再試行",
   "For the little decisions in life.": "日々の小さな決断に。",
@@ -461,6 +462,5 @@
   "Check absent students. They stay in the class and remain excluded in the next round.": "欠席者にチェックを入れます。クラスからは削除せず、次のラウンドでも除外します。",
   "Absent": "欠席",
   "Tools": "ツール",
-  "All student names are included. Attendance and round progress are not shared.": "全員の名前が含まれます。出欠とラウンドの進行状況は共有しません。",
-  "An update is ready. It will apply automatically when you finish.": "更新があります。操作が終わると自動的に適用されます。"
+  "All student names are included. Attendance and round progress are not shared.": "全員の名前が含まれます。出欠とラウンドの進行状況は共有しません。"
 }

@@ -4,6 +4,16 @@ Updated: 2026-10-27.
 
 ## Current authorization
 
+Latest request, 2026-10-27: undo the last automatic-PWA-update change (9e4744b) and restore
+the previous website release (4f791de). This rollback uses a new revert commit, not a history
+rewrite. Frontend source/config/tests exactly match 4f791de. Localization, Classroom and
+usability remain; manual Save & update is restored. No database/data reset or downgrade.
+Do not reintroduce automatic reload without a new user request. Verify the rollback workflow
+before claiming the public website has reverted.
+Rollback checks: frontend matches 4f791de exactly; fresh lint, 20 unit tests and production
+build/typecheck passed. Existing auto-update clients may need all Wheelero tabs closed and
+reopened to let the restored prompt-mode worker activate. Do not clear browser data.
+
 The latest request adds focused usability: viewport-fitting wheel, visible Customize/paste,
 compact tool navigation, shorter translated intro, and a reusable Classroom workflow.
 On 2026-10-27 the user explicitly approved committing and pushing the reviewed usability
@@ -23,9 +33,8 @@ storage keys or reset data. JSON is the backup/device/domain transfer mechanism.
 
 Web Crypto rejection sampling selects winners; display projection/animation do not alter
 probabilities. Transactions use Web Locks; BroadcastChannel updates tabs. Publish after
-successful writes, preserve previous data on quota failure. PWA updates are now automatic:
-workers activate immediately, but each tab waits for idle/safe UI and flushes writes before
-reload. navigator.storage.persist() may refuse.
+successful writes, preserve previous data on quota failure. PWA updates require explicit
+consent, flush writes, and never interrupt a draw. navigator.storage.persist() may refuse.
 
 Implemented: 1-10,000 entries, inline/bulk/Excel editing, 12 templates, themes/images/sounds,
 no-repeat/restoration, history, TXT/JSON exports, fullscreen, offline installation, name,
@@ -34,13 +43,6 @@ validated UTF-8 snapshots in /#wheel= with no uploads/history/other wheels; copi
 be revoked and are not encrypted. Above 16,000 encoded characters use JSON.
 
 ## Release changes
-
-- Latest request: remove mandatory Save & update. autoUpdate worker + onNeedReload override
-  checks for releases on focus/visibility/online and every visible online minute. Reload only
-  after 3 idle seconds, no spin/operation/error/fullscreen, no open dialog or focused editor.
-  Session storage retains the current view once across reload, number drafts and team results.
-  Existing open clients on the old code need one ordinary refresh/close-reopen; no data clearing.
-  The existing exclusive worker test verifies this policy with two real worker revisions.
 
 - All 14 languages now cover public copy, FAQ/About/Privacy/404, tools, templates,
   themes/gallery, storage/sharing/validation messages and runtime page metadata.
@@ -108,20 +110,10 @@ dialogs passed axe; native-speaker and physical-device checks remain outstanding
 
 ## Hosting and next steps
 
-Automatic-update follow-up checks (2026-10-27): typecheck/build, lint, all 20 unit tests and
-the 13-catalog audit passed. Real automatic worker regression passed (30.4s), covering
-focused editing, unsaved Customize settings, spinning/result modal, external activation,
-automatic reload, current-screen restore, saved title/draft/history. Browser suite: 38 passed;
-the tool-persistence assertion initially compared innerText to textContent, was corrected
-to use innerText and its targeted rerun passed. All 39 browser cases and the worker case
-therefore have passing results. Number inputs/team count/generated groups survive refresh.
-No new test cases were added; existing regressions were updated. Physical devices untested.
-
-Site: https://wheelero.com on GitHub Pages. Repo: https://github.com/Nikolasgouz/wheelero.
-Verified deployment run 40474293357 succeeded for 4f791de (localization/classroom/usability).
-Live root and launch.html served identical app assets; live Greek lower sections/FAQ were
-verified. Check the workflow attached to the auto-update follow-up commit for its release
-status. A cached pre-change PWA can retain the old manual-update behavior until refreshed.
+Previously deployed site: https://wheelero.com on GitHub Pages. Repo:
+https://github.com/Nikolasgouz/wheelero. Last verified deployment run 40383010819, code 75228a6;
+b35e19f documented that deployment. This release is approved for push; check the workflow
+for the new commit before claiming the live site has updated.
 GitHub Actions checks every push to main then deploys. CI uses four shards x two workers
 (eight total), followed by one exclusive PWA update job. Keep that topology and the pinned
 Playwright image aligned with bun.lock. No apt/browser downloads inside CI containers.

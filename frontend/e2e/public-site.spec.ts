@@ -93,22 +93,15 @@ test('distinct public tools work and remain available offline', async ({ page, c
   await expect(page.getByLabel('Entry 1', { exact: true })).toHaveValue('8')
   await page.reload()
   await expect(page.locator('.sidebar-entry input')).toHaveCount(5)
-  await expect(page.getByLabel('Minimum', { exact: true })).toHaveValue('8')
-  await expect(page.getByLabel('Maximum', { exact: true })).toHaveValue('12')
   await page.goto('/yes-no-wheel')
   await expect(page.locator('.sidebar-entry input')).toHaveCount(2)
   await page.goto('/random-team-generator')
   await page
     .getByLabel('Names — one per line or spreadsheet cell')
     .fill('Alex\tEmma\r\nAlex\r\nNikos\r\nSofia')
-  await page.getByLabel('Number of teams', { exact: true }).fill('3')
   await page.getByRole('button', { name: 'Generate teams', exact: true }).click()
-  await expect(page.locator('.team-results section')).toHaveCount(3)
+  await expect(page.locator('.team-results section')).toHaveCount(2)
   await expect(page.locator('.team-results li')).toHaveCount(5)
-  const teams = await page.locator('.team-results').innerText()
-  await page.reload()
-  await expect(page.getByLabel('Number of teams', { exact: true })).toHaveValue('3')
-  await expect(page.locator('.team-results')).toHaveText(teams, { useInnerText: true })
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready
   })

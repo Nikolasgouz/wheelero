@@ -74,8 +74,7 @@ bun run preview --port 4173 --strictPort
 ```
 
 `launch.html` bypasses stale PWA navigation caches. Normal browsing/PWA start uses `/`.
-Old tabs from the manual-update version may need one normal refresh or close/reopen.
-Later updates apply automatically; close old tabs if a storage upgrade requests it.
+Use Save & update in old installed tabs; close old tabs if the storage upgrade requests it.
 
 ## Static production build
 
@@ -111,12 +110,8 @@ records are in the deployment guide. SSH access alone cannot configure Pages or 
 
 Use Install when offered, or the browser install menu. On iPhone/iPad: Safari > Share >
 Add to Home Screen. Wait for Ready to use offline before testing without internet.
-Updates are automatic. The app checks when you return to its tab, regain connectivity and
-every minute while visible/online. A new version reloads after three idle seconds and saved
-writes, waiting for spins, focused inputs, open dialogs and presentations to finish. Another
-tab activating the worker cannot interrupt your draw. The current view and tool drafts are
-preserved. Tabs already running the old manual-update code need one ordinary refresh or
-close/reopen to adopt this behavior. This is not App Store/Google Play publication.
+Save & update waits for local writes and is disabled during spins; activation from another
+tab never forces a mid-spin reload. This is not App Store/Google Play publication.
 
 ## Checks
 

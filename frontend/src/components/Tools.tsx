@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { translate } from '../locale'
 import { parseEntries } from '../lib/entries'
 import { generateTeams } from '../lib/teams'
@@ -10,13 +10,9 @@ export function NumberRange({
   disabled: boolean
   apply: (labels: string[]) => void
 }) {
-  const [minimum, setMinimum] = useState(sessionStorage.getItem('wheelero-number-min') ?? '1')
-  const [maximum, setMaximum] = useState(sessionStorage.getItem('wheelero-number-max') ?? '10')
+  const [minimum, setMinimum] = useState('1')
+  const [maximum, setMaximum] = useState('10')
   const [error, setError] = useState('')
-  useEffect(() => {
-    sessionStorage.setItem('wheelero-number-min', minimum)
-    sessionStorage.setItem('wheelero-number-max', maximum)
-  }, [minimum, maximum])
   return (
     <form
       className="number-range"
@@ -69,15 +65,9 @@ export function NumberRange({
 
 export function TeamGenerator() {
   const [text, setText] = useState(localStorage.getItem('wheelero-team-draft') ?? '')
-  const [count, setCount] = useState(sessionStorage.getItem('wheelero-team-count') ?? '2')
-  const [teams, setTeams] = useState<string[][]>(() =>
-    JSON.parse(sessionStorage.getItem('wheelero-teams') ?? '[]'),
-  )
+  const [count, setCount] = useState('2')
+  const [teams, setTeams] = useState<string[][]>([])
   const [error, setError] = useState('')
-  useEffect(() => {
-    sessionStorage.setItem('wheelero-team-count', count)
-    sessionStorage.setItem('wheelero-teams', JSON.stringify(teams))
-  }, [count, teams])
   return (
     <section className="team-tool card">
       <form
