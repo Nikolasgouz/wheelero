@@ -11,7 +11,6 @@ import {
   Laptop,
 } from 'lucide-react'
 import { t } from '../i18n'
-import { getLanguage, translate } from '../locale'
 import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
 import { shuffled } from '../lib/random'
@@ -27,8 +26,6 @@ export function WheelSidebar({
   setTab,
   openEditor,
   clear,
-  paste,
-  classroomControls,
 }: {
   wheel: LocalWheel
   disabled: boolean
@@ -37,8 +34,6 @@ export function WheelSidebar({
   setTab: (tab: 'entries' | 'results') => void
   openEditor: () => void
   clear: (section: 'entries' | 'results') => void
-  paste: () => void
-  classroomControls: React.ReactNode
 }) {
   const [newEntry, setNewEntry] = useState(
     () => localStorage.getItem(`sidebar-draft:${wheel.id}`) ?? '',
@@ -74,6 +69,7 @@ export function WheelSidebar({
             aria-controls={`sidebar-${key}`}
             aria-selected={tab === key}
             tabIndex={tab === key ? 0 : -1}
+            aria-label={key === 'entries' ? t.options : t.results}
             onClick={() => setTab(key)}
             onKeyDown={(event) => {
               if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
@@ -90,20 +86,13 @@ export function WheelSidebar({
               document.getElementById(`sidebar-tab-${next}`)!.focus()
             }}
           >
-            {key === 'entries' ? t.options : t.results}{' '}
+            {key === 'entries' ? t.options : t.results}
             <span className="count-badge" aria-hidden="true">
               {key === 'entries' ? wheel.options.length : wheel.results.length}
             </span>
           </button>
         ))}
       </div>
-      {classroomControls}
-      {tab === 'entries' && (
-        <button className="secondary paste-list-trigger" disabled={disabled} onClick={paste}>
-          <Plus size={16} />
-          {translate('Paste a list')}
-        </button>
-      )}
       <fieldset
         className="sidebar-actions"
         disabled={disabled}
@@ -338,9 +327,9 @@ export function WheelSidebar({
                   </span>
                   <time
                     dateTime={r.created_at}
-                    title={new Date(r.created_at).toLocaleString(getLanguage())}
+                    title={new Date(r.created_at).toLocaleString('en-GB')}
                   >
-                    {new Date(r.created_at).toLocaleTimeString(getLanguage(), {
+                    {new Date(r.created_at).toLocaleTimeString('en-GB', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}

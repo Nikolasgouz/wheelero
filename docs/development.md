@@ -28,11 +28,10 @@ migration when changing stored schema. Keep backups/import validation aligned. N
 stored wheels to change the default example. Preserve entry IDs/images on edits/reordering.
 Do not add API requests or hidden cloud sync: local-only storage is an explicit user choice.
 
-IndexedDB v11 adds classroom metadata; keep entry UUIDs stable through attendance and
-rounds. Never reuse active as an absence flag. Import/replace/new-round actions use the
-store transaction path, including cancellation of obsolete timed removals. The requested
-usability regressions are in lib/classroom.test.ts and e2e/usability.spec.ts; the latter
-captures ignored artifacts/usability-*.png at desktop/mobile sizes. See usability.md.
+The usability/Classroom commit was reverted at the user's request on 2026-10-27. Preserve
+the earlier interface. IndexedDB v12 is intentionally newer than both UI revisions: it
+captures v10/v11 in before-usability-rollback before restoring the original wheel shape.
+Do not downgrade the openDB version or delete user data to match older frontend code.
 
 store.ts is the only writer for wheels. Use Web Locks and write before publishing success;
 surface quota errors without losing the previous saved record. Recovery backup export is
@@ -51,12 +50,8 @@ matching static output, PWA allowlist and useful functionality/content. Keep rea
 
 Share links embed validated payloads in a fragment. Do not send the fragment to a service,
 claim encryption or offer revocation. Large payloads use JSON export. Keep bundled assets
-local with their licenses. Fourteen-language UI and editorial copy use src/locale.ts and
-locales/*.json. Keep all catalogs/placeholders aligned; see localization.md. User-authored
-content is preserved, and templates are translated only on display/creation.
+local with their licenses. Existing fourteen-language menus remain; editorial copy is English.
 
 Update README/PROJECT_CONTEXT/docs before handoff. Keep backend/ and ignored historical
 databases intact for recovery. The user authorized GitHub pushes and automatic deployment
-on main. On 2026-10-27 the user approved committing and pushing the reviewed localization
-and usability changes, superseding the preview-only restriction. Never commit secrets or
-local data. Verify the release workflow before reporting successful publication.
+on main. Preserve the checks before deployment; never commit secrets or local data.

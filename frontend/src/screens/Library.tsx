@@ -1,7 +1,6 @@
 import { Copy, Download, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useRef } from 'react'
 import { t } from '../i18n'
-import { translate } from '../locale'
 import { backupSchema, type LocalWheel } from '../types'
 import { addWheels, deleteWheel, forkWheel, selectWheel } from '../state/store'
 import { makeWheel } from '../state/wheel'
@@ -55,7 +54,6 @@ export function Library({
             >
               <span className="mini-wheel" />
               <h2>{wheel.title}</h2>
-              {wheel.classroom && <span className="class-badge">{translate('Classroom')}</span>}
               <p>
                 {t.count(wheel.options.length)} · {t.historyCount(wheel.results.length)}
               </p>
@@ -111,13 +109,12 @@ export function Library({
                       format: 'gyrna',
                       version: 1,
                       wheels: wheels.map(
-                        ({ title, no_repeat, customization, options, results, classroom }) => ({
+                        ({ title, no_repeat, customization, options, results }) => ({
                           title,
                           no_repeat,
                           customization,
                           options,
                           results,
-                          classroom,
                         }),
                       ),
                     },
@@ -152,19 +149,16 @@ export function Library({
             if (!selected) return
             e.target.value = ''
             run(async () => {
-              if (selected.size > 100_000_000)
-                throw new Error('The file must be smaller than 100 MB.')
+              if (selected.size > 100_000_000) throw new Error(t.fileTooLarge)
               let json: unknown
               try {
                 json = JSON.parse(await selected.text())
               } catch (error) {
-                if (error instanceof SyntaxError)
-                  throw new Error('Invalid backup (version 1, up to 100 wheels / 10,000 entries).')
+                if (error instanceof SyntaxError) throw new Error(t.importInvalid)
                 throw error
               }
               const data = backupSchema.safeParse(json)
-              if (!data.success)
-                throw new Error('Invalid backup (version 1, up to 100 wheels / 10,000 entries).')
+              if (!data.success) throw new Error(t.importInvalid)
               await addWheels(data.data.wheels.map(forkWheel))
             })
           }}

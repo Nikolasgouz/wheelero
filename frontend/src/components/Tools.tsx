@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { translate } from '../locale'
 import { parseEntries } from '../lib/entries'
 import { generateTeams } from '../lib/teams'
 
@@ -36,7 +35,7 @@ export function NumberRange({
       }}
     >
       <label>
-        {translate('Minimum')}
+        Minimum
         <input
           type="number"
           step="1"
@@ -46,7 +45,7 @@ export function NumberRange({
         />
       </label>
       <label>
-        {translate('Maximum')}
+        Maximum
         <input
           type="number"
           step="1"
@@ -56,9 +55,9 @@ export function NumberRange({
         />
       </label>
       <button className="secondary" disabled={disabled}>
-        {translate('Generate number wheel')}
+        Generate number wheel
       </button>
-      {error && <p role="alert">{translate(error)}</p>}
+      {error && <p role="alert">{error}</p>}
     </form>
   )
 }
@@ -69,7 +68,7 @@ export function TeamGenerator() {
   const [teams, setTeams] = useState<string[][]>([])
   const [error, setError] = useState('')
   return (
-    <section className="team-tool card">
+    <section className="team-tool card" lang="en">
       <form
         onSubmit={(event) => {
           event.preventDefault()
@@ -87,7 +86,7 @@ export function TeamGenerator() {
           }
         }}
       >
-        <label htmlFor="team-names">{translate('Names — one per line or spreadsheet cell')}</label>
+        <label htmlFor="team-names">Names — one per line or spreadsheet cell</label>
         <textarea
           id="team-names"
           rows={8}
@@ -98,7 +97,7 @@ export function TeamGenerator() {
             localStorage.setItem('wheelero-team-draft', event.target.value)
           }}
         />
-        <label htmlFor="team-count">{translate('Number of teams')}</label>
+        <label htmlFor="team-count">Number of teams</label>
         <input
           id="team-count"
           type="number"
@@ -108,13 +107,13 @@ export function TeamGenerator() {
           value={count}
           onChange={(e) => setCount(e.target.value)}
         />
-        <button className="primary">{translate('Generate teams')}</button>
-        {error && <p role="alert">{translate(error)}</p>}
+        <button className="primary">Generate teams</button>
+        {error && <p role="alert">{error}</p>}
       </form>
       <div aria-live="polite" className="team-results">
         {teams.map((team, index) => (
           <section key={index}>
-            <h2>{translate('Team {n}').replace('{n}', String(index + 1))}</h2>
+            <h2>Team {index + 1}</h2>
             <ul>
               {team.map((name, i) => (
                 <li key={i}>{name}</li>
@@ -132,10 +131,7 @@ export function TeamGenerator() {
                 [
                   '\uFEFF' +
                     teams
-                      .map(
-                        (team, index) =>
-                          `${translate('Team {n}').replace('{n}', String(index + 1))}\r\n${team.join('\r\n')}`,
-                      )
+                      .map((team, index) => `Team ${index + 1}\r\n${team.join('\r\n')}`)
                       .join('\r\n\r\n'),
                 ],
                 { type: 'text/plain;charset=utf-8' },
@@ -148,7 +144,7 @@ export function TeamGenerator() {
             URL.revokeObjectURL(url)
           }}
         >
-          {translate('Export teams')}
+          Export teams
         </button>
       )}
     </section>

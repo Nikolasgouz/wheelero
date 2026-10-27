@@ -112,7 +112,7 @@ export async function prepareApplause(): Promise<AudioBuffer> {
   const audio = context
   applause ??= fetch('/audio/applause.wav')
     .then(async (response) => {
-      if (!response.ok) throw new Error('Could not load the applause sound.')
+      if (!response.ok) throw new Error(`Could not load applause (HTTP ${response.status}).`)
       return audio.decodeAudioData(await response.arrayBuffer())
     })
     .catch((error) => {

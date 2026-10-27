@@ -64,7 +64,7 @@ export function setLanguage(next: Language) {
   for (const listener of listeners) listener()
 }
 
-// Catalog keys are English source messages. User-authored wheel content is not translated.
+// English is the source language; asset names and editorial copy may remain English.
 export function translate(text: string): string {
   return catalogs[language][text] ?? text
 }

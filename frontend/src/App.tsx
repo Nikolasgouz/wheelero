@@ -28,7 +28,7 @@ import { createShareLink, readSharedWheel } from './lib/sharing'
 import { exportLegacyBackup } from './state/storage'
 import { Customize } from './components/Customize'
 import { defaults, type Customization } from './customization'
-import { getLanguage, subscribeLanguage, translate } from './locale'
+import { getLanguage, subscribeLanguage } from './locale'
 import { LanguageMenu } from './components/LanguageMenu'
 import { playSound, prepareApplause, stopSounds } from './lib/audio'
 import { presentationOptions, textColor } from './lib/presentation'
@@ -37,10 +37,6 @@ import { PwaControls } from './components/PwaControls'
 import { HomeInfo } from './components/HomeInfo'
 import { SiteIntro, SiteDetails, SiteFooter } from './components/SiteContent'
 import { NumberRange, TeamGenerator } from './components/Tools'
-import { ToolNavigation } from './components/ToolNavigation'
-import { Workspace } from './components/Workspace'
-import { PasteList } from './components/PasteList'
-import { Attendance, ClassroomControls, ClassroomPicker } from './components/Classroom'
 import { pages, currentPath } from './site'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
@@ -50,8 +46,7 @@ import { Editor } from './screens/Editor'
 import { WheelSidebar } from './components/WheelSidebar'
 import { Library } from './screens/Library'
 import {
-  importEntries,
-  startNewRound,
+  activeOptions,
   addWheels,
   clearWheel,
   editWheel,
@@ -65,14 +60,14 @@ import {
   flushStorage,
   useStore,
 } from './state/store'
-import { activeOptions, makeWheel } from './state/wheel'
+import { makeWheel } from './state/wheel'
 import { templates as bundledTemplates } from './state/templates'
 import type { DrawResult, LocalWheel, Option, Wheel } from './types'
 
 const sitePath = currentPath(location.pathname.replace(/\/$/, '') || '/')
 
 type Screen = 'wheel' | 'options' | 'library'
-type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization' | 'classroom'>
+type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
 
 export default function App() {
   const language = useSyncExternalStore(subscribeLanguage, getLanguage)
@@ -94,9 +89,6 @@ export default function App() {
       (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   )
   const [customOpen, setCustomOpen] = useState(false)
-  const [pasteOpen, setPasteOpen] = useState(false)
-  const [classroomOpen, setClassroomOpen] = useState(false)
-  const [attendanceOpen, setAttendanceOpen] = useState(false)
   const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
   const [popupOpen, setPopupOpen] = useState(false)
   const [sound, setSound] = useState(localStorage.getItem('wheelero-sound') === 'true')
@@ -104,30 +96,12 @@ export default function App() {
   const [shareOpen, setShareOpen] = useState(false)
   const [shareUrl, setShareUrl] = useState('')
   const [shared, setShared] = useState<SharedWheel | null>(null)
-  const templates = bundledTemplates.map((template) => ({
-    ...template,
-    title: translate(template.title),
-    category: translate(template.category),
-    options: template.options.map(translate),
-  }))
+  const templates = bundledTemplates
   const [sidebarTab, setSidebarTab] = useState<'entries' | 'results'>('entries')
   const soundEnabled = useRef(sound)
   soundEnabled.current = sound
   const operation = useRef(false)
   const wheel = data?.wheels.find((w) => w.id === data.active)
-
-  useEffect(() => {
-    document.title = translate(pages[sitePath].title)
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute('content', translate(pages[sitePath].description))
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.setAttribute('content', translate(pages[sitePath].title))
-    document
-      .querySelector('meta[property="og:description"]')
-      ?.setAttribute('content', translate(pages[sitePath].description))
-  }, [language])
 
   const reportError = useCallback((error: unknown) => {
     setError(error instanceof Error ? error.message : String(error))
@@ -189,9 +163,7 @@ export default function App() {
     }
   }, [])
 
-  function edit(
-    patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat' | 'customization' | 'classroom'>>,
-  ) {
+  function edit(patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat' | 'customization'>>) {
     setResult(null)
     setPopupOpen(false)
     setSpinOptions(null)
@@ -290,7 +262,7 @@ export default function App() {
   function copy(text: string) {
     run(async () => {
       await navigator.clipboard.writeText(text)
-      setMessage('Copied!')
+      setMessage(t.copied)
     })
   }
   function closeResult() {
@@ -301,14 +273,14 @@ export default function App() {
     return (
       <main className="loading">
         <span className="brand">{t.brand}</span>
-        <p>{error ? translate(error) : t.loading}</p>
+        <p>{error || t.loading}</p>
         {error && (
           <>
             <button className="primary" onClick={() => run(() => initialize(sitePath))}>
               {t.retry}
             </button>
             <button className="secondary" onClick={() => run(exportLegacyBackup)}>
-              {translate('Export previous browser data')}
+              Export previous browser data
             </button>
           </>
         )}
@@ -381,19 +353,12 @@ export default function App() {
 
       <main id="main-content">
         {!presenting && <SiteIntro path={sitePath} />}
-        {!presenting && (
-          <ToolNavigation
-            path={sitePath}
-            disabled={locked}
-            classroom={() => setClassroomOpen(true)}
-          />
-        )}
         <p className="sr-only" role="status" aria-live="polite">
           {!spinning && result ? `${winnerMessage} ${result.label}` : ''}
         </p>
         {error && (
           <div className="notice error" role="alert">
-            <span>{translate(error)}</span>
+            <span>{error}</span>
             <button className="icon-button" aria-label={t.close} onClick={() => setError('')}>
               <X size={16} />
             </button>
@@ -401,7 +366,7 @@ export default function App() {
         )}
         {message && (
           <div className="notice" role="status">
-            <span>{translate(message)}</span>
+            <span>{message}</span>
             <button className="icon-button" aria-label={t.close} onClick={() => setMessage('')}>
               <X size={16} />
             </button>
@@ -409,7 +374,7 @@ export default function App() {
         )}
         {notice && (
           <p className="notice" role="status">
-            {translate(notice)}
+            {notice}
           </p>
         )}
         {pages[sitePath].kind === 'information' ? (
@@ -418,12 +383,11 @@ export default function App() {
           <TeamGenerator />
         ) : screen === 'library' ? (
           <>
-            <section className="sync-controls card">
-              <h2>{translate('Stored in your browser')}</h2>
+            <section className="sync-controls card" lang="en">
+              <h2>Stored in your browser</h2>
               <p>
-                {translate(
-                  'Wheels, settings and results are saved in IndexedDB on this device. Export JSON before clearing browser data or moving to another device.',
-                )}
+                Wheels, settings and results are saved in IndexedDB on this device. Export JSON
+                before clearing browser data or moving to another device.
               </p>
               {'storage' in navigator && 'persist' in navigator.storage && (
                 <button
@@ -440,10 +404,10 @@ export default function App() {
                     })
                   }
                 >
-                  {translate('Protect local storage')}
+                  Protect local storage
                 </button>
               )}
-              {storageMessage && <p role="status">{translate(storageMessage)}</p>}
+              {storageMessage && <p role="status">{storageMessage}</p>}
             </section>
             <Library
               wheels={data.wheels}
@@ -459,9 +423,7 @@ export default function App() {
                 disabled={locked}
                 apply={(labels) =>
                   edit({
-                    title: translate('Numbers {min} to {max}')
-                      .replace('{min}', labels[0])
-                      .replace('{max}', labels[labels.length - 1]),
+                    title: `Numbers ${labels[0]} to ${labels[labels.length - 1]}`,
                     options: labels.map((label) => ({
                       id: crypto.randomUUID(),
                       label,
@@ -472,7 +434,7 @@ export default function App() {
                 }
               />
             )}
-            <Workspace screen={screen}>
+            <div className={`workspace mobile-${screen}`}>
               <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
                 <div className="wheel-top">
                   <div className="wheel-heading">
@@ -482,14 +444,13 @@ export default function App() {
                     </span>
                     <div className="wheel-tools">
                       <button
-                        className="secondary customize-trigger"
+                        className="icon-button"
                         aria-label={ct.title}
                         title={ct.title}
                         disabled={locked}
                         onClick={() => setCustomOpen(true)}
                       >
                         <Settings size={18} />
-                        <span>{ct.title}</span>
                       </button>
                       <button
                         className="icon-button"
@@ -533,14 +494,7 @@ export default function App() {
                   config={config}
                   winnerId={result?.option_id ?? null}
                   idle={
-                    !spinning &&
-                    displayed.length > 0 &&
-                    screen === 'wheel' &&
-                    !shareOpen &&
-                    !shared &&
-                    !pasteOpen &&
-                    !classroomOpen &&
-                    !attendanceOpen
+                    !spinning && displayed.length > 0 && screen === 'wheel' && !shareOpen && !shared
                   }
                   canSpin={canSpin}
                   onSpin={spin}
@@ -575,10 +529,8 @@ export default function App() {
                     </div>
                   )}
                   <div className="spin-actions">
-                    {!wheel.classroom && !available.length && wheel.options.length > 0 && (
-                      <p>{t.exhausted}</p>
-                    )}
-                    {!wheel.classroom && !available.length && wheel.options.length > 0 && (
+                    {!available.length && wheel.options.length > 0 && <p>{t.exhausted}</p>}
+                    {!available.length && wheel.options.length > 0 && (
                       <button
                         className="secondary"
                         disabled={locked}
@@ -601,23 +553,6 @@ export default function App() {
                   tab={sidebarTab}
                   setTab={setSidebarTab}
                   openEditor={() => navigate('options')}
-                  paste={() => setPasteOpen(true)}
-                  classroomControls={
-                    wheel.classroom && (
-                      <ClassroomControls
-                        wheel={sidebarSnapshot ?? wheel}
-                        disabled={locked}
-                        attendance={() => setAttendanceOpen(true)}
-                        noRepeat={(no_repeat) => edit({ no_repeat })}
-                        restart={() =>
-                          run(async () => {
-                            await startNewRound(wheel.id)
-                            navigate('wheel')
-                          })
-                        }
-                      />
-                    )
-                  }
                   clear={(section) =>
                     run(async () => {
                       await clearWheel(wheel.id, section)
@@ -665,7 +600,7 @@ export default function App() {
                     })
                   }
                 >
-                  {translate('Restore entries')}
+                  Restore entries
                 </button>
                 <div className="save-bar">
                   <span>
@@ -679,7 +614,7 @@ export default function App() {
                       onClick={() =>
                         run(async () => {
                           await flushStorage()
-                          setMessage('Automatically saved on this device')
+                          setMessage(t.autoSave)
                         })
                       }
                     >
@@ -702,7 +637,7 @@ export default function App() {
                   </div>
                 </div>
               </div>
-            </Workspace>
+            </div>
             <section className="templates-section" hidden={screen !== 'options'}>
               <div className="section-heading">
                 <div>
@@ -771,42 +706,6 @@ export default function App() {
         </nav>
       )}
 
-      {pasteOpen && (
-        <PasteList
-          count={wheel.options.length}
-          close={() => setPasteOpen(false)}
-          apply={async (text, mode) => {
-            await flushStorage()
-            await importEntries(wheel.id, text, mode)
-            navigate('wheel')
-          }}
-        />
-      )}
-      {classroomOpen && (
-        <ClassroomPicker
-          wheels={data.wheels}
-          current={wheel}
-          busy={busy}
-          run={run}
-          close={() => setClassroomOpen(false)}
-          ready={() => {
-            setClassroomOpen(false)
-            if (sitePath !== '/') location.assign('/')
-            else navigate('wheel')
-          }}
-        />
-      )}
-      {attendanceOpen && (
-        <Attendance
-          key={wheel.id}
-          wheel={wheel}
-          close={() => setAttendanceOpen(false)}
-          save={async (absent_ids) => {
-            await editWheel(wheel.id, { classroom: { absent_ids } })
-            navigate('wheel')
-          }}
-        />
-      )}
       {customOpen && (
         <Customize
           value={wheel.customization}
@@ -826,6 +725,7 @@ export default function App() {
       {result && popupOpen && (
         <Dialog title={winnerMessage} close={closeResult} headerClose={false}>
           <div className="result-display">
+            <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
           </div>
           <div className="result-actions">
@@ -848,17 +748,10 @@ export default function App() {
       {shareOpen && (
         <Dialog title={t.shareHeading} close={() => setShareOpen(false)}>
           <p className="muted">
-            {translate(
-              'This link contains the title, entries, images and settings of this wheel. Results and other wheels are excluded. No upload is made. Anyone with the link can read and copy it. Links cannot be revoked; use JSON export for large wheels.',
-            )}
+            This link contains the title, entries, images and settings of this wheel. Results and
+            other wheels are excluded. No upload is made. Anyone with the link can read and copy it.
+            Links cannot be revoked; use JSON export for large wheels.
           </p>
-          {wheel.classroom && (
-            <p className="muted">
-              {translate(
-                'All student names are included. Attendance and round progress are not shared.',
-              )}
-            </p>
-          )}
           <button
             className="primary full-width"
             disabled={busy || !valid}

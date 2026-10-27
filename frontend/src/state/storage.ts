@@ -20,7 +20,7 @@ import { translateEnglishDefaults } from './englishDefaults'
 import { upgradeCustomization } from './customizationMigration'
 
 export let migrationNotice = ''
-const database = openDB('gyrna', 11, {
+const database = openDB('gyrna', 12, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -106,7 +106,6 @@ const database = openDB('gyrna', 11, {
               options: wheel.options,
               results: wheel.results,
               no_repeat: wheel.no_repeat,
-              classroom: null,
               customization: wheel.customization,
               updated_at: wheel.updated_at,
             })),
@@ -116,15 +115,22 @@ const database = openDB('gyrna', 11, {
             'An unfinished draw from the old server version could not be recovered. Existing results were preserved; no replacement winner was generated.'
         await store.put(current, 'current')
       }
-    }
-    if (oldVersion === 10) {
+    } else {
       const store = transaction.objectStore('state')
       const state: SavedState | undefined = await store.get('current')
       if (state) {
         await transaction
           .objectStore('legacy-backup')
-          .put(structuredClone(state), 'before-classroom')
-        for (const wheel of state.wheels) wheel.classroom = null
+          .put(structuredClone(state), 'before-usability-rollback')
+        state.wheels = state.wheels.map((wheel) => ({
+          id: wheel.id,
+          title: wheel.title,
+          options: wheel.options,
+          results: wheel.results,
+          no_repeat: wheel.no_repeat,
+          customization: wheel.customization,
+          updated_at: wheel.updated_at,
+        }))
         await store.put(state, 'current')
       }
     }
@@ -145,15 +151,19 @@ export async function writeState(state: SavedState): Promise<void> {
   }
 }
 export async function exportLegacyBackup() {
+  const rollback: SavedState | undefined = await (
+    await database
+  ).get('legacy-backup', 'before-usability-rollback')
   const state: LegacyState | undefined = await (await database).get('legacy-backup', 'previous')
-  if (!state) throw new Error('No previous browser database was found.')
+  const wheels = rollback ? rollback.wheels : state?.wheels.filter((wheel) => !wheel.deleted)
+  if (!wheels) throw new Error('No previous browser database was found.')
   const url = URL.createObjectURL(
     new Blob(
       [
         JSON.stringify({
           format: 'gyrna',
           version: 1,
-          wheels: state.wheels.filter((wheel) => !wheel.deleted),
+          wheels,
         }),
       ],
       { type: 'application/json' },

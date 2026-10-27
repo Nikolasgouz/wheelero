@@ -1,7 +1,7 @@
 # Working in Wheelero
 
 The user chose local browser storage and no backend. Keep React/TypeScript, Bun/Vite and
-the existing design. Wheels/images/results use IndexedDB v11; small preferences/drafts
+the existing design. Wheels/images/results use IndexedDB v12; small preferences/drafts
 use localStorage. No network APIs/cloud sync. Historical backend/SQLite files stay intact
 for recovery and are excluded from deployment.
 
@@ -12,11 +12,9 @@ single-use helpers. Python lines <=100 chars if modifying historical tooling.
 Do not add tests unless requested; storage/draw/import tests were explicitly requested
 for this project. Update obsolete API expectations to actual local behavior.
 
-English default with fourteen-language UI/content (locale.ts/locales/*.json). Preserve Wheelero
+English default with fourteen-language menus (locale.ts/locales/*.json). Preserve Wheelero
 branding, user content and local asset licenses. Editorial content is in src/site.ts.
 Keep one H1 and meaningful functionality per public page. No trackers.
-Translate application copy in all thirteen catalogs; preserve placeholders. Never translate
-stored user content. Localize templates only when displaying or creating a new wheel.
 
 ## Commands
 
@@ -37,10 +35,6 @@ land on the winning entry ID and reveal results only after animation. Lock editi
 customization/sound/fullscreen during draws. Respect reduced motion and global mute.
 Customization drafts save only on OK; timed removals use IDs. PWA updates flush writes,
 require this tab's explicit action and never interrupt a spin.
-Classroom absence uses stable entry IDs separately from no-repeat active flags. New rounds
-reset active flags, never attendance. Backups/copies retain attendance; class share links
-include the whole roster but omit attendance/progress. Keep old version-1 imports valid.
-Workspace sizing uses actual header/toolbar height on desktop; keep small-screen scrolling.
 
 Share links embed unencrypted snapshots in fragments, excluding history/other wheels.
 Validate/cap payloads, explain no revocation, use JSON for large wheels. Preserve backup
@@ -56,10 +50,12 @@ or screenshots. The user authorized setup/push to Nikolasgouz/wheelero and prepa
 for wheelero.com on 2026-10-26. Keep SSH keys ignored; never commit credentials or change
 repository visibility without authorization. Hosting/DNS access must be verified.
 Existing preview management is documented in docs/deployment.md.
-Current authorization (2026-10-27): the user approved committing and pushing the reviewed
-localization/usability changes to GitHub. Pushes to main trigger the existing verified
-deployment workflow. Do not change hosting, DNS or purchase services as part of this release.
-The user then requested rolling back the automatic-update follow-up (9e4744b). Preserve
-the 4f791de application behavior, including manual PWA confirmation, unless requested otherwise.
 Update README/PROJECT_CONTEXT/docs before handoff. Remove unnecessary defensive code,
 trivial helpers and unused parameters before finishing.
+
+Latest user request (2026-10-27): revert the whole usability/classroom/localization commit
+4f791de to b35e19f behavior, including the earlier wheel layout. Do not keep Classroom or
+expanded public-copy translations from that commit. Preserve browser data via IndexedDB
+v12 migration: snapshot v10/v11 before restoring the original wheel shape. Do not reopen
+v10 on an upgraded v11 database. Do not reset/delete existing user data. Commit/push this
+rollback using the existing main-branch deployment workflow; no force push or DNS changes.

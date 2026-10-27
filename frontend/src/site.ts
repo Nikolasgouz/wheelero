@@ -5,7 +5,7 @@ export const pages = {
     description:
       'Pick a random name with a customizable wheel. Paste a list, spin, save your wheels and use Wheelero offline. No account needed.',
     intro:
-      'Add your names or choices, customize your wheel, and spin to pick a winner. No account needed.',
+      'One spin, one decision. Add your entries, make the wheel your own and let chance choose. Your lists stay on this device. Share a copy by link or JSON file.',
     kind: 'wheel',
   },
   '/random-name-picker': {

@@ -1,68 +1,55 @@
-# Website languages
+# Menu languages
 
-English is the default. The menu offers English, Greek, Spanish, French, German, Italian,
-Portuguese, Dutch, Polish, Turkish, Russian, Romanian, Japanese and Simplified Chinese.
-Language names remain in their own language so visitors can find them. Local flag SVGs
-identify the choices. Wheelero remains the brand in every locale.
+English is the default. The header offers English, Ελληνικά, Español, Français,
+Deutsch, Italiano, Português, Nederlands, Polski, Türkçe, Русский, Română, 日本語 and 简体中文.
+LanguageMenu opens a native dialog with buttons labelled in each language and local
+flag SVGs, also shown beside the current language. Tab/Enter select; Escape dismisses
+and focus returns to the trigger. The selected option is marked with aria-pressed.
+This renders flags on Windows without depending on flag emoji support. Selection is disabled
+during a draw or pending operation. It updates the interface without reloading, remounting
+the app, losing entry drafts or writing to a wheel. Preference lives in localStorage as
+`spinaro-language`; an unrecognized stored code falls back to English.
 
-`frontend/src/locale.ts` owns selection, subscriptions and English-key lookup. App subscribes
-using useSyncExternalStore; message modules update before React renders. Selection changes
-the interface without navigation or loss of drafts and is disabled during a draw.
-The spinaro-language localStorage preference survives reload; unknown saved codes fall
-back to English. No database migration is needed.
+`frontend/src/locale.ts` owns selection, subscriptions and message lookup. App subscribes
+with `useSyncExternalStore`; the existing message modules refresh their exported objects
+before React rerenders. `document.documentElement.lang` follows selection on startup
+and subsequent changes. JSON catalogs share a separate bundle, precached with the app.
+Flag assets come from flag-icons (MIT); source revision and license are in public/flags/.
+No remote translation service or extra dependency is used. No database/API shape change.
 
-All thirteen translated catalogs contain 464 common messages; Polish, Russian and Romanian
-also contain two plural forms. Coverage includes menus, accessible labels, Customize,
-themes/images/sounds, templates, tools, storage/sharing messages, application validation
-errors, home descriptions, instructions, FAQs, About, Privacy, 404 and page metadata.
-The usability additions cover paste preview/actions, classroom, attendance, round status,
-tool navigation and the shorter home introduction in every language.
-Public copy lives in site.ts and i18n.ts; components translate it at render time.
-Static HTML/SEO and the install manifest use English by default. After startup, document
-language/title/description/OG metadata follow the selected language. Browser-owned dialogs,
-permission prompts and installation UI follow the browser/OS language.
+Each catalog translates 196 interface messages: navigation, entries/results, My wheels,
+sharing/import/export controls, installation help, client-side errors, Customize tabs,
+controls, sound names and accessible labels. Polish/Russian/Romanian include extra plural forms.
+English source strings are lookup keys; unmapped text falls back explicitly to English.
+Keep all thirteen catalogs aligned when changing a menu string. Placeholders such as `{n}`
+must remain intact. Counts use Intl.PluralRules and the appropriate few forms.
 
-Keep source keys and {n}/{min}/{max} placeholders aligned in every catalog. Missing keys
-fall back to English, so audit additions before delivery. Counts use Intl.PluralRules.
-History dates use the selected language. Catalogs are bundled and precached for offline
-use. No remote translation service, tracker or translation dependency. No RTL languages.
+User entry names, wheel titles, custom popup messages and recorded results are never
+translated. Only the exact default `And The Winner is...` is localized when displayed;
+the stored configuration stays unchanged. TXT result-export headings use the current
+language. Winner names are preserved; timestamps and draw sources are omitted from
+TXT exports. JSON backups and internal history retain that metadata.
 
-## Content and persistence
+Scope: menu localization, not complete website translation. HomeInfo editorial copy,
+template contents, most theme/gallery names, backend validation responses and installed-app
+manifest text remain English. Translating these is separate future work. No RTL languages
+are offered in this release. Native-speaker review of every translation is still needed.
 
-User entry names, wheel titles, custom popup messages and recorded winners are not
-translated or rewritten. Proper names in examples stay unchanged. Template titles,
-categories and options are translated when displayed and when a new wheel is created;
-already saved wheels retain their content. New yes/no and number wheels use the selected
-language. Numeric entries remain numeric; team headings and TXT exports are localized.
+Initial ten-language verification (2026-10-25–26): typecheck, lint, production build and 10 unit checks passed.
+Chromium exercised every language across navigation, My wheels and Customize; the
+document and unsaved entry draft survive switching. Stored preference survives reload;
+Greek/German switching and a localized winner work offline. Draw locking, keyboard
+selection/focus, accessible labels and invalid saved-code fallback passed. Header axe
+WCAG A/AA and layout checks passed at 360/390/768/1440px. Longer mobile sound labels
+use a full-width selector row; screenshots were inspected. Catalog keys/placeholders
+were checked across all nine JSON files. Physical-device/screen-reader and native-speaker
+reviews were not performed.
+The full existing E2E suite passed 28/30 initially. Two 15-second action timeouts
+(bulk input and a 390px Customize tab) passed on a focused rerun, without code or
+timeout changes. All 30 scenarios have therefore passed, across those two runs.
 
-Only the exact default And The Winner is... is localized in results and the Customize
-input. Opening, cancelling or confirming untouched settings does not replace that stored
-default with its translation. A user-edited message is preserved. Image gallery names are
-resolved on each render, not captured in the initial language. Status/error state stores
-source messages so visible notices change language too. Malformed share payloads show a
-localized application error instead of raw parser output.
-
-## Presentation
-
-The center uses container-relative font sizing, balanced wrapping and a 68% text width
-for space inside the circular boundary. The full translated label remains accessible.
-Decorative sparkle/asterisk symbols were removed from the wheel, winner popup and editor;
-the Wheelero logo remains intact.
-
-## Verification
-
-2026-10-27: source-key and placeholder audit passed for all thirteen files. TypeScript,
-ESLint, 16 existing unit tests, production build and all 36 existing E2E tests passed.
-All 14 languages passed public-route, Customize/gallery/template, library, reload and
-draw checks. Center labels fit at 360/390/768/1440px (idle and spinning). Offline language
-switching, draft/data preservation, popup OK/cancel and malformed sharing passed. Mobile
-modal tabs fit in all languages; Greek/German/Japanese dialogs passed axe. Screenshots
-were inspected. PROJECT_CONTEXT.md records the results. Native-speaker review of every language and physical-device/screen-reader testing
-have not been performed. Temporary checks/screenshots are ignored under artifacts/.
-
-The subsequent usability work passed all 14 languages for desktop wheel fit, mobile paste,
-class creation and attendance, with no missing catalog keys/placeholders, browser errors
-or horizontal overflow. English/Greek new dialogs passed axe. Current suite: 20 unit tests
-and 40 E2E tests; final focused rerun: 4/4 usability tests. See PROJECT_CONTEXT.md.
-
-The user approved committing and pushing these reviewed changes on 2026-10-27.
+Fourteen-language/flags follow-up (2026-10-26): all four added locales and their Customize
+tabs passed browser checks; all 14 SVG flags loaded online and after an offline reload.
+The dialog passed axe WCAG A/AA and no-overflow checks at 360/390/768/1440px. Keyboard
+selection, Escape, focus return, persistence and locking during draws passed. The 390px
+screenshot was inspected. All thirteen catalogs preserve shared keys/placeholders.
