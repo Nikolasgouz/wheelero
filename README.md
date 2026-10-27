@@ -3,6 +3,9 @@
 **One spin, one decision.** A static React/TypeScript/Bun/Vite website and offline PWA.
 The current application has **no backend, API calls, server sessions or SQLite dependency**.
 
+Live website: **https://wheelero.com** (GitHub Pages). HTTPS, local draws/sharing and
+offline use were verified on the public domain on 2026-10-26.
+
 ## Local storage
 
 Wheels, images, customization, results and removed entries live in **IndexedDB** on the

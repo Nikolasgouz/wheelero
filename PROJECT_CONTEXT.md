@@ -65,7 +65,7 @@ Keep PC awake/online; state/process IDs: ignored artifacts/public-preview.json.
 Docker/TLS hosting and physical iOS/Android installation remain unverified.
 Operator identity/privacy contact and Pages/DNS administration access are not supplied.
 The owner has configured DNS to GitHub Pages; public workflow status is now readable.
-No purchases, permanent live deployment or store submission occurred.
+Production is live at https://wheelero.com on GitHub Pages. No purchases or store submission.
 
 Browser quota varies and is not unlimited. Persistent storage may be refused. Data is
 origin-specific: JSON is the device/domain transfer mechanism. Old server-only uploads
@@ -99,7 +99,7 @@ Android TWA/Bubblewrap and iOS Capacitor are separate future work.
   reading job status, but raw log downloads return 403 without an account token.
 - Authoritative DNS now verifies all four Pages A records and www CNAME
   nikolasgouz.github.io, retaining dns1.papaki.gr/dns2.papaki.gr. No agent DNS changes made.
-  HTTPS reaches GitHub with a valid certificate; before deployment it returns GitHub 404.
+  HTTPS now serves Wheelero. HTTP and www both redirect to https://wheelero.com/.
 - This deployment pass: typecheck/lint/16 unit tests and production build passed;
   wheelero.com metadata/indexing/manifest/404 checked. All 36 Chromium E2E tests passed
   again (3.7m), including offline/mobile/storage/update checks. actionlint passed for
@@ -109,7 +109,14 @@ Android TWA/Bubblewrap and iOS Capacitor are separate future work.
   Ubuntu 26 font packages from azure.archive.ubuntu.com (owner supplied log).
 - CI now uses Ubuntu 24.04 runners and the official Playwright 1.64.1 Noble container
   pinned by verified OCI digest. It matches bun.lock and needs no apt/browser installation.
-  New pushes cancel older runs on the same branch. actionlint passed; new CI/deployment
-  verification is pending.
-- Next: verify the new CI run, then HTTPS/custom domain/offline on the actual live site;
-  add real operator contact. Do not purchase hosting or change visibility without instructions.
+  Bun is bootstrapped via its npm global package inside containers (no system unzip);
+  frontend installation/scripts still use Bun. New pushes cancel older branch runs.
+- GitHub run 40383010819 (commit 75228a6) completed successfully: build, all four browser
+  shards, PWA update regression and Pages deployment. actionlint passed. The application
+  was then verified at https://wheelero.com in Chromium: local spin, fragment sharing to
+  a separate context, no API/cookies, offline reload/draw, canonical HTML, real 404 and
+  360/390/768/1440px layouts, with zero page errors. Mobile/desktop screenshots reviewed.
+  Production robots allows indexing; HTTP/www redirect to HTTPS apex.
+- Next: add real operator/privacy contact and test installation on physical iOS/Android.
+  Preserve the eight-worker CI layout and the isolated PWA test; update Playwright's image
+  with its locked package version. Do not purchase hosting or change visibility without instructions.

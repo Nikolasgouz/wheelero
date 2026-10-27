@@ -4,6 +4,13 @@ Wheelero now requires static file hosting only. There is no application backend,
 database, session cookie, API proxy or background worker to deploy. GitHub can hold the
 source; GitHub Pages or another static host can serve the built files. A Droplet is optional.
 
+Production is live at **https://wheelero.com**. GitHub run
+[40383010819](https://github.com/Nikolasgouz/wheelero/actions/runs/40383010819) passed build,
+all four browser shards, the isolated PWA update check and deployment on 2026-10-26.
+Live Chromium checks passed for local spin, fragment sharing, no API/cookies, offline
+reload/draw, canonical metadata, real 404 and layouts at 360/390/768/1440px. Both HTTP
+and https://www.wheelero.com redirect to the HTTPS apex. Physical installs remain untested.
+
 ## Build for the real origin
 
 After confirming ownership of the domain, set PUBLIC_URL=https://wheelero.com and
@@ -64,8 +71,8 @@ deployment on an existing Droplet instead; its IP/server access would be needed.
 
 Verified 2026-10-26 after the owner's DNS changes: nameservers remain `dns1.papaki.gr`
 and `dns2.papaki.gr`; apex A now has the four GitHub Pages addresses below and www has
-the correct GitHub CNAME. HTTPS reaches GitHub; successful deployment still needs to
-pass all workflow checks. **Keep the existing nameservers** and these records:
+the correct GitHub CNAME. HTTPS serves Wheelero after the successful deployment above.
+**Keep the existing nameservers** and these records:
 
 | Type | Host | Value |
 | --- | --- | --- |
@@ -121,6 +128,7 @@ Historical backend/SQLite files are untouched. scripts/database.py remains avail
 consistent historical backup/restore into a new file, never over a live database. Existing
 server-only links will not resolve in the static app; ask their author for a JSON/new link.
 
-Before permanent launch, add operator identity/privacy contact and final provider details
-to About/Privacy. Verify canonical URLs, 404, sharing, offline reload and installation on
-real devices. Browser data does not transfer automatically between domains.
+Remaining publication details: add real operator identity/privacy contact to About/Privacy.
+The privacy text identifies GitHub Pages hosting. Canonical URLs, 404, sharing and offline
+reload have been verified live; installation on physical devices remains to be checked.
+Browser data does not transfer automatically between domains.
