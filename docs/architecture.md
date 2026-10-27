@@ -35,8 +35,11 @@ and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templati
 
 Vite preview serves real HTML routes and 404s with no API proxy. Production Caddy serves
 the same dist directory. The service worker caches app files/assets, not user lists.
-Known public-route navigations use NetworkFirst with cache:no-cache (HTTP revalidation),
-a four-second timeout, a bounded page cache and route-specific precached offline fallbacks.
+Known public-route navigations use NetworkOnly with a requestWillFetch plugin setting
+cache:no-cache (HTTP revalidation), a four-second timeout and route-specific precached
+offline fallbacks. Workbox fetchOptions alone does not apply to navigation requests.
+Do not runtime-cache HTML: a new worker removes obsolete precached assets, so older runtime
+HTML could reference missing bundles offline. Fallback HTML belongs to the installed bundle.
 Disabling precache directory-index matching prevents `/` from bypassing that network rule.
 Unknown paths retain genuine network 404s. Hashed assets first seen with newer HTML have
 a bounded runtime cache so they remain available offline before the next worker installs.

@@ -35,8 +35,8 @@ land on the winning entry ID and reveal results only after animation. Lock editi
 customization/sound/fullscreen during draws. Respect reduced motion and global mute.
 Customization drafts save only on OK; timed removals use IDs. New PWA workers activate
 automatically without reloading open pages. Reloading an open editor requires this tab's
-action and completed writes; never interrupt a spin. Normal navigation uses NetworkFirst
-HTML with HTTP revalidation and offline fallbacks, not a permanently precached homepage.
+action and completed writes; never interrupt a spin. Normal navigation fetches HTML with
+HTTP revalidation and precached offline fallbacks, not a permanently cached homepage.
 
 Share links embed unencrypted snapshots in fragments, excluding history/other wheels.
 Validate/cap payloads, explain no revocation, use JSON for large wheels. Preserve backup

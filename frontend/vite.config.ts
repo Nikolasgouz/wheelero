@@ -62,13 +62,14 @@ export default defineConfig({
             .filter((path) => path !== '/404')
             .map((path) => ({
               urlPattern: new RegExp(`^https?://[^/]+${path === '/' ? '/' : `${path}/?`}(\\?.*)?$`),
-              handler: 'NetworkFirst' as const,
+              handler: 'NetworkOnly' as const,
               options: {
-                cacheName: 'wheelero-pages',
-                fetchOptions: { cache: 'no-cache' as const },
-                networkTimeoutSeconds: 4,
-                cacheableResponse: { statuses: [200] },
-                expiration: { maxEntries: 30 },
+                plugins: [
+                  {
+                    requestWillFetch: async ({ request }: { request: Request }) =>
+                      new Request(request, { cache: 'no-cache', signal: AbortSignal.timeout(4000) }),
+                  },
+                ],
                 precacheFallback: {
                   fallbackURL: path === '/' ? 'index.html' : `${path.slice(1)}/index.html`,
                 },

@@ -26,12 +26,15 @@ history, restore entries, JSON/TXT exports, 12 templates and public tools remain
 
 The previous large-wheel layout and icon Customize are restored. Fourteen menu languages
 remain, with their older translation coverage: public explanatory text is not fully
-translated in this restored version. Normal public URLs now use NetworkFirst HTML with
-HTTP revalidation, a four-second timeout and cached/preloaded offline fallbacks. New
+translated in this restored version. Normal public URLs now fetch HTML with HTTP
+revalidation, a four-second timeout and precached offline fallbacks. New
 workers activate automatically without reloading open pages. Save & update remains an
 optional action for an already-open editor, flushes writes and is disabled during spins.
 Controller changes expose this action after activation too. Editor drafts/preferences
 remain in localStorage; no storage schema change accompanies the navigation fix.
+Navigation uses NetworkOnly plus PrecacheFallbackPlugin, avoiding old runtime HTML that
+could reference deleted bundles after worker activation. requestWillFetch sets no-cache
+on the Request itself because Workbox ignores fetchOptions for navigation requests.
 
 ## Storage rollback
 
@@ -77,10 +80,13 @@ Full rollback 12ea1b5 deployed successfully in run 40481024919. Live v10/v11 fix
 verified preservation of names/settings/history and recovery export. The initial live
 waiting-worker check timed out; the follow-up navigation fix addresses cache-first HTML
 and workers waiting indefinitely for activation. Its build/typecheck/lint, 16 unit tests
-and all 36 E2E tests passed (2 workers, 3.0 minutes). The existing lifecycle test now
+and all 36 E2E tests passed again after the final navigation fix (2 workers, 2.9 minutes).
+The existing lifecycle test now
 verifies fresh normal-URL HTML, automatic activation during a spin without a forced reload,
 and saved wheel/editor draft preservation. No new test cases were added. Actual public
 old-worker-to-new-worker verification is prepared in an isolated browser and awaits deploy;
+The first live transition activated correctly but exposed stale HTTP cache because Workbox
+ignores fetchOptions on navigation. The final requestWillFetch plugin addresses that;
 its ignored report will be artifacts/live-navigation-update.json. Physical installs are
 still unverified. Never claim publication until the deployment workflow and live URL pass.
 CI uses four two-worker browser

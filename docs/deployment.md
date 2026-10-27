@@ -26,7 +26,7 @@ sitemap.xml, manifest, worker and assets. Serve directory index files and a genu
 status for unknown paths; avoid a blanket SPA rewrite to index.html. Use HTTPS for Web
 Crypto/PWA. Set sw.js and HTML to revalidate rather than caching them indefinitely.
 
-The 2026-10-27 stale-navigation fix uses NetworkFirst for normal public URLs and activates
+The 2026-10-27 stale-navigation fix fetches normal public URLs with HTTP revalidation and activates
 new workers without forcing an open page to reload. Old installations adopt this policy
 when the browser downloads/installs the new sw.js; the next ordinary navigation uses it.
 GitHub Pages/CDN propagation can delay that download. Do not clear site data or unregister
