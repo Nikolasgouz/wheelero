@@ -81,16 +81,17 @@ verified preservation of names/settings/history and recovery export. The initial
 waiting-worker check timed out; the follow-up navigation fix addresses cache-first HTML
 and workers waiting indefinitely for activation. Its build/typecheck/lint, 16 unit tests
 and all 36 E2E tests passed again after the final navigation fix (2 workers, 2.9 minutes).
-The existing lifecycle test now
-verifies fresh normal-URL HTML, automatic activation during a spin without a forced reload,
-and saved wheel/editor draft preservation. No new test cases were added. Actual public
-old-worker-to-new-worker verification is prepared in an isolated browser and awaits deploy;
-The first live transition activated correctly but exposed stale HTTP cache because Workbox
-ignores fetchOptions on navigation. The final requestWillFetch plugin addresses that;
-its ignored report will be artifacts/live-navigation-update.json. Physical installs are
-still unverified. Never claim publication until the deployment workflow and live URL pass.
-CI uses four two-worker browser
-shards, then one exclusive PWA-update job; failures block deployment. SSH keys are ignored.
+The existing lifecycle test verifies fresh normal-URL HTML, automatic activation during
+a spin without a forced reload, and saved wheel/editor draft preservation. No new test
+cases were added. The first live transition exposed stale HTTP cache because Workbox
+ignores fetchOptions on navigation; the final requestWillFetch plugin fixes that.
+Final code cea2c88 deployed successfully in run 40485652554. An actual production browser
+with the preceding worker then verified automatic activation, fresh normal-URL navigation,
+no forced reload, unchanged saved wheel/unsubmitted draft and offline reload. All passed;
+ignored report: artifacts/live-navigation-update.json. No cache-reset link or deletion of
+site data was used. This final handoff update changes documentation only.
+CI uses four two-worker browser shards, then one exclusive PWA-update job; failures block
+deployment. SSH keys are ignored. Retain this policy and the restored non-Classroom UI.
 
 Physical iOS/Android installs and human screen-reader checks remain unverified. Storage
 quotas vary and clearing site data loses local wheels; JSON backups are necessary.

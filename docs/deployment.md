@@ -32,6 +32,11 @@ when the browser downloads/installs the new sw.js; the next ordinary navigation 
 GitHub Pages/CDN propagation can delay that download. Do not clear site data or unregister
 the PWA as an update procedure. Saved wheels and drafts are independent of the asset cache.
 
+Verified live for code cea2c88 after successful run 40485652554: a browser controlled by
+the preceding worker adopted the replacement automatically, fetched the new page at `/`,
+retained its saved wheel and unsubmitted editor draft, and reloaded offline successfully.
+The open editor was not forcibly reloaded. No special query URL or data clearing was used.
+
 PUBLIC_URL is built into metadata, not replaced by a server. Keep PUBLIC_INDEXING=false
 for temporary previews. Local builds can leave PUBLIC_URL empty (relative metadata).
 The user supplied wheelero.com as the intended domain. No registrar/DNS changes or
