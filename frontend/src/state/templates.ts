@@ -1,5 +1,5 @@
 import type { Template } from '../types'
-// Bundled examples remain available before the first successful API connection.
+// Bundled template source strings; localize when displaying or creating a wheel.
 export const templates: Template[] = [
   {
     id: 'names',
@@ -18,7 +18,7 @@ export const templates: Template[] = [
   {
     id: 'plans',
     title: 'What should we do tonight?',
-    emoji: '✨',
+    emoji: '🌆',
     category: 'With friends',
     options: ['Cinema 🎬', 'Board games 🎲', 'A walk 🌙', 'Drinks 🍹', 'Stay home 🛋️'],
   },
@@ -69,7 +69,14 @@ export const templates: Template[] = [
     title: 'Breakfast ideas',
     emoji: '🥞',
     category: 'Start your day',
-    options: ['Pancakes', 'Oatmeal', 'Scrambled eggs', 'Yogurt and fruit', 'Avocado toast', 'Smoothie'],
+    options: [
+      'Pancakes',
+      'Oatmeal',
+      'Scrambled eggs',
+      'Yogurt and fruit',
+      'Avocado toast',
+      'Smoothie',
+    ],
   },
   {
     id: 'dessert',

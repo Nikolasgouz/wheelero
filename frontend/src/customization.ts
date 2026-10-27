@@ -1,12 +1,12 @@
 import { ct } from './customization.i18n'
 import { z } from 'zod'
 
-export const gallery = Object.entries(ct.images).map(([src, name]) => ({ src, name }))
+const gallery = Object.keys(ct.images)
 export const imageSchema = z
   .string()
   .max(683000)
   .refine((value) => {
-    if (gallery.some((image) => image.src === value)) return true
+    if (gallery.includes(value)) return true
     if (!/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)) return false
     const [header, encoded] = value.split(',')
     if (encoded.length % 4 !== 0) return false
@@ -126,7 +126,7 @@ export const defaults: Customization = {
 // Reduce large uploads before embedding them in the private, portable wheel snapshot.
 export async function readImage(file: File): Promise<string> {
   if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 10_000_000)
-    throw new Error(ct.badImage)
+    throw new Error('Choose a PNG, JPEG or WebP image up to 10 MB.')
   const bitmap = await createImageBitmap(file)
   const canvas = document.createElement('canvas')
   const scale = Math.min(1, 1024 / Math.max(bitmap.width, bitmap.height))
@@ -135,6 +135,6 @@ export async function readImage(file: File): Promise<string> {
   canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
   bitmap.close()
   const data = canvas.toDataURL('image/webp', 0.8)
-  if (data.length > 683000) throw new Error(ct.bigImage)
+  if (data.length > 683000) throw new Error('This image is too large. Try a smaller one.')
   return data
 }

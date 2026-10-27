@@ -42,7 +42,7 @@ export function Editor({
   const duplicate = new Set(wheel.options.map((o) => o.label)).size !== wheel.options.length
   function add(labels: string[]) {
     if (labels.length + wheel.options.length > 10000 || labels.some((v) => v.length > 160)) {
-      report(t.limit)
+      report('Up to 10,000 entries, with up to 160 characters each.')
       return
     }
     edit({
@@ -68,9 +68,6 @@ export function Editor({
           <h2 id="editor-title">{t.edit}</h2>
           <p>{t.editHint}</p>
         </div>
-        <span className="tiny-wheel" aria-hidden="true">
-          ✳
-        </span>
       </div>
       <fieldset disabled={disabled}>
         <label className="field-label" htmlFor="wheel-title">
@@ -121,14 +118,7 @@ export function Editor({
               value={bulk}
               onChange={(e) => setDraft((current) => ({ ...current, bulk: e.target.value }))}
             />
-            <button
-              className="secondary small"
-              onClick={() =>
-                add(
-                  parseEntries(bulk),
-                )
-              }
-            >
+            <button className="secondary small" onClick={() => add(parseEntries(bulk))}>
               {t.pasteApply}
             </button>
           </div>

@@ -1,6 +1,8 @@
 import { ct } from '../customization.i18n'
 import { useEffect, useRef, useState } from 'react'
-import { customizationSchema, palettes, type Customization } from '../customization'
+import { customizationSchema, defaults, palettes, type Customization } from '../customization'
+import { t } from '../i18n'
+import { translate } from '../locale'
 import { playSound, stopSounds } from '../lib/audio'
 import { Dialog } from './Dialog'
 import { ImagePicker } from './ImagePicker'
@@ -168,13 +170,13 @@ export function Customize({
             setSaving(true)
             setError('')
             void save(parsed.data)
-              .catch((error) => setError(String(error)))
+              .catch((error: Error) => setError(error.message))
               .finally(() => setSaving(false))
           }}
         >
           {error && (
             <p role="alert" className="error">
-              {error}
+              {translate(error)}
             </p>
           )}
           <fieldset disabled={saving} style={{ border: 0, padding: 0, margin: 0 }}>
@@ -207,7 +209,11 @@ export function Customize({
                   <label>
                     {ct.message}
                     <input
-                      value={draft.popup_message}
+                      value={
+                        draft.popup_message === defaults.popup_message
+                          ? t.selected
+                          : draft.popup_message
+                      }
                       disabled={!draft.popup}
                       maxLength={200}
                       required
@@ -369,7 +375,7 @@ export function Customize({
               className="primary"
               disabled={saving || uploads > 0 || !customizationSchema.safeParse(draft).success}
             >
-              OK
+              {translate('OK')}
             </button>
           </div>
         </form>

@@ -1,122 +1,120 @@
 # Wheelero context
 
-Updated: 2026-10-26. User asked to remove backend storage, initially mentioned localStorage,
-then preferred a larger local store. Decision: **IndexedDB for wheels/images/results;
-localStorage for small preferences/drafts. No backend.** On 2026-10-26 the user subsequently
-authorized GitHub setup/push to Nikolasgouz/wheelero and preparation for wheelero.com.
+Updated: 2026-10-27.
 
-## Current implementation
+## Current authorization
 
-- Existing React/TypeScript/Bun/Vite design/features preserved: PWA, 14 menu languages,
-  12 templates, 1-10,000 entries, customization/images/sounds, no-repeat/restoration,
-  local history, TXT/JSON backups, number/name/yes-no/team tools and public pages.
-- No API client/requests. Bundled templates; Web Crypto draws. Sync controls, revisions,
-  sessions and outbox fields removed from active frontend data.
-- IndexedDB v10 migrates v1-v9 and retains the original record in legacy-backup/previous.
-  Current record version 1 preserves IDs/configuration/history/removal jobs. An unfinished
-  old server draw is reported, not fabricated. Historical SQLite is untouched.
-- Writes publish after commit; quota failures preserve old data. Web Locks/BroadcastChannel
-  coordinate tabs. Optimistic input edits retain caret and roll back failed writes.
-- My wheels > Protect local storage calls navigator.storage.persist(); browser may refuse.
-  JSON backups remain necessary; clearing browser data deletes local wheels.
-- Sharing embeds versioned UTF-8/base64url in /#wheel=, with no uploads/history/other wheels.
-  Recipient saves a new copy. Links are unencrypted and not revocable. Payloads above
-  16,000 encoded characters use JSON files. Old ?share= links explain the change.
-- Seven static routes plus 404/launch HTML, robots/sitemap/metadata/manifest/SW.
-  PUBLIC_URL/PUBLIC_INDEXING are build-time inputs. No runtime Python.
-- START_GYRNA.bat starts only Vite preview at localhost:4173/launch.html and stops any
-  owned old backend on 8017. PWA updates preserve drafts and do not interrupt spins.
-- Docker/Compose/Caddy serves static files. backend/ remains historical source/recovery;
-  do not delete old DBs/volumes. Static hosting can replace a Droplet entirely.
+The latest request adds focused usability: viewport-fitting wheel, visible Customize/paste,
+compact tool navigation, shorter translated intro, and a reusable Classroom workflow.
+On 2026-10-27 the user explicitly approved committing and pushing the reviewed usability
+and prior localization/center-label changes to GitHub. This supersedes the preview-only
+restriction. Pushes to main invoke the existing CI/deployment workflow; its success must
+be verified separately. The public Cloudflare preview remains stopped. Local preview runs at
+http://localhost:4173/launch.html; START_GYRNA.bat rebuilds/opens it.
+
+## Product and architecture
+
+Existing React/TypeScript/Bun/Vite static PWA. No active backend, API calls, accounts or
+server synchronization. Historical Python/FastAPI/SQLite files remain untouched for recovery.
+IndexedDB v11 (gyrna) stores wheels/images/settings/results/removals/class attendance. Old
+records survive in legacy-backup/previous and before-classroom. localStorage holds preferences
+and editor drafts. Do not rename
+storage keys or reset data. JSON is the backup/device/domain transfer mechanism.
+
+Web Crypto rejection sampling selects winners; display projection/animation do not alter
+probabilities. Transactions use Web Locks; BroadcastChannel updates tabs. Publish after
+successful writes, preserve previous data on quota failure. PWA updates require explicit
+consent, flush writes, and never interrupt a draw. navigator.storage.persist() may refuse.
+
+Implemented: 1-10,000 entries, inline/bulk/Excel editing, 12 templates, themes/images/sounds,
+no-repeat/restoration, history, TXT/JSON exports, fullscreen, offline installation, name,
+yes/no, number and team tools, About/Privacy/FAQ/404 and static SEO. Share links contain
+validated UTF-8 snapshots in /#wheel= with no uploads/history/other wheels; copies cannot
+be revoked and are not encrypted. Above 16,000 encoded characters use JSON.
+
+## Release changes
+
+- All 14 languages now cover public copy, FAQ/About/Privacy/404, tools, templates,
+  themes/gallery, storage/sharing/validation messages and runtime page metadata.
+- Thirteen translated catalogs have 464 common keys; pl/ru/ro add plural forms. No remote
+  translation service. Catalogs remain in the precache for offline switching.
+- Existing user titles/names/results/custom messages are never rewritten on language
+  changes. New templates/tools localize at creation. Exact default winner text localizes
+  in the popup and Customize input without changing its stored value. Gallery labels
+  refresh when the language changes. Application error state retains source keys.
+- Removed decorative sparkle/asterisk marks from wheel, result and editor; brand retained.
+  Center label uses container-relative type size, balanced wrapping and circular margins.
+  Greek CTA is now "Turn the wheel" in Greek to avoid a broken long word on small screens.
+- Malformed share links show a localized validation error.
+- Workspace measures actual header/tool chrome and limits desktop diameter by height AND
+  width. Mobile stacks naturally; short windows scroll. Sidebar lists stay bounded.
+- Visible Customize opens unchanged settings; Paste a list previews counts, trims blanks,
+  keeps duplicates, and commits add/replace atomically. Cancel is inert. Replace clears
+  attendance/round/restoration jobs but retains history; Add preserves existing IDs/progress.
+- Tool navigation uses actual routes/aria-current; Classroom is an optional local workflow.
+  A class is a wheel with classroom.absent_ids, independent of no-repeat active flags.
+  Stable IDs distinguish duplicate students. New rounds restore active flags and cancel
+  pending removals without resetting attendance. All-absent/exhausted messages are distinct.
+- v11 migration adds classroom:null to old wheels, preserving a v10 recovery record. Version-1
+  JSON/old links remain valid. JSON/local copies preserve attendance; class share links expose
+  all names but omit attendance/progress (explicit disclosure). No RNG/network changes.
 
 ## Important files
 
-frontend/src/state/storage.ts: v10 migration, IndexedDB/recovery/quota handling.
-state/store.ts: local transactions, draws, editing/removal/restoration and tab updates.
-lib/sharing.ts: bounded/validated fragment links. App.tsx: storage/Share UI and spin timing.
-types.ts: local/backup models. site.ts/scripts/pages.tsx/vite.config.ts: static SEO/404/PWA.
-scripts/start-gyrna.ps1/public-preview.ps1: static launchers. Dockerfile/compose.yaml/
-deploy/Caddyfile: optional static HTTPS hosting. backend/README.md: historical scope.
+frontend/src/locale.ts, locales/*.json: selection/catalogs. i18n.ts and customization.i18n.ts:
+interface keys. site.ts, HomeInfo/SiteContent/Tools components: public content and tools.
+App.tsx: translated status/templates/metadata and spin coordination. Wheel.tsx/styles.css:
+wheel center and appearance. Customize/ImagePicker: temporary settings and localized gallery.
+state/store.ts: persistence and localized creation; state/storage.ts: migration/recovery.
+lib/sharing.ts: bounded snapshot validation. scripts/pages.tsx/vite.config.ts: static SEO/PWA.
+docs/localization.md documents content boundaries and verification.
+Workspace/ToolNavigation/PasteList/Classroom components implement the new flows; state/wheel.ts
+owns eligibility/new-round logic, store.ts commits mutations, types.ts validates metadata.
+See docs/usability.md and data-model.md. Tests: lib/classroom.test.ts, e2e/usability.spec.ts.
 
-## Actual verification, 2026-10-26
+## Earlier localization verification, 2026-10-27
 
-- Bun typecheck/lint/build passed; 16 unit tests passed. PWA precaches 59 files (~2.4 MiB).
-  Upstream Zod annotation warnings remain non-failing.
-- Full Chromium E2E: **36 passed (3.7m)** against static hosting with backend 8017 stopped.
-  Includes >5 MiB JSON import/persistence of three 10,000-entry wheels, quota-failure
-  rollback, v1/v9 migration and original recovery record, no API traffic, fragment copies,
-  offline reload/draws, customization/images/audio, result-pointer mapping, two-tab edits,
-  cookie-independent storage, import/export and safe cross-tab PWA updates.
-- Layout/keyboard/axe checks passed at 360/390/768/1440px in the full E2E run.
-- START_GYRNA.bat lifecycle tested: builds and serves static files at 4173 without Python.
-- Old Cloudflare tunnel expired (Tunnel not found). The static launcher was stopped and
-  restarted successfully, verifying owned-process cleanup and exact Host allowlisting.
-- New public HTTPS URL checked in Chromium: no API calls/session cookies, local draw,
-  independent fragment recipient copy with no history, canonical URLs, real 404, offline
-  yes/no draw and all four widths. Zero page errors. Historical Python preview stopped.
-- Git diff whitespace check passed. These application checks preceded GitHub setup.
+Before the usability work, all 14 languages passed public-route, Customize/gallery/template,
+library, refresh, draw and offline checks. User content/drafts remained unchanged. Center
+idle/spinning labels fit at 360/390/768/1440px (112 measurements). Greek/German/Japanese
+dialogs passed axe; native-speaker and physical-device checks remain outstanding.
 
-Verified temporary URL:
-https://fuzzy-market-model-demonstration.trycloudflare.com
-Keep PC awake/online; state/process IDs: ignored artifacts/public-preview.json.
+## Current usability verification
 
-## Limits / next steps
+- Typecheck, ESLint, production build and 20/20 unit tests passed. Full Chromium E2E:
+  40/40 passed, two local workers, 2.9 minutes, including the exclusive real PWA update.
+- Final attendance-reference filtering/legacy-share assertions were followed by fresh
+  lint/build/20 unit tests and all four usability E2E tests passing (17.2 seconds).
+- Paste preview/cancel/replace/add/refresh, duplicate IDs, absence, no-repeat/exhaustion,
+  offline round restart, v10-to-v11 recovery and older storage migrations passed.
+- Desktop 1366x768, 1440x900, 1920x1080 and mobile 390x844 passed no-overflow, keyboard,
+  modal Escape/focus and light/dark axe checks; screenshots visually inspected. Effective
+  small/zoomed viewport 683x384 retains scrolling/access to spin (not physical browser zoom).
+- All 14 languages passed desktop fit and mobile paste/create-class/attendance; no browser
+  errors or horizontal overflow. English/Greek new dialogs passed full axe scans. Source-key
+  and placeholder audit passed for all catalogs. Paste Escape restores focus to its opener.
+- Artifacts: usability-{1366,1440,1920,390}-{light,dark}.png, usability-classroom.png,
+  usability-attendance-el-mobile.png and usability-locales.json, all ignored in artifacts/.
+- Workbox precaches 59 files (~2.74 MiB). Nonfatal build warnings: upstream Zod annotations
+  and translated-catalog chunk slightly above 500 kB. These are local verification results.
 
-Docker/TLS hosting and physical iOS/Android installation remain unverified.
-Operator identity/privacy contact and Pages/DNS administration access are not supplied.
-The owner has configured DNS to GitHub Pages; public workflow status is now readable.
-Production is live at https://wheelero.com on GitHub Pages. No purchases or store submission.
+## Hosting and next steps
 
-Browser quota varies and is not unlimited. Persistent storage may be refused. Data is
-origin-specific: JSON is the device/domain transfer mechanism. Old server-only uploads
-are not accessible in the static app; historical files remain for operator recovery.
-Android TWA/Bubblewrap and iOS Capacitor are separate future work.
+Previously deployed site: https://wheelero.com on GitHub Pages. Repo:
+https://github.com/Nikolasgouz/wheelero. Last verified deployment run 40383010819, code 75228a6;
+b35e19f documented that deployment. This release is approved for push; check the workflow
+for the new commit before claiming the live site has updated.
+GitHub Actions checks every push to main then deploys. CI uses four shards x two workers
+(eight total), followed by one exclusive PWA update job. Keep that topology and the pinned
+Playwright image aligned with bun.lock. No apt/browser downloads inside CI containers.
+Bun is bootstrapped by npm inside the container; dependencies/scripts still use Bun.
 
-## GitHub setup, 2026-10-26
+Domain DNS: Papaki dns1.papaki.gr/dns2.papaki.gr; four GitHub Pages A records and www CNAME
+nikolasgouz.github.io. HTTPS/www redirects were verified previously. No DNS change this
+session. SSH keys remain ignored; SSH alone cannot administer Pages/DNS. No API token.
 
-- User supplied an SSH deploy key for https://github.com/Nikolasgouz/wheelero. Fixed its
-  Windows ACL, verified GitHub's host key against official docs, ignored ssh_keys/.
-  Key contents were never printed/committed. History/working-tree secret-pattern scan passed.
-- Initially empty remote now has main, including the preserved earlier Git history and
-  local-first application commit 7483620. Push and remote HEAD were verified over SSH.
-- .github/workflows/pages.yml uses Bun 1.4.2 and pinned actions. Build/typecheck/lint/unit
-  checks precede four browser shards with two workers each (eight total, user's final
-  preference). The @exclusive PWA update test runs alone after every shard passes.
-  All jobs use the same build artifact. Every push to main deploys only after all checks;
-  PAGES_ENABLED is unused. PRs check only. Custom domain must be wheelero.com.
-- Local Playwright defaults to eight workers; --workers=2 reduces local resource use.
-  Sixteen overloaded this PC and were stopped; eight initially yielded 33 passes/two
-  timing failures/one dependent test not run. The spin-lock test now pauses its clock
-  while asserting controls, avoiding dependence on CPU speed. CI spreads eight workers
-  over four machines instead of saturating one runner. GitHub reporter exposes failures
-  as annotations; failure traces are uploaded with seven-day retention.
-- GitHub run 40378516624 failed before deployment: 35 passes, PWA update test failed as
-  Save & update stayed visible. The click now checks registration.waiting directly after
-  flushing writes, handling activation by another tab without relying on a delayed event.
-  Reload still requires explicit consent and waits until the wheel is idle.
-- SSH key cannot administer Pages/DNS; no noninteractive GitHub API credential available.
-  Owner manages Pages settings. No repository variable is needed. Public API now permits
-  reading job status, but raw log downloads return 403 without an account token.
-- Authoritative DNS now verifies all four Pages A records and www CNAME
-  nikolasgouz.github.io, retaining dns1.papaki.gr/dns2.papaki.gr. No agent DNS changes made.
-  HTTPS now serves Wheelero. HTTP and www both redirect to https://wheelero.com/.
-- This deployment pass: typecheck/lint/16 unit tests and production build passed;
-  wheelero.com metadata/indexing/manifest/404 checked. All 36 Chromium E2E tests passed
-  again (3.7m), including offline/mobile/storage/update checks. actionlint passed for
-  the new workflow. After the update fix, typecheck/lint/build and five consecutive PWA
-  regression runs passed. Full local rerun passed all 36 tests in 2.2m with two local
-  workers. GitHub run 40381218184 passed three shards; the fourth stalled downloading
-  Ubuntu 26 font packages from azure.archive.ubuntu.com (owner supplied log).
-- CI now uses Ubuntu 24.04 runners and the official Playwright 1.64.1 Noble container
-  pinned by verified OCI digest. It matches bun.lock and needs no apt/browser installation.
-  Bun is bootstrapped via its npm global package inside containers (no system unzip);
-  frontend installation/scripts still use Bun. New pushes cancel older branch runs.
-- GitHub run 40383010819 (commit 75228a6) completed successfully: build, all four browser
-  shards, PWA update regression and Pages deployment. actionlint passed. The application
-  was then verified at https://wheelero.com in Chromium: local spin, fragment sharing to
-  a separate context, no API/cookies, offline reload/draw, canonical HTML, real 404 and
-  360/390/768/1440px layouts, with zero page errors. Mobile/desktop screenshots reviewed.
-  Production robots allows indexing; HTTP/www redirect to HTTPS apex.
-- Next: add real operator/privacy contact and test installation on physical iOS/Android.
-  Preserve the eight-worker CI layout and the isolated PWA test; update Playwright's image
-  with its locked package version. Do not purchase hosting or change visibility without instructions.
+Next: verify the GitHub workflow for this release. Native-speaker
+review, physical iOS/Android installation and human screen-reader checks remain. Operator
+identity/privacy contact are still needed for permanent publication. Browser storage varies
+and can be erased; maintain JSON backups. Store publishing (Android TWA/Bubblewrap or iOS
+Capacitor), accounts, live rooms, payments and AI suggestions remain separate future work.

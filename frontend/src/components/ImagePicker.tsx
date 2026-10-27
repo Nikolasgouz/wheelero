@@ -1,6 +1,7 @@
 import { ct } from '../customization.i18n'
 import { useState } from 'react'
-import { gallery, readImage } from '../customization'
+import { readImage } from '../customization'
+import { translate } from '../locale'
 
 export function ImagePicker({
   label,
@@ -33,7 +34,7 @@ export function ImagePicker({
             setError('')
             void readImage(file)
               .then(change)
-              .catch((error) => setError(String(error)))
+              .catch((error: Error) => setError(error.message))
               .finally(() => {
                 setLoading(false)
                 busyChanged(false)
@@ -42,15 +43,10 @@ export function ImagePicker({
         />
       </label>
       <div className="image-gallery" aria-label={ct.gallery}>
-        {gallery.map((image) => (
-          <button
-            type="button"
-            key={image.src}
-            aria-pressed={value === image.src}
-            onClick={() => change(image.src)}
-          >
-            <img src={image.src} alt="" />
-            <span>{image.name}</span>
+        {Object.entries(ct.images).map(([src, name]) => (
+          <button type="button" key={src} aria-pressed={value === src} onClick={() => change(src)}>
+            <img src={src} alt="" />
+            <span>{name}</span>
           </button>
         ))}
       </div>
@@ -60,7 +56,7 @@ export function ImagePicker({
         </button>
       )}
       {loading && <p role="status">{ct.loading}</p>}
-      {error && <p role="alert">{error}</p>}
+      {error && <p role="alert">{translate(error)}</p>}
     </fieldset>
   )
 }

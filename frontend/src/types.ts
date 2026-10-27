@@ -31,6 +31,15 @@ export const backupWheelSchema = z
       .max(120)
       .refine((v) => v.trim().length > 0),
     no_repeat: z.boolean(),
+    classroom: z
+      .object({
+        absent_ids: z
+          .array(z.uuid())
+          .max(10000)
+          .refine((ids) => new Set(ids).size === ids.length),
+      })
+      .nullable()
+      .default(null),
     customization: z
       .union([customizationSchema, legacyCustomizationSchema])
       .default(() => structuredClone(defaults)),
@@ -38,6 +47,10 @@ export const backupWheelSchema = z
     results: z.array(resultSchema).max(10000),
   })
   .refine((w) => new Set(w.options.map((o) => o.id)).size === w.options.length)
+  .refine((w) => {
+    const ids = new Set(w.options.map((o) => o.id))
+    return !w.classroom || w.classroom.absent_ids.every((id) => ids.has(id))
+  })
   .refine((w) => new TextEncoder().encode(JSON.stringify(w)).length <= 8_000_000)
 export const backupSchema = z.object({
   format: z.literal('gyrna'),

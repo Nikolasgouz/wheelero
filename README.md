@@ -14,7 +14,7 @@ depends on the browser/device. localStorage holds small preferences and editor d
 My wheels > Protect local storage requests persistent storage where supported. The browser
 may decline; even a grant cannot protect data from the user clearing browser storage.
 
-Old browser databases migrate to IndexedDB v10. The migration retains a recovery copy of
+Old browser databases migrate to IndexedDB v11. The migration retains a recovery copy of
 the previous record. No names are uploaded. Existing server-only records are not fetched
 or erased. The historical backend and ignored SQLite files remain on disk for recovery.
 
@@ -29,6 +29,15 @@ Do not clear browser site data without a backup.
 - Unbiased Web Crypto selection, pointer/result agreement, optional sound, themes/images,
   customizable duration, fullscreen, keyboard support and reduced motion.
 - Name picker, yes/no, number-range and balanced-team tools, plus About, Privacy and FAQ.
+- Visible Customize, direct Paste a list with preview/replace/add, and compact tool links.
+  Desktop wheel sizing respects available width and height; long lists scroll internally.
+- Classroom: save a reusable class in My wheels, mark absences by student ID, select with
+  No repeats, and Start new round while keeping absent students excluded. All data stays
+  on this browser. JSON/copies preserve attendance; class share links include all names
+  but exclude attendance and round progress. See [usability](docs/usability.md).
+- Fourteen interface/content languages, including templates, tools, FAQ, About/Privacy,
+  customization and messages. User-authored names/titles stay unchanged. Language works
+  offline and survives refresh; see [localization](docs/localization.md).
 - Share a copy in a URL fragment, without uploading it. History/other wheels are excluded.
   Links cannot be revoked. Wheels exceeding the 16,000-character payload limit use JSON
   files instead. Some messaging apps may truncate long links; JSON is the reliable option.
@@ -50,6 +59,11 @@ Development URL: http://localhost:5173. For the production-style local preview, 
 http://localhost:4173/launch.html. STOP_GYRNA.bat stops its owned processes. Existing filenames
 and browser origin stay unchanged to preserve shortcuts and local data. The launcher also
 stops the old project backend if it is still listening on 8017; it never restarts Python.
+
+The 2026-10-27 localization and usability release was approved for GitHub publication
+after local preview. Open http://localhost:4173/launch.html for local review; check the
+GitHub Actions run for the release commit to confirm deployment to wheelero.com.
+The old public Cloudflare preview remains stopped.
 
 Manual preview:
 

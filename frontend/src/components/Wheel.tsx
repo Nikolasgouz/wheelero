@@ -65,12 +65,6 @@ export function Wheel({
     <div className={`wheel-stage ${spinning ? 'is-spinning' : ''}`}>
       <span className="orbit-dot dot-one" />
       <span className="orbit-dot dot-two" />
-      <span className="little-star star-one" aria-hidden="true">
-        ✧
-      </span>
-      <span className="little-star star-two" aria-hidden="true">
-        ✦
-      </span>
       <div
         ref={pointer}
         className="wheel-pointer"

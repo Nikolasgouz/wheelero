@@ -288,8 +288,11 @@ for (const width of [360, 390, 768, 1440]) {
     if (width >= 1024) {
       expect(sidebar.x).toBeGreaterThan(wheelBounds.x + wheelBounds.width)
       expect(width - sidebar.x - sidebar.width).toBeLessThanOrEqual(17)
-      expect(Math.abs(wheelBounds.x + wheelBounds.width / 2 - width / 2)).toBeLessThan(100)
-      expect(wheelBounds.width).toBeGreaterThan(800)
+      expect(
+        Math.abs(wheelBounds.x + wheelBounds.width / 2 - wheelPanel.x - wheelPanel.width / 2),
+      ).toBeLessThan(2)
+      expect(wheelBounds.y + wheelBounds.height).toBeLessThanOrEqual(1000)
+      expect(wheelBounds.width).toBeGreaterThan(300)
     } else {
       expect(
         Math.abs(wheelBounds.x + wheelBounds.width / 2 - wheelPanel.x - wheelPanel.width / 2),

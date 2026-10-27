@@ -460,13 +460,16 @@ button:hover:not(:disabled) {
   box-shadow: 0 3px 8px #46325e25;
   border: 3px solid #eee7fa;
   color: #7650cc;
-  padding: 12px;
+  padding: 0;
+  container-type: inline-size;
   z-index: 1;
 }
 .wheel-spin-control span {
-  max-width: 90px;
-  font-size: clamp(13px, 1.5vw, 20px);
-  line-height: 1.25;
+  max-width: 68%;
+  font-size: clamp(10px, 14cqi, 18px);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   font-weight: 750;
 }
 .wheel-spin-control:hover:not(:disabled) {
@@ -505,21 +508,6 @@ button:hover:not(:disabled) {
   right: 3%;
   bottom: 26%;
   background: #e7d1b1;
-}
-.little-star {
-  position: absolute;
-  color: #bea8df;
-}
-.star-one {
-  font-size: 27px;
-  right: 0;
-  top: 16%;
-}
-.star-two {
-  font-size: 19px;
-  left: 3%;
-  bottom: 13%;
-  color: #acbdb4;
 }
 .large-list-label {
   position: absolute;
@@ -674,17 +662,6 @@ button:hover:not(:disabled) {
   font-size: 11px;
   color: var(--muted);
   margin: 0;
-}
-.tiny-wheel {
-  font-size: 24px;
-  color: #b69bdc;
-  background: var(--input);
-  width: 39px;
-  height: 39px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
 }
 .field-label {
   display: block;
@@ -1159,10 +1136,6 @@ dialog::backdrop {
 .result-display {
   text-align: center;
   padding: 20px 0 28px;
-}
-.result-sparkle {
-  font-size: 35px;
-  color: var(--primary);
 }
 .winner {
   font-size: 38px;
@@ -2012,7 +1985,7 @@ input[type='color'] {
   }
 }
 
-/* Equal space above and below the wheel keeps its center in the viewport. */
+/* Size the tool from the measured space below its heading/navigation. */
 .home:not(.presenting) {
   padding-top: 0;
 }
@@ -2031,15 +2004,16 @@ input[type='color'] {
   margin: 0 auto;
 }
 .home:not(.presenting) .spinner-panel {
-  display: grid;
-  grid-template-rows: minmax(min-content, 1fr) auto minmax(min-content, 1fr);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding-top: 0;
 }
 .wheel-top {
-  align-self: end;
+  width: 100%;
 }
 .home:not(.presenting) .wheel-stage {
-  width: min(100%, 960px, max(260px, calc(100dvh - 140px)));
+  width: min(100%, 760px);
   max-width: none;
 }
 .home:not(.presenting) > footer {
@@ -2052,8 +2026,9 @@ input[type='color'] {
 .wheel-sidebar {
   display: flex;
   flex-direction: column;
-  height: min(680px, max(400px, calc(100dvh - 160px)));
-  overflow: hidden;
+  height: 540px;
+  min-height: 480px;
+  overflow: auto;
 }
 .sidebar-tabs {
   display: flex;
@@ -2179,35 +2154,22 @@ input[type='color'] {
   .home:not(.presenting) .workspace {
     max-width: none;
     gap: 24px;
-    --wheel-size: min(calc(100vw - 396px), 960px, max(260px, calc(100dvh - 140px)));
+
   }
   .home:not(.presenting) .spinner-panel {
-    padding-left: clamp(0px, calc(100vw - 396px - var(--wheel-size)), 364px);
-    grid-template-rows: auto auto 1fr;
+    padding: 0;
   }
   .home:not(.presenting) .wheel-stage {
-    width: var(--wheel-size);
+    width: min(100%, var(--wheel-diameter, 480px));
   }
-  .home:not(.presenting) .wheel-top {
-    display: grid;
-    align-items: center;
-    min-height: 44px;
-  }
-  .home:not(.presenting) .wheel-heading,
-  .home:not(.presenting) .wheel-title {
-    grid-area: 1 / 1;
-    margin: 0;
-  }
-  .home:not(.presenting) .wheel-title {
-    margin: 0 120px;
-    pointer-events: none;
-  }
+  .home:not(.presenting) .wheel-heading { margin: 0 8px; }
+  .home:not(.presenting) .wheel-title { margin: 4px auto 0; }
   .home:not(.presenting) .wheel-sidebar-column {
     align-self: start;
-    margin-top: 16px;
+    margin-top: 0;
   }
   .home:not(.presenting) .wheel-sidebar {
-    height: max(400px, calc(100dvh - 96px));
+    height: var(--tool-height, 540px);
   }
 }
 @media (max-width: 1023px) {
@@ -2217,7 +2179,7 @@ input[type='color'] {
     gap: 24px;
   }
   .home:not(.presenting) .spinner-panel {
-    min-height: calc(100dvh - 192px);
+    min-height: 0;
   }
   .wheel-sidebar {
     height: 480px;
@@ -2232,10 +2194,10 @@ input[type='color'] {
 }
 
 /* Public pages keep the interactive wheel first and use the existing visual tokens. */
-.site-intro { max-width: 960px; margin: 20px auto 28px; text-align: center; }
+.site-intro { max-width: 960px; margin: 6px auto 10px; text-align: center; }
 .site-intro h1 { font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.8px; margin: 8px 0; }
 .site-intro p { color: var(--muted); font-size: 14px; line-height: 1.65; margin: 8px 0; }
-.site-intro .info-eyebrow { color: var(--primary); font-size: 11px; }
+.site-intro .info-eyebrow { color: var(--primary); font-size: 11px; margin: 0; }
 .site-details { max-width: 900px; margin: 40px auto; line-height: 1.8; }
 .site-details section { margin: 30px 0; }
 .site-details details { border-bottom: 1px solid var(--line); padding: 14px 0; }
@@ -2255,3 +2217,39 @@ input[type='color'] {
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
 @media (pointer: coarse) { button, .site-links a, summary { min-height: 44px; } .icon-button { min-width: 44px; } }
 @media (max-width: 600px) { .site-intro { margin: 14px auto; } .site-intro p { font-size: 12px; } .site-details { margin: 30px 12px; } }
+
+/* Compact, accessible tool discovery and classroom workflows. */
+.tool-navigation { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 8px; margin: 0 0 12px; }
+.tool-navigation a, .tool-navigation button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; min-height: 40px; border-radius: 12px; font-size: 12px; color: var(--muted); text-decoration: none; }
+.tool-navigation a[aria-current='page'], .tool-navigation .classroom-entry { color: var(--primary); background: var(--tint); font-weight: 650; }
+.tool-navigation a[aria-disabled='true'] { cursor: not-allowed; opacity: .5; }
+.wheel-tools { align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.wheel-tools .customize-trigger { min-height: 44px; padding: 8px 12px; font-size: 13px; }
+.wheel-tools .icon-button { width: 44px; height: 44px; }
+.paste-list-trigger { margin: 8px 12px 0; min-height: 44px; flex-shrink: 0; }
+.paste-list, .class-create { display: grid; gap: 12px; }
+.paste-list textarea { width: 100%; min-width: 0; resize: vertical; }
+.paste-list p { margin: 0; }
+.dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.dialog-actions button { min-height: 44px; }
+.class-create input { width: 100%; }
+.class-list { display: grid; gap: 8px; max-height: 240px; overflow: auto; margin-bottom: 20px; }
+.class-list button { min-height: 44px; justify-content: flex-start; text-align: start; overflow-wrap: anywhere; }
+.classroom-controls { padding: 12px 16px; flex-shrink: 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+.classroom-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.class-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--primary); }
+.classroom-controls label { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+.classroom-controls p { margin: 4px 0 8px; }
+.wheel-sidebar:has(.classroom-controls) .sidebar-panel { flex: 1 0 260px; }
+.classroom-controls button { min-height: 40px; }
+.classroom-controls input, .attendance-list input { accent-color: var(--primary); width: 18px; height: 18px; flex-shrink: 0; }
+.attendance-list { max-height: 50dvh; overflow: auto; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.attendance-list label { display: flex; align-items: center; gap: 12px; min-height: 44px; overflow-wrap: anywhere; }
+.attendance-list label span { min-width: 0; }
+@media (max-width: 760px) {
+  .tool-navigation { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+  .tool-navigation a, .tool-navigation button { padding: 6px; min-width: 0; min-height: 44px; font-size: 11px; text-align: center; overflow-wrap: anywhere; }
+  .wheel-heading { margin: 0; gap: 6px; }
+  .dialog-actions button { flex: 1 1 100%; }
+  .class-list button { width: 100%; }
+}

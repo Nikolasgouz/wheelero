@@ -16,7 +16,10 @@ export function createShareLink(wheel: Wheel): string {
     wheel: {
       title: wheel.title,
       no_repeat: wheel.no_repeat,
-      options: wheel.options,
+      classroom: wheel.classroom ? { absent_ids: [] } : null,
+      options: wheel.classroom
+        ? wheel.options.map((option) => ({ ...option, active: true }))
+        : wheel.options,
       customization: wheel.customization,
       results: [],
     },
@@ -36,9 +39,23 @@ export function createShareLink(wheel: Wheel): string {
 export function readSharedWheel(fragment: string) {
   if (fragment.length > maxLength)
     throw new Error('This share link is too large. Import a JSON file instead.')
-  const bytes = Uint8Array.from(atob(fragment.replaceAll('-', '+').replaceAll('_', '/')), (char) =>
-    char.charCodeAt(0),
-  )
-  return shareSchema.parse(JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)))
-    .wheel
+  try {
+    const bytes = Uint8Array.from(
+      atob(fragment.replaceAll('-', '+').replaceAll('_', '/')),
+      (char) => char.charCodeAt(0),
+    )
+    const parsed = shareSchema.safeParse(
+      JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)),
+    )
+    if (!parsed.success) throw new Error('Invalid shared wheel link.')
+    return parsed.data.wheel
+  } catch (error) {
+    if (
+      error instanceof SyntaxError ||
+      error instanceof TypeError ||
+      (error instanceof DOMException && error.name === 'InvalidCharacterError')
+    )
+      throw new Error('Invalid shared wheel link.')
+    throw error
+  }
 }

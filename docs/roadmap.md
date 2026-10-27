@@ -6,7 +6,8 @@ tools and static public pages. Backend/API/sync are retired.
 Before permanent hosting: static host/domain/DNS access, operator/contact information
 and HTTPS verification. Docker/Droplet is optional.
 Physical iOS/Android installation, audio, keyboard, safe areas and human screen-reader
-testing remain. Existing fourteen-language menus stay; new public copy is English.
+testing remain. All fourteen languages now cover public copy, templates, tools and menus;
+native-speaker review remains. The latest localization changes await local user review.
 
 Next refinements: large-history pagination, local backup reminders, storage usage display
 and native-speaker translation review. Fragment links cannot expire or be revoked.

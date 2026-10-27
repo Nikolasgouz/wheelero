@@ -227,7 +227,7 @@ test('version 9 storage migrates locally, preserving wheels and a recovery copy'
   expect(requests).toEqual([])
   const recovery = await restored.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve) => {
-      const request = indexedDB.open('gyrna', 10)
+      const request = indexedDB.open('gyrna')
       request.onsuccess = () => resolve(request.result)
     })
     const previous = await new Promise<{ workspace_id: string }>((resolve) => {

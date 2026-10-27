@@ -92,7 +92,14 @@ export function PwaControls({
             {t.install}
           </button>
         ) : (
-          <button className="text-button" onClick={() => report(t.installInstructions)}>
+          <button
+            className="text-button"
+            onClick={() =>
+              report(
+                'On iPhone/iPad: Safari → Share → Add to Home Screen. In other browsers, look for Install app in the menu, if supported.',
+              )
+            }
+          >
             {t.installHelp}
           </button>
         ))}

@@ -20,7 +20,7 @@ import { translateEnglishDefaults } from './englishDefaults'
 import { upgradeCustomization } from './customizationMigration'
 
 export let migrationNotice = ''
-const database = openDB('gyrna', 10, {
+const database = openDB('gyrna', 11, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -28,9 +28,9 @@ const database = openDB('gyrna', 10, {
     void database.then((db) => db.close())
   },
   async upgrade(db, oldVersion, _newVersion, transaction) {
-    db.createObjectStore('legacy-backup')
+    if (oldVersion < 10) db.createObjectStore('legacy-backup')
     if (oldVersion === 0) db.createObjectStore('state')
-    else {
+    else if (oldVersion < 10) {
       const store = transaction.objectStore('state')
       const state: LegacyState | undefined = await store.get('current')
       if (state) {
@@ -106,6 +106,7 @@ const database = openDB('gyrna', 10, {
               options: wheel.options,
               results: wheel.results,
               no_repeat: wheel.no_repeat,
+              classroom: null,
               customization: wheel.customization,
               updated_at: wheel.updated_at,
             })),
@@ -114,6 +115,17 @@ const database = openDB('gyrna', 10, {
           migrationNotice =
             'An unfinished draw from the old server version could not be recovered. Existing results were preserved; no replacement winner was generated.'
         await store.put(current, 'current')
+      }
+    }
+    if (oldVersion === 10) {
+      const store = transaction.objectStore('state')
+      const state: SavedState | undefined = await store.get('current')
+      if (state) {
+        await transaction
+          .objectStore('legacy-backup')
+          .put(structuredClone(state), 'before-classroom')
+        for (const wheel of state.wheels) wheel.classroom = null
+        await store.put(state, 'current')
       }
     }
   },
