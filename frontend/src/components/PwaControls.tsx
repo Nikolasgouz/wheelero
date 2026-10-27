@@ -26,6 +26,15 @@ export function PwaControls({
     updateServiceWorker,
   } = useRegisterSW({ onNeedReload: () => setActivated(true) })
   useEffect(() => {
+    if (!('serviceWorker' in navigator)) return
+    const controller = navigator.serviceWorker.controller
+    const changed = () => {
+      if (controller) setActivated(true)
+    }
+    navigator.serviceWorker.addEventListener('controllerchange', changed)
+    return () => navigator.serviceWorker.removeEventListener('controllerchange', changed)
+  }, [])
+  useEffect(() => {
     if (!activated || !updateRequested || busy) return
     let cancelled = false
     void flushStorage()

@@ -33,8 +33,10 @@ Web Locks/BroadcastChannel for multiple tabs. Never invent old pending server re
 Web Crypto chooses winners without bias. Display projection never changes eligibility;
 land on the winning entry ID and reveal results only after animation. Lock editing,
 customization/sound/fullscreen during draws. Respect reduced motion and global mute.
-Customization drafts save only on OK; timed removals use IDs. PWA updates flush writes,
-require this tab's explicit action and never interrupt a spin.
+Customization drafts save only on OK; timed removals use IDs. New PWA workers activate
+automatically without reloading open pages. Reloading an open editor requires this tab's
+action and completed writes; never interrupt a spin. Normal navigation uses NetworkFirst
+HTML with HTTP revalidation and offline fallbacks, not a permanently precached homepage.
 
 Share links embed unencrypted snapshots in fragments, excluding history/other wheels.
 Validate/cap payloads, explain no revocation, use JSON for large wheels. Preserve backup
@@ -59,3 +61,4 @@ expanded public-copy translations from that commit. Preserve browser data via In
 v12 migration: snapshot v10/v11 before restoring the original wheel shape. Do not reopen
 v10 on an upgraded v11 database. Do not reset/delete existing user data. Commit/push this
 rollback using the existing main-branch deployment workflow; no force push or DNS changes.
+Follow-up: fix stale normal-URL navigation while retaining that rollback and all local data.

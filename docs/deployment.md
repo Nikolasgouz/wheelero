@@ -26,6 +26,12 @@ sitemap.xml, manifest, worker and assets. Serve directory index files and a genu
 status for unknown paths; avoid a blanket SPA rewrite to index.html. Use HTTPS for Web
 Crypto/PWA. Set sw.js and HTML to revalidate rather than caching them indefinitely.
 
+The 2026-10-27 stale-navigation fix uses NetworkFirst for normal public URLs and activates
+new workers without forcing an open page to reload. Old installations adopt this policy
+when the browser downloads/installs the new sw.js; the next ordinary navigation uses it.
+GitHub Pages/CDN propagation can delay that download. Do not clear site data or unregister
+the PWA as an update procedure. Saved wheels and drafts are independent of the asset cache.
+
 PUBLIC_URL is built into metadata, not replaced by a server. Keep PUBLIC_INDEXING=false
 for temporary previews. Local builds can leave PUBLIC_URL empty (relative metadata).
 The user supplied wheelero.com as the intended domain. No registrar/DNS changes or

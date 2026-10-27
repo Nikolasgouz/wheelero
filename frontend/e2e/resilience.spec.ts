@@ -114,50 +114,67 @@ test('export and import preserves a wheel and marks imported history as local', 
   await expect(page.locator('.history li').getByLabel('Device draw / import')).toHaveCount(1)
 })
 
-test('real service-worker update preserves saved and unsubmitted editor work', { tag: '@exclusive' }, async ({ page }) => {
-  const workerPath = path.resolve('dist/sw.js')
-  const original = await readFile(workerPath, 'utf8')
-  await page.goto('/')
-  await page.evaluate(async () => {
-    await navigator.serviceWorker.ready
-  })
-  await page.reload()
-  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
-  await showScreen(page, 'options')
-  await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
-  await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Add multiple entries' }).click()
-  await page.getByLabel('One entry per line').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
-  try {
-    await writeFile(workerPath, `${original}\n// update lifecycle test ${Date.now()}\n`)
+test(
+  'real service-worker update preserves saved and unsubmitted editor work',
+  { tag: '@exclusive' },
+  async ({ page }) => {
+    const workerPath = path.resolve('dist/sw.js')
+    const original = await readFile(workerPath, 'utf8')
+    const htmlPath = path.resolve('dist/index.html')
+    const originalHtml = await readFile(htmlPath, 'utf8')
+    await page.goto('/')
     await page.evaluate(async () => {
-      await (await navigator.serviceWorker.ready).update()
+      await navigator.serviceWorker.ready
     })
-    const update = page.getByRole('button', { name: 'Save & update' })
-    await expect(update).toBeVisible()
-    await showScreen(page, 'wheel')
-    await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-    await expect(update).toBeDisabled()
-    const otherTab = await page.context().newPage()
-    await otherTab.goto('/privacy')
-    await otherTab.evaluate(async () => {
-      const registration = await navigator.serviceWorker.ready
-      if (!registration.waiting) throw new Error('Expected a waiting worker')
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-    })
-    await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
-    await expect(page.getByRole('dialog').locator('.winner')).toBeVisible()
-    await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+    await page.reload()
+    await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
     await showScreen(page, 'options')
-    await expect(update).toBeEnabled()
-    await update.click()
-    await expect(update).toHaveCount(0)
-    await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue('Πριν την ενημέρωση')
-    await expect(page.getByLabel('One entry per line')).toHaveValue(
-      'Πρόχειρη ιδέα που δεν προστέθηκε',
-    )
-    await otherTab.close()
-  } finally {
-    await writeFile(workerPath, original)
-  }
-})
+    await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
+    await showScreen(page, 'options')
+    await page.getByRole('button', { name: 'Add multiple entries' }).click()
+    await page.getByLabel('One entry per line').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
+    try {
+      await writeFile(
+        htmlPath,
+        originalHtml.replace('</head>', '<meta name="release-check" content="new"></head>'),
+      )
+      const otherTab = await page.context().newPage()
+      await otherTab.goto('/')
+      await expect(otherTab.locator('meta[name="release-check"]')).toHaveAttribute('content', 'new')
+      await expect(page.locator('meta[name="release-check"]')).toHaveCount(0)
+      await showScreen(page, 'wheel')
+      await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
+      await writeFile(workerPath, `${original}\n// update lifecycle test ${Date.now()}\n`)
+      await otherTab.evaluate(async () => {
+        const controlled = new Promise<void>((resolve) => {
+          navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), {
+            once: true,
+          })
+        })
+        await (await navigator.serviceWorker.ready).update()
+        await controlled
+      })
+      const update = page.getByRole('button', { name: 'Save & update' })
+      await expect(update).toBeVisible()
+      await expect(update).toBeDisabled()
+      await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
+      await expect(page.getByRole('dialog').locator('.winner')).toBeVisible()
+      await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+      await showScreen(page, 'options')
+      await expect(update).toBeEnabled()
+      await update.click()
+      await expect(update).toHaveCount(0)
+      await expect(page.locator('meta[name="release-check"]')).toHaveAttribute('content', 'new')
+      await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(
+        'Πριν την ενημέρωση',
+      )
+      await expect(page.getByLabel('One entry per line')).toHaveValue(
+        'Πρόχειρη ιδέα που δεν προστέθηκε',
+      )
+      await otherTab.close()
+    } finally {
+      await writeFile(workerPath, original)
+      await writeFile(htmlPath, originalHtml)
+    }
+  },
+)

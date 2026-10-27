@@ -63,8 +63,8 @@ bun run build
 bun run preview --port 4173 --strictPort
 ```
 
-`launch.html` bypasses stale PWA navigation caches. Normal browsing/PWA start uses `/`.
-Use Save & update in old installed tabs; close old tabs if the storage upgrade requests it.
+Normal browsing/PWA start uses `/`. Online navigation revalidates the page with the host;
+offline navigation uses cached pages. Close old tabs if a storage upgrade requests it.
 
 ## Static production build
 
@@ -100,8 +100,10 @@ records are in the deployment guide. SSH access alone cannot configure Pages or 
 
 Use Install when offered, or the browser install menu. On iPhone/iPad: Safari > Share >
 Add to Home Screen. Wait for Ready to use offline before testing without internet.
-Save & update waits for local writes and is disabled during spins; activation from another
-tab never forces a mid-spin reload. This is not App Store/Google Play publication.
+New workers activate automatically without reloading open editors. Opening/reloading the
+normal URL requests current HTML, with a four-second network timeout and cached/preloaded
+offline fallbacks. Save & update is optional for an already-open page: it waits for local
+writes and is disabled during spins. This is not App Store/Google Play publication.
 
 ## Checks
 

@@ -53,9 +53,37 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallbackAllowlist: [
-          /^\/$/,
-          /^\/(random-name-picker|yes-no-wheel|random-number-wheel|random-team-generator|about|privacy)\/?$/,
+        // New workers may activate, but open editors reload only on the user's action.
+        skipWaiting: true,
+        navigateFallback: undefined,
+        directoryIndex: null,
+        runtimeCaching: [
+          ...Object.keys(pages)
+            .filter((path) => path !== '/404')
+            .map((path) => ({
+              urlPattern: new RegExp(`^https?://[^/]+${path === '/' ? '/' : `${path}/?`}(\\?.*)?$`),
+              handler: 'NetworkFirst' as const,
+              options: {
+                cacheName: 'wheelero-pages',
+                fetchOptions: { cache: 'no-cache' as const },
+                networkTimeoutSeconds: 4,
+                cacheableResponse: { statuses: [200] },
+                expiration: { maxEntries: 30 },
+                precacheFallback: {
+                  fallbackURL: path === '/' ? 'index.html' : `${path.slice(1)}/index.html`,
+                },
+              },
+            })),
+          {
+            urlPattern: ({ url }) =>
+              url.origin === self.location.origin && url.pathname.startsWith('/assets/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'wheelero-assets',
+              cacheableResponse: { statuses: [200] },
+              expiration: { maxEntries: 100 },
+            },
+          },
         ],
         globPatterns: ['**/*.{js,css,html,png,svg,webp,woff2,wav}'],
       },

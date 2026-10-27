@@ -12,8 +12,9 @@ translations from 4f791de. Do not reintroduce these without a new request.
 
 Use a new revert commit/push, not a force push or history rewrite. Publication on main is
 authorized and triggers existing GitHub Pages CI. No purchases, DNS or hosting changes.
-The only necessary code difference from b35e19f is safe IndexedDB rollback migration and
-the existing migration test opening the current DB version. No user database is deleted.
+The rollback includes safe IndexedDB migration and the existing migration test opening
+the current DB version. No user database is deleted. A subsequent user request fixes
+stale PWA navigation without restoring the rejected UI changes.
 
 ## Runtime
 
@@ -25,8 +26,12 @@ history, restore entries, JSON/TXT exports, 12 templates and public tools remain
 
 The previous large-wheel layout and icon Customize are restored. Fourteen menu languages
 remain, with their older translation coverage: public explanatory text is not fully
-translated in this restored version. Manual Save & update is restored. PWA updates flush
-writes and never interrupt a spin. Editor drafts/preferences remain in localStorage.
+translated in this restored version. Normal public URLs now use NetworkFirst HTML with
+HTTP revalidation, a four-second timeout and cached/preloaded offline fallbacks. New
+workers activate automatically without reloading open pages. Save & update remains an
+optional action for an already-open editor, flushes writes and is disabled during spins.
+Controller changes expose this action after activation too. Editor drafts/preferences
+remain in localStorage; no storage schema change accompanies the navigation fix.
 
 ## Storage rollback
 
@@ -68,8 +73,17 @@ storage failure. Original attendance metadata survives in that recovery file. Ig
 artifacts/usability-rollback-storage.json. No new repository test cases were introduced.
 
 Live site: https://wheelero.com; repository: github.com/Nikolasgouz/wheelero.
-Before this request, e84b89a deployed successfully in run 40478773239. Check the workflow
-for the new full rollback commit before reporting it live. CI uses four two-worker browser
+Full rollback 12ea1b5 deployed successfully in run 40481024919. Live v10/v11 fixtures
+verified preservation of names/settings/history and recovery export. The initial live
+waiting-worker check timed out; the follow-up navigation fix addresses cache-first HTML
+and workers waiting indefinitely for activation. Its build/typecheck/lint, 16 unit tests
+and all 36 E2E tests passed (2 workers, 3.0 minutes). The existing lifecycle test now
+verifies fresh normal-URL HTML, automatic activation during a spin without a forced reload,
+and saved wheel/editor draft preservation. No new test cases were added. Actual public
+old-worker-to-new-worker verification is prepared in an isolated browser and awaits deploy;
+its ignored report will be artifacts/live-navigation-update.json. Physical installs are
+still unverified. Never claim publication until the deployment workflow and live URL pass.
+CI uses four two-worker browser
 shards, then one exclusive PWA-update job; failures block deployment. SSH keys are ignored.
 
 Physical iOS/Android installs and human screen-reader checks remain unverified. Storage

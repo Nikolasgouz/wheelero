@@ -34,8 +34,15 @@ seven routes and 404/launch HTML, robots and sitemap before Workbox precaching. 
 and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templating service.
 
 Vite preview serves real HTML routes and 404s with no API proxy. Production Caddy serves
-the same dist directory. The service worker caches app files/assets, not user lists. Updates
-require this tab's explicit action and completed writes; other tabs cannot force a reload.
+the same dist directory. The service worker caches app files/assets, not user lists.
+Known public-route navigations use NetworkFirst with cache:no-cache (HTTP revalidation),
+a four-second timeout, a bounded page cache and route-specific precached offline fallbacks.
+Disabling precache directory-index matching prevents `/` from bypassing that network rule.
+Unknown paths retain genuine network 404s. Hashed assets first seen with newer HTML have
+a bounded runtime cache so they remain available offline before the next worker installs.
+New workers skip waiting but do not force page reloads; an open editor reloads only after
+this tab's explicit action and completed writes. Controller changes expose that optional
+action even when activation has already completed. No IndexedDB/localStorage data is cleared.
 
 ## Storage persistence
 
