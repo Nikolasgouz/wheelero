@@ -11,6 +11,12 @@ Live Chromium checks passed for local spin, fragment sharing, no API/cookies, of
 reload/draw, canonical metadata, real 404 and layouts at 360/390/768/1440px. Both HTTP
 and https://www.wheelero.com redirect to the HTTPS apex. Physical installs remain untested.
 
+Localization/classroom/usability release 4f791de was verified live after successful run
+40474293357 on 2026-10-27, including Greek lower-page content at the normal root URL.
+The automatic-update follow-up removes mandatory confirmation: new workers activate and
+each tab safely reloads when idle. Already-running old clients need one normal refresh or
+close/reopen to load that policy. Never ask users to clear IndexedDB/site data to update.
+
 ## Build for the real origin
 
 After confirming ownership of the domain, set PUBLIC_URL=https://wheelero.com and
@@ -35,7 +41,7 @@ domain purchase have been performed by this work.
 
 Source repository: https://github.com/Nikolasgouz/wheelero, branch `main`.
 `.github/workflows/pages.yml` installs locked dependencies with Bun 1.4.2, runs typecheck,
-lint, 16 unit tests and production build. Four parallel browser jobs each run two workers
+lint, 20 unit tests and production build. Four parallel browser jobs each run two workers
 (eight total) against the same build artifact, split into four shards. The service-worker
 update regression runs alone after all four jobs pass. Only then can Pages deploy. Only
 frontend/dist is uploaded; historical Python code, keys and local data are not deployed.

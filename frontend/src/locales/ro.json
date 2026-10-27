@@ -94,7 +94,6 @@
   "Install app": "Instalează aplicația",
   "How do I install it?": "Cum se instalează?",
   "Ready to use offline.": "Gata de utilizare offline.",
-  "Save & update": "Salvează și actualizează",
   "Getting your wheel ready…": "Se pregătește roata…",
   "Try again": "Încearcă din nou",
   "For the little decisions in life.": "Pentru micile decizii ale vieții.",
@@ -464,5 +463,6 @@
   "Check absent students. They stay in the class and remain excluded in the next round.": "Bifează elevii absenți. Rămân în clasă și sunt excluși și în runda următoare.",
   "Absent": "Absent",
   "Tools": "Instrumente",
-  "All student names are included. Attendance and round progress are not shared.": "Sunt incluse toate numele elevilor. Prezența și progresul rundei nu sunt distribuite."
+  "All student names are included. Attendance and round progress are not shared.": "Sunt incluse toate numele elevilor. Prezența și progresul rundei nu sunt distribuite.",
+  "An update is ready. It will apply automatically when you finish.": "Este disponibilă o actualizare. Se va aplica automat când termini."
 }

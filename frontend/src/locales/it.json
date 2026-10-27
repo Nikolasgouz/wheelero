@@ -94,7 +94,6 @@
   "Install app": "Installa app",
   "How do I install it?": "Come si installa?",
   "Ready to use offline.": "Pronto per l’uso offline.",
-  "Save & update": "Salva e aggiorna",
   "Getting your wheel ready…": "Preparazione della ruota…",
   "Try again": "Riprova",
   "For the little decisions in life.": "Per le piccole decisioni della vita.",
@@ -462,5 +461,6 @@
   "Check absent students. They stay in the class and remain excluded in the next round.": "Seleziona gli studenti assenti. Restano nella classe e saranno esclusi anche dal prossimo round.",
   "Absent": "Assente",
   "Tools": "Strumenti",
-  "All student names are included. Attendance and round progress are not shared.": "Sono inclusi tutti i nomi. Presenze e avanzamento del round non vengono condivisi."
+  "All student names are included. Attendance and round progress are not shared.": "Sono inclusi tutti i nomi. Presenze e avanzamento del round non vengono condivisi.",
+  "An update is ready. It will apply automatically when you finish.": "È disponibile un aggiornamento. Verrà applicato automaticamente quando avrai finito."
 }

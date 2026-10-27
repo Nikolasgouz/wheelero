@@ -33,7 +33,7 @@ export default defineConfig({
       },
     },
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       includeAssets: ['wheelero.svg', 'wheelero-192.png', 'wheelero-512.png', 'wheelero-180.png'],
       manifest: {
         id: '/',

@@ -78,7 +78,11 @@ export default function App() {
   const language = useSyncExternalStore(subscribeLanguage, getLanguage)
   const { data, notice } = useStore()
   const [online, setOnline] = useState(navigator.onLine)
-  const [screen, setScreen] = useState<Screen>('wheel')
+  const [screen, setScreen] = useState<Screen>(() => {
+    const restored = sessionStorage.getItem('wheelero-update-screen') as Screen | null
+    sessionStorage.removeItem('wheelero-update-screen')
+    return restored ?? 'wheel'
+  })
   const [busy, setBusy] = useState(false)
   const [spinning, setSpinning] = useState(false)
   const [sidebarSnapshot, setSidebarSnapshot] = useState<LocalWheel | null>(null)
@@ -747,7 +751,11 @@ export default function App() {
       </main>
       <footer>
         {!presenting && <SiteFooter />}
-        <PwaControls busy={locked} report={setMessage} />
+        <PwaControls
+          busy={locked || presenting || Boolean(error)}
+          report={setMessage}
+          beforeReload={() => sessionStorage.setItem('wheelero-update-screen', screen)}
+        />
       </footer>
       {pages[sitePath].kind === 'wheel' && (
         <nav className="mobile-nav" aria-label={t.mobileNavigation}>

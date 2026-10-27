@@ -35,8 +35,10 @@ Web Locks/BroadcastChannel for multiple tabs. Never invent old pending server re
 Web Crypto chooses winners without bias. Display projection never changes eligibility;
 land on the winning entry ID and reveal results only after animation. Lock editing,
 customization/sound/fullscreen during draws. Respect reduced motion and global mute.
-Customization drafts save only on OK; timed removals use IDs. PWA updates flush writes,
-require this tab's explicit action and never interrupt a spin.
+Customization drafts save only on OK; timed removals use IDs. PWA workers activate
+automatically. Each tab reloads only after three idle seconds and completed writes;
+never during a spin, focused editing, open dialog, fullscreen presentation or storage error.
+Preserve per-tab view/tool drafts through automatic reload; do not restore a manual update button.
 Classroom absence uses stable entry IDs separately from no-repeat active flags. New rounds
 reset active flags, never attendance. Backups/copies retain attendance; class share links
 include the whole roster but omit attendance/progress. Keep old version-1 imports valid.

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Download, RefreshCw } from 'lucide-react'
+import { Download } from 'lucide-react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { t } from '../i18n'
+import { translate } from '../locale'
 import { flushStorage } from '../state/store'
 
 interface InstallEvent extends Event {
@@ -12,31 +13,81 @@ interface InstallEvent extends Event {
 export function PwaControls({
   busy,
   report,
+  beforeReload,
 }: {
   busy: boolean
   report: (message: string) => void
+  beforeReload: () => void
 }) {
   const [install, setInstall] = useState<InstallEvent | null>(null)
   const [standalone, setStandalone] = useState(matchMedia('(display-mode: standalone)').matches)
-  const [activated, setActivated] = useState(false)
-  const [updateRequested, setUpdateRequested] = useState(false)
+  const [updateReady, setUpdateReady] = useState(false)
+  const [registration, setRegistration] = useState<ServiceWorkerRegistration>()
   const {
-    needRefresh: [needRefresh],
     offlineReady: [offlineReady],
-    updateServiceWorker,
-  } = useRegisterSW({ onNeedReload: () => setActivated(true) })
+  } = useRegisterSW({
+    onNeedReload: () => setUpdateReady(true),
+    onRegisteredSW: (_url, registration) => setRegistration(registration),
+    onRegisterError: (error) => report(error.message),
+  })
   useEffect(() => {
-    if (!activated || !updateRequested || busy) return
+    if (!registration) return
+    function check() {
+      if (navigator.onLine && !document.hidden)
+        void registration!.update().catch((error: Error) => report(error.message))
+    }
+    const interval = window.setInterval(check, 60_000)
+    window.addEventListener('online', check)
+    window.addEventListener('focus', check)
+    document.addEventListener('visibilitychange', check)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('online', check)
+      window.removeEventListener('focus', check)
+      document.removeEventListener('visibilitychange', check)
+    }
+  }, [registration, report])
+  useEffect(() => {
+    if (!updateReady || busy) return
     let cancelled = false
-    void flushStorage()
-      .then(() => {
-        if (!cancelled) location.reload()
-      })
-      .catch((error) => report(error.message))
+    let saving = false
+    let lastActivity = performance.now()
+    const events = ['pointerdown', 'keydown', 'input', 'wheel', 'touchmove', 'focusin', 'focusout']
+    function activity() {
+      lastActivity = performance.now()
+    }
+    function safeToReload() {
+      return (
+        !cancelled &&
+        !document.hidden &&
+        performance.now() - lastActivity >= 3000 &&
+        !document.querySelector('dialog[open]') &&
+        !document.activeElement?.matches('input, textarea, select, [contenteditable="true"]')
+      )
+    }
+    for (const event of events)
+      document.addEventListener(event, activity, { capture: true, passive: true })
+    const interval = window.setInterval(() => {
+      if (saving || !safeToReload()) return
+      saving = true
+      void flushStorage()
+        .then(() => {
+          if (safeToReload()) {
+            beforeReload()
+            location.reload()
+          }
+        })
+        .catch((error: Error) => report(error.message))
+        .finally(() => {
+          saving = false
+        })
+    }, 500)
     return () => {
       cancelled = true
+      clearInterval(interval)
+      for (const event of events) document.removeEventListener(event, activity, true)
     }
-  }, [activated, updateRequested, busy, report])
+  }, [updateReady, busy, report, beforeReload])
   useEffect(() => {
     const prompt = (event: Event) => {
       event.preventDefault()
@@ -56,25 +107,10 @@ export function PwaControls({
   return (
     <div className="pwa-controls">
       {offlineReady && <span className="offline-ready">{t.offlineReady}</span>}
-      {(needRefresh || activated) && (
-        <button
-          className="secondary"
-          disabled={busy}
-          onClick={() => {
-            void flushStorage()
-              .then(async () => {
-                const registration = await navigator.serviceWorker.ready
-                setUpdateRequested(true)
-                if (registration.waiting) return updateServiceWorker(true)
-                // Another tab may have activated it before this tab received the event.
-                setActivated(true)
-              })
-              .catch((error) => report(error.message))
-          }}
-        >
-          <RefreshCw size={15} />
-          {t.updateNow}
-        </button>
+      {updateReady && (
+        <span role="status" className="update-status">
+          {translate('An update is ready. It will apply automatically when you finish.')}
+        </span>
       )}
       {!standalone &&
         (install ? (

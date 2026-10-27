@@ -114,50 +114,71 @@ test('export and import preserves a wheel and marks imported history as local', 
   await expect(page.locator('.history li').getByLabel('Device draw / import')).toHaveCount(1)
 })
 
-test('real service-worker update preserves saved and unsubmitted editor work', { tag: '@exclusive' }, async ({ page }) => {
-  const workerPath = path.resolve('dist/sw.js')
-  const original = await readFile(workerPath, 'utf8')
-  await page.goto('/')
-  await page.evaluate(async () => {
-    await navigator.serviceWorker.ready
-  })
-  await page.reload()
-  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
-  await showScreen(page, 'options')
-  await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
-  await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Add multiple entries' }).click()
-  await page.getByLabel('One entry per line').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
-  try {
-    await writeFile(workerPath, `${original}\n// update lifecycle test ${Date.now()}\n`)
+test(
+  'automatic service-worker updates wait for editing, dialogs and spins and preserve drafts',
+  { tag: '@exclusive' },
+  async ({ page }) => {
+    const workerPath = path.resolve('dist/sw.js')
+    const original = await readFile(workerPath, 'utf8')
+    await page.goto('/')
     await page.evaluate(async () => {
-      await (await navigator.serviceWorker.ready).update()
+      await navigator.serviceWorker.ready
     })
-    const update = page.getByRole('button', { name: 'Save & update' })
-    await expect(update).toBeVisible()
-    await showScreen(page, 'wheel')
-    await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-    await expect(update).toBeDisabled()
-    const otherTab = await page.context().newPage()
-    await otherTab.goto('/privacy')
-    await otherTab.evaluate(async () => {
-      const registration = await navigator.serviceWorker.ready
-      if (!registration.waiting) throw new Error('Expected a waiting worker')
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-    })
-    await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
-    await expect(page.getByRole('dialog').locator('.winner')).toBeVisible()
-    await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+    await page.reload()
+    await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
     await showScreen(page, 'options')
-    await expect(update).toBeEnabled()
-    await update.click()
-    await expect(update).toHaveCount(0)
-    await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue('Πριν την ενημέρωση')
-    await expect(page.getByLabel('One entry per line')).toHaveValue(
-      'Πρόχειρη ιδέα που δεν προστέθηκε',
-    )
-    await otherTab.close()
-  } finally {
-    await writeFile(workerPath, original)
-  }
-})
+    await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
+    await showScreen(page, 'options')
+    await page.getByRole('button', { name: 'Add multiple entries' }).click()
+    await page.getByLabel('One entry per line').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
+    const started = await page.evaluate(() => performance.timeOrigin)
+    await page.getByRole('button', { name: 'Customize', exact: true }).click()
+    await page.getByLabel('Spin duration (seconds) — value').fill('7')
+    try {
+      await writeFile(workerPath, `${original}\n// update lifecycle test ${Date.now()}\n`)
+      // Returning to the tab discovers the update without an update button or test-only update().
+      await page.evaluate(() => window.dispatchEvent(new Event('focus')))
+      await expect(page.locator('.update-status')).toBeAttached()
+      await page.waitForTimeout(4000)
+      expect(await page.evaluate(() => performance.timeOrigin)).toBe(started)
+      await expect(page.getByLabel('Spin duration (seconds) — value')).toHaveValue('7')
+      await page.getByRole('button', { name: 'Cancel', exact: true }).click()
+      await page.getByLabel('One entry per line').focus()
+      await page.waitForTimeout(4000)
+      expect(await page.evaluate(() => performance.timeOrigin)).toBe(started)
+      await page.getByLabel('One entry per line').press('End')
+      await page.getByLabel('One entry per line').pressSequentially(' 🎲')
+      await showScreen(page, 'wheel')
+      await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
+      await page.waitForTimeout(4000)
+      expect(await page.evaluate(() => performance.timeOrigin)).toBe(started)
+      await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
+      // A different tab can activate a second worker while this tab is drawing.
+      await writeFile(workerPath, `${original}\n// external update ${Date.now()}\n`)
+      const otherTab = await page.context().newPage()
+      await otherTab.goto('/privacy')
+      await expect(otherTab.locator('.update-status')).toBeAttached()
+      expect(await page.evaluate(() => performance.timeOrigin)).toBe(started)
+      await expect(page.getByRole('dialog').locator('.winner')).toBeVisible()
+      await page.waitForTimeout(4000)
+      expect(await page.evaluate(() => performance.timeOrigin)).toBe(started)
+      await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
+      await showScreen(page, 'options')
+      await expect.poll(() => page.evaluate(() => performance.timeOrigin)).toBeGreaterThan(started)
+      await expect(page.locator('.update-status')).toHaveCount(0)
+      await expect(page.locator('.editor-column')).toBeVisible()
+      await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(
+        'Πριν την ενημέρωση',
+      )
+      await expect(page.getByLabel('One entry per line')).toHaveValue(
+        'Πρόχειρη ιδέα που δεν προστέθηκε 🎲',
+      )
+      expect((await readSavedState(page)).wheels[0].results).toHaveLength(1)
+      expect((await readSavedState(page)).wheels[0].customization.duration).toBe(10)
+      await expect(page.getByRole('button', { name: 'Save & update' })).toHaveCount(0)
+      await otherTab.close()
+    } finally {
+      await writeFile(workerPath, original)
+    }
+  },
+)

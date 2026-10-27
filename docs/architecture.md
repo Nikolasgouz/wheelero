@@ -54,8 +54,15 @@ tools, templates, messages and runtime metadata. Catalogs are precached with the
 user-authored wheel content is not translated. See localization.md for boundaries.
 
 Vite preview serves real HTML routes and 404s with no API proxy. Production Caddy serves
-the same dist directory. The service worker caches app files/assets, not user lists. Updates
-require this tab's explicit action and completed writes; other tabs cannot force a reload.
+the same dist directory. The service worker caches app files/assets, not user lists.
+VitePWA autoUpdate activates new workers immediately; onNeedReload intercepts the library's
+default reload. Each tab flushes writes and reloads only after three quiet seconds with no
+spin/operation, dialog, focused editor, fullscreen or application error. Visibility/online/
+focus events and a one-minute visible-online timer discover updates in long-lived tabs.
+Updating a worker never directly reloads another tab. Its own safety gate applies there.
+The transient view marker in sessionStorage restores the current screen once after an
+automatic reload. Team results/count and number-range drafts also use per-tab sessionStorage;
+existing editor/new-entry drafts and team names retain their existing localStorage keys.
 
 ## Storage persistence
 

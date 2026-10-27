@@ -94,7 +94,6 @@
   "Install app": "安装应用",
   "How do I install it?": "如何安装？",
   "Ready to use offline.": "已可离线使用。",
-  "Save & update": "保存并更新",
   "Getting your wheel ready…": "正在准备转盘…",
   "Try again": "重试",
   "For the little decisions in life.": "为生活中的小决定而生。",
@@ -462,5 +461,6 @@
   "Check absent students. They stay in the class and remain excluded in the next round.": "勾选缺席学生。他们仍保留在班级中，并在下一轮继续被排除。",
   "Absent": "缺席",
   "Tools": "工具",
-  "All student names are included. Attendance and round progress are not shared.": "包含所有学生姓名，但不分享出勤情况和本轮进度。"
+  "All student names are included. Attendance and round progress are not shared.": "包含所有学生姓名，但不分享出勤情况和本轮进度。",
+  "An update is ready. It will apply automatically when you finish.": "有可用更新。操作结束后将自动应用。"
 }

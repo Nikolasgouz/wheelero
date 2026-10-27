@@ -53,3 +53,10 @@ Class links additionally include classroom with an empty absent_ids list, and re
 flags in the snapshot. All pupil names remain included; attendance/history are not exposed.
 
 Historical SQLAlchemy models/Alembic migrations remain under backend/ for recovery only.
+
+## Transient view/tool data
+
+Automatic updates use sessionStorage (per tab, no IndexedDB schema change):
+wheelero-update-screen is written just before reload and consumed once at startup;
+wheelero-number-min/max preserve range inputs; wheelero-team-count/teams preserve generated
+groups. Existing team names remain in localStorage wheelero-team-draft. No cloud copy.

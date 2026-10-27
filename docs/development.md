@@ -43,6 +43,12 @@ timing, pointer agreement, global mute, reduced motion and the pre-spin sidebar 
 Keep input/toolbar changes locked during a draw. TXT exports include numbered winner names,
 UTF-8 BOM and CRLF, with no dates/source labels; JSON preserves full history metadata.
 
+Automatic PWA updates use autoUpdate plus an onNeedReload override. Do not remove the
+per-tab idle/operation/dialog/focus guard or storage flush. The existing @exclusive test
+uses actual worker revisions, focus-based discovery, editing, customization drafts, spins
+and external activation to verify automatic reload without losing work. Do not add a
+mandatory update button. Already-open pre-change clients need one refresh to adopt new code.
+
 ## Public pages and links
 
 src/site.ts owns public content. scripts/pages.tsx emits HTML before Workbox. PUBLIC_URL and

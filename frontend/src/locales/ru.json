@@ -94,7 +94,6 @@
   "Install app": "Установить приложение",
   "How do I install it?": "Как установить?",
   "Ready to use offline.": "Готово к работе офлайн.",
-  "Save & update": "Сохранить и обновить",
   "Getting your wheel ready…": "Подготовка колеса…",
   "Try again": "Попробовать снова",
   "For the little decisions in life.": "Для маленьких жизненных решений.",
@@ -464,5 +463,6 @@
   "Check absent students. They stay in the class and remain excluded in the next round.": "Отметьте отсутствующих. Они остаются в классе и исключаются также из следующего раунда.",
   "Absent": "Отсутствует",
   "Tools": "Инструменты",
-  "All student names are included. Attendance and round progress are not shared.": "Включены имена всех учеников. Посещаемость и прогресс раунда не передаются."
+  "All student names are included. Attendance and round progress are not shared.": "Включены имена всех учеников. Посещаемость и прогресс раунда не передаются.",
+  "An update is ready. It will apply automatically when you finish.": "Доступно обновление. Оно применится автоматически, когда вы закончите."
 }

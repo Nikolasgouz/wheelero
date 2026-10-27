@@ -110,7 +110,6 @@ function messages() {
       'On iPhone/iPad: Safari → Share → Add to Home Screen. In other browsers, look for Install app in the menu, if supported.',
     ),
     offlineReady: translate('Ready to use offline.'),
-    updateNow: translate('Save & update'),
     conflict: translate('A newer version was found. Your changes were kept in a separate copy.'),
     sessionChanged: translate(
       'Your session changed. Local wheels were preserved as new private copies.',
