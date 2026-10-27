@@ -8,6 +8,9 @@ offline use were verified on the public domain on 2026-10-26.
 
 The 2026-10-27 release reverts the entire usability/Classroom commit to the preceding
 interface and translation coverage. Existing classes remain as ordinary saved wheels.
+The subsequent desktop layout keeps the wheel centered on the screen, with Entries on the
+right. At normal desktop sizes the whole tool fits above the fold; large lists scroll inside
+their panel. Narrow screens and high zoom retain natural page scrolling.
 IndexedDB v12 safely preserves data from the intervening v11 release; no database reset.
 
 ## Local storage

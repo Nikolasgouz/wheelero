@@ -62,3 +62,7 @@ v12 migration: snapshot v10/v11 before restoring the original wheel shape. Do no
 v10 on an upgraded v11 database. Do not reset/delete existing user data. Commit/push this
 rollback using the existing main-branch deployment workflow; no force push or DNS changes.
 Follow-up: fix stale normal-URL navigation while retaining that rollback and all local data.
+Latest follow-up: fit the wheel and Entries in the first desktop viewport at 100% zoom.
+Keep the wheel centered on the viewport, Entries on the right and the largest fitting
+diameter. This supersedes only the rollback's wheel sizing, not its removal of Classroom.
+Use the CSS wheel-viewport/wheel-area layout; preserve scrolling on narrow/short screens.

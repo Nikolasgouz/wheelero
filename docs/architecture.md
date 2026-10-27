@@ -29,6 +29,15 @@ export for larger wheels/images. Old ?share= server links show an explanatory me
 
 ## Static pages and PWA
 
+App.tsx groups the intro and tool in wheel-viewport. On desktop, its flex layout assigns
+the remaining viewport height to workspace. Equal outer grid columns keep the wheel
+centered on the screen while Entries occupies the right column. wheel-area is a size
+container: the diameter is min(100cqw,100cqh), capped by the central column, so both
+available height and width matter without JavaScript resize observers. A minimum tool
+height permits scrolling on short screens; mobile retains the existing single column.
+The sidebar scrolls internally, title ellipsis retains full accessible text/title, and
+expanded legends consume space before calculating the wheel's available height.
+
 src/site.ts and SiteContent.tsx supply shared public content. scripts/pages.tsx pre-renders
 seven routes and 404/launch HTML, robots and sitemap before Workbox precaching. PUBLIC_URL
 and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templating service.

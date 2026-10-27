@@ -29,7 +29,9 @@ stored wheels to change the default example. Preserve entry IDs/images on edits/
 Do not add API requests or hidden cloud sync: local-only storage is an explicit user choice.
 
 The usability/Classroom commit was reverted at the user's request on 2026-10-27. Preserve
-the earlier interface. IndexedDB v12 is intentionally newer than both UI revisions: it
+the earlier features. A subsequent request restores only viewport-fitting wheel sizing,
+with true horizontal centering and Entries on the right; do not bring Classroom back.
+IndexedDB v12 is intentionally newer than both UI revisions: it
 captures v10/v11 in before-usability-rollback before restoring the original wheel shape.
 Do not downgrade the openDB version or delete user data to match older frontend code.
 

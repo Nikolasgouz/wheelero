@@ -352,327 +352,340 @@ export default function App() {
       </header>
 
       <main id="main-content">
-        {!presenting && <SiteIntro path={sitePath} />}
-        <p className="sr-only" role="status" aria-live="polite">
-          {!spinning && result ? `${winnerMessage} ${result.label}` : ''}
-        </p>
-        {error && (
-          <div className="notice error" role="alert">
-            <span>{error}</span>
-            <button className="icon-button" aria-label={t.close} onClick={() => setError('')}>
-              <X size={16} />
-            </button>
-          </div>
-        )}
-        {message && (
-          <div className="notice" role="status">
-            <span>{message}</span>
-            <button className="icon-button" aria-label={t.close} onClick={() => setMessage('')}>
-              <X size={16} />
-            </button>
-          </div>
-        )}
-        {notice && (
-          <p className="notice" role="status">
-            {notice}
+        <div className={pages[sitePath].kind === 'wheel' ? 'wheel-viewport' : undefined}>
+          {!presenting && <SiteIntro path={sitePath} />}
+          <p className="sr-only" role="status" aria-live="polite">
+            {!spinning && result ? `${winnerMessage} ${result.label}` : ''}
           </p>
-        )}
-        {pages[sitePath].kind === 'information' ? (
-          <SiteDetails path={sitePath} />
-        ) : pages[sitePath].kind === 'teams' ? (
-          <TeamGenerator />
-        ) : screen === 'library' ? (
-          <>
-            <section className="sync-controls card" lang="en">
-              <h2>Stored in your browser</h2>
-              <p>
-                Wheels, settings and results are saved in IndexedDB on this device. Export JSON
-                before clearing browser data or moving to another device.
-              </p>
-              {'storage' in navigator && 'persist' in navigator.storage && (
-                <button
-                  className="secondary"
+          {error && (
+            <div className="notice error" role="alert">
+              <span>{error}</span>
+              <button className="icon-button" aria-label={t.close} onClick={() => setError('')}>
+                <X size={16} />
+              </button>
+            </div>
+          )}
+          {message && (
+            <div className="notice" role="status">
+              <span>{message}</span>
+              <button className="icon-button" aria-label={t.close} onClick={() => setMessage('')}>
+                <X size={16} />
+              </button>
+            </div>
+          )}
+          {notice && (
+            <p className="notice" role="status">
+              {notice}
+            </p>
+          )}
+          {pages[sitePath].kind === 'information' ? (
+            <SiteDetails path={sitePath} />
+          ) : pages[sitePath].kind === 'teams' ? (
+            <TeamGenerator />
+          ) : screen === 'library' ? (
+            <>
+              <section className="sync-controls card" lang="en">
+                <h2>Stored in your browser</h2>
+                <p>
+                  Wheels, settings and results are saved in IndexedDB on this device. Export JSON
+                  before clearing browser data or moving to another device.
+                </p>
+                {'storage' in navigator && 'persist' in navigator.storage && (
+                  <button
+                    className="secondary"
+                    disabled={locked}
+                    onClick={() =>
+                      run(async () => {
+                        const granted = await navigator.storage.persist()
+                        setStorageMessage(
+                          granted
+                            ? 'Persistent storage is enabled. Keep JSON backups too; clearing browser data still deletes your wheels.'
+                            : 'The browser did not grant persistent storage. Your wheels are still saved locally; keep JSON backups.',
+                        )
+                      })
+                    }
+                  >
+                    Protect local storage
+                  </button>
+                )}
+                {storageMessage && <p role="status">{storageMessage}</p>}
+              </section>
+              <Library
+                wheels={data.wheels}
+                active={data.active}
+                run={run}
+                openEditor={() => navigate('options')}
+              />
+            </>
+          ) : (
+            <>
+              {sitePath === '/random-number-wheel' && (
+                <NumberRange
                   disabled={locked}
-                  onClick={() =>
-                    run(async () => {
-                      const granted = await navigator.storage.persist()
-                      setStorageMessage(
-                        granted
-                          ? 'Persistent storage is enabled. Keep JSON backups too; clearing browser data still deletes your wheels.'
-                          : 'The browser did not grant persistent storage. Your wheels are still saved locally; keep JSON backups.',
-                      )
+                  apply={(labels) =>
+                    edit({
+                      title: `Numbers ${labels[0]} to ${labels[labels.length - 1]}`,
+                      options: labels.map((label) => ({
+                        id: crypto.randomUUID(),
+                        label,
+                        active: true,
+                        image: null,
+                      })),
                     })
                   }
-                >
-                  Protect local storage
-                </button>
+                />
               )}
-              {storageMessage && <p role="status">{storageMessage}</p>}
-            </section>
-            <Library
-              wheels={data.wheels}
-              active={data.active}
-              run={run}
-              openEditor={() => navigate('options')}
-            />
-          </>
-        ) : (
-          <>
-            {sitePath === '/random-number-wheel' && (
-              <NumberRange
-                disabled={locked}
-                apply={(labels) =>
-                  edit({
-                    title: `Numbers ${labels[0]} to ${labels[labels.length - 1]}`,
-                    options: labels.map((label) => ({
-                      id: crypto.randomUUID(),
-                      label,
-                      active: true,
-                      image: null,
-                    })),
-                  })
-                }
-              />
-            )}
-            <div className={`workspace mobile-${screen}`}>
-              <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
-                <div className="wheel-top">
-                  <div className="wheel-heading">
-                    <span className="pill">
-                      <span />
-                      {t.count(wheel.options.length)}
+              <div className={`workspace mobile-${screen}`}>
+                <section className="spinner-panel" aria-label={t.wheel} hidden={screen !== 'wheel'}>
+                  <div className="wheel-top">
+                    <div className="wheel-heading">
+                      <span className="pill">
+                        <span />
+                        {t.count(wheel.options.length)}
+                      </span>
+                      <div className="wheel-tools">
+                        <button
+                          className="icon-button"
+                          aria-label={ct.title}
+                          title={ct.title}
+                          disabled={locked}
+                          onClick={() => setCustomOpen(true)}
+                        >
+                          <Settings size={18} />
+                        </button>
+                        <button
+                          className="icon-button"
+                          aria-label={sound ? t.soundOff : t.soundOn}
+                          disabled={locked}
+                          onClick={() => {
+                            if (sound) stopSounds()
+                            setSound(!sound)
+                          }}
+                        >
+                          {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                        </button>
+                        <button
+                          className="icon-button"
+                          aria-label={presenting ? t.exitFullscreen : t.fullscreen}
+                          disabled={locked}
+                          onClick={() =>
+                            run(async () => {
+                              if (presenting) {
+                                if (document.fullscreenElement) await document.exitFullscreen()
+                                setPresenting(false)
+                              } else {
+                                setPresenting(true)
+                                if (document.fullscreenEnabled)
+                                  await document.documentElement.requestFullscreen()
+                              }
+                            })
+                          }
+                        >
+                          <Maximize2 size={17} />
+                        </button>
+                      </div>
+                    </div>
+                    <h2
+                      className={config.show_title ? 'wheel-title' : 'sr-only'}
+                      title={wheel.title}
+                    >
+                      {wheel.title}
+                    </h2>
+                  </div>
+                  <div className="wheel-area">
+                    <Spinner
+                      svg={wheelSvg}
+                      options={displayed}
+                      rotation={rotation}
+                      spinning={spinning}
+                      config={config}
+                      winnerId={result?.option_id ?? null}
+                      idle={
+                        !spinning &&
+                        displayed.length > 0 &&
+                        screen === 'wheel' &&
+                        !shareOpen &&
+                        !shared
+                      }
+                      canSpin={canSpin}
+                      onSpin={spin}
+                    />
+                  </div>
+                  <div className="wheel-bottom">
+                    {displayed.length !== available.length && (
+                      <p className="muted display-note">{ct.visible(displayed.length)}</p>
+                    )}
+                    {displayed.length > 48 && config.text !== 'never' && (
+                      <details className="wheel-legend">
+                        <summary>{ct.legend}</summary>
+                        <ol>
+                          {displayed.map((o) => (
+                            <li key={o.id}>{o.label}</li>
+                          ))}
+                        </ol>
+                      </details>
+                    )}
+                    {result && config.confetti && (
+                      <div key={result.id} className="confetti" aria-hidden="true">
+                        {Array.from({ length: 40 }, (_, i) => (
+                          <i
+                            key={i}
+                            style={{
+                              left: `${(i * 37) % 100}%`,
+                              background: config.palette[i % config.palette.length].color,
+                              animationDelay: `${(i % 7) * 0.08}s`,
+                              transform: `rotate(${i * 29}deg)`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    <div className="spin-actions">
+                      {!available.length && wheel.options.length > 0 && <p>{t.exhausted}</p>}
+                      {!available.length && wheel.options.length > 0 && (
+                        <button
+                          className="secondary"
+                          disabled={locked}
+                          onClick={() =>
+                            edit({ options: wheel.options.map((o) => ({ ...o, active: true })) })
+                          }
+                        >
+                          {t.reset}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </section>
+                <div className="wheel-sidebar-column" hidden={screen !== 'wheel'}>
+                  <WheelSidebar
+                    key={wheel.id}
+                    wheel={sidebarSnapshot ?? wheel}
+                    disabled={locked}
+                    edit={edit}
+                    tab={sidebarTab}
+                    setTab={setSidebarTab}
+                    openEditor={() => navigate('options')}
+                    clear={(section) =>
+                      run(async () => {
+                        await clearWheel(wheel.id, section)
+                        setResult(null)
+                        setPopupOpen(false)
+                        setSpinOptions(null)
+                        setSpinConfig(null)
+                        setSidebarSnapshot(null)
+                        setRotation(0)
+                      })
+                    }
+                  />
+                </div>
+                <div className="editor-column" hidden={screen !== 'options'}>
+                  <div className="options-toolbar">
+                    <h2>{t.options}</h2>
+                    <button
+                      className="secondary"
+                      disabled={locked}
+                      onClick={() => setCustomOpen(true)}
+                    >
+                      <Settings2 size={17} />
+                      {ct.title}
+                    </button>
+                  </div>
+                  <Editor
+                    key={wheel.id}
+                    wheel={wheel}
+                    disabled={locked}
+                    edit={edit}
+                    report={setError}
+                  />
+                  <button
+                    className="secondary"
+                    disabled={
+                      locked ||
+                      (!data.removed.some((item) => item.wheel_id === wheel.id) &&
+                        wheel.options.every((option) => option.active))
+                    }
+                    onClick={() =>
+                      run(async () => {
+                        await restoreEntries(wheel.id)
+                        setResult(null)
+                        setSpinOptions(null)
+                      })
+                    }
+                  >
+                    Restore entries
+                  </button>
+                  <div className="save-bar">
+                    <span>
+                      <Check size={14} />
+                      {t.saved}
                     </span>
-                    <div className="wheel-tools">
+                    <div>
                       <button
-                        className="icon-button"
-                        aria-label={ct.title}
-                        title={ct.title}
-                        disabled={locked}
-                        onClick={() => setCustomOpen(true)}
-                      >
-                        <Settings size={18} />
-                      </button>
-                      <button
-                        className="icon-button"
-                        aria-label={sound ? t.soundOff : t.soundOn}
-                        disabled={locked}
-                        onClick={() => {
-                          if (sound) stopSounds()
-                          setSound(!sound)
-                        }}
-                      >
-                        {sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
-                      </button>
-                      <button
-                        className="icon-button"
-                        aria-label={presenting ? t.exitFullscreen : t.fullscreen}
-                        disabled={locked}
+                        className="secondary"
+                        disabled={locked || !valid}
                         onClick={() =>
                           run(async () => {
-                            if (presenting) {
-                              if (document.fullscreenElement) await document.exitFullscreen()
-                              setPresenting(false)
-                            } else {
-                              setPresenting(true)
-                              if (document.fullscreenEnabled)
-                                await document.documentElement.requestFullscreen()
-                            }
+                            await flushStorage()
+                            setMessage(t.autoSave)
                           })
                         }
                       >
-                        <Maximize2 size={17} />
+                        <RefreshCw size={15} />
+                        {t.save}
                       </button>
-                    </div>
-                  </div>
-                  <h2 className={config.show_title ? 'wheel-title' : 'sr-only'}>{wheel.title}</h2>
-                </div>
-                <Spinner
-                  svg={wheelSvg}
-                  options={displayed}
-                  rotation={rotation}
-                  spinning={spinning}
-                  config={config}
-                  winnerId={result?.option_id ?? null}
-                  idle={
-                    !spinning && displayed.length > 0 && screen === 'wheel' && !shareOpen && !shared
-                  }
-                  canSpin={canSpin}
-                  onSpin={spin}
-                />
-                <div className="wheel-bottom">
-                  {displayed.length !== available.length && (
-                    <p className="muted display-note">{ct.visible(displayed.length)}</p>
-                  )}
-                  {displayed.length > 48 && config.text !== 'never' && (
-                    <details className="wheel-legend">
-                      <summary>{ct.legend}</summary>
-                      <ol>
-                        {displayed.map((o) => (
-                          <li key={o.id}>{o.label}</li>
-                        ))}
-                      </ol>
-                    </details>
-                  )}
-                  {result && config.confetti && (
-                    <div key={result.id} className="confetti" aria-hidden="true">
-                      {Array.from({ length: 40 }, (_, i) => (
-                        <i
-                          key={i}
-                          style={{
-                            left: `${(i * 37) % 100}%`,
-                            background: config.palette[i % config.palette.length].color,
-                            animationDelay: `${(i % 7) * 0.08}s`,
-                            transform: `rotate(${i * 29}deg)`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  <div className="spin-actions">
-                    {!available.length && wheel.options.length > 0 && <p>{t.exhausted}</p>}
-                    {!available.length && wheel.options.length > 0 && (
                       <button
                         className="secondary"
                         disabled={locked}
                         onClick={() =>
-                          edit({ options: wheel.options.map((o) => ({ ...o, active: true })) })
+                          run(async () => {
+                            setShareUrl('')
+                            setShareOpen(true)
+                          })
                         }
                       >
-                        {t.reset}
+                        <Share2 size={15} />
+                        {t.share}
                       </button>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </section>
-              <div className="wheel-sidebar-column" hidden={screen !== 'wheel'}>
-                <WheelSidebar
-                  key={wheel.id}
-                  wheel={sidebarSnapshot ?? wheel}
-                  disabled={locked}
-                  edit={edit}
-                  tab={sidebarTab}
-                  setTab={setSidebarTab}
-                  openEditor={() => navigate('options')}
-                  clear={(section) =>
-                    run(async () => {
-                      await clearWheel(wheel.id, section)
-                      setResult(null)
-                      setPopupOpen(false)
-                      setSpinOptions(null)
-                      setSpinConfig(null)
-                      setSidebarSnapshot(null)
-                      setRotation(0)
-                    })
-                  }
-                />
               </div>
-              <div className="editor-column" hidden={screen !== 'options'}>
-                <div className="options-toolbar">
-                  <h2>{t.options}</h2>
-                  <button
-                    className="secondary"
-                    disabled={locked}
-                    onClick={() => setCustomOpen(true)}
-                  >
-                    <Settings2 size={17} />
-                    {ct.title}
-                  </button>
-                </div>
-                <Editor
-                  key={wheel.id}
-                  wheel={wheel}
-                  disabled={locked}
-                  edit={edit}
-                  report={setError}
-                />
-                <button
-                  className="secondary"
-                  disabled={
-                    locked ||
-                    (!data.removed.some((item) => item.wheel_id === wheel.id) &&
-                      wheel.options.every((option) => option.active))
-                  }
-                  onClick={() =>
-                    run(async () => {
-                      await restoreEntries(wheel.id)
-                      setResult(null)
-                      setSpinOptions(null)
-                    })
-                  }
-                >
-                  Restore entries
-                </button>
-                <div className="save-bar">
-                  <span>
-                    <Check size={14} />
-                    {t.saved}
-                  </span>
+              <section className="templates-section" hidden={screen !== 'options'}>
+                <div className="section-heading">
                   <div>
+                    <h2>
+                      {t.templates} <span>↗</span>
+                    </h2>
+                    <p>{t.templatesHint}</p>
+                  </div>
+                  <span className="template-hint">{t.allTemplates}</span>
+                </div>
+                <div className="template-grid">
+                  {templates.map((template) => (
                     <button
-                      className="secondary"
-                      disabled={locked || !valid}
-                      onClick={() =>
-                        run(async () => {
-                          await flushStorage()
-                          setMessage(t.autoSave)
-                        })
-                      }
-                    >
-                      <RefreshCw size={15} />
-                      {t.save}
-                    </button>
-                    <button
-                      className="secondary"
+                      className="template-card"
+                      key={template.id}
                       disabled={locked}
                       onClick={() =>
                         run(async () => {
-                          setShareUrl('')
-                          setShareOpen(true)
+                          await addWheels([makeWheel(template.title, template.options)])
+                          navigate('wheel')
                         })
                       }
                     >
-                      <Share2 size={15} />
-                      {t.share}
+                      <span className={`template-emoji ${template.id}`}>{template.emoji}</span>
+                      <span>
+                        <strong>{template.title}</strong>
+                        <small>{template.category}</small>
+                      </span>
+                      <ChevronRight size={17} />
                     </button>
-                  </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-            <section className="templates-section" hidden={screen !== 'options'}>
-              <div className="section-heading">
-                <div>
-                  <h2>
-                    {t.templates} <span>↗</span>
-                  </h2>
-                  <p>{t.templatesHint}</p>
-                </div>
-                <span className="template-hint">{t.allTemplates}</span>
-              </div>
-              <div className="template-grid">
-                {templates.map((template) => (
-                  <button
-                    className="template-card"
-                    key={template.id}
-                    disabled={locked}
-                    onClick={() =>
-                      run(async () => {
-                        await addWheels([makeWheel(template.title, template.options)])
-                        navigate('wheel')
-                      })
-                    }
-                  >
-                    <span className={`template-emoji ${template.id}`}>{template.emoji}</span>
-                    <span>
-                      <strong>{template.title}</strong>
-                      <small>{template.category}</small>
-                    </span>
-                    <ChevronRight size={17} />
-                  </button>
-                ))}
-              </div>
-            </section>
-          </>
-        )}
+              </section>
+            </>
+          )}
+        </div>
         {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && (
           <>
             <HomeInfo />
