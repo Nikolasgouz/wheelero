@@ -85,7 +85,12 @@ The old responsive test's >800px assertion conflicted with fitting and true cent
 it now checks exact centering, viewport containment and maximum available diameter.
 No new repository test cases were added. All 36 E2E checks passed (2 workers, 2.7 minutes),
 including keyboard/axe checks, mobile/customization and real service-worker updates.
-The current layout awaits the main-branch deployment workflow and live verification.
+Layout code 20c1fa2 deployed successfully in GitHub run 40488853315. Live Chromium checks
+on the normal https://wheelero.com URL passed at all eight viewport sizes in light/dark,
+matching local measurements. Desktop wheel and Entries fit above the fold and the wheel
+center differs from the viewport center by less than 1 CSS px. Ignored live screenshots
+and report: artifacts/live-centered-viewport-*.png and live-centered-viewport-report.json.
+Physical-device/browser-zoom testing remains unverified. This handoff commit is docs-only.
 
 Rollback checks passed: typecheck/lint/production build, 16 unit tests, all 36 Chromium E2E
 tests (2 workers, 3.9 minutes), including the real manual-PWA-update regression. Separate
