@@ -1,7 +1,12 @@
 export const colors = ['#ded2f6', '#f6d5c4', '#cbe5dc', '#f4e6b7', '#cddff2', '#edcfe1']
 
-export function targetRotation(current: number, index: number, count: number): number {
-  const angle = 360 - ((index + 0.5) * 360) / count
+export function targetRotation(
+  current: number,
+  index: number,
+  count: number,
+  position: number,
+): number {
+  const angle = 360 - ((index + position) * 360) / count
   return current + 5 * 360 + ((angle - (current % 360) + 360) % 360)
 }
 

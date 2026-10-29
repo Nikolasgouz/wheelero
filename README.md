@@ -101,6 +101,8 @@ The wheel center uses a short translated Spin label (Greek: Γύρνα), retaini
 screen-reader label. Entries/Results action buttons wrap when needed with 44px touch targets.
 Idle rotation pauses while the winner dialog is open and resumes after dismissal,
 unless reduced motion is enabled.
+Each spin stops at a random point inside the winning slice, with a small boundary margin.
+This visual variation is sampled independently after the winner is selected.
 
 - Six distinct tools: the custom wheel, name picker, yes/no wheel, number wheel,
   team generator and **[random number generator](https://wheelero.com/random-number-generator/)**.

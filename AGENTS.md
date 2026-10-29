@@ -1,5 +1,9 @@
 # Working in Wheelero
 
+Choose the visual landing point only after the winner is fixed. App samples a separate
+Web Crypto fraction in [0.05, 0.95) of the winning visible sector. targetRotation stays
+deterministic with an explicit position argument. Never change eligibility to vary landing.
+
 Pause idle rotation while the winner popup is open. Resume after closing/removing the
 winner when otherwise eligible, and continue respecting reduced motion.
 

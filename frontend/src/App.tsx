@@ -49,6 +49,7 @@ import { pages, currentPath, shareExplanation } from './site'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
+import { randomIndex } from './lib/random'
 import { freezeWheel } from './lib/motion'
 import { Editor } from './screens/Editor'
 import { WheelSidebar } from './components/WheelSidebar'
@@ -233,6 +234,8 @@ export default function App() {
             startAngle,
             visible.findIndex((o) => o.id === outcome.result.option_id),
             visible.length,
+            // Independent visual landing point, with a 5% margin from either boundary.
+            0.05 + (randomIndex(10000) / 10000) * 0.9,
           ) +
             (config.slow_spin ? -3 : Math.max(0, Math.floor(config.duration / 2) - 5)) * 360,
         )

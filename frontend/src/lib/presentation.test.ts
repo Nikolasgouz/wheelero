@@ -19,8 +19,10 @@ describe('customized display preserves every winning ID', () => {
           expect(visible.length).toBeLessThanOrEqual(max)
           const index = visible.findIndex((o) => o.id === winner.id)
           expect(index).toBeGreaterThanOrEqual(0)
-          const rotation = targetRotation(1173, index, visible.length)
-          expect(visible[indexAtPointer(rotation, visible.length)].id).toBe(winner.id)
+          for (const position of [0.05, 0.5, 0.94991]) {
+            const rotation = targetRotation(1173, index, visible.length, position)
+            expect(visible[indexAtPointer(rotation, visible.length)].id).toBe(winner.id)
+          }
         }
         expect(entries).toHaveLength(1100)
       }, 30000)

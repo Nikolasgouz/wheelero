@@ -4,6 +4,15 @@ Updated: 2026-10-29. Current task: pause idle rotation behind the winner dialog.
 Published and verified live: release 048ad9d, successful Pages run 40929895815.
 The user explicitly authorized this release through the existing main-branch workflow.
 
+Latest follow-up: variable landing inside the winning slice. App samples a separate Web
+Crypto index after spinWheel has selected the winner, mapping it to 5%-95% of the visible
+sector. targetRotation now takes that fraction explicitly and remains deterministic. Draw
+probabilities, winner IDs, duration, popup pause, storage and UI remain unchanged.
+Build/typecheck/lint and 31 unit tests passed, with existing geometry tests extended to
+edge/center positions, counts through 10,000 and display projections with duplicates/images.
+Direct Chromium verified 12 distinct landing positions on desktop/mobile, matching the
+stored winner every time, paused behind the popup, plus offline drawing. Publication pending.
+
 Latest follow-up: App.tsx excludes popupOpen from the wheel's idle-rotation condition.
 The winner remains under the pointer while the result dialog is visible. Close/Remove
 winner resumes idle rotation, with reduced motion still respected. No new UI text or layout.

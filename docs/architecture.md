@@ -21,6 +21,10 @@ temporary optimistic overlay for caret stability and revert it on failed writes.
 
 Web Crypto rejection sampling determines the result independently of animation/display
 projection. Duplicate entries retain separate chances. Geometry lands on the winning ID.
+After selecting that ID, App samples an independent randomIndex(10000) and maps it to
+5%-95% of the visible sector. targetRotation receives this position explicitly, keeping
+geometry deterministic and the pointer away from ambiguous boundaries. Landing variation
+does not affect selection probabilities, and the winner popup still pauses idle rotation.
 No-repeat, auto-removal and manual removal retain their existing behavior; removal jobs
 identify their original wheel/entry/result and do not affect copies.
 

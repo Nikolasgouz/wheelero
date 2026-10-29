@@ -4,16 +4,23 @@ import { randomIndex, shuffled } from './random'
 import { backupSchema } from '../types'
 
 describe('pointer agreement', () => {
-  it('lands at every sector center for 1–200 choices across repeated rotations', () => {
+  it('lands inside each winning sector across positions and repeated rotations', () => {
     let current = 0
     const failures: string[] = []
-    for (let count = 1; count <= 200; count++) {
+    for (const count of [...Array.from({ length: 200 }, (_, i) => i + 1), 1000, 10000]) {
       for (let index = 0; index < count; index++) {
-        const next = targetRotation(current, index, count)
-        if (next - current < 1800 || indexAtPointer(next, count) !== index) {
-          failures.push(`${count}:${index}`)
+        for (const position of [0.05, 0.5, 0.94991]) {
+          const next = targetRotation(current, index, count, position)
+          const landed = (((360 - (next % 360)) % 360) * count) / 360 - index
+          if (
+            next - current < 1800 ||
+            indexAtPointer(next, count) !== index ||
+            Math.abs(landed - position) > 0.0001
+          ) {
+            failures.push(`${count}:${index}:${position}`)
+          }
+          current = next
         }
-        current = next
       }
     }
     expect(failures).toEqual([])
