@@ -1,7 +1,8 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-32eeaf0. All CI checks and deployment passed. New visitors see the site behind a compact
+6129dc3. All CI checks and deployment passed. Wheel sound starts enabled on every page load.
+New visitors see the site behind a compact
 cookie dialog and must accept or reject before using the tool. Optional GA4 requires consent, with safe page
 views and feature counts. Live collection requests received HTTP204; GA report ingestion
 could not be checked without property access. See [analytics verification](docs/analytics.md).

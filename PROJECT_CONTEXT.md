@@ -13,7 +13,10 @@ being ignored, page-local mute during preview and sound re-enabled after reload.
 Local build/typecheck, lint and three targeted E2E passed (full spin/edit/save flow, actual
 audio previews/volume/stop/mute, local-only draw/share). Direct Chromium observed no audio
 on load, a running AudioContext/source on spin, no sources when muted, and audible sources
-again after reload despite a legacy saved false preference. Publication verification pending.
+again after reload despite a legacy saved false preference. Published as 6129dc3 through
+successful run 40911892051: all 41 browser cases, isolated PWA update, 16 unit tests and build
+checks passed. Live Chromium repeated enabled-on-load, no autoplay, running audio on spin,
+mute suppressing playback and reload restoring sound. Physical speaker/device mute untested.
 
 ## Latest: approved cookie copy, no modal language picker
 

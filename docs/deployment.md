@@ -1,5 +1,11 @@
 # Static deployment
 
+Sound-on-load verified live on 2026-10-29: code 6129dc3, successful run
+[40911892051](https://github.com/Nikolasgouz/wheelero/actions/runs/40911892051).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
+verified enabled sound despite legacy mute storage, no autoplay, active audio on spin,
+working page-local mute and sound enabled again after refresh.
+
 Approved cookie copy verified live on 2026-10-29: code 32eeaf0, successful run
 [40910298245](https://github.com/Nikolasgouz/wheelero/actions/runs/40910298245).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
