@@ -1,16 +1,22 @@
 import { loadEnv } from 'vite'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { SiteDetails, SiteFooter, SiteIntro } from '../src/components/SiteContent'
-import { pages, type SitePath } from '../src/site'
+import { PageLoading } from '../src/components/PageLoading'
+import { pages, publicPath, type SitePath } from '../src/site'
+
+function escapeHtml(text: string) {
+  return text
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+}
 
 export async function generatePages() {
   const environment = { ...loadEnv('production', '..', ''), ...process.env }
   const contactFormId = environment.VITE_CONTACT_FORM_ID ?? ''
   if (contactFormId && !/^[a-zA-Z0-9]{6,64}$/.test(contactFormId))
-    throw new Error(
-      'VITE_CONTACT_FORM_ID must be a Formspree form ID, not an email or URL.',
-    )
+    throw new Error('VITE_CONTACT_FORM_ID must be a Formspree form ID, not an email or URL.')
   const origin = environment.PUBLIC_URL?.replace(/\/$/, '') ?? ''
   const indexable = environment.PUBLIC_INDEXING === 'true'
   if (indexable && !origin) throw new Error('PUBLIC_URL is required for an indexable build.')
@@ -19,45 +25,19 @@ export async function generatePages() {
   const shell = await readFile('dist/index.html', 'utf8')
   for (const [path, page] of Object.entries(pages)) {
     const content = renderToStaticMarkup(
-      <div className="app home">
-        <header className="topbar">
-          <a className="brand" href="/">
-            <img className="brand-icon" src="/wheelero.svg" alt="" width="34" height="34" />
-            Wheelero
-          </a>
-        </header>
-        <main>
-          <SiteIntro path={path as SitePath} />
-          {page.kind !== 'information' && (
-            <section className="site-details">
-              <h2>How to use this tool</h2>
-              <ol>
-                <li>Add or paste your entries.</li>
-                <li>Choose your settings and spin or generate teams.</li>
-                <li>Save your wheel or export results as text.</li>
-              </ol>
-              <p>
-                The interactive tool uses JavaScript. Enable it to use the wheel. Names stay on this
-                device.
-              </p>
-            </section>
-          )}
-          <SiteDetails path={path as SitePath} contactFormId={contactFormId} />
-        </main>
-        <footer className="site-footer">
-          <SiteFooter path={path as SitePath} />
-        </footer>
-      </div>,
+      <PageLoading path={path as SitePath} contactFormId={contactFormId} />,
     )
-    const url = `${origin}${path === '/404' ? '/' : path}`
+    const url = `${origin}${publicPath(path as SitePath)}`
     const meta = `<meta name="robots" content="${indexable && path !== '/404' ? 'index,follow' : 'noindex,nofollow'}" />
-<link rel="canonical" href="${url}" />
+${path === '/404' ? '' : `<link rel="canonical" href="${escapeHtml(url)}" />`}
 <meta property="og:type" content="website" /><meta property="og:site_name" content="Wheelero" />
-<meta property="og:title" content="${page.title}" /><meta property="og:description" content="${page.description}" />
-<meta property="og:url" content="${url}" /><meta property="og:image" content="${origin}/social.png" />
+<meta property="og:title" content="${escapeHtml(page.title)}" /><meta property="og:description" content="${escapeHtml(page.description)}" />
+<meta property="og:url" content="${escapeHtml(url)}" /><meta property="og:image" content="${origin}/social.png" />
 <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Wheelero. One spin, one decision." />
-<meta name="twitter:card" content="summary_large_image" />`
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${escapeHtml(page.title)}" /><meta name="twitter:description" content="${escapeHtml(page.description)}" />
+<meta name="twitter:image" content="${origin}/social.png" /><meta name="twitter:image:alt" content="Wheelero. One spin, one decision." />`
     const structured =
       path === '/404'
         ? ''
@@ -76,10 +56,10 @@ export async function generatePages() {
               : {}),
           }).replaceAll('<', '\\u003c')}</script>`
     const html = shell
-      .replace(/<title>.*?<\/title>/, `<title>${page.title}</title>`)
+      .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(page.title)}</title>`)
       .replace(
         /<meta name="description"[^>]+>/,
-        `<meta name="description" content="${page.description}" />`,
+        `<meta name="description" content="${escapeHtml(page.description)}" />`,
       )
       .replace('</head>', `${meta}${structured}</head>`)
       .replace('<div id="root"></div>', `<div id="root">${content}</div>`)
@@ -87,7 +67,11 @@ export async function generatePages() {
     if (path !== '/') await mkdir(`dist${path}`, { recursive: true })
     await writeFile(file, html)
     if (path === '/404') await writeFile('dist/404.html', html)
-    if (path === '/') await writeFile('dist/launch.html', html)
+    if (path === '/')
+      await writeFile(
+        'dist/launch.html',
+        html.replace('content="index,follow"', 'content="noindex,follow"'),
+      )
   }
   await writeFile(
     'dist/robots.txt',
@@ -102,7 +86,7 @@ export async function generatePages() {
       (origin
         ? Object.keys(pages)
             .filter((path) => path !== '/404')
-            .map((path) => `<url><loc>${origin}${path}</loc></url>`)
+            .map((path) => `<url><loc>${origin}${publicPath(path as SitePath)}</loc></url>`)
             .join('')
         : '') +
       '</urlset>',

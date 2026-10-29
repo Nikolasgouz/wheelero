@@ -42,6 +42,9 @@ import { PwaControls } from './components/PwaControls'
 import { HomeInfo } from './components/HomeInfo'
 import { SiteIntro, SiteDetails, SiteFooter } from './components/SiteContent'
 import { NumberRange, TeamGenerator } from './components/Tools'
+import { NumberGenerator } from './components/NumberGenerator'
+import { ToolGuide } from './components/ToolGuide'
+import { PageLoading } from './components/PageLoading'
 import { pages, currentPath, shareExplanation } from './site'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
@@ -286,9 +289,8 @@ export default function App() {
 
   if (!data || !wheel)
     return (
-      <main className="loading">
-        <span className="brand">{t.brand}</span>
-        <p>{error || t.loading}</p>
+      <PageLoading path={sitePath} contactFormId={import.meta.env.VITE_CONTACT_FORM_ID ?? ''}>
+        {error && <p role="alert">{error}</p>}
         {error && (
           <>
             <button className="primary" onClick={() => run(() => initialize(sitePath))}>
@@ -299,7 +301,7 @@ export default function App() {
             </button>
           </>
         )}
-      </main>
+      </PageLoading>
     )
   const available = activeOptions(wheel)
   const locked = busy
@@ -424,6 +426,8 @@ export default function App() {
             />
           ) : pages[sitePath].kind === 'teams' ? (
             <TeamGenerator />
+          ) : pages[sitePath].kind === 'numbers' ? (
+            <NumberGenerator />
           ) : screen === 'library' ? (
             <>
               <button
@@ -689,7 +693,8 @@ export default function App() {
             </>
           )}
         </div>
-        {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && <HomeInfo />}
+        {screen === 'wheel' && !presenting && <ToolGuide path={sitePath} />}
+        {screen === 'wheel' && !presenting && sitePath === '/' && <HomeInfo />}
       </main>
       <footer className="site-footer">
         {sitePath === '/cookies' && consent !== null && <AnalyticsConsent />}

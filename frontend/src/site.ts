@@ -3,10 +3,11 @@ export const shareExplanation =
 
 export const pages = {
   '/': {
-    title: 'Wheelero – Random Name Picker & Spin the Wheel',
-    heading: 'Spin the Wheel to Pick a Random Name',
+    title: 'Spin the Wheel – Custom Wheel Spinner | Wheelero',
+    heading: 'Spin the Wheel',
     description:
-      'Turn a list into a decision. Add names or choices, customise the wheel and click its center to pick a winner.',
+      'Make your own wheel with names, tasks or choices. Customise colors and sounds, spin for a random decision and save your wheel. Free, with no signup.',
+    intro: 'Add your choices, customise the wheel and spin to make a decision. Free, with no signup.',
     kind: 'wheel',
   },
   '/random-name-picker': {
@@ -41,6 +42,15 @@ export const pages = {
     intro:
       'Paste names and choose how many teams to make. Groups differ by at most one person. Export them as text.',
     kind: 'teams',
+  },
+  '/random-number-generator': {
+    title: 'Random Number Generator – With or Without Repeats | Wheelero',
+    heading: 'Random Number Generator',
+    description:
+      'Generate random integers between your minimum and maximum. Pick one or many numbers, allow repeats or keep each batch unique, and copy your results.',
+    intro:
+      'Choose a range and generate one or many random integers, with or without repeats. No spinning required.',
+    kind: 'numbers',
   },
   '/about': {
     title: 'About Wheelero – One spin, one decision.',
@@ -94,8 +104,10 @@ export const pages = {
   },
 } as const
 export type SitePath = keyof typeof pages
+// GitHub Pages already redirects extensionless tool URLs to their directory URL.
+export const publicPath = (path: SitePath): string => (path === '/' ? '/' : `${path}/`)
 export const currentPath = (path: string): SitePath =>
-  path === '/launch.html' ? '/' : path in pages ? (path as SitePath) : '/404'
+  path === '/launch.html' ? '/' : Object.hasOwn(pages, path) ? (path as SitePath) : '/404'
 export const footerGroups = [
   {
     title: 'Help & information',

@@ -1,5 +1,18 @@
 # Working in Wheelero
 
+Latest SEO request (2026-10-29) authorizes publishing through the existing Pages workflow.
+Six tool routes include /random-number-generator, distinct from /random-number-wheel.
+ToolGuide supplies translated task-specific instructions/examples/FAQs and real tool links
+below the tool. This supersedes earlier removal of homepage FAQs/Tools links. The homepage
+has one visible H1 below the tool, preserving the centered first-viewport wheel layout.
+PageLoading shares prerendered and client-loading content. Keep English static SEO,
+trailing-slash canonicals matching Pages redirects, unique metadata and a real 404.
+Number generation uses Web Crypto rejection sampling and sparse sampling without replacement,
+inclusive integer bounds +/-1e9, 1-1000 results and per-batch uniqueness. Never track outputs.
+GA4 is an explicitly authorized exception to older 'No trackers' guidance: preserve basic
+consent, the isolated official-tag frame, safe metadata and no Google requests before consent.
+See docs/seo.md and docs/analytics.md. Do not restore Classroom or change storage schemas.
+
 Latest delivery instruction (2026-10-29): after committing the accumulated local changes,
 the user authorized pushing and deploying them to wheelero.com through the existing
 main-branch GitHub Pages workflow. This supersedes earlier no-commit/no-deploy notes for

@@ -87,6 +87,14 @@ was removed at the user's request; migration-recovery export is retained only fo
 
 ## Features
 
+- Six distinct tools: the custom wheel, name picker, yes/no wheel, number wheel,
+  team generator and **[random number generator](https://wheelero.com/random-number-generator/)**.
+  The instant generator supports inclusive integer bounds +/-1 billion, 1-1,000 outputs,
+  optional repeats, clipboard copy and offline use. Results remain in memory on this device.
+- Each tool has task-specific instructions, examples, FAQs and related links, shared between
+  English prerendered HTML and the translated application. Canonicals/sitemap use the final
+  trailing-slash URLs served by GitHub Pages. See [SEO implementation and checks](docs/seo.md).
+
 Home explanations, instructions, features, About/Privacy, tool introductions/controls,
 footer links and template display names follow the selected language (14 languages).
 Copy describes the current Save/Open, in-place Entries editing, TXT result export, local

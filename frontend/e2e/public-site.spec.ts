@@ -164,6 +164,7 @@ test('public HTML has real headings and metadata and unknown routes return 404',
     '/yes-no-wheel',
     '/random-number-wheel',
     '/random-team-generator',
+    '/random-number-generator',
     '/about',
     '/privacy',
     '/how-to-use',
@@ -181,7 +182,7 @@ test('public HTML has real headings and metadata and unknown routes return 404',
     expect(html).toContain('property="og:image"')
     titles.add(html.match(/<title>(.*?)<\/title>/)![1])
   }
-  expect(titles.size).toBe(11)
+  expect(titles.size).toBe(12)
   expect((await request.get('/not-a-wheelero-page')).status()).toBe(404)
   expect((await request.get('/robots.txt')).status()).toBe(200)
   expect((await request.get('/sitemap.xml')).status()).toBe(200)

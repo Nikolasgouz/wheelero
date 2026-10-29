@@ -1,5 +1,12 @@
 # Development
 
+SEO regression checks in e2e/seo.spec.ts expect a production-configured build:
+PUBLIC_URL=https://wheelero.com, PUBLIC_INDEXING=true and VITE_ANALYTICS_ENABLED=true.
+The localhost origin still cannot activate real Analytics. Analytics tests intercept Google
+requests. After changing the route map, restart an existing Vite preview so its in-memory
+route map matches dist. Never build concurrently with the isolated worker-update test.
+See seo.md for the six-route audit and number-generator invariants.
+
 Use Bun for dependencies/scripts; preserve bun.lock. The active app is static React/TS.
 Run bun install --frozen-lockfile, bun run dev from frontend/. No Python environment or
 database migration is needed. START_GYRNA.bat builds and starts Vite preview at localhost:4173.

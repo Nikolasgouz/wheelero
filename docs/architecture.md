@@ -58,8 +58,16 @@ The sidebar scrolls internally, title ellipsis retains full accessible text/titl
 expanded legends consume space before calculating the wheel's available height.
 
 src/site.ts and SiteContent.tsx supply shared public content. scripts/pages.tsx pre-renders
-eleven routes and 404/launch HTML, robots and sitemap before Workbox precaching. PUBLIC_URL
+twelve routes and 404/launch HTML, robots and sitemap before Workbox precaching. PUBLIC_URL
 and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templating service.
+
+PageLoading is shared by prerendering and the client while IndexedDB opens. ToolGuide and
+tool-content.ts supply the same task-specific copy before and after initialization for six
+tools, with translations applied in the client. The homepage H1 is below the tool, leaving
+the centered wheel layout intact. The application mounts with createRoot, not hydration.
+The instant number generator is independent of stored wheels: lib/numbers.ts uses rejection
+sampling and a sparse Fisher-Yates map, while NumberGenerator keeps results in memory only.
+See seo.md for limits, canonical URLs, metadata and validation.
 
 Vite preview serves real HTML routes and 404s with no API proxy. Production Caddy serves
 the same dist directory. The service worker caches app files/assets, not user lists.

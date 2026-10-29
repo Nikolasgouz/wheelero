@@ -1,10 +1,16 @@
 import { expect, test, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { pages } from '../src/site'
 
 test.use({
   storageState: { cookies: [], origins: [] },
   serviceWorkers: 'block',
   reducedMotion: 'reduce',
+})
+
+test.afterEach(async ({ context }) => {
+  // Finish static fixture responses before Playwright tears down the browser context.
+  await context.unrouteAll({ behavior: 'wait' })
 })
 
 async function analyticsBrowser(page: Page) {
@@ -16,8 +22,13 @@ async function analyticsBrowser(page: Page) {
   })
   await page.context().route('https://wheelero.com/**', async (route) => {
     const url = new URL(route.request().url())
-    const response = await route.fetch({ url: `http://localhost:4173${url.pathname}${url.search}` })
-    await route.fulfill({ response })
+    const path = url.pathname.replace(/\/$/, '') || '/'
+    // Use the actual build under the production origin, without a second HTTP request
+    // that can outlive a navigation while the applause sample is preloading.
+    const file = Object.hasOwn(pages, path)
+      ? path === '/' ? '/index.html' : `${path}/index.html`
+      : url.pathname
+    await route.fulfill({ path: `dist${file}` })
   })
   await page
     .context()
@@ -98,6 +109,14 @@ test('one page view per navigation and only safe successful feature events', asy
   await expect.poll(() => events.filter((e) => e.name === 'teams_generate').length).toBe(1)
   expect(events.at(-1)!.params.entry_count).toBe(4)
   expect(events.at(-1)!.params.team_count).toBe(2)
+  await page.goto('https://wheelero.com/random-number-generator?private=PRIVATE_NUMBER#PRIVATE_RESULT')
+  await expect.poll(() => events.filter((e) => e.name === 'page_view').length).toBe(3)
+  await page.getByLabel('Minimum', { exact: true }).fill('987654321')
+  await page.getByLabel('Maximum', { exact: true }).fill('987654321')
+  await page.getByRole('button', { name: 'Generate numbers', exact: true }).click()
+  await expect(page.getByLabel('Generated numbers', { exact: true })).toHaveValue('987654321')
+  expect(JSON.stringify(events)).not.toContain('987654321')
+  expect(events.at(-1)!.params.page_location).toBe('https://wheelero.com/random-number-generator')
   expect(JSON.stringify(events)).not.toContain('PRIVATE')
   for (const event of events) {
     expect(Object.keys(event.params).sort()).toEqual(

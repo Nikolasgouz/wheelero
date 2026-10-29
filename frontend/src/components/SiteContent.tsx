@@ -1,15 +1,11 @@
 import { ArrowLeft } from 'lucide-react'
-import { footerGroups, information, pages, type SitePath } from '../site'
+import { footerGroups, information, pages, publicPath, type SitePath } from '../site'
 import { getLanguage, translate } from '../locale'
 import { ContactForm } from './ContactForm'
 
 export function SiteIntro({ path }: { path: SitePath }) {
-  if (path === '/')
-    return (
-      <h1 className="sr-only" lang={getLanguage()}>
-        {translate(pages[path].heading)}
-      </h1>
-    )
+  // The homepage's visible H1 and introduction live below the wheel in ToolGuide.
+  if (path === '/') return null
   return (
     <section
       className={`site-intro ${pages[path].kind === 'information' ? 'information-intro' : ''}`}
@@ -39,7 +35,7 @@ export function SiteFooter({ path }: { path: SitePath }) {
         <section className="footer-group" key={title}>
           <h2>{translate(title)}</h2>
           {links.map(([href, label]) => (
-            <a key={href} href={href} aria-current={path === href ? 'page' : undefined}>
+            <a key={href} href={publicPath(href)} aria-current={path === href ? 'page' : undefined}>
               {translate(label)}
             </a>
           ))}
