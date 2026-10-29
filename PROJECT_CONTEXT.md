@@ -1,7 +1,7 @@
 ﻿# Wheelero context
 
-Updated: 2026-10-29. Current task: pause idle rotation behind the winner dialog.
-Published and verified live: release 048ad9d, successful Pages run 40929895815.
+Updated: 2026-10-29. Current task: variable landing inside the winning slice.
+Published and verified live: release 71d8348, successful Pages run 40931251381.
 The user explicitly authorized this release through the existing main-branch workflow.
 
 Latest follow-up: variable landing inside the winning slice. App samples a separate Web
@@ -11,7 +11,10 @@ probabilities, winner IDs, duration, popup pause, storage and UI remain unchange
 Build/typecheck/lint and 31 unit tests passed, with existing geometry tests extended to
 edge/center positions, counts through 10,000 and display projections with duplicates/images.
 Direct Chromium verified 12 distinct landing positions on desktop/mobile, matching the
-stored winner every time, paused behind the popup, plus offline drawing. Publication pending.
+stored winner every time, paused behind the popup, plus offline drawing. Both existing
+spin/projection E2E cases passed. Final CI passed all 45 browser/PWA cases, 31 unit tests,
+typecheck/lint/build and deployment. Live desktop/mobile verification repeated 12 spins
+with distinct fractions, correct winners, paused popup and offline drawing successfully.
 
 Latest follow-up: App.tsx excludes popupOpen from the wheel's idle-rotation condition.
 The winner remains under the pointer while the result dialog is visible. Close/Remove

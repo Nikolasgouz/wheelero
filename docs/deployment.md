@@ -1,5 +1,13 @@
 # Static deployment
 
+Variable winning-slice landing verified live on 2026-10-29: release 71d8348, successful
+[run 40931251381](https://github.com/Nikolasgouz/wheelero/actions/runs/40931251381).
+Independent visual sampling changes the landing fraction without altering winner selection.
+All 45 browser/PWA cases, 31 unit tests, build/typecheck/lint passed. Live desktop/mobile
+checks observed 12 distinct landing positions with correct winners, stationary popup
+background and offline drawing. Existing geometry checks include edge/center fractions,
+counts up to 10,000 and winner-preserving projections with duplicates and images.
+
 Winner-dialog pause verified live on 2026-10-29: release 048ad9d, successful
 [run 40929895815](https://github.com/Nikolasgouz/wheelero/actions/runs/40929895815).
 App.tsx gates idle rotation on !popupOpen. All 45 browser/PWA cases, 31 unit tests and

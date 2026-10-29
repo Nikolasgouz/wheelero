@@ -1,7 +1,9 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-048ad9d. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
+71d8348. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
+Random landing within the winning slice was verified in 12 live desktop/mobile spins,
+with correct pointer/winner agreement and working offline drawing.
 Idle rotation now pauses behind the winner dialog. Desktop/mobile live checks confirmed
 a stable wheel while the dialog is open and resumption after Close/Remove winner.
 Short center labels and wrapping sidebar actions were verified live at 360/390/768/1366/1920px
