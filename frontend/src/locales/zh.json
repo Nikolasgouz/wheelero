@@ -415,5 +415,6 @@
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "使用-1,000,000,000到1,000,000,000之间的整数，最小值不能大于最大值。",
   "Choose a quantity from 1 to 1,000.": "数量请选择1到1,000。",
   "There are not enough different numbers in this range.": "此范围内没有足够的不同数字。",
-  "Choose a meal, a film or the next task on your list.": "选择一餐美食、一部电影或清单上的下一项任务。"
+  "Choose a meal, a film or the next task on your list.": "选择一餐美食、一部电影或清单上的下一项任务。",
+  "Spin": "旋转"
 }

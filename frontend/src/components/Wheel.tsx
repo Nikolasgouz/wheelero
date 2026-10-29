@@ -29,7 +29,7 @@ export function Wheel({
 }) {
   const pointer = useRef<HTMLDivElement>(null)
   const spinButton = useRef<HTMLButtonElement>(null)
-  const spinLabel = spinning ? t.spinning : t.spin
+  const spinLabel = spinning ? t.spinning : t.spinShort
   const count = options.length
   const colors = useMemo(() => sectorColors(count, config.palette), [count, config.palette])
   useLayoutEffect(() => {
@@ -39,7 +39,7 @@ export function Wheel({
       label.style.fontSize = ''
       let size = parseFloat(getComputedStyle(label).fontSize)
       const height = Math.min(button.clientWidth, button.clientHeight) * 0.68
-      while (label.scrollHeight > height && size > 1) {
+      while ((label.scrollHeight > height || label.scrollWidth > label.clientWidth) && size > 1) {
         size -= 0.5
         label.style.fontSize = `${size}px`
       }

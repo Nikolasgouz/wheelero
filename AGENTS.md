@@ -1,5 +1,10 @@
 # Working in Wheelero
 
+Latest controls follow-up: the center uses a short visible Spin translation (Greek: Γύρνα),
+with the existing descriptive t.spin aria-label. Keep words intact and fit both dimensions
+inside the center. Sidebar action buttons wrap at their intrinsic width with 44px targets.
+Do not change wheel dimensions/colors, Entries fields/tabs or the integrated homepage content.
+
 Latest SEO request (2026-10-29) authorizes publishing through the existing Pages workflow.
 Six tool routes include /random-number-generator, distinct from /random-number-wheel.
 Latest homepage follow-up: do not render ToolGuide on /. Integrate unique guidance into

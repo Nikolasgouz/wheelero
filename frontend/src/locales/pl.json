@@ -417,5 +417,6 @@
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Użyj liczb całkowitych od -1 000 000 000 do 1 000 000 000. Minimum nie może być większe niż Maksimum.",
   "Choose a quantity from 1 to 1,000.": "Wybierz ilość od 1 do 1000.",
   "There are not enough different numbers in this range.": "W tym zakresie nie ma wystarczająco wielu różnych liczb.",
-  "Choose a meal, a film or the next task on your list.": "Wybierz posiłek, film lub kolejne zadanie z listy."
+  "Choose a meal, a film or the next task on your list.": "Wybierz posiłek, film lub kolejne zadanie z listy.",
+  "Spin": "Zakręć"
 }

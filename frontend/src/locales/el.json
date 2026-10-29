@@ -415,5 +415,6 @@
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Χρησιμοποίησε ακεραίους από -1.000.000.000 έως 1.000.000.000, με Ελάχιστο μικρότερο ή ίσο του Μέγιστου.",
   "Choose a quantity from 1 to 1,000.": "Διάλεξε πλήθος από 1 έως 1.000.",
   "There are not enough different numbers in this range.": "Δεν υπάρχουν αρκετοί διαφορετικοί αριθμοί σε αυτό το εύρος.",
-  "Choose a meal, a film or the next task on your list.": "Διάλεξε ένα φαγητό, μια ταινία ή την επόμενη δουλειά στη λίστα σου."
+  "Choose a meal, a film or the next task on your list.": "Διάλεξε ένα φαγητό, μια ταινία ή την επόμενη δουλειά στη λίστα σου.",
+  "Spin": "Γύρνα"
 }

@@ -93,6 +93,9 @@ was removed at the user's request; migration-recovery export is retained only fo
 
 ## Features
 
+The wheel center uses a short translated Spin label (Greek: Γύρνα), retaining a descriptive
+screen-reader label. Entries/Results action buttons wrap when needed with 44px touch targets.
+
 - Six distinct tools: the custom wheel, name picker, yes/no wheel, number wheel,
   team generator and **[random number generator](https://wheelero.com/random-number-generator/)**.
   The instant generator supports inclusive integer bounds +/-1 billion, 1-1,000 outputs,

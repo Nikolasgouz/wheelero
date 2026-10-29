@@ -47,6 +47,7 @@ function messages() {
     noRepeatHint: translate('Each entry can win once per round.'),
     reset: translate('New round'),
     spin: translate('Click to spin'),
+    spinShort: translate('Spin'),
     spinning: translate('Spinning…'),
     spinHint: translate('Small decisions, without the overthinking.'),
     exhausted: translate('Every entry has had a turn. Start a new round!'),

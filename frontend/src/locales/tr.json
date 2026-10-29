@@ -415,5 +415,6 @@
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "-1.000.000.000 ile 1.000.000.000 arasında tam sayılar kullanın. Minimum, Maksimumdan büyük olamaz.",
   "Choose a quantity from 1 to 1,000.": "1 ile 1.000 arasında adet seçin.",
   "There are not enough different numbers in this range.": "Bu aralıkta yeterince farklı sayı yok.",
-  "Choose a meal, a film or the next task on your list.": "Bir yemek, film veya listendeki bir sonraki görevi seç."
+  "Choose a meal, a film or the next task on your list.": "Bir yemek, film veya listendeki bir sonraki görevi seç.",
+  "Spin": "Çevir"
 }

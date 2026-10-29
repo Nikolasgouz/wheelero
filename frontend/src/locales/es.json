@@ -415,5 +415,6 @@
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Usa enteros de -1.000.000.000 a 1.000.000.000, con Mínimo menor o igual que Máximo.",
   "Choose a quantity from 1 to 1,000.": "Elige una cantidad de 1 a 1.000.",
   "There are not enough different numbers in this range.": "No hay suficientes números distintos en este rango.",
-  "Choose a meal, a film or the next task on your list.": "Elige una comida, una película o la siguiente tarea de tu lista."
+  "Choose a meal, a film or the next task on your list.": "Elige una comida, una película o la siguiente tarea de tu lista.",
+  "Spin": "Girar"
 }

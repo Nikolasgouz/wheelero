@@ -4,6 +4,16 @@ Updated: 2026-10-29. Current task: targeted SEO plus a real instant number gener
 Published and verified live: code d8af70a, successful Pages run 40925325028.
 The user explicitly authorized this release through the existing main-branch workflow.
 
+Latest controls follow-up, ready for publication: Wheel uses t.spinShort for visible Spin
+(Greek Γύρνα) in all 14 languages, keeping t.spin as the descriptive aria-label. Center text
+uses nowrap with a full-width grid track and width/height fitting. Sidebar action rows wrap
+with intrinsic button widths and minimum 44px height. No wheel size/color/layout, field/tab,
+SEO, URL, footer, Analytics or consent changes. Build/typecheck/lint, 31 unit tests and seven
+targeted browser cases passed. Direct Chromium checked 360/390/768/1366/1920px in English and
+Greek, all other short labels at 360px, and spin/shuffle/sort/clear/result export/keyboard.
+All 22 views fit with no horizontal overflow. Desktop/mobile screenshots were reviewed:
+artifacts/spin-controls-local-*.png. Publication/live verification pending.
+
 Current follow-up: remove the homepage's extra SEO/ToolGuide panel, integrating unique
 information in HomeInfo with the earlier aesthetic. Implemented: visible H1 in
 the old heading style, Save/Open replacing the duplicate Customise feature card, next-task

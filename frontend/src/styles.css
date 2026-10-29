@@ -456,6 +456,7 @@ button:hover:not(:disabled) {
   border-radius: 50%;
   background: #fff;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   box-shadow: 0 3px 8px #46325e25;
   border: 3px solid #eee7fa;
@@ -470,8 +471,7 @@ button:hover:not(:disabled) {
   font-size: clamp(10px, 14cqi, 20px);
   line-height: 1.2;
   font-weight: 750;
-  overflow-wrap: anywhere;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 .wheel-spin-control:hover:not(:disabled) {
   background: #eee7fa;
@@ -2057,13 +2057,17 @@ input[type='color'] {
 }
 .sidebar-actions {
   display: flex;
+  flex-wrap: wrap;
   flex-shrink: 0;
   gap: 6px;
   padding: 12px;
   border-bottom: 1px solid var(--line);
 }
 .sidebar-actions button {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: max-content;
+  min-height: 44px;
+  white-space: nowrap;
   gap: 4px;
   padding: 8px 6px;
   font-size: 12px;
