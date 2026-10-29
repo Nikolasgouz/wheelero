@@ -416,5 +416,6 @@
   "Copy results": "Copiază rezultatele",
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Folosește întregi de la -1.000.000.000 la 1.000.000.000, cu Minim mai mic sau egal cu Maxim.",
   "Choose a quantity from 1 to 1,000.": "Alege o cantitate de la 1 la 1.000.",
-  "There are not enough different numbers in this range.": "Nu există suficiente numere distincte în acest interval."
+  "There are not enough different numbers in this range.": "Nu există suficiente numere distincte în acest interval.",
+  "Choose a meal, a film or the next task on your list.": "Alege o masă, un film sau următoarea sarcină de pe lista ta."
 }

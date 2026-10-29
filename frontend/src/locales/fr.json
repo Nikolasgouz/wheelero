@@ -414,5 +414,6 @@
   "Copy results": "Copier les résultats",
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Utilisez des entiers de -1 000 000 000 à 1 000 000 000, avec Minimum inférieur ou égal à Maximum.",
   "Choose a quantity from 1 to 1,000.": "Choisissez une quantité de 1 à 1 000.",
-  "There are not enough different numbers in this range.": "La plage ne contient pas assez de nombres distincts."
+  "There are not enough different numbers in this range.": "La plage ne contient pas assez de nombres distincts.",
+  "Choose a meal, a film or the next task on your list.": "Choisissez un repas, un film ou la prochaine tâche de votre liste."
 }

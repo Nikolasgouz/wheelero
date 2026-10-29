@@ -4,6 +4,16 @@ Updated: 2026-10-29. Current task: targeted SEO plus a real instant number gener
 Published and verified live: code 3e9d755, successful Pages run 40922917095.
 The user explicitly authorized this release through the existing main-branch workflow.
 
+Current follow-up: remove the homepage's extra SEO/ToolGuide panel, integrating unique
+information in HomeInfo with the earlier aesthetic. Implemented: visible H1 in
+the old heading style, Save/Open replacing the duplicate Customise feature card, next-task
+example in everyday uses and six plain footer tool links. Five specialist guides remain.
+Metadata/initial HTML/Analytics are preserved. Build/typecheck/lint and 31 unit tests passed.
+All 13 targeted browser checks passed (SEO, Analytics, sharing and responsive accessibility).
+Eight layout/theme views at 1366x768, 1440x900, 1920x1080 and 390x844 passed, with screenshots
+visually reviewed on desktop/mobile. All 14 languages and keyboard footer links passed.
+Publication and live recheck pending. Screenshots: artifacts/home-integrated-local-*.png.
+
 ## Product and runtime
 
 React/TypeScript + Bun/Vite static PWA, GitHub Pages at https://wheelero.com.
@@ -38,8 +48,10 @@ plus real 404/launch entry. Existing slashless routes keep working through Pages
 Canonicals/sitemap use final trailing slashes. Unique titles/descriptions/H1, OG/Twitter and
 accurate WebApplication JSON-LD. No fabricated ratings, lastmod, keyword metrics or claims.
 
-ToolGuide/tool-content.ts supply shared instructions, examples, FAQs and real related links
-below the tools. Homepage H1 is visible below the wheel, preserving its first-screen size.
+ToolGuide/tool-content.ts supply instructions/examples/FAQs for the five specialist tools.
+HomeInfo integrates homepage guidance without an extra box or duplicate instructions/FAQs.
+The visible H1 is in its original information section below the wheel. site.ts/toolPaths
+drives all six footer tool links. Both changes preserve the first-screen wheel size.
 This latest request supersedes older removed-FAQ/Tools instructions. PageLoading shares
 prerender/client loading copy and reserves tool space. React still mounts with createRoot,
 not interactive hydration. English content matches before/after initialization.
@@ -53,7 +65,8 @@ Existing wheel/team selection and storage schema are unchanged. All new copy is 
 ## Important files
 
 - src/site.ts, components/SiteContent.tsx: route metadata and information pages.
-- src/tool-content.ts, components/ToolGuide.tsx: six task guides, links and FAQs.
+- src/tool-content.ts, components/ToolGuide.tsx: five specialist guides, links and FAQs.
+- components/HomeInfo.tsx: integrated homepage guidance and its single visible H1.
 - components/PageLoading.tsx, scripts/pages.tsx: initial HTML, sitemap/robots/metadata.
 - components/NumberGenerator.tsx, lib/numbers.ts: instant random integers.
 - App.tsx/styles.css/components/Wheel.tsx: main layout and spin behavior.

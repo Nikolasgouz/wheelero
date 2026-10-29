@@ -117,9 +117,9 @@ function messages() {
     privacy: translate('No account needed. Go at your own pace.'),
     about: {
       eyebrow: translate('Names, ideas and everyday choices'),
-      title: translate('What is Wheelero for?'),
+      title: translate('Spin the Wheel'),
       intro: translate(
-        'Turn a list into a decision. Add names or choices, customise the wheel and click its center to pick a winner.',
+        'Add your choices, customise the wheel and spin to make a decision. Free, with no signup.',
       ),
       uses: [
         {
@@ -136,7 +136,7 @@ function messages() {
         },
         {
           title: translate('Everyday choices'),
-          text: translate('Choose a meal, a film or something to do together.'),
+          text: translate('Choose a meal, a film or the next task on your list.'),
         },
       ],
       howTitle: translate('How it works'),
@@ -162,8 +162,10 @@ function messages() {
       featuresIntro: translate('Tools for every spin.'),
       features: [
         {
-          title: translate('Customise'),
-          text: translate('Choose colors, images, sounds and spin duration.'),
+          title: translate('Save'),
+          text: translate(
+            'Save updates a wheel with the same name. A different name creates a copy. Open a saved wheel to edit a working draft.',
+          ),
         },
         {
           title: translate('Templates'),

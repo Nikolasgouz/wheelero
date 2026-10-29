@@ -1855,6 +1855,7 @@ input[type='color'] {
   max-width: 760px;
   margin-bottom: 28px;
 }
+.home-info h1,
 .home-info h2 {
   margin: 0 0 16px;
   font-size: clamp(25px, 3vw, 36px);
@@ -2303,6 +2304,8 @@ input[type='color'] {
 .site-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .site-links a[aria-current='page'] { font-weight: 650; }
 .footer-group { min-width: 0; }
+.footer-tools { grid-column: 1 / -1; }
+.footer-tools ul { display: flex; flex-wrap: wrap; gap: 0 24px; list-style: none; padding: 0; margin: 0; }
 .footer-group h2 { margin: 0 0 8px; color: var(--text); font-size: 14px; font-weight: 700; }
 .site-links .footer-logo { gap: 10px; padding: 0; margin-bottom: 12px; color: var(--text); font-size: 23px; font-weight: 800; letter-spacing: -0.8px; }
 .footer-logo img { flex-shrink: 0; }

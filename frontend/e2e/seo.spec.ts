@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { pages, publicPath } from '../src/site'
-import { toolGuides, type ToolPath } from '../src/tool-content'
+import { pages, publicPath, toolPaths } from '../src/site'
 
 test('six distinct tools preserve useful initial HTML, headings, metadata and links', async ({
   browser,
@@ -12,7 +11,7 @@ test('six distinct tools preserve useful initial HTML, headings, metadata and li
   const staticPage = await staticContext.newPage()
   const titles = new Set<string>()
   const descriptions = new Set<string>()
-  for (const path of Object.keys(toolGuides) as ToolPath[]) {
+  for (const path of toolPaths) {
     await staticPage.goto(path)
     await expect(staticPage.locator('h1')).toHaveCount(1)
     await expect(staticPage.locator('h1')).toHaveText(pages[path].heading)
@@ -43,18 +42,26 @@ test('six distinct tools preserve useful initial HTML, headings, metadata and li
     )
     expect(schema['@type']).toBe('WebApplication')
     expect(schema).not.toHaveProperty('aggregateRating')
-    const before = await staticPage.locator('.tool-guide').textContent()
+    const content = path === '/' ? '.home-info' : '.tool-guide'
+    const before = await staticPage.locator(content).textContent()
     await page.goto(path)
     await expect(page.locator('.tool-loading')).toHaveCount(0)
     await expect(page.locator('h1')).toHaveCount(1)
     await expect(page.locator('h1')).toHaveText(pages[path].heading)
-    expect(await page.locator('.tool-guide').textContent()).toBe(before)
-    await expect(page.locator('.tool-links [aria-current=page]')).toHaveAttribute(
+    expect(await page.locator(content).textContent()).toBe(before)
+    if (path === '/') {
+      await expect(page.locator('.tool-guide')).toHaveCount(0)
+      await expect(page.locator('.home-info')).toContainText('Save updates a wheel with the same name.')
+      await expect(page.locator('.home-info')).toContainText('the next task on your list')
+      await expect(page.locator('.info-how')).toHaveCount(1)
+    }
+    await expect(page.locator('.footer-tools a')).toHaveCount(6)
+    await expect(page.locator('.footer-tools [aria-current=page]')).toHaveAttribute(
       'href',
       publicPath(path),
     )
     for (const href of await page
-      .locator('.tool-guide a')
+      .locator('.footer-tools a')
       .evaluateAll((links) => links.map((link) => link.getAttribute('href')!))) {
       expect((await request.get(href)).status()).toBe(200)
     }
@@ -62,7 +69,7 @@ test('six distinct tools preserve useful initial HTML, headings, metadata and li
   expect(titles.size).toBe(6)
   expect(descriptions.size).toBe(6)
   const sitemap = await (await request.get('/sitemap.xml')).text()
-  for (const path of Object.keys(toolGuides) as ToolPath[])
+  for (const path of toolPaths)
     expect(sitemap).toContain(`<loc>https://wheelero.com${publicPath(path)}</loc>`)
   expect(sitemap).not.toContain('/404')
   expect(sitemap).not.toContain('lastmod')

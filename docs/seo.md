@@ -51,10 +51,23 @@ from name selection. Wheelero remains the sole brand.
 
 ## Content and rendering
 
+Homepage follow-up: removed its extra ToolGuide panel and duplicate instructions/FAQs.
+HomeInfo now carries the visible H1 in the existing heading style. Existing instructions
+and fairness explanations were already equivalent. Save/Open guidance replaces the repeated
+Customise feature card, and the everyday-use example includes choosing the next task.
+The six tool links are plain accessible footer links. All copy remains visible to visitors
+and in initial HTML, in all 14 languages. The five specialist guides, metadata, canonicals,
+sitemap, structured data and Analytics are preserved. Before publication, build/typecheck,
+lint, 31 unit tests and 13 targeted browser cases passed. Visual/overflow/keyboard checks
+passed at 1366x768, 1440x900, 1920x1080 and 390x844 in light/dark mode. Desktop/mobile
+screenshots were visually reviewed. All 14 language views passed. Live follow-up pending.
+
 - `src/site.ts`: route metadata, canonical path helper and the new numbers route.
-- `src/tool-content.ts`: distinct instructions, examples, FAQs and related paths for six tools.
+- `src/tool-content.ts`: distinct instructions, examples, FAQs and related paths for five specialist tools.
 - `components/ToolGuide.tsx`: the same meaningful guide HTML in prerender and client views,
   six crawlable tool links, current-route state and related-tool explanations.
+- `components/HomeInfo.tsx`: the homepage's integrated information, without an extra SEO box.
+- `components/SiteContent.tsx`: shared footer links to all six tool paths.
 - `components/PageLoading.tsx`: shared prerender/client loading layout reserves tool space
   while IndexedDB opens. JavaScript is required for draws, but instructions, headings,
   links and FAQs are real initial HTML. No second rendering framework was added.

@@ -266,7 +266,7 @@ for (const width of [360, 390, 768, 1440]) {
     await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
     await expect(
-      page.getByRole('heading', { name: 'What is Wheelero for?', exact: true }),
+      page.getByRole('heading', { name: 'Spin the Wheel', level: 1, exact: true }),
     ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Wheel features', exact: true })).toBeVisible()
     await expect(page.locator('.info-how li')).toHaveCount(3)

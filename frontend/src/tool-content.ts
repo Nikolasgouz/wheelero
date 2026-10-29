@@ -5,16 +5,8 @@ const spin =
   'Click the center. The winner appears when the wheel stops. Choose Close or Remove winner.'
 const rounds = information['/how-to-use'][6]
 const fairness = information['/how-to-use'][4]
-const save = information['/how-to-use'][2]
 
 export const toolGuides = {
-  '/': {
-    steps: [entries, information['/about'][1][1], spin],
-    example:
-      'Use a decision wheel for dinner ideas, party games or the next task on your list. Each line is a separate chance.',
-    faq: [fairness, save],
-    related: ['/random-name-picker', '/yes-no-wheel', '/random-number-wheel'],
-  },
   '/random-name-picker': {
     steps: [
       entries,

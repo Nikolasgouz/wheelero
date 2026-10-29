@@ -97,6 +97,8 @@ was removed at the user's request; migration-recovery export is retained only fo
 - Each tool has task-specific instructions, examples, FAQs and related links, shared between
   English prerendered HTML and the translated application. Canonicals/sitemap use the final
   trailing-slash URLs served by GitHub Pages. See [SEO implementation and checks](docs/seo.md).
+  The homepage integrates its guidance into the original information sections, with one
+  visible H1 and plain tool links in the footer. It has no additional ToolGuide/FAQ panel.
 
 Home explanations, instructions, features, About/Privacy, tool introductions/controls,
 footer links and template display names follow the selected language (14 languages).

@@ -62,9 +62,12 @@ twelve routes and 404/launch HTML, robots and sitemap before Workbox precaching.
 and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templating service.
 
 PageLoading is shared by prerendering and the client while IndexedDB opens. ToolGuide and
-tool-content.ts supply the same task-specific copy before and after initialization for six
-tools, with translations applied in the client. The homepage H1 is below the tool, leaving
-the centered wheel layout intact. The application mounts with createRoot, not hydration.
+tool-content.ts supply task-specific copy for the five specialist tools. The homepage uses
+only its original HomeInfo sections, including one visible H1, examples, instructions and
+Save/Open guidance. SiteFooter links all six tools using site.ts/toolPaths. The same copy
+appears before and after initialization, with translations applied in the client. The
+homepage H1 is below the tool, leaving the centered wheel layout intact. The application
+mounts with createRoot, not hydration.
 The instant number generator is independent of stored wheels: lib/numbers.ts uses rejection
 sampling and a sparse Fisher-Yates map, while NumberGenerator keeps results in memory only.
 See seo.md for limits, canonical URLs, metadata and validation.

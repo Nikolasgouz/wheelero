@@ -2,9 +2,11 @@
 
 Latest SEO request (2026-10-29) authorizes publishing through the existing Pages workflow.
 Six tool routes include /random-number-generator, distinct from /random-number-wheel.
-ToolGuide supplies translated task-specific instructions/examples/FAQs and real tool links
-below the tool. This supersedes earlier removal of homepage FAQs/Tools links. The homepage
-has one visible H1 below the tool, preserving the centered first-viewport wheel layout.
+Latest homepage follow-up: do not render ToolGuide on /. Integrate unique guidance into
+the original HomeInfo sections without duplicate instructions or a new SEO box. HomeInfo
+has the single visible H1 in its existing heading style, Save/Open guidance in Features,
+and practical examples in Uses. All six tools have accessible text links in the footer.
+Keep ToolGuide on the five specialist tools. Preserve the centered first-viewport wheel.
 PageLoading shares prerendered and client-loading content. Keep English static SEO,
 trailing-slash canonicals matching Pages redirects, unique metadata and a real 404.
 Number generation uses Web Crypto rejection sampling and sparse sampling without replacement,

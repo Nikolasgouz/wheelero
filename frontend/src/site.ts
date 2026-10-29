@@ -104,6 +104,14 @@ export const pages = {
   },
 } as const
 export type SitePath = keyof typeof pages
+export const toolPaths = [
+  '/',
+  '/random-name-picker',
+  '/random-number-generator',
+  '/random-number-wheel',
+  '/yes-no-wheel',
+  '/random-team-generator',
+] as const satisfies readonly SitePath[]
 // GitHub Pages already redirects extensionless tool URLs to their directory URL.
 export const publicPath = (path: SitePath): string => (path === '/' ? '/' : `${path}/`)
 export const currentPath = (path: string): SitePath =>

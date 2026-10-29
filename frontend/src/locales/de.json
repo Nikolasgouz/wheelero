@@ -414,5 +414,6 @@
   "Copy results": "Ergebnisse kopieren",
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Verwende ganze Zahlen von -1.000.000.000 bis 1.000.000.000. Das Minimum darf nicht größer als das Maximum sein.",
   "Choose a quantity from 1 to 1,000.": "Wähle eine Anzahl von 1 bis 1.000.",
-  "There are not enough different numbers in this range.": "Dieser Bereich enthält nicht genügend unterschiedliche Zahlen."
+  "There are not enough different numbers in this range.": "Dieser Bereich enthält nicht genügend unterschiedliche Zahlen.",
+  "Choose a meal, a film or the next task on your list.": "Wähle ein Essen, einen Film oder die nächste Aufgabe auf deiner Liste."
 }

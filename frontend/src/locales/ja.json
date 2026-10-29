@@ -414,5 +414,6 @@
   "Copy results": "結果をコピー",
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "-1,000,000,000〜1,000,000,000の整数を指定し、最小値を最大値以下にしてください。",
   "Choose a quantity from 1 to 1,000.": "個数は1〜1,000で指定してください。",
-  "There are not enough different numbers in this range.": "この範囲には異なる数字が十分にありません。"
+  "There are not enough different numbers in this range.": "この範囲には異なる数字が十分にありません。",
+  "Choose a meal, a film or the next task on your list.": "食事や映画、リストの次のタスクを選びましょう。"
 }

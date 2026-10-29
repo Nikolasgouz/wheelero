@@ -1,8 +1,8 @@
-import { Palette, LayoutGrid, Repeat2, FileDown, Share2, WifiOff } from 'lucide-react'
+import { Save, LayoutGrid, Repeat2, FileDown, Share2, WifiOff } from 'lucide-react'
 import { t } from '../i18n'
 import { getLanguage } from '../locale'
 
-const featureIcons = [Palette, LayoutGrid, Repeat2, FileDown, Share2, WifiOff]
+const featureIcons = [Save, LayoutGrid, Repeat2, FileDown, Share2, WifiOff]
 
 export function HomeInfo() {
   return (
@@ -10,7 +10,7 @@ export function HomeInfo() {
       <section aria-labelledby="about-title">
         <header className="info-heading">
           <p className="info-eyebrow">{t.about.eyebrow}</p>
-          <h2 id="about-title">{t.about.title}</h2>
+          <h1 id="about-title">{t.about.title}</h1>
           <p>{t.about.intro}</p>
         </header>
         <div className="info-uses">

@@ -416,5 +416,6 @@
   "Copy results": "Копировать результаты",
   "Use whole numbers from -1,000,000,000 to 1,000,000,000, with Minimum no greater than Maximum.": "Используйте целые числа от -1 000 000 000 до 1 000 000 000. Минимум не должен превышать Максимум.",
   "Choose a quantity from 1 to 1,000.": "Выберите количество от 1 до 1000.",
-  "There are not enough different numbers in this range.": "В этом диапазоне недостаточно разных чисел."
+  "There are not enough different numbers in this range.": "В этом диапазоне недостаточно разных чисел.",
+  "Choose a meal, a film or the next task on your list.": "Выберите блюдо, фильм или следующую задачу из своего списка."
 }
