@@ -48,14 +48,14 @@ test('basic consent blocks all Google requests before acceptance and after rejec
 }) => {
   const { events, scripts } = await analyticsBrowser(page)
   await page.goto('https://wheelero.com/?email=PRIVATE_EMAIL#PRIVATE_SHARE')
-  await expect(page.getByRole('button', { name: 'Accept analytics', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Accept cookies', exact: true })).toBeVisible()
   await page.waitForTimeout(500)
   expect(scripts).toEqual([])
   expect(events).toEqual([])
   expect(await page.context().cookies()).toEqual([])
-  await page.getByRole('button', { name: 'Reject analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Reject cookies', exact: true }).click()
   await page.reload()
-  await expect(page.getByRole('button', { name: 'Accept analytics', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Accept cookies', exact: true })).toHaveCount(0)
   await page.goto('https://wheelero.com/cookies')
   await expect(page.locator('.analytics-settings [role=status]')).toContainText('Analytics is off.')
   expect(scripts).toEqual([])
@@ -64,7 +64,7 @@ test('basic consent blocks all Google requests before acceptance and after rejec
 test('one page view per navigation and only safe successful feature events', async ({ page }) => {
   const { events, scripts } = await analyticsBrowser(page)
   await page.goto('https://wheelero.com/?utm_source=PRIVATE_CAMPAIGN#PRIVATE_SHARE')
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await expect.poll(() => events.filter((e) => e.name === 'page_view').length).toBe(1)
   expect(scripts).toHaveLength(1)
   expect(events[0].params.page_location).toBe('https://wheelero.com/')
@@ -118,18 +118,18 @@ test('revocation removes tracking and cookies across tabs without deleting wheel
 }) => {
   const { events, scripts } = await analyticsBrowser(page)
   await page.goto('https://wheelero.com/')
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await expect.poll(() => events.length).toBe(1)
   await page.getByRole('textbox', { name: 'Wheel title', exact: true }).fill('Retained wheel')
   const settings = await page.context().newPage()
   await settings.goto('https://wheelero.com/cookies')
-  await settings.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await settings.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await expect(page.locator('iframe')).toHaveCount(1)
   await page.context().addCookies([
     { name: '_ga', value: 'test', domain: 'wheelero.com', path: '/', secure: true },
     { name: '_ga_JB9ZRMKRKR', value: 'test', domain: 'wheelero.com', path: '/', secure: true },
   ])
-  await settings.getByRole('button', { name: 'Reject analytics', exact: true }).click()
+  await settings.getByRole('button', { name: 'Reject cookies', exact: true }).click()
   await expect(page.locator('iframe')).toHaveCount(0)
   expect(
     (await page.context().cookies()).filter((cookie) => cookie.name.startsWith('_ga')),
@@ -150,7 +150,7 @@ test('local preview stays untracked even with acceptance and debug enabled', asy
   const { scripts } = await analyticsBrowser(page)
   await page.goto('http://localhost:4173/')
   await page.evaluate(() => sessionStorage.setItem('wheelero-analytics-debug', 'true'))
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await page.reload()
   await expect(page.locator('iframe')).toHaveCount(0)
   expect(scripts).toEqual([])
@@ -159,7 +159,7 @@ test('local preview stays untracked even with acceptance and debug enabled', asy
 test('failed persistence does not emit a save event', async ({ page }) => {
   const { events } = await analyticsBrowser(page)
   await page.goto('https://wheelero.com/')
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await expect.poll(() => events.length).toBe(1)
   await page.evaluate(() => {
     const put = IDBObjectStore.prototype.put
@@ -180,11 +180,11 @@ test('debug is opt-in, consent changes do not duplicate views and unsafe message
   const { events } = await analyticsBrowser(page)
   await page.goto('https://wheelero.com/cookies?email=PRIVATE_EMAIL#PRIVATE_FRAGMENT')
   await page.evaluate(() => sessionStorage.setItem('wheelero-analytics-debug', 'true'))
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await expect.poll(() => events.length).toBe(1)
   expect(events[0].params.debug_mode).toBe(true)
   expect(events[0].params.page_location).toBe('https://wheelero.com/cookies')
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await page.evaluate(() => {
     const frame = document.querySelector('iframe')!.contentWindow!
     frame.postMessage(
@@ -208,24 +208,33 @@ test('debug is opt-in, consent changes do not duplicate views and unsafe message
       location.origin,
     )
   })
-  await page.getByRole('button', { name: 'Reject analytics', exact: true }).click()
-  await page.getByRole('button', { name: 'Accept analytics', exact: true }).click()
+  await page.getByRole('button', { name: 'Reject cookies', exact: true }).click()
+  await page.getByRole('button', { name: 'Accept cookies', exact: true }).click()
   await page.waitForTimeout(300)
   expect(events).toHaveLength(1)
 })
 
-test('consent banner works with keyboard on mobile and has accessible controls', async ({
+test('cookie choice blocks the tool, survives Escape and works with keyboard on mobile', async ({
   page,
 }) => {
   await analyticsBrowser(page)
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('https://wheelero.com/')
-  const banner = page.locator('.analytics-banner')
+  const banner = page.locator('dialog:has(.analytics-settings)')
+  await expect(banner).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await expect(banner).toBeVisible()
+  await page.mouse.click(2, 2)
   await expect(banner).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  const scan = await new AxeBuilder({ page }).include('.analytics-banner').analyze()
+  const scan = await new AxeBuilder({ page }).include('dialog:has(.analytics-settings)').analyze()
   expect(scan.violations).toEqual([])
-  await banner.getByRole('button', { name: 'Reject analytics', exact: true }).focus()
+  await banner.getByRole('button', { name: 'Reject cookies', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(banner).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
+  await page.reload()
+  await expect(banner).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 })

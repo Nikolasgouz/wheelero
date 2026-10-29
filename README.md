@@ -19,6 +19,9 @@ this public form ID by default; GitHub variable `CONTACT_FORM_ID` can override i
 See [contact setup](docs/contact-form.md) for the activation and delivery verification steps.
 Cookie settings explains browser storage and allows accepting or rejecting optional Analytics
 at any time. Before acceptance, no Google Analytics script or request is loaded.
+New visitors must choose **Accept cookies** or **Reject cookies** before using the app.
+Both choices give full access. The dialog explains cookies, supports language selection
+and links to a privacy view readable before choosing. Existing choices are remembered.
 See [public pages](docs/public-pages.md) for routes and publication limitations.
 Install app opens the browser's installation prompt when
 available or shows installation instructions. **Save & update** appears only when a new

@@ -692,8 +692,7 @@ export default function App() {
         {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && <HomeInfo />}
       </main>
       <footer className="site-footer">
-        {sitePath === '/cookies' && <AnalyticsConsent settings />}
-        {sitePath !== '/cookies' && <AnalyticsConsent />}
+        {sitePath === '/cookies' && <AnalyticsConsent />}
         {!presenting && <SiteFooter path={sitePath} />}
         <PwaControls busy={locked} report={setMessage} />
       </footer>

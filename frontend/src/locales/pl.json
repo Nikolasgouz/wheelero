@@ -366,8 +366,12 @@
   "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Zezwolić Google Analytics na pomiar wizyt i użycia funkcji? Otrzymuje liczby, a nie imiona, zawartość kół, wyniki czy dane kontaktowe. Nic nie jest wysyłane przed wyrażeniem zgody.",
   "Analytics is allowed.": "Statystyki są dozwolone.",
   "Analytics is off.": "Statystyki są wyłączone.",
-  "Accept analytics": "Akceptuj statystyki",
-  "Reject analytics": "Odrzuć statystyki",
   "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Dostawca hostingu otrzymuje dane połączenia, takie jak adres IP. Opcjonalne Google Analytics uruchamia się dopiero po wyrażeniu zgody. Możesz odmówić lub zmienić wybór w ustawieniach plików cookie.",
-  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Wybór dotyczący statystyk jest zapisany na tym urządzeniu. Po akceptacji Google Analytics używa plików cookie _ga przez maksymalnie rok i otrzymuje wizyty, liczby użycia funkcji oraz techniczne dane połączenia. Odrzucenie zatrzymuje zbieranie i usuwa te pliki cookie bez usuwania kół."
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Wybór dotyczący statystyk jest zapisany na tym urządzeniu. Po akceptacji Google Analytics używa plików cookie _ga przez maksymalnie rok i otrzymuje wizyty, liczby użycia funkcji oraz techniczne dane połączenia. Odrzucenie zatrzymuje zbieranie i usuwa te pliki cookie bez usuwania kół.",
+  "About cookies": "O plikach cookie",
+  "Accept cookies": "Akceptuj cookies",
+  "Reject cookies": "Odrzuć cookies",
+  "Cookies are small files stored by your browser. They help websites remember information between visits.": "Pliki cookie to małe pliki zapisywane przez przeglądarkę. Pomagają witrynom zapamiętywać informacje między wizytami.",
+  "Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.": "Wheelero używa opcjonalnych plików cookie Google Analytics przez maksymalnie rok do pomiaru wizyt i użycia funkcji. Nie są wysyłane imiona, wpisy kół, wyniki ani dane kontaktowe.",
+  "Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.": "Akceptuj cookies, aby włączyć Analytics, lub odrzuć je, aby kontynuować bez niego. Obie opcje dają pełny dostęp. Koła pozostają na tym urządzeniu. Możesz zmienić wybór w ustawieniach plików cookie."
 }

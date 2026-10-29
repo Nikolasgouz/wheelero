@@ -6,11 +6,17 @@ Published on wheelero.com as 6bb5296 through successful run 40893717840.
 
 ## Consent and production gating
 
-`AnalyticsConsent.tsx` presents equally styled accept/reject buttons. `/cookies` retains
-both choices so consent can be changed later. Labels and privacy text cover all 14 locales.
+`CookieGate.tsx` requires a choice before mounting the application. The initial native modal
+cannot be dismissed by Escape/backdrop and includes a language selector. Its equally styled
+buttons are Accept cookies and Reject cookies. Both give full access. `AnalyticsConsent.tsx`
+explains cookies, the optional Google Analytics purpose/lifetime, excluded personal content
+and how to change the choice. `/privacy` can be read before choosing, as a separate static
+information view without the interactive app. `/cookies` retains both choices afterward.
+Labels and explanatory text cover all 14 locales. Existing choices are preserved, not reset
+for this copy update. Dialog titles use unique IDs so the nested language dialog is accessible.
 The versioned preference `wheelero-analytics-consent-v1` in localStorage is either accepted
 or rejected. Unknown values require a new choice. Choosing nothing or rejecting loads no
-Google script and sends no consent pings. The wheel works independently of this choice.
+Google script and sends no consent pings. Choosing rejection fully enables the wheel.
 
 Both parent and frame require a production build, `VITE_ANALYTICS_ENABLED=true`, and the
 exact origin `https://wheelero.com`. The Pages workflow sets the flag. Local preview and

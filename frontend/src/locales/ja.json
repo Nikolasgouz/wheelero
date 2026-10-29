@@ -364,8 +364,12 @@
   "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Google Analyticsによるページ訪問数や機能の利用状況の測定を許可しますか？送信するのは件数で、名前、ルーレットの内容、結果、連絡先は送信しません。同意するまで何も送信されません。",
   "Analytics is allowed.": "アクセス解析は許可されています。",
   "Analytics is off.": "アクセス解析は無効です。",
-  "Accept analytics": "アクセス解析を許可",
-  "Reject analytics": "アクセス解析を拒否",
   "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "ホスティング事業者はIPアドレスなどの接続情報を受け取ります。任意のGoogle Analyticsは同意後にのみ開始します。Cookie設定で拒否したり選択を変更したりできます。",
-  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "アクセス解析の選択はこの端末に保存されます。同意するとGoogle Analyticsは_ga Cookieを最長1年間使用し、ページ訪問数、機能の利用件数、技術的な接続情報を受け取ります。拒否すると収集を停止し、ルーレットを削除せずにこれらのCookieを削除します。"
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "アクセス解析の選択はこの端末に保存されます。同意するとGoogle Analyticsは_ga Cookieを最長1年間使用し、ページ訪問数、機能の利用件数、技術的な接続情報を受け取ります。拒否すると収集を停止し、ルーレットを削除せずにこれらのCookieを削除します。",
+  "About cookies": "Cookieについて",
+  "Accept cookies": "Cookieを許可",
+  "Reject cookies": "Cookieを拒否",
+  "Cookies are small files stored by your browser. They help websites remember information between visits.": "Cookieはブラウザが保存する小さなファイルです。ウェブサイトが訪問の間に情報を記憶するために役立ちます。",
+  "Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.": "Wheeleroは訪問数や機能の利用状況を測定するため、任意のGoogle Analytics Cookieを最長1年間使用します。名前、ルーレットの項目、結果、連絡先は送信しません。",
+  "Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.": "Analyticsを有効にするにはCookieを許可してください。拒否するとAnalyticsなしで続行できます。どちらを選んでもすべての機能を利用できます。ルーレットはこの端末に保存されます。Cookie設定でいつでも選択を変更できます。"
 }

@@ -364,8 +364,12 @@
   "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "是否允许Google Analytics统计页面访问和功能使用情况？它只接收数量，不接收姓名、转盘内容、结果或联系方式。在您同意之前不会发送任何数据。",
   "Analytics is allowed.": "已允许分析。",
   "Analytics is off.": "分析已关闭。",
-  "Accept analytics": "接受分析",
-  "Reject analytics": "拒绝分析",
   "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "托管服务商会接收IP地址等连接信息。可选的Google Analytics仅在您同意后启动。您可以拒绝或在Cookie设置中更改选择。",
-  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "您的分析选择保存在此设备上。如果同意，Google Analytics会使用_ga Cookie最长一年，并接收页面访问、功能使用次数和技术连接信息。拒绝后会停止收集并删除这些Cookie，不会删除您的转盘。"
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "您的分析选择保存在此设备上。如果同意，Google Analytics会使用_ga Cookie最长一年，并接收页面访问、功能使用次数和技术连接信息。拒绝后会停止收集并删除这些Cookie，不会删除您的转盘。",
+  "About cookies": "关于Cookie",
+  "Accept cookies": "接受Cookie",
+  "Reject cookies": "拒绝Cookie",
+  "Cookies are small files stored by your browser. They help websites remember information between visits.": "Cookie是浏览器保存的小文件，帮助网站在两次访问之间记住信息。",
+  "Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.": "Wheelero使用可选的Google Analytics Cookie统计访问和功能使用情况，最长保存一年。不发送姓名、转盘条目、结果或联系方式。",
+  "Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.": "接受Cookie即可启用Analytics，拒绝则可在不启用Analytics的情况下继续。两种选择都可使用全部功能。您的转盘保存在此设备上，您可在Cookie设置中更改选择。"
 }

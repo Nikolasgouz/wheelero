@@ -10,7 +10,7 @@ export function LanguageMenu({ language, disabled }: { language: Language; disab
     <div className="language-picker">
       <button
         className="language-trigger"
-        aria-label={translate('Language')}
+        aria-label={`${translate('Language')}: ${selected.name}`}
         aria-haspopup="dialog"
         disabled={disabled}
         onClick={() => setOpen(true)}

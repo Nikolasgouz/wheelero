@@ -2,6 +2,20 @@
 
 Updated: 2026-10-29.
 
+## Latest: required cookie choice
+
+CookieGate wraps App in main.tsx. With no stored choice, show a native non-dismissible
+modal and do not mount the interactive application. Both Accept cookies and Reject cookies
+unlock all features. Existing choices stay valid. /privacy renders a restricted readable
+information page before choice, with no wheel controls. Language selection works inside
+the modal; Dialog now uses unique useId titles and LanguageMenu includes the visible language
+in its accessible name. AnalyticsConsent explains cookies, purpose/lifetime and privacy in
+all 14 languages. The old floating banner is removed. Consent/tracking semantics unchanged.
+Lint/build/typecheck and 10 targeted E2E passed (analytics, required choice, shared links,
+modal dismissal). Manual Chromium verified all 14 labels/mobile overflow, nested language
+dialog and privacy access before consent. Screenshots: artifacts/cookie-gate-*.png (ignored).
+Deployment of this follow-up is pending; the previous GA4 release below is already live.
+
 ## GA4 published and verified
 
 Code 6bb5296 is live through successful run 40893717840. Typecheck/lint/build, 16 unit

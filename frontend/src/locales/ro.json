@@ -366,8 +366,12 @@
   "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Permiți Google Analytics să măsoare vizitele și utilizarea funcțiilor? Primește numărători, nu nume, conținutul roților, rezultate sau date de contact. Nu se trimite nimic înainte să accepți.",
   "Analytics is allowed.": "Analiza este permisă.",
   "Analytics is off.": "Analiza este oprită.",
-  "Accept analytics": "Acceptă analiza",
-  "Reject analytics": "Refuză analiza",
   "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Furnizorul de găzduire primește date de conexiune, precum adresa IP. Google Analytics opțional pornește doar după acceptare. Poți refuza sau schimba alegerea în Setări cookie.",
-  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Alegerea pentru analiză este salvată pe acest dispozitiv. Dacă accepți, Google Analytics folosește cookie-uri _ga timp de cel mult un an și primește vizite, numărători de utilizare și date tehnice de conexiune. Refuzul oprește colectarea și șterge aceste cookie-uri fără a șterge roțile."
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Alegerea pentru analiză este salvată pe acest dispozitiv. Dacă accepți, Google Analytics folosește cookie-uri _ga timp de cel mult un an și primește vizite, numărători de utilizare și date tehnice de conexiune. Refuzul oprește colectarea și șterge aceste cookie-uri fără a șterge roțile.",
+  "About cookies": "Despre cookie-uri",
+  "Accept cookies": "Acceptă cookie-uri",
+  "Reject cookies": "Refuză cookie-uri",
+  "Cookies are small files stored by your browser. They help websites remember information between visits.": "Cookie-urile sunt fișiere mici salvate de browser. Ajută site-urile să rețină informații între vizite.",
+  "Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.": "Wheelero folosește cookie-uri opționale Google Analytics timp de cel mult un an pentru a măsura vizitele și utilizarea funcțiilor. Nu se trimit nume, intrări ale roților, rezultate sau date de contact.",
+  "Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.": "Acceptă cookie-urile pentru a activa Analytics sau refuză-le pentru a continua fără el. Ambele opțiuni oferă acces complet. Roțile rămân pe acest dispozitiv. Poți schimba alegerea în Setări cookie."
 }

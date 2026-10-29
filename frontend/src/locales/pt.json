@@ -364,8 +364,12 @@
   "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Permitir que o Google Analytics meça visitas e utilização das funcionalidades? Recebe contagens, não nomes, conteúdos das rodas, resultados ou contactos. Nada é enviado antes de aceitar.",
   "Analytics is allowed.": "As estatísticas são permitidas.",
   "Analytics is off.": "As estatísticas estão desativadas.",
-  "Accept analytics": "Aceitar estatísticas",
-  "Reject analytics": "Rejeitar estatísticas",
   "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "O alojamento recebe dados de ligação, como o endereço IP. O Google Analytics opcional só começa após aceitar. Pode rejeitar ou alterar a escolha nas definições de cookies.",
-  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "A escolha de estatísticas é guardada neste dispositivo. Se aceitar, o Google Analytics utiliza cookies _ga durante até um ano e recebe visitas, contagens de utilização e dados técnicos de ligação. Rejeitar interrompe a recolha e remove estes cookies sem apagar as rodas."
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "A escolha de estatísticas é guardada neste dispositivo. Se aceitar, o Google Analytics utiliza cookies _ga durante até um ano e recebe visitas, contagens de utilização e dados técnicos de ligação. Rejeitar interrompe a recolha e remove estes cookies sem apagar as rodas.",
+  "About cookies": "Sobre os cookies",
+  "Accept cookies": "Aceitar cookies",
+  "Reject cookies": "Rejeitar cookies",
+  "Cookies are small files stored by your browser. They help websites remember information between visits.": "Os cookies são pequenos ficheiros guardados pelo navegador. Ajudam os sites a recordar informações entre visitas.",
+  "Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.": "O Wheelero usa cookies opcionais do Google Analytics durante até um ano para medir visitas e utilização das funcionalidades. Não são enviados nomes, entradas das rodas, resultados ou contactos.",
+  "Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.": "Aceite os cookies para ativar o Analytics ou rejeite-os para continuar sem ele. Ambas as escolhas dão acesso completo. As rodas ficam neste dispositivo. Pode alterar a escolha nas definições de cookies."
 }

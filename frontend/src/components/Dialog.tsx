@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { X } from 'lucide-react'
 import { t } from '../i18n'
 
@@ -14,6 +14,7 @@ export function Dialog({
   headerClose?: boolean
 }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
   useEffect(() => {
     const opener = document.activeElement as HTMLElement
     const dialog = ref.current!
@@ -30,10 +31,10 @@ export function Dialog({
         event.preventDefault()
         close()
       }}
-      aria-labelledby="dialog-title"
+      aria-labelledby={titleId}
     >
       <div className="dialog-heading">
-        <h2 id="dialog-title">{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         {headerClose && (
           <button className="icon-button" onClick={close} aria-label={t.close}>
             <X size={20} />

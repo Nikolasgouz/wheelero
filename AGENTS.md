@@ -27,6 +27,9 @@ Only allowed page paths/static titles and numeric feature counts may cross that 
 No names, results, emails, links, query strings or fragments. No advertising features.
 Consent can be changed at /cookies. Revocation removes the frame and GA cookies immediately,
 including across tabs, without deleting wheels. See docs/analytics.md for tests and debug.
+Latest consent UX: require Accept cookies or Reject cookies before mounting App. Both choices
+give full access. CookieGate's modal is not dismissible; privacy remains readable without
+entering the app. Preserve existing choices. Explain cookies and analytics in all 14 locales.
 
 ## Commands
 
