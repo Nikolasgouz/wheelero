@@ -22,7 +22,12 @@ event deduplication and mobile accessibility. Direct Chromium passed 168 views a
 14 languages, six routes and 390/1440px, plus six initial HTML routes. Metadata remained
 unchanged with no horizontal overflow, duplicate paragraphs or tool bars. Representative
 Greek/German/Japanese desktop/mobile screenshots were visually reviewed.
-Deployment/live verification pending. No ranking or traffic gains are claimed.
+Published code a8944eb, successful
+[Pages run 40940065673](https://github.com/Nikolasgouz/wheelero/actions/runs/40940065673).
+All browser shards, the isolated PWA update test and deployment passed. Live verification
+repeated all 168 views and six initial HTML checks successfully, with language-menu changes
+and reload persistence in all 14 languages. Live Greek desktop/mobile screenshots reviewed.
+No ranking or traffic gains are claimed.
 
 ## Earlier implementation
 

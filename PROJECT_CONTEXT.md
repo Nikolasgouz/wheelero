@@ -14,9 +14,12 @@ Build/typecheck/lint and all 31 unit tests passed. Nonblocking translation-bundl
 is 526 kB before gzip. All 10 SEO/Analytics E2E cases passed, including offline numbers and
 mobile accessibility. Direct Chromium passed 168 views (14 languages, six routes, 390/1440px),
 six initial HTML routes, unchanged metadata and no horizontal overflow. Representative
-Greek/German/Japanese desktop/mobile screenshots were reviewed. Deployment verification
-is pending. Preview http://localhost:4173/. Next: publish and verify live before claiming
-completion. No credentials, build outputs, browser data or screenshots belong in Git.
+Greek/German/Japanese desktop/mobile screenshots were reviewed. Published code a8944eb,
+successful Pages run 40940065673: all browser shards, isolated PWA update and deploy passed.
+Live verification repeated all 168 views and six initial HTML routes successfully. Language
+menu changes and reload persistence passed in all 14 languages. Greek live desktop/mobile
+screenshots were reviewed. No outstanding work for this delivery. Preview http://localhost:4173/.
+No credentials, build outputs, browser data or screenshots belong in Git.
 
 Previous release:
 Published and verified live: release 71d8348, successful Pages run 40931251381.

@@ -4,7 +4,10 @@ Current delivery (2026-10-29): revised introductions and practical examples are 
 in all 14 languages. Existing Uses/How it works sections explain each tool naturally.
 The homepage Teams paragraph keeps neutral wording. The bottom tool-name bars are removed,
 while help/privacy and contextual related links remain. Metadata and behavior are unchanged.
-The user authorized commit and publication. Deployment verification is pending.
+Published and verified live: code a8944eb, successful
+[Pages run 40940065673](https://github.com/Nikolasgouz/wheelero/actions/runs/40940065673).
+All CI stages passed. Live checks covered 168 desktop/mobile translated views, six initial
+HTML routes and language-menu changes with reload persistence in all 14 languages.
 See [editorial copy and verification](docs/seo.md). Local preview: http://localhost:4173/.
 
 Previous release:
