@@ -2,6 +2,19 @@
 
 Updated: 2026-10-29.
 
+## Latest: wheel sound enabled on every visit
+
+App.tsx initializes sound=true and no longer reads/writes wheelero-sound in localStorage.
+Old stored mute values are ignored. Mute remains page-local, previews still bypass mute,
+and per-wheel sound/volume/No sound settings remain unchanged. No audio plays on opening
+the page; preload only prepares the local applause sample. Playback follows spin/preview.
+Existing audio and spin tests now expect the enabled default, legacy muted preferences
+being ignored, page-local mute during preview and sound re-enabled after reload.
+Local build/typecheck, lint and three targeted E2E passed (full spin/edit/save flow, actual
+audio previews/volume/stop/mute, local-only draw/share). Direct Chromium observed no audio
+on load, a running AudioContext/source on spin, no sources when muted, and audible sources
+again after reload despite a legacy saved false preference. Publication verification pending.
+
 ## Latest: approved cookie copy, no modal language picker
 
 CookieGate now uses "Help us improve Wheelero" as its title and no language selector.

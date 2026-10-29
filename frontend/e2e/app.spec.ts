@@ -67,13 +67,13 @@ test('edit, spin, pointer agreement, refresh persistence and library', async ({ 
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(entries).toBeDisabled()
-  for (const name of ['Customise', 'Save', 'Share', 'Unmute sound', 'Presentation mode']) {
+  for (const name of ['Customise', 'Save', 'Share', 'Mute sound', 'Presentation mode']) {
     const button = page.getByRole('button', { name, exact: true })
     await expect(button).toBeDisabled()
     await expect(button).toHaveCSS('cursor', 'not-allowed')
     await button.evaluate((node: HTMLButtonElement) => node.click())
   }
-  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   await expect(page.locator('.home')).not.toHaveClass(/presenting/)
   for (const name of ['Shuffle', 'Sort', 'Clear entries'])
     await expect(

@@ -65,7 +65,7 @@ test('local by default: no list uploads, restore winners and explicit snapshot',
   })
   await page.goto('/')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
-  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   const entries = page.getByRole('textbox', { name: 'Entries', exact: true })
   await entries.fill(
     ['<img src=x onerror=alert(1)>', ...(await entries.inputValue()).split('\n').slice(1)].join(

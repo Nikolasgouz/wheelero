@@ -196,6 +196,12 @@ production build και Alembic check. Οι έλεγχοι περιλαμβάν�
 
 ## Latest UI simplification (2026-10-29)
 
+Sound now starts enabled on every page load, including refresh and revisits. The old
+wheelero-sound preference is no longer read or written. Mute still works within the current
+page and is locked during a spin. No sound and volume settings remain part of each saved
+wheel. Preloading applause does not play it; playback still follows user interaction and
+browser audio permissions. This supersedes the historical muted-by-default behavior above.
+
 Removed the global-mute notice, equal-chance/duplicate-display paragraph and duplicated
 Templates heading/inspiration subtitle in all languages. Customize Play explicitly
 previews either sound even with wheel mute enabled, without changing that preference.

@@ -97,6 +97,8 @@ Default pre-rendered SEO remains English; client title/description follow the la
 - Unbiased Web Crypto selection, pointer/result agreement, optional sound, themes/images,
   customizable duration, fullscreen, keyboard support and reduced motion. Customize Play
   previews bypass the wheel mute switch; selected volume and No sound still apply.
+  Wheel sound starts on at every page load. Mute applies until the next reload or full
+  navigation, while the wheel's selected sounds and volumes remain saved.
 - Name picker, yes/no, number-range and balanced-team tools, plus About and Privacy. The Questions & answers section has been removed.
 - Share a copy in a URL fragment, without uploading it. History/other wheels are excluded.
   Links cannot be revoked. Wheels exceeding the 16,000-character payload limit cannot be

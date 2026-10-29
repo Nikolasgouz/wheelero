@@ -128,6 +128,7 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
 
 test('real audio graph previews while wheel is muted and respects stop and volume', async ({ page }) => {
   await page.addInitScript(() => {
+    localStorage.setItem('wheelero-sound', 'false')
     const observed = { starts: 0, stops: 0, volumes: [] as number[] }
     Object.assign(window, { observedAudio: observed })
     const start = AudioScheduledSourceNode.prototype.start
@@ -157,7 +158,6 @@ test('real audio graph previews while wheel is muted and respects stop and volum
     }
   })
   await ready(page)
-  await page.getByRole('button', { name: 'Unmute sound', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
   let dialog = await customize(page)
@@ -249,6 +249,8 @@ test('real audio graph previews while wheel is muted and respects stop and volum
   await dialog.getByRole('tab', { name: 'After spin' }).click()
   await dialog.getByLabel('Result sound', { exact: true }).selectOption('magic')
   await save(page)
+  // Previews preserve this page's mute state; reloading always enables wheel audio.
+  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
   await page.reload()
   dialog = await customize(page)
   await expect(dialog.getByLabel('Spin sound', { exact: true })).toHaveValue('arpeggio')
@@ -256,9 +258,8 @@ test('real audio graph previews while wheel is muted and respects stop and volum
   await expect(dialog.getByLabel('Result sound', { exact: true })).toHaveValue('magic')
   await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
   await dialog.getByRole('button', { name: 'Cancel' }).click()
-  // Explicit previews do not change the saved mute preference.
   await showScreen(page, 'wheel')
-  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   dialog = await customize(page)
   await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
 })

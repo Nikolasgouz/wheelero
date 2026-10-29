@@ -98,7 +98,7 @@ export default function App() {
   const [templatesOpen, setTemplatesOpen] = useState(false)
   const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
   const [popupOpen, setPopupOpen] = useState(false)
-  const [sound, setSound] = useState(localStorage.getItem('wheelero-sound') === 'true')
+  const [sound, setSound] = useState(true)
   const [presenting, setPresenting] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [shareUrl, setShareUrl] = useState('')
@@ -188,7 +188,6 @@ export default function App() {
   }
   useEffect(() => () => stopSounds(), [])
   useEffect(() => {
-    localStorage.setItem('wheelero-sound', String(sound))
     if (sound) void prepareApplause().catch(reportError)
   }, [sound, reportError])
   useEffect(() => {

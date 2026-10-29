@@ -57,6 +57,9 @@ Web Crypto chooses winners without bias. Display projection never changes eligib
 land on the winning entry ID and reveal results only after animation. Lock editing,
 customization/sound/fullscreen during draws. Respect reduced motion. Wheel mute controls
 spin/result sounds; explicit Customize Play previews bypass it without changing that preference.
+Wheel sound starts enabled on every page load/reload, ignoring the old wheelero-sound
+localStorage key. Mute lasts only for the current mounted page. Keep per-wheel No sound
+and volume settings intact; do not play audio until a spin or explicit preview action.
 Customization drafts save only on OK; timed removals use IDs. New PWA workers activate
 automatically without reloading open pages. Reloading an open editor requires this tab's
 action and completed writes; never interrupt a spin. Normal navigation fetches HTML with
