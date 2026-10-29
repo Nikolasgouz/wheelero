@@ -1,5 +1,12 @@
 # Static deployment
 
+Latest verified release (2026-10-29): code 54a537f, successful run
+[40863773592](https://github.com/Nikolasgouz/wheelero/actions/runs/40863773592).
+All build checks, 16 unit tests, 34 browser cases and the isolated PWA-update test passed.
+Live wheelero.com was checked for the editable left title, persistence, desktop/mobile fit,
+spin, offline reload/spin, removed Draft/star and configured contact form with hidden inbox.
+No DNS or repository visibility changes were made.
+
 Wheelero now requires static file hosting only. There is no application backend, server
 database, session cookie, API proxy or background worker to deploy. GitHub can hold the
 source; GitHub Pages or another static host can serve the built files. A Droplet is optional.

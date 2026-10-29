@@ -2,6 +2,22 @@
 
 Updated: 2026-10-29.
 
+## Published and verified
+
+Code 54a537f is live at https://wheelero.com via successful GitHub run 40863773592.
+Build/typecheck/lint, 16 unit tests, all 34 browser tests across four shards/eight workers,
+the isolated real PWA-update regression and Pages deployment passed. Earlier failed-run
+notes below are superseded. No storage/draw logic was changed while correcting stale tests.
+
+Direct live Chromium verification passed for the editable left title and refresh persistence,
+centered full desktop wheel/Entries at 1366x768 and 1440x900, mobile 390x844 without horizontal
+overflow, removal of Draft/decorative star, spinning and offline reload/spin. Contact is
+enabled with xljjlgrl; no recipient email occurs in the shipped JavaScript. No additional
+live contact message was sent (real inbox delivery was already verified locally).
+Production bundle: /assets/index-Sclm-nsn.js. Screenshots: ignored artifacts/live-release-*.png.
+Physical-device installation remains untested. Final verification documentation is committed
+separately with [skip ci], since only Markdown changes after the verified deployment.
+
 ## Delivery authorization
 
 First deployment attempt 40862741591 stopped at browser checks. Existing tests still

@@ -1,6 +1,8 @@
 # Contact form
 
-Updated 2026-10-29. Changes committed; user subsequently authorized deployment.
+Updated 2026-10-29. Published with code 54a537f via Pages run 40863773592. Live Chromium
+confirmed the form is enabled, public ID is configured and receiver emails are absent
+from the shipped bundle. No additional live message was sent after the verified local test.
 
 ## Active configuration
 

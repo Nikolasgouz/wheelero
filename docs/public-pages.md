@@ -1,6 +1,6 @@
 # Footer information pages
 
-Updated 2026-10-29. Changes are local, not deployed.
+Updated 2026-10-29. Published via successful Pages run 40863773592 (code 54a537f).
 
 Latest change supersedes the email-link/Tools notes below: Tools is removed and the
 recipient is absent from the browser source. Contact now uses a Formspree message form,
