@@ -225,6 +225,14 @@ test('cookie choice blocks the tool, survives Escape and works with keyboard on 
   await expect(banner).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toHaveCount(0)
+  await expect(page.locator('.wheel-stage')).toBeVisible()
+  await expect(page.locator('[inert] .entries-textarea')).toHaveCount(1)
+  await page.locator('.entries-textarea').evaluate((element) => element.focus())
+  expect(await banner.evaluate((element) => element.contains(document.activeElement))).toBe(true)
+  for (let index = 0; index < 8; index++) {
+    await page.keyboard.press('Tab')
+    expect(await page.locator('[inert]').evaluate((element) => element.contains(document.activeElement))).toBe(false)
+  }
   await page.keyboard.press('Escape')
   await expect(banner).toBeVisible()
   await page.mouse.click(2, 2)

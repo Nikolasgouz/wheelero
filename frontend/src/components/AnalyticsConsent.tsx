@@ -10,20 +10,14 @@ export function AnalyticsConsent() {
   const consent = useSyncExternalStore(subscribeAnalyticsConsent, getAnalyticsConsent)
   return (
     <section className="analytics-settings" aria-label={translate('Cookie settings')}>
-      <h2>{translate('About cookies')}</h2>
       <p>
         {translate(
-          'Cookies are small files stored by your browser. They help websites remember information between visits.',
+          'Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.',
         )}
       </p>
       <p>
         {translate(
-          'Wheelero uses optional Google Analytics cookies to measure visits and feature usage for up to one year. No names, wheel entries, results or contact details are sent.',
-        )}
-      </p>
-      <p>
-        {translate(
-          'Accept cookies to enable Analytics or reject cookies to continue without it. Both choices give you full access. Your wheels stay on this device. You can change your choice in Cookie settings.',
+          'Either choice gives full access. You can change it anytime in Cookie settings.',
         )}
       </p>
       {consent !== null && (

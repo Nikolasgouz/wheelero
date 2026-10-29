@@ -21,7 +21,8 @@ See [contact setup](docs/contact-form.md) for the activation and delivery verifi
 Cookie settings explains browser storage and allows accepting or rejecting optional Analytics
 at any time. Before acceptance, no Google Analytics script or request is loaded.
 New visitors must choose **Accept cookies** or **Reject cookies** before using the app.
-Both choices give full access. The dialog explains cookies, supports language selection
+Both choices give full access. The site is visible behind the dialog but cannot receive
+clicks or keyboard focus until a choice. The concise dialog explains cookies, supports language selection
 and links to a privacy view readable before choosing. Existing choices are remembered.
 See [public pages](docs/public-pages.md) for routes and publication limitations.
 Install app opens the browser's installation prompt when

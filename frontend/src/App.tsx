@@ -1,6 +1,6 @@
 import { ct } from './customization.i18n'
 import { AnalyticsConsent } from './components/AnalyticsConsent'
-import { trackAnalytics } from './lib/analytics'
+import { getAnalyticsConsent, subscribeAnalyticsConsent, trackAnalytics } from './lib/analytics'
 import {
   useCallback,
   useEffect,
@@ -75,6 +75,7 @@ type Screen = 'wheel' | 'options' | 'library'
 type SharedWheel = Pick<Wheel, 'title' | 'no_repeat' | 'options' | 'customization'>
 
 export default function App() {
+  const consent = useSyncExternalStore(subscribeAnalyticsConsent, getAnalyticsConsent)
   const language = useSyncExternalStore(subscribeLanguage, getLanguage)
   const { data, notice } = useStore()
   const [online, setOnline] = useState(navigator.onLine)
@@ -692,7 +693,7 @@ export default function App() {
         {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && <HomeInfo />}
       </main>
       <footer className="site-footer">
-        {sitePath === '/cookies' && <AnalyticsConsent />}
+        {sitePath === '/cookies' && consent !== null && <AnalyticsConsent />}
         {!presenting && <SiteFooter path={sitePath} />}
         <PwaControls busy={locked} report={setMessage} />
       </footer>
@@ -839,7 +840,7 @@ export default function App() {
         </Dialog>
       )}
 
-      {shared && (
+      {shared && consent !== null && (
         <Dialog
           title={t.shared}
           close={() => {

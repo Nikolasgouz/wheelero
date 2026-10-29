@@ -9,11 +9,15 @@ dismissing it, dark theme, readable privacy, rejection enabling the tool and per
 
 ## Consent and production gating
 
-`CookieGate.tsx` requires a choice before mounting the application. The initial native modal
+`CookieGate.tsx` displays the application behind an inert, aria-hidden wrapper until a choice.
+The page is visible through a light scrim without blur, but cannot receive clicks or focus.
+Shared-wheel dialogs wait until the choice to avoid opening above the cookie modal.
+The initial native modal
 cannot be dismissed by Escape/backdrop and includes a language selector. Its equally styled
 buttons are Accept cookies and Reject cookies. Both give full access. `AnalyticsConsent.tsx`
-explains cookies, the optional Google Analytics purpose/lifetime, excluded personal content
-and how to change the choice. `/privacy` can be read before choosing, as a separate static
+briefly explains cookies, the optional Google Analytics purpose, excluded personal content
+and how to change the choice. Full details including lifetime remain on the cookie and privacy
+pages. `/privacy` can be read before choosing, as a separate static
 information view without the interactive app. `/cookies` retains both choices afterward.
 Labels and explanatory text cover all 14 locales. Existing choices are preserved, not reset
 for this copy update. Dialog titles use unique IDs so the nested language dialog is accessible.

@@ -2265,7 +2265,9 @@ input[type='color'] {
 .site-intro { max-width: 960px; margin: 20px auto 28px; text-align: center; }
 .cookie-gate { min-height: 100dvh; }
 .cookie-gate main { max-width: 800px; margin: 24px auto; }
-.cookie-language { display: flex; justify-content: end; margin-bottom: 16px; }
+.cookie-overlay dialog::backdrop { background: #211a3a55; backdrop-filter: none; }
+.cookie-overlay .analytics-settings { padding: 0; }
+.cookie-language { display: flex; justify-content: end; margin-bottom: 8px; }
 .analytics-settings { width: 100%; padding: 16px 0; }
 .analytics-settings h2 { margin: 0 0 8px; font-size: 17px; }
 .analytics-settings p { margin: 12px 0; font-size: 14px; line-height: 1.6; }

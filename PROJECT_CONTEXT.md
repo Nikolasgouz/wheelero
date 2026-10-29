@@ -2,7 +2,22 @@
 
 Updated: 2026-10-29.
 
-## Latest: required cookie choice
+## Latest: visible site behind compact cookie choice
+
+The app now mounts behind CookieGate, with an inert/aria-hidden wrapper until the visitor
+accepts or rejects. A translucent backdrop without blur keeps the wheel and Entries visible.
+Native modal focus and Escape/backdrop blocking remain. Shared-wheel dialogs wait for the
+choice so they cannot obscure the cookie modal. Either choice unlocks the existing app
+without remounting it. The explanation is two short paragraphs in all 14 languages; detailed
+cookie/privacy pages retain purpose, lifetime and other disclosures. Existing choices and
+the no-Google-before-acceptance rule are unchanged. Local lint, build/typecheck, 16 unit tests
+and 9 targeted browser tests passed (all analytics cases and both shared-copy flows).
+Direct Chromium checked all 14 translated explanations fit at 390x844, a visible wheel,
+blocked desktop clicks/typing, rejection unlocking edits and no horizontal overflow.
+The existing mobile keyboard/axe test checks inert focus and Tab containment. Screenshots:
+artifacts/compact-cookies-{el,en}-{mobile,desktop}.png. Deployment verification pending.
+
+## Previous: required cookie choice
 
 CookieGate wraps App in main.tsx. With no stored choice, show a native non-dismissible
 modal and do not mount the interactive application. Both Accept cookies and Reject cookies
