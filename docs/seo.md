@@ -1,7 +1,7 @@
 # Targeted SEO and number generator
 
-Updated 2026-10-29. Published and verified at https://wheelero.com, code 3e9d755,
-successful [Pages run 40922917095](https://github.com/Nikolasgouz/wheelero/actions/runs/40922917095).
+Updated 2026-10-29. Published and verified at https://wheelero.com, code d8af70a,
+successful [Pages run 40925325028](https://github.com/Nikolasgouz/wheelero/actions/runs/40925325028).
 
 ## Inspection and decisions
 
@@ -60,7 +60,11 @@ and in initial HTML, in all 14 languages. The five specialist guides, metadata, 
 sitemap, structured data and Analytics are preserved. Before publication, build/typecheck,
 lint, 31 unit tests and 13 targeted browser cases passed. Visual/overflow/keyboard checks
 passed at 1366x768, 1440x900, 1920x1080 and 390x844 in light/dark mode. Desktop/mobile
-screenshots were visually reviewed. All 14 language views passed. Live follow-up pending.
+screenshots were visually reviewed. All 14 language views passed. The full CI run passed
+all 45 browser/PWA cases, 31 unit tests, build/typecheck/lint and deployment. Live checks
+repeated eight layout/theme views, keyboard links and all 14 languages, plus six-route
+HTML/metadata/redirect/404/sitemap checks, offline generation and consent safeguards.
+Screenshots are ignored under artifacts/home-integrated-{local,live}-*.png.
 
 - `src/site.ts`: route metadata, canonical path helper and the new numbers route.
 - `src/tool-content.ts`: distinct instructions, examples, FAQs and related paths for five specialist tools.

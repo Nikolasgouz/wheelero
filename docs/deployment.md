@@ -1,5 +1,13 @@
 # Static deployment
 
+Homepage information layout verified live on 2026-10-29: code d8af70a, successful
+[run 40925325028](https://github.com/Nikolasgouz/wheelero/actions/runs/40925325028).
+Removed the homepage's additional guide panel, integrated its unique information into
+HomeInfo and added six plain footer tool links. All 45 browser/PWA cases, 31 unit tests,
+build/typecheck/lint passed in CI. Desktop/mobile screenshots were reviewed before release.
+Live layout/keyboard checks passed at four sizes in light/dark and in all 14 languages.
+Live six-route HTML/metadata/sitemap/404, offline and consent checks passed. No DNS changes.
+
 Targeted SEO and instant number generator verified live on 2026-10-29: code 3e9d755,
 successful [run 40922917095](https://github.com/Nikolasgouz/wheelero/actions/runs/40922917095).
 All 44 browser cases, isolated PWA update, 31 unit tests and build/typecheck/lint passed.

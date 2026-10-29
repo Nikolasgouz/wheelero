@@ -1,7 +1,7 @@
 ﻿# Wheelero context
 
 Updated: 2026-10-29. Current task: targeted SEO plus a real instant number generator.
-Published and verified live: code 3e9d755, successful Pages run 40922917095.
+Published and verified live: code d8af70a, successful Pages run 40925325028.
 The user explicitly authorized this release through the existing main-branch workflow.
 
 Current follow-up: remove the homepage's extra SEO/ToolGuide panel, integrating unique
@@ -12,7 +12,10 @@ Metadata/initial HTML/Analytics are preserved. Build/typecheck/lint and 31 unit 
 All 13 targeted browser checks passed (SEO, Analytics, sharing and responsive accessibility).
 Eight layout/theme views at 1366x768, 1440x900, 1920x1080 and 390x844 passed, with screenshots
 visually reviewed on desktop/mobile. All 14 languages and keyboard footer links passed.
-Publication and live recheck pending. Screenshots: artifacts/home-integrated-local-*.png.
+Published successfully after all 45 CI browser/PWA checks passed. Live verification repeated
+the eight layout/theme views, keyboard links and 14 languages. Six initial HTML/client routes,
+metadata/canonicals/sitemap/404, offline generation and absence of tracking before consent
+or after rejection all passed. Screenshots: artifacts/home-integrated-{local,live}-*.png.
 
 ## Product and runtime
 
