@@ -1,5 +1,11 @@
 # Static deployment
 
+Compact cookie overlay verified live on 2026-10-29: code ee81b1d, successful run
+[40905429966](https://github.com/Nikolasgouz/wheelero/actions/runs/40905429966).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
+verified the visible but inert app, shorter text in all 14 languages, mobile fit, rejection
+unlocking edits and zero Google requests before choice or after rejection.
+
 Cookie-choice follow-up verified on 2026-10-29: code 151c72b, successful run
 [40903094723](https://github.com/Nikolasgouz/wheelero/actions/runs/40903094723).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live verification

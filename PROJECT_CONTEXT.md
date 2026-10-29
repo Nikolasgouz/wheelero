@@ -15,7 +15,10 @@ and 9 targeted browser tests passed (all analytics cases and both shared-copy fl
 Direct Chromium checked all 14 translated explanations fit at 390x844, a visible wheel,
 blocked desktop clicks/typing, rejection unlocking edits and no horizontal overflow.
 The existing mobile keyboard/axe test checks inert focus and Tab containment. Screenshots:
-artifacts/compact-cookies-{el,en}-{mobile,desktop}.png. Deployment verification pending.
+artifacts/compact-cookies-{el,en}-{mobile,desktop}.png. Published as ee81b1d through successful
+run 40905429966: all 41 browser cases, isolated PWA update, 16 unit tests and build checks
+passed. Direct live Chromium repeated the 14-language/mobile/desktop blocking checks,
+rejection unlocking edits and zero Google requests before choice or after rejection.
 
 ## Previous: required cookie choice
 

@@ -2,6 +2,10 @@
 
 Measurement ID: `G-JB9ZRMKRKR`. Installation requested on 2026-10-29. No earlier Analytics
 or Tag Manager installation was found. The existing Cookie settings page was informational.
+Compact visible-background follow-up is live as ee81b1d via successful run 40905429966.
+All CI checks passed. Live Chromium verified all 14 translations fit on mobile, the visible
+wheel stays inert, desktop clicking/typing cannot edit until choice, rejection unlocks edits
+and no Google requests occur before choice or after rejection.
 Published on wheelero.com as 6bb5296 through successful run 40893717840.
 Required cookie-choice follow-up is live as 151c72b via successful run 40903094723. All CI
 checks passed. Live verification confirmed blocking before a choice, Escape/backdrop not
