@@ -147,11 +147,11 @@ test('failed IndexedDB write preserves the last saved wheel and reports the erro
       return put.apply(this, args)
     }
   })
-  await page.getByLabel('Wheel title', { exact: true }).fill('Cannot be saved')
+  await page.getByRole('textbox', { name: 'Wheel title', exact: true }).fill('Cannot be saved')
   await expect(page.getByRole('alert')).toContainText('Browser storage is full')
   expect((await readSavedState(page)).wheels[0]).toEqual(original)
   await page.reload()
-  await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(original.title)
+  await expect(page.getByRole('textbox', { name: 'Wheel title', exact: true })).toHaveValue(original.title)
 })
 
 test('public HTML has real headings and metadata and unknown routes return 404', async ({

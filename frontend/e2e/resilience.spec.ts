@@ -6,13 +6,14 @@ import path from 'node:path'
 test('typing in the middle of a title preserves text and caret position', async ({ page }) => {
   await page.goto('/')
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
-  const title = page.getByLabel('Wheel title', { exact: true })
+  const title = page.getByRole('textbox', { name: 'Wheel title', exact: true })
   await title.fill('ΑΒΓΔ')
   await showScreen(page, 'options')
   await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
+  await expect.poll(async () => (await readSavedState(page)).wheels.some(
+    (wheel) => wheel.saved && wheel.title === 'ΑΒΓΔ',
+  )).toBe(true)
   await title.focus()
   await title.press('End')
   await title.press('ArrowLeft')
@@ -24,7 +25,9 @@ test('typing in the middle of a title preserves text and caret position', async 
   await showScreen(page, 'options')
   await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
+  await expect.poll(async () => (await readSavedState(page)).wheels.some(
+    (wheel) => wheel.saved && wheel.title === 'ΑΒΧΨΩΓΔ' && wheel.options[0].label === 'ΑΒΓΔ',
+  )).toBe(true)
   await option.focus()
   await option.press('End')
   await option.press('ArrowLeft')
@@ -34,8 +37,11 @@ test('typing in the middle of a title preserves text and caret position', async 
   await showScreen(page, 'options')
   await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
+  await expect.poll(async () => (await readSavedState(page)).wheels.some(
+    (wheel) => wheel.saved && wheel.title === 'ΑΒΧΨΩΓΔ' && wheel.options[0].label === 'ΑΒΧΨΩΓΔ',
+  )).toBe(true)
   await page.reload()
+  await showScreen(page, 'options')
   await expect(title).toHaveValue('ΑΒΧΨΩΓΔ')
   await expect(option).toHaveValue('ΑΒΧΨΩΓΔ')
 })
@@ -47,9 +53,8 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
   await page.goto('/')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
   await showScreen(page, 'options')
-  await page.getByLabel('Wheel title', { exact: true }).fill(title)
+  await page.getByRole('textbox', { name: 'Wheel title', exact: true }).fill(title)
   await showScreen(page, 'options')
   await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await page.getByRole('button', { name: 'Open', exact: true }).first().click()
@@ -62,7 +67,9 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
   await showScreen(page, 'options')
   await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.locator('.save-bar > span')).toBeVisible()
+  await expect.poll(async () => (await readSavedState(page)).wheels.some(
+    (wheel) => wheel.saved && wheel.title === `${title} · Copy`,
+  )).toBe(true)
   const copies = (await readSavedState(page)).wheels
   expect(copies.map((wheel: { title: string }) => wheel.title)).toContain(`${title} · Copy`)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -110,7 +117,7 @@ test(
     await page.reload()
     await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
     await showScreen(page, 'options')
-    await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
+    await page.getByRole('textbox', { name: 'Wheel title', exact: true }).fill('Πριν την ενημέρωση')
     await showScreen(page, 'options')
     await page.locator('.add-option input').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
     try {
@@ -145,7 +152,7 @@ test(
       await update.click()
       await expect(update).toHaveCount(0)
       await expect(page.locator('meta[name="release-check"]')).toHaveAttribute('content', 'new')
-      await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(
+      await expect(page.getByRole('textbox', { name: 'Wheel title', exact: true })).toHaveValue(
         'Πριν την ενημέρωση',
       )
       await expect(page.locator('.add-option input')).toHaveValue(

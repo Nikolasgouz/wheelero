@@ -9,8 +9,8 @@ Contact contains a reply-email field and message box. The support inbox address 
 included in the website. Submission uses a Formspree form ID configured as
 `VITE_CONTACT_FORM_ID` in the root `.env` or build environment. **Local sending is active
 and verified** with form ID `xljjlgrl`. The recipient is configured privately at Formspree.
-The connected Gmail inbox received the real production-preview test. This change has not
-been published to wheelero.com. Future deployment needs GitHub variable `CONTACT_FORM_ID`.
+The connected Gmail inbox received the real production-preview test. The Pages build uses
+this public form ID by default; GitHub variable `CONTACT_FORM_ID` can override it.
 See [contact setup](docs/contact-form.md) for the activation and delivery verification steps.
 Cookie settings explains actual browser storage, without unused consent switches.
 See [public pages](docs/public-pages.md) for routes and publication limitations.

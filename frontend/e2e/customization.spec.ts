@@ -11,6 +11,10 @@ async function ready(page: Page) {
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
 const state = readSavedState
+async function activeWheel(page: Page) {
+  const data = await state(page)
+  return data.wheels.find((wheel) => wheel.id === data.active)!
+}
 async function customize(page: Page) {
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Customise', exact: true }).click()
@@ -101,7 +105,7 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
     db.close()
   })
   await ready(page)
-  await expect(page.locator('.spinner-panel h2')).toHaveText('Pick a name')
+  await expect(page.getByRole('textbox', { name: 'Wheel title', exact: true })).toHaveValue('Pick a name')
   const migrated = await state(page)
   expect(migrated.wheels[0].options.map((o) => o.label)).toEqual(['One', 'Two'])
   expect(migrated.wheels[0].options[0].image).toBe(null)
@@ -117,7 +121,7 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
     'Sofia',
   ])
   await page.reload()
-  await expect(page.locator('.spinner-panel h2')).toHaveText('Pick a name')
+  await expect(page.getByRole('textbox', { name: 'Wheel title', exact: true })).toHaveValue('Pick a name')
   expect((await state(page)).wheels).toHaveLength(3)
 })
 
@@ -328,7 +332,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
     pointer_changes: false,
   })
   await page.reload()
-  await expect(page.locator('.wheel-title')).toHaveCount(0)
+  await expect(page.locator('.wheel-title-editor')).toHaveCount(0)
   await expect(page.locator('.wheel-center-image')).toHaveCount(0)
   await expect(page.locator('.wheel-rim')).toHaveCSS('box-shadow', 'none')
   expect((await state(page)).wheels[0].customization).toEqual(config)
@@ -343,7 +347,7 @@ test('transactional customization: defaults, cancel, every tab, persistence and 
   await expect(page.locator('.winning-sector')).toHaveCount(1)
   await expect(page.getByRole('button', { name: 'Remove winner', exact: true })).toHaveCount(0)
   const data = await state(page)
-  const winner = data.wheels[0].results[0]
+  const winner = data.wheels.find((wheel) => wheel.id === data.active)!.results[0]
   const selected = await page.locator('.wheel-svg').evaluate((svg) => {
     const rotation = Number((svg as SVGElement).style.transform.slice(7, -4))
     const entries = svg.querySelectorAll('[data-option-id]')
@@ -411,10 +415,10 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('#sidebar-results .history strong').first()).toBeVisible()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
-  const winner = (await state(page)).wheels[0].results[0]
+  const winner = (await activeWheel(page)).results[0]
   await page.reload()
-  await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(5)
-  expect((await state(page)).wheels[0].options.some((o) => o.id === winner.option_id)).toBe(false)
+  await expect.poll(async () => (await activeWheel(page)).options.length).toBe(5)
+  expect((await activeWheel(page)).options.some((o) => o.id === winner.option_id)).toBe(false)
   dialog = await customize(page)
   await dialog.getByRole('tab', { name: 'After spin' }).click()
   await dialog.getByLabel('Show winner popup', { exact: true }).check()
@@ -424,9 +428,9 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await expect(page.locator('#sidebar-results .history strong').first()).toBeVisible()
   await page.getByRole('dialog').getByRole('button', { name: 'Remove winner', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(0)
-  expect((await state(page)).wheels[0].options.length).toBe(4)
+  expect((await activeWheel(page)).options.length).toBe(4)
   await page.waitForTimeout(5200)
-  expect((await state(page)).wheels[0].options.length).toBe(4)
+  expect((await activeWheel(page)).options.length).toBe(4)
   await showScreen(page, 'options')
   for (let i = 0; i < 3; i++) await page.locator('.remove-option').first().click()
   await showScreen(page, 'wheel')
@@ -434,7 +438,7 @@ test('automatic winner removal persists through refresh and is idempotent with m
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect(page.locator('#sidebar-results .history strong').first()).toBeVisible()
-  await expect.poll(async () => (await state(page)).wheels[0].options.length).toBe(0)
+  await expect.poll(async () => (await activeWheel(page)).options.length).toBe(0)
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeDisabled()
   await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click()
   await expect(page.locator('.inline-result')).toHaveCount(0)
@@ -450,7 +454,7 @@ test('automatic removal remains scoped to its original wheel after a copy', asyn
   await dialog.getByLabel('Automatically remove winner after 5 seconds', { exact: true }).check()
   await dialog.getByLabel('Show winner popup', { exact: true }).uncheck()
   await save(page)
-  const original = (await state(page)).wheels[0]
+  const original = await activeWheel(page)
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
@@ -513,6 +517,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
     (await entries.inputValue()) +
       '\n' +
       Array.from({ length: 1001 }, (_, i) => `Entry ${i}`).join('\n'),
+    { timeout: 60000 },
   )
   await showScreen(page, 'options')
   await expect(page.locator('.option-row')).toHaveCount(200)
@@ -538,7 +543,7 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   await expect(page.getByRole('button', { name: 'More options', exact: true })).toBeDisabled()
   await expect(page.locator('#sidebar-results .history strong').first()).toBeVisible()
   const data = await state(page)
-  const winner = data.wheels[0].results[0]
+  const winner = data.wheels.find((wheel) => wheel.id === data.active)!.results[0]
   expect(winner.choice_count).toBe(1007)
   expect(data.wheels[0].options).toHaveLength(1007)
   const selected = await page.locator('.wheel-svg').evaluate((svg) => {

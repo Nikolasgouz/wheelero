@@ -4,6 +4,15 @@ Updated: 2026-10-29.
 
 ## Delivery authorization
 
+First deployment attempt 40862741591 stopped at browser checks. Existing tests still
+expected the removed Draft badge/heading, selected both hidden and visible title inputs,
+and read the first saved snapshot instead of the active working wheel after Save. Updated
+the existing checks to use visible textboxes, actual persisted saved data and active IDs.
+No draw/storage behavior was changed to accommodate tests. Full verification is in progress.
+The corrected local browser run passed 33/34 with eight workers; the 1007-name paste
+hit its 15-second action budget on Windows (the entries were rendered). Allow 60 seconds
+for that large paste only, retaining every count/projection assertion. Typecheck/lint pass.
+
 The user subsequently authorized push and deployment to wheelero.com. Deployment is now
 in progress via the existing main-branch Pages workflow. The workflow uses the verified
 public Formspree ID xljjlgrl as its default, overridable by CONTACT_FORM_ID. No private

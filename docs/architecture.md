@@ -38,7 +38,7 @@ The adjacent PwaControls uses Install app for native prompts and fallback instru
 ContactForm sends an explicit visitor submission to Formspree only when configured with
 VITE_CONTACT_FORM_ID. This is independent of local wheel storage. No recipient address
 is bundled. Root envDir lets Vite and prerendering share the build setting. The existing
-Pages workflow reads repository variable CONTACT_FORM_ID for a future authorized build.
+Pages workflow uses public form ID xljjlgrl by default, overridable by CONTACT_FORM_ID.
 Its existing waiting/activated-worker condition gates Save & update. No update is forced
 by the footer changes. All labels use locale catalogs. Editorial copy avoids semicolons
 without rewriting user-entered strings or changing stored data.
