@@ -1,7 +1,9 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-d8af70a. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
+0bd30aa. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
+Short center labels and wrapping sidebar actions were verified live at 360/390/768/1366/1920px
+in English/Greek, with all 14 short translations fitting. Wheel geometry/design is unchanged.
 Six task-specific SEO pages and the new instant random number generator are live, verified
 in initial HTML and Chromium, including offline use. See [SEO verification](docs/seo.md).
 The homepage now uses its original information layout without the extra SEO panel, with

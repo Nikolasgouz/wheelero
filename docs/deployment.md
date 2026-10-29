@@ -1,5 +1,13 @@
 # Static deployment
 
+Spin labels and sidebar wrapping verified live on 2026-10-29: release 0bd30aa, successful
+[run 40928555868](https://github.com/Nikolasgouz/wheelero/actions/runs/40928555868).
+All 45 browser/PWA cases, 31 unit tests, build/typecheck/lint passed. The first run caught
+a theme-test setup race, fixed by using the existing theme button instead of mutating DOM.
+No additional product styling changed. Live checks covered 360/390/768/1366/1920px in
+English/Greek, all 14 short labels, working controls/keyboard and no horizontal overflow.
+Metadata/HTML/sitemap/404/offline/consent checks passed. Screenshots: artifacts/spin-controls-live-*.png.
+
 Homepage information layout verified live on 2026-10-29: code d8af70a, successful
 [run 40925325028](https://github.com/Nikolasgouz/wheelero/actions/runs/40925325028).
 Removed the homepage's additional guide panel, integrated its unique information into

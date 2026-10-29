@@ -1,10 +1,10 @@
 ﻿# Wheelero context
 
-Updated: 2026-10-29. Current task: targeted SEO plus a real instant number generator.
-Published and verified live: code d8af70a, successful Pages run 40925325028.
+Updated: 2026-10-29. Current task: short spin labels and responsive sidebar actions.
+Published and verified live: release 0bd30aa, successful Pages run 40928555868.
 The user explicitly authorized this release through the existing main-branch workflow.
 
-Latest controls follow-up, ready for publication: Wheel uses t.spinShort for visible Spin
+Latest controls follow-up, published: Wheel uses t.spinShort for visible Spin
 (Greek Γύρνα) in all 14 languages, keeping t.spin as the descriptive aria-label. Center text
 uses nowrap with a full-width grid track and width/height fitting. Sidebar action rows wrap
 with intrinsic button widths and minimum 44px height. No wheel size/color/layout, field/tab,
@@ -12,7 +12,10 @@ SEO, URL, footer, Analytics or consent changes. Build/typecheck/lint, 31 unit te
 targeted browser cases passed. Direct Chromium checked 360/390/768/1366/1920px in English and
 Greek, all other short labels at 360px, and spin/shuffle/sort/clear/result export/keyboard.
 All 22 views fit with no horizontal overflow. Desktop/mobile screenshots were reviewed:
-artifacts/spin-controls-local-*.png. Publication/live verification pending.
+artifacts/spin-controls-{local,live}-*.png. Live verification repeated all 22 views and
+English/Greek interactions successfully, with no horizontal overflow. All 45 browser/PWA
+cases, 31 unit tests, build/typecheck/lint and deployment passed in the final CI run.
+Live metadata, six initial HTML routes, sitemap, 404, offline use and consent checks passed.
 First CI run 40927758156 stopped on the existing number-generator dark-mode contrast test.
 That test wrote data-theme directly while React retained a saved light preference. It now
 switches through the actual theme button and asserts the resulting theme. Six repeated
