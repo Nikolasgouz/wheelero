@@ -1,5 +1,11 @@
 # Static deployment
 
+Automatic cookie language verified live on 2026-10-29: code 9f7e287, successful run
+[40908662642](https://github.com/Nikolasgouz/wheelero/actions/runs/40908662642).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
+checked browser-language detection in all 14 locales, regional variants, fallback and saved
+override, mobile dialog fit and no Google requests before consent.
+
 Compact cookie overlay verified live on 2026-10-29: code ee81b1d, successful run
 [40905429966](https://github.com/Nikolasgouz/wheelero/actions/runs/40905429966).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium

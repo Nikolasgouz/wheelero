@@ -2,6 +2,10 @@
 
 Measurement ID: `G-JB9ZRMKRKR`. Installation requested on 2026-10-29. No earlier Analytics
 or Tag Manager installation was found. The existing Cookie settings page was informational.
+Automatic browser language and clearer copy are live as 9f7e287 via successful run
+40908662642. All CI checks passed. Live Chromium verified all 14 browser languages/regional
+variants, ordered preferences/fallback, saved manual override, translated settings, mobile
+fit and no Google requests before consent. No Analytics transport behavior changed.
 Compact visible-background follow-up is live as ee81b1d via successful run 40905429966.
 All CI checks passed. Live Chromium verified all 14 translations fit on mobile, the visible
 wheel stays inert, desktop clicking/typing cannot edit until choice, rejection unlocks edits

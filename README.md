@@ -1,7 +1,7 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-ee81b1d. All CI checks and deployment passed. New visitors see the site behind a compact
+9f7e287. All CI checks and deployment passed. New visitors see the site behind a compact
 cookie dialog and must accept or reject before using the tool. Optional GA4 requires consent, with safe page
 views and feature counts. Live collection requests received HTTP204; GA report ingestion
 could not be checked without property access. See [analytics verification](docs/analytics.md).

@@ -14,7 +14,10 @@ Local build/typecheck, lint, 16 unit tests and all 7 analytics browser tests pas
 Chromium checked all 14 browser locales/regional tags, ordered preferences, unsupported
 fallback, saved manual override + refresh, translated cookie settings, mobile fit and zero
 Google requests before acceptance. Screenshot: artifacts/automatic-cookie-language-el.png.
-Publication verification pending.
+Published as 9f7e287 through successful run 40908662642. All 41 browser cases, isolated PWA
+update, 16 unit tests and build checks passed. Live Chromium repeated all 14 automatic
+language/regional checks, preference ordering/fallback, manual override persistence,
+cookie settings translation, mobile fit and zero pre-consent Google requests successfully.
 
 ## Latest: visible site behind compact cookie choice
 
