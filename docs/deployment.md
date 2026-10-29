@@ -1,5 +1,10 @@
 # Static deployment
 
+Pick a number template verified live on 2026-10-29: code 0580832, successful run
+[40914388174](https://github.com/Nikolasgouz/wheelero/actions/runs/40914388174).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
+verified replacement in all 14 languages, 12 templates, entries 1–10, spin and refresh.
+
 Sound-on-load verified live on 2026-10-29: code 6129dc3, successful run
 [40911892051](https://github.com/Nikolasgouz/wheelero/actions/runs/40911892051).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium

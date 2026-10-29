@@ -9,7 +9,10 @@ The library still has 12 editable templates. New title/category translations cov
 languages and the card keeps its existing accent style. Saved user wheels and frozen legacy
 migration mappings are unchanged. Build/typecheck and lint passed. Direct Chromium verified
 all 14 translated titles/categories, 12 cards with the old template absent, creation of the
-1–10 wheel, a real spin in that range and refresh persistence. Publication pending.
+1–10 wheel, a real spin in that range and refresh persistence. Published as 0580832 via
+successful run 40914388174. All 41 browser cases, isolated PWA update, 16 unit tests and
+build checks passed. Live Chromium repeated the 14-language replacement, number entries,
+spin and refresh checks successfully.
 
 ## Latest: wheel sound enabled on every visit
 
