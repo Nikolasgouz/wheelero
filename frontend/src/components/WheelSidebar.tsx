@@ -1,20 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import {
-  ArrowDownAZ,
-  Download,
-  History,
-  Pencil,
-  Plus,
-  Shuffle,
-  Trash2,
-  Wifi,
-  Laptop,
-} from 'lucide-react'
+import { ArrowDownAZ, Download, History, Shuffle, Trash2, Wifi, Laptop } from 'lucide-react'
 import { t } from '../i18n'
-import { ct } from '../customization.i18n'
 import type { LocalWheel, Wheel } from '../types'
 import { shuffled } from '../lib/random'
 import { resultsText } from '../lib/results'
+import { parseEntries, reconcileEntries } from '../lib/entries'
 
 const alphabetical = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
@@ -35,10 +25,10 @@ export function WheelSidebar({
   openEditor: () => void
   clear: (section: 'entries' | 'results') => void
 }) {
-  const [newEntry, setNewEntry] = useState(
-    () => localStorage.getItem(`sidebar-draft:${wheel.id}`) ?? '',
-  )
-  const [page, setPage] = useState(0)
+  const source = wheel.options.map((option) => option.label).join('\n')
+  const [draft, setDraft] = useState({ source, text: source })
+  const [overLimit, setOverLimit] = useState(false)
+  if (draft.source !== source) setDraft({ source, text: source })
   const [allHistory, setAllHistory] = useState(false)
   const [sortedResults, setSortedResults] = useState(
     () => localStorage.getItem(`result-sort:${wheel.id}`) === 'true',
@@ -50,10 +40,6 @@ export function WheelSidebar({
         : wheel.results,
     [wheel.results, sortedResults],
   )
-  const currentPage = Math.min(page, Math.max(0, Math.ceil(wheel.options.length / 100) - 1))
-  useEffect(() => {
-    localStorage.setItem(`sidebar-draft:${wheel.id}`, newEntry)
-  }, [newEntry, wheel.id])
   useEffect(() => {
     localStorage.setItem(`result-sort:${wheel.id}`, String(sortedResults))
   }, [sortedResults, wheel.id])
@@ -104,7 +90,6 @@ export function WheelSidebar({
           disabled={wheel.options.length < 2}
           onClick={() => {
             edit({ options: shuffled(wheel.options) })
-            setPage(0)
           }}
         >
           <Shuffle size={14} />
@@ -117,7 +102,6 @@ export function WheelSidebar({
             edit({
               options: [...wheel.options].sort((a, b) => alphabetical.compare(a.label, b.label)),
             })
-            setPage(0)
           }}
         >
           <ArrowDownAZ size={14} />
@@ -129,8 +113,8 @@ export function WheelSidebar({
           disabled={!wheel.options.length}
           onClick={() => {
             clear('entries')
-            setPage(0)
-            setNewEntry('')
+            setDraft({ source: '', text: '' })
+            setOverLimit(false)
           }}
         >
           <Trash2 size={14} /> {t.clear}
@@ -191,110 +175,37 @@ export function WheelSidebar({
         hidden={tab !== 'entries'}
         className="sidebar-panel"
       >
-        <p className="sidebar-edit-hint" id="sidebar-edit-hint">
-          {t.editEntriesHint}
-        </p>
-        <fieldset disabled={disabled}>
-          <div className="sidebar-entry-list">
-            {wheel.options
-              .slice(currentPage * 100, (currentPage + 1) * 100)
-              .map((option, offset) => (
-                <div
-                  className={`sidebar-entry ${wheel.no_repeat && !option.active ? 'used' : ''}`}
-                  key={option.id}
-                >
-                  <span aria-hidden="true">{currentPage * 100 + offset + 1}</span>
-                  <input
-                    aria-label={t.entryLabel(currentPage * 100 + offset + 1)}
-                    aria-describedby="sidebar-edit-hint"
-                    value={option.label}
-                    maxLength={160}
-                    onFocus={(event) => event.currentTarget.select()}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') event.currentTarget.blur()
-                    }}
-                    onChange={(event) =>
-                      edit({
-                        options: wheel.options.map((o) =>
-                          o.id === option.id ? { ...o, label: event.target.value } : o,
-                        ),
-                      })
-                    }
-                    onBlur={() => {
-                      if (!option.label.trim())
-                        edit({ options: wheel.options.filter((o) => o.id !== option.id) })
-                    }}
-                  />
-                  <button
-                    className="icon-button"
-                    aria-label={`${t.editEntry}: ${option.label}`}
-                    title={t.editEntry}
-                    onClick={(event) => {
-                      const input = event.currentTarget.parentElement!.querySelector('input')!
-                      input.focus()
-                      input.select()
-                    }}
-                  >
-                    <Pencil size={15} />
-                  </button>
-                  <button
-                    className="icon-button"
-                    aria-label={`${t.removeEntry}: ${option.label}`}
-                    onClick={() =>
-                      edit({ options: wheel.options.filter((o) => o.id !== option.id) })
-                    }
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                </div>
-              ))}
-          </div>
-          {wheel.options.length > 100 && (
-            <div className="editor-pages">
-              <button disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>
-                {ct.previous}
-              </button>
-              <span>
-                {currentPage + 1} / {Math.ceil(wheel.options.length / 100)}
-              </span>
-              <button
-                disabled={(currentPage + 1) * 100 >= wheel.options.length}
-                onClick={() => setPage(currentPage + 1)}
-              >
-                {ct.next}
-              </button>
-            </div>
-          )}
-          <form
-            className="add-option sidebar-add"
-            onSubmit={(event) => {
-              event.preventDefault()
-              if (!newEntry.trim() || wheel.options.length >= 10000) return
-              edit({
-                options: [
-                  ...wheel.options,
-                  { id: crypto.randomUUID(), label: newEntry.trim(), active: true, image: null },
-                ],
-              })
-              setNewEntry('')
-            }}
-          >
-            <input
-              aria-label={t.newEntry}
-              placeholder={t.newEntry}
-              maxLength={160}
-              value={newEntry}
-              onChange={(event) => setNewEntry(event.target.value)}
-            />
-            <button
-              className="icon-button"
-              aria-label={t.addEntry}
-              disabled={!newEntry.trim() || wheel.options.length >= 10000}
-            >
-              <Plus size={19} />
-            </button>
-          </form>
-        </fieldset>
+        <textarea
+          className="entries-textarea"
+          aria-label={t.options}
+          placeholder={t.pasteHint}
+          disabled={disabled}
+          spellCheck={false}
+          maxLength={1610000}
+          value={draft.text}
+          onChange={(event) => {
+            const text = event.currentTarget.value
+            const labels = parseEntries(text)
+            if (labels.length > 10000 || labels.some((label) => label.length > 160)) {
+              setOverLimit(true)
+              return
+            }
+            setOverLimit(false)
+            setDraft({ source: labels.join('\n'), text })
+            edit({
+              options: reconcileEntries(
+                wheel.options,
+                labels,
+                parseEntries(text.slice(0, event.currentTarget.selectionStart)).length,
+              ),
+            })
+          }}
+        />
+        {overLimit && (
+          <p className="entries-limit" role="alert">
+            {t.limit}
+          </p>
+        )}
       </div>
       <div
         role="tabpanel"

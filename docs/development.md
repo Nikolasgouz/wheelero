@@ -51,9 +51,14 @@ PUBLIC_INDEXING are read at build time; build again after changing them. New rou
 matching static output, PWA allowlist and useful functionality/content. Keep real 404s.
 
 Share links embed validated payloads in a fragment. Do not send the fragment to a service,
-claim encryption or offer revocation. Large payloads use JSON export. Keep bundled assets
-local with their licenses. Existing fourteen-language menus remain; editorial copy is English.
+claim encryption or offer revocation. Large payloads report the link size limit. Keep bundled assets local with their licenses.
+Public copy and controls use all fourteen language catalogs. site.ts holds English source
+text for both static output and translated client views. Keep user data separate from UI copy.
 
 Update README/PROJECT_CONTEXT/docs before handoff. Keep backend/ and ignored historical
 databases intact for recovery. The user authorized GitHub pushes and automatic deployment
 on main. Preserve the checks before deployment; never commit secrets or local data.
+
+Current storage is v13: it adds the local saved flag for explicit Save/Open behavior.
+Keep v12 rollback snapshots intact; new/default/template wheels are drafts, while the
+upgrade preserves all older wheels as saved. See data-model.md.

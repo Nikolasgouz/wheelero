@@ -1,20 +1,10 @@
 import { ct } from '../customization.i18n'
-import {
-  ImagePlus,
-  ArrowDown,
-  ArrowUp,
-  ClipboardList,
-  Plus,
-  RotateCcw,
-  Shuffle,
-  Trash2,
-} from 'lucide-react'
+import { ImagePlus, ArrowDown, ArrowUp, Plus, RotateCcw, Shuffle, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Dialog } from '../components/Dialog'
 import { ImagePicker } from '../components/ImagePicker'
 import { t } from '../i18n'
 import { colors } from '../lib/geometry'
-import { parseEntries } from '../lib/entries'
 import { shuffled } from '../lib/random'
 import type { LocalWheel, Option, Wheel } from '../types'
 
@@ -29,30 +19,17 @@ export function Editor({
   edit: (patch: Partial<Pick<Wheel, 'title' | 'options' | 'no_repeat'>>) => void
   report: (message: string) => void
 }) {
-  const [{ bulk, newLabel }, setDraft] = useState<{ bulk: string | null; newLabel: string }>(() =>
-    JSON.parse(localStorage.getItem(`draft:${wheel.id}`) ?? '{"bulk":null,"newLabel":""}'),
+  const [draft, setDraft] = useState<{ newLabel: string }>(() =>
+    JSON.parse(localStorage.getItem(`draft:${wheel.id}`) ?? '{"newLabel":""}'),
   )
   useEffect(() => {
-    localStorage.setItem(`draft:${wheel.id}`, JSON.stringify({ bulk, newLabel }))
-  }, [bulk, newLabel, wheel.id])
+    localStorage.setItem(`draft:${wheel.id}`, JSON.stringify(draft))
+  }, [draft, wheel.id])
   const [imageOption, setImageOption] = useState<string | null>(null)
   const [imageBusy, setImageBusy] = useState(false)
   const [page, setPage] = useState(0)
   const currentPage = Math.min(page, Math.max(0, Math.ceil(wheel.options.length / 200) - 1))
   const duplicate = new Set(wheel.options.map((o) => o.label)).size !== wheel.options.length
-  function add(labels: string[]) {
-    if (labels.length + wheel.options.length > 10000 || labels.some((v) => v.length > 160)) {
-      report(t.limit)
-      return
-    }
-    edit({
-      options: [
-        ...wheel.options,
-        ...labels.map((label) => ({ id: crypto.randomUUID(), label, active: true, image: null })),
-      ],
-    })
-    setDraft({ newLabel: '', bulk: null })
-  }
   function move(index: number, direction: number) {
     const options = [...wheel.options]
     ;[options[index], options[index + direction]] = [options[index + direction], options[index]]
@@ -68,9 +45,6 @@ export function Editor({
           <h2 id="editor-title">{t.edit}</h2>
           <p>{t.editHint}</p>
         </div>
-        <span className="tiny-wheel" aria-hidden="true">
-          ✳
-        </span>
       </div>
       <fieldset disabled={disabled}>
         <label className="field-label" htmlFor="wheel-title">
@@ -93,15 +67,6 @@ export function Editor({
           </label>
           <div>
             <button
-              className="text-button"
-              onClick={() =>
-                setDraft((current) => ({ ...current, bulk: bulk === null ? '' : null }))
-              }
-            >
-              <ClipboardList size={14} />
-              {t.paste}
-            </button>
-            <button
               className="icon-button"
               title={t.shuffle}
               aria-label={t.shuffle}
@@ -112,27 +77,6 @@ export function Editor({
             </button>
           </div>
         </div>
-        {bulk !== null && (
-          <div className="bulk-editor">
-            <label htmlFor="bulk-options">{t.pasteHint}</label>
-            <textarea
-              id="bulk-options"
-              rows={5}
-              value={bulk}
-              onChange={(e) => setDraft((current) => ({ ...current, bulk: e.target.value }))}
-            />
-            <button
-              className="secondary small"
-              onClick={() =>
-                add(
-                  parseEntries(bulk),
-                )
-              }
-            >
-              {t.pasteApply}
-            </button>
-          </div>
-        )}
         <div className="option-list">
           {wheel.options.slice(currentPage * 200, (currentPage + 1) * 200).map((option, offset) => {
             const i = currentPage * 200 + offset
@@ -210,19 +154,36 @@ export function Editor({
           className="add-option"
           onSubmit={(e) => {
             e.preventDefault()
-            if (newLabel.trim()) add([newLabel.trim()])
+            const label = draft.newLabel.trim()
+            if (!label) return
+            if (wheel.options.length >= 10000 || label.length > 160) {
+              report(t.limit)
+              return
+            }
+            edit({
+              options: [
+                ...wheel.options,
+                {
+                  id: crypto.randomUUID(),
+                  label,
+                  active: true,
+                  image: null,
+                },
+              ],
+            })
+            setDraft((current) => ({ ...current, newLabel: '' }))
           }}
         >
           <input
             aria-label={t.optionPlaceholder}
             placeholder={t.optionPlaceholder}
-            value={newLabel}
+            value={draft.newLabel}
             maxLength={160}
             onChange={(e) => setDraft((current) => ({ ...current, newLabel: e.target.value }))}
           />
           <button
             className="icon-button"
-            disabled={!newLabel.trim() || wheel.options.length === 10000}
+            disabled={!draft.newLabel.trim() || wheel.options.length === 10000}
             aria-label={t.add}
           >
             <Plus size={20} />

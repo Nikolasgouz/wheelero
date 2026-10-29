@@ -26,7 +26,7 @@ it('shares Unicode and settings in a fragment without history and rejects oversi
     ...wheel.options[0],
     id: crypto.randomUUID(),
   }))
-  expect(() => createShareLink(wheel)).toThrow('Export JSON')
+  expect(() => createShareLink(wheel)).toThrow('too large for a share link')
 })
 
 describe('browser random selection', () => {

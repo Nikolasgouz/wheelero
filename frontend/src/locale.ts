@@ -64,7 +64,7 @@ export function setLanguage(next: Language) {
   for (const listener of listeners) listener()
 }
 
-// English is the source language; asset names and editorial copy may remain English.
+// English is the source language. Translate public copy; preserve user-entered wheel data.
 export function translate(text: string): string {
   return catalogs[language][text] ?? text
 }

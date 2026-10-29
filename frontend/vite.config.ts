@@ -7,6 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { generatePages } from './scripts/pages'
 
 export default defineConfig({
+  envDir: '..',
   appType: 'mpa',
   plugins: [
     react(),

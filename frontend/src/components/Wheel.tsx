@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from 'react'
 import { freezeWheel } from '../lib/motion'
 import { indexAtPointer, sectorPath } from '../lib/geometry'
 import { sectorColors, textColor } from '../lib/presentation'
@@ -28,8 +28,31 @@ export function Wheel({
   onSpin: () => void
 }) {
   const pointer = useRef<HTMLDivElement>(null)
+  const spinButton = useRef<HTMLButtonElement>(null)
+  const spinLabel = spinning ? t.spinning : t.spin
   const count = options.length
   const colors = useMemo(() => sectorColors(count, config.palette), [count, config.palette])
+  useLayoutEffect(() => {
+    const button = spinButton.current!
+    const label = button.querySelector('span')!
+    const fit = () => {
+      label.style.fontSize = ''
+      let size = parseFloat(getComputedStyle(label).fontSize)
+      const height = Math.min(button.clientWidth, button.clientHeight) * 0.68
+      while (label.scrollHeight > height && size > 1) {
+        size -= 0.5
+        label.style.fontSize = `${size}px`
+      }
+    }
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(button)
+    document.fonts.addEventListener('loadingdone', fit)
+    return () => {
+      observer.disconnect()
+      document.fonts.removeEventListener('loadingdone', fit)
+    }
+  }, [spinLabel])
   useEffect(() => {
     if (!idle) return
     const node = svg.current!
@@ -63,14 +86,6 @@ export function Wheel({
   }, [spinning, config.pointer_changes, count, colors, svg])
   return (
     <div className={`wheel-stage ${spinning ? 'is-spinning' : ''}`}>
-      <span className="orbit-dot dot-one" />
-      <span className="orbit-dot dot-two" />
-      <span className="little-star star-one" aria-hidden="true">
-        ✧
-      </span>
-      <span className="little-star star-two" aria-hidden="true">
-        ✦
-      </span>
       <div
         ref={pointer}
         className="wheel-pointer"
@@ -173,12 +188,13 @@ export function Wheel({
           })}
         </svg>
         <button
+          ref={spinButton}
           className="wheel-spin-control"
           aria-label={t.spin}
           disabled={!canSpin}
           onClick={onSpin}
         >
-          <span>{spinning ? t.spinning : t.spin}</span>
+          <span>{spinLabel}</span>
         </button>
       </div>
     </div>

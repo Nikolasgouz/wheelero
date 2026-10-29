@@ -7,12 +7,10 @@ import { ImagePicker } from './ImagePicker'
 
 export function Customize({
   value,
-  muted,
   close,
   save,
 }: {
   value: Customization
-  muted: boolean
   close: () => void
   save: (value: Customization) => Promise<void>
 }) {
@@ -99,7 +97,7 @@ export function Customize({
         <button
           type="button"
           className="secondary"
-          disabled={muted || draft[key] === 'none'}
+          disabled={draft[key] === 'none'}
           onClick={() => {
             preview.current()
             preview.current = playSound(
@@ -158,7 +156,6 @@ export function Customize({
             </button>
           ))}
         </div>
-        {muted && <p className="muted">{ct.muted}</p>}
         <form
           aria-busy={saving}
           onSubmit={(e) => {
@@ -194,7 +191,6 @@ export function Customize({
                     {check('slow_spin', ct.slow)}
                     {check('show_title', ct.showTitle)}
                     {range('max_names', ct.maxNames, 4, 1000)}
-                    <p className="muted">{ct.fairness}</p>
                   </div>
                 </>
               )}

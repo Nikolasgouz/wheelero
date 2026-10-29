@@ -1,11 +1,12 @@
-import { Palette, FolderHeart, Repeat2, FileDown, Share2, WifiOff } from 'lucide-react'
+import { Palette, LayoutGrid, Repeat2, FileDown, Share2, WifiOff } from 'lucide-react'
 import { t } from '../i18n'
+import { getLanguage } from '../locale'
 
-const featureIcons = [Palette, FolderHeart, Repeat2, FileDown, Share2, WifiOff]
+const featureIcons = [Palette, LayoutGrid, Repeat2, FileDown, Share2, WifiOff]
 
 export function HomeInfo() {
   return (
-    <div className="home-info" lang="en">
+    <div className="home-info" lang={getLanguage()}>
       <section aria-labelledby="about-title">
         <header className="info-heading">
           <p className="info-eyebrow">{t.about.eyebrow}</p>
@@ -35,7 +36,7 @@ export function HomeInfo() {
           ))}
         </ol>
       </section>
-      <section aria-labelledby="features-title">
+      <section aria-labelledby="features-title" lang={getLanguage()}>
         <header className="info-heading">
           <h2 id="features-title">{t.about.featuresTitle}</h2>
           <p>{t.about.featuresIntro}</p>

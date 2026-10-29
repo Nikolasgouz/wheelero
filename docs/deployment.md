@@ -132,14 +132,18 @@ https://fuzzy-market-model-demonstration.trycloudflare.com (see PROJECT_CONTEXT 
 
 Wheels belong to each browser's IndexedDB. User JSON export/import is the backup and
 device/domain transfer mechanism. IndexedDB v10 preserves a recovery record when upgrading
-old installations. Persistent storage requests reduce eviction risk when granted but do
-not prevent user deletion. No new server backups of names are needed or performed.
+old installations. The storage-permission request UI has been removed. Browser eviction
+or clearing data can remove local wheels; keep JSON backups. No server backups of names
+are needed or performed.
 
 Historical backend/SQLite files are untouched. scripts/database.py remains available for
 consistent historical backup/restore into a new file, never over a live database. Existing
 server-only links will not resolve in the static app; ask their author for a JSON/new link.
 
-Remaining publication details: add real operator identity/privacy contact to About/Privacy.
+Remaining publication details: add the real operator identity when supplied. The support
+recipient is no longer in browser assets. Contact uses verified Formspree form xljjlgrl.
+Set CONTACT_FORM_ID=xljjlgrl as a GitHub repository variable before a future authorized
+deployment. Real local-preview delivery was verified. This change is not deployed.
 The privacy text identifies GitHub Pages hosting. Canonical URLs, 404, sharing and offline
 reload have been verified live; installation on physical devices remains to be checked.
 Browser data does not transfer automatically between domains.

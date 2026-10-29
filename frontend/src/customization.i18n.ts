@@ -107,12 +107,6 @@ function messages() {
     previous: translate('Previous'),
     next: translate('Next'),
     legend: translate('Names on the wheel'),
-    fairness: translate(
-      'Every active entry has an equal chance. Hiding names or duplicates does not remove entries.',
-    ),
-    muted: translate(
-      'Global mute is on. Use the sound icon on the Wheel screen to enable sound and previews.',
-    ),
     badImage: translate('Choose a PNG, JPEG or WebP image up to 10 MB.'),
     bigImage: translate('This image is too large. Try a smaller one.'),
     bigWheel: translate('This wheel exceeds 8 MB. Remove or resize some images.'),

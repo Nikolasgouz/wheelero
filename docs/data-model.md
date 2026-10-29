@@ -1,6 +1,6 @@
 # Current browser data model
 
-IndexedDB database name: gyrna (stable to preserve existing data), schema version **12**.
+IndexedDB database name: gyrna (stable to preserve existing data), schema version **14**.
 Object stores:
 
 - state/current: version-1 SavedState.
@@ -10,7 +10,7 @@ Object stores:
 
 SavedState contains wheels, active wheel ID, tool_wheels route mappings, scheduled removals
 and removed-entry snapshots with their original positions. Wheels contain ID/title, ordered
-entries, result history, no_repeat, customization version 2 and updated_at. Entries carry
+entries, result history, no_repeat, customization version 2, updated_at and the local-only saved boolean. Entries carry
 UUID/label/active/image; results retain UUID, chosen entry ID/label/index/count/date/source.
 
 Each active entry has equal probability. Duplicate labels remain separate UUID entries.
@@ -48,3 +48,38 @@ customization, with results fixed to []. It excludes private wheel IDs, history 
 wheels. Link content is readable by its holder and cannot be recalled.
 
 Historical SQLAlchemy models/Alembic migrations remain under backend/ for recovery only.
+
+## Explicit library save (v13)
+
+New/default/template wheels start with saved=false. Their edits are still written to
+IndexedDB for draft recovery, but Open and its JSON export list only saved=true wheels.
+Save matches the exact saved title after the UI trims surrounding whitespace. It replaces
+that record's contents while retaining its ID; an unused name creates a new saved record.
+If old data has duplicate saved names, prefer the current saved record when it matches,
+otherwise the last matching record in storage. Other duplicates are not deleted.
+Saving a live starter/import/copy under a new name preserves the old saved record.
+After Save, editing continues in a working draft; opening a library item also creates a
+draft. Cancel leaves data untouched. Writes are atomic under Web Locks/IndexedDB.
+Entries, settings and history are copied together. No schema or backup-format change.
+Copies, imported backups and explicit shared-copy saves are already deliberate storage
+actions and enter the library. Empty Open lists show a translated empty state, never
+example cards. Deleting the last saved wheel leaves no library card for a fallback draft.
+
+The v13 upgrade preserves all previous wheels/settings/IDs/results. Because pre-v13 had
+no explicit-save flag, existing records become saved=true; no previous lists are hidden
+or deleted. V10/v11 recovery snapshots and earlier migration logic are preserved. Older
+unsaved drafts remain in local storage when starting another wheel; no automatic deletion
+is introduced. JSON/share format stays version 1 and does not expose the saved flag.
+
+## Starter library (v14)
+
+Fresh installations start with three real saved records: the main wheel with the original
+six names, plus two empty wheels (0 entries, 0 results). Empty titles use the current
+language's Wheel label plus 2/3. All have independent IDs and normal edit/copy/delete support.
+The v14 upgrade preserves all records and only fills libraries with fewer than three saved
+wheels. If none are saved, it enrolls the active wheel first without changing its contents.
+It does not trim larger libraries. Seeding happens once, so deletion survives refresh.
+Later New/template wheels remain drafts until Save; import/copy behavior is unchanged.
+
+Standard JSON file import/export controls were removed on 2026-10-29. Historical backup
+schemas and legacy recovery data remain intact; shared links still validate wheel payloads.

@@ -1,35 +1,36 @@
-import { Copy, Download, Pencil, Plus, Trash2, Upload } from 'lucide-react'
-import { useRef } from 'react'
+import { Copy, Pencil, Plus, Trash2 } from 'lucide-react'
 import { t } from '../i18n'
-import { backupSchema, type LocalWheel } from '../types'
+import type { LocalWheel } from '../types'
 import { addWheels, deleteWheel, forkWheel, selectWheel } from '../state/store'
 import { makeWheel } from '../state/wheel'
+import { templates } from '../state/templates'
 
 export function Library({
   wheels,
   active,
   run,
   openEditor,
+  openWheel,
 }: {
   wheels: LocalWheel[]
   active: string
   run: (task: () => Promise<unknown>) => void
   openEditor: () => void
+  openWheel: () => void
 }) {
-  const file = useRef<HTMLInputElement>(null)
   return (
     <section className="library-screen">
       <div className="section-heading">
         <div>
           <h2>{t.library}</h2>
-          <p>{t.autoSave}</p>
+          <p>{t.savedWheelsHint}</p>
         </div>
         <button
           className="primary"
           onClick={() =>
             run(async () => {
-              await addWheels([makeWheel(t.newTitle, [])])
-              openEditor()
+              await addWheels([makeWheel(templates[0].title, templates[0].options)])
+              openWheel()
             })
           }
         >
@@ -37,6 +38,7 @@ export function Library({
           {t.newWheel}
         </button>
       </div>
+      {!wheels.length && <p className="card empty-library">{t.noSavedWheels}</p>}
       <div className="library-grid">
         {wheels.map((wheel) => (
           <article
@@ -48,7 +50,7 @@ export function Library({
               onClick={() =>
                 run(async () => {
                   await selectWheel(wheel.id)
-                  openEditor()
+                  openWheel()
                 })
               }
             >
@@ -96,73 +98,6 @@ export function Library({
             </div>
           </article>
         ))}
-      </div>
-      <div className="backup-actions">
-        <button
-          className="secondary"
-          onClick={() => {
-            const url = URL.createObjectURL(
-              new Blob(
-                [
-                  JSON.stringify(
-                    {
-                      format: 'gyrna',
-                      version: 1,
-                      wheels: wheels.map(
-                        ({ title, no_repeat, customization, options, results }) => ({
-                          title,
-                          no_repeat,
-                          customization,
-                          options,
-                          results,
-                        }),
-                      ),
-                    },
-                    null,
-                    2,
-                  ),
-                ],
-                { type: 'application/json' },
-              ),
-            )
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `wheelero-${new Date().toISOString().slice(0, 10)}.json`
-            a.click()
-            URL.revokeObjectURL(url)
-          }}
-        >
-          <Download size={17} />
-          {t.export}
-        </button>
-        <button className="secondary" onClick={() => file.current!.click()}>
-          <Upload size={17} />
-          {t.import}
-        </button>
-        <input
-          ref={file}
-          type="file"
-          accept="application/json,.json"
-          hidden
-          onChange={(e) => {
-            const selected = e.target.files?.[0]
-            if (!selected) return
-            e.target.value = ''
-            run(async () => {
-              if (selected.size > 100_000_000) throw new Error(t.fileTooLarge)
-              let json: unknown
-              try {
-                json = JSON.parse(await selected.text())
-              } catch (error) {
-                if (error instanceof SyntaxError) throw new Error(t.importInvalid)
-                throw error
-              }
-              const data = backupSchema.safeParse(json)
-              if (!data.success) throw new Error(t.importInvalid)
-              await addWheels(data.data.wheels.map(forkWheel))
-            })
-          }}
-        />
       </div>
     </section>
   )

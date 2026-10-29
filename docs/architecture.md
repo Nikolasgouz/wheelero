@@ -5,7 +5,7 @@ backend. Python/FastAPI/SQLite code remains in backend/ solely as historical sou
 
 ## Data and drawing
 
-UI -> state/store.ts -> IndexedDB v12. The version-1 saved record holds wheels, current ID,
+UI -> state/store.ts -> IndexedDB v14. The version-1 saved record holds wheels, current ID,
 tool-page mappings, timed removals and removed-entry restoration data. No API client remains.
 Templates are bundled. localStorage stores preferences/editor drafts, not the wheel database.
 
@@ -29,6 +29,20 @@ export for larger wheels/images. Old ?share= server links show an explanatory me
 
 ## Static pages and PWA
 
+SiteFooter uses six information links declared in site.ts/footerGroups, with no Tools
+disclosure. It receives SitePath to mark the
+active route. Links are grouped into Help & information and Privacy & terms. SiteDetails renders the information map for
+/how-to-use, /about, /contact, /privacy, /terms and /cookies. FAQ answers use native details/summary.
+Information pages use a separate intro/content style, with a return-to-wheel link.
+The adjacent PwaControls uses Install app for native prompts and fallback instructions.
+ContactForm sends an explicit visitor submission to Formspree only when configured with
+VITE_CONTACT_FORM_ID. This is independent of local wheel storage. No recipient address
+is bundled. Root envDir lets Vite and prerendering share the build setting. The existing
+Pages workflow reads repository variable CONTACT_FORM_ID for a future authorized build.
+Its existing waiting/activated-worker condition gates Save & update. No update is forced
+by the footer changes. All labels use locale catalogs. Editorial copy avoids semicolons
+without rewriting user-entered strings or changing stored data.
+
 App.tsx groups the intro and tool in wheel-viewport. On desktop, its flex layout assigns
 the remaining viewport height to workspace. Equal outer grid columns keep the wheel
 centered on the screen while Entries occupies the right column. wheel-area is a size
@@ -39,7 +53,7 @@ The sidebar scrolls internally, title ellipsis retains full accessible text/titl
 expanded legends consume space before calculating the wheel's available height.
 
 src/site.ts and SiteContent.tsx supply shared public content. scripts/pages.tsx pre-renders
-seven routes and 404/launch HTML, robots and sitemap before Workbox precaching. PUBLIC_URL
+eleven routes and 404/launch HTML, robots and sitemap before Workbox precaching. PUBLIC_URL
 and PUBLIC_INDEXING are build-time inputs. There is no runtime metadata templating service.
 
 Vite preview serves real HTML routes and 404s with no API proxy. Production Caddy serves
@@ -58,7 +72,11 @@ action even when activation has already completed. No IndexedDB/localStorage dat
 
 ## Storage persistence
 
-IndexedDB quota depends on browser/device. navigator.storage.persist() is requested only
-when the user presses Protect local storage; browser refusal is explained honestly.
-Neither persistent storage nor PWA installation replaces JSON backups. Data is per-origin
+IndexedDB quota depends on browser/device. The explicit persistent-storage request UI
+was removed with the storage-information panel. PWA installation does not prevent browser storage deletion. Standard JSON import/export
+controls were removed; legacy-data recovery remains available when applicable. Data is per-origin
 and does not automatically move from a temporary preview URL to wheelero.com.
+
+SaveWheel submits a named save to store.saveWheel in a single locked transaction.
+App filters the Open library by LocalWheel.saved; draft autosave remains independent of
+library visibility. Import/copy enrollment and migration behavior are in data-model.md.

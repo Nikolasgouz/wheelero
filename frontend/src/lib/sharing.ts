@@ -22,10 +22,7 @@ export function createShareLink(wheel: Wheel): string {
     },
   })
   const bytes = new TextEncoder().encode(json)
-  if (bytes.length > maxLength * 0.75)
-    throw new Error(
-      'This wheel is too large for a share link. Use Export JSON in My wheels to share its images and entries as a file.',
-    )
+  if (bytes.length > maxLength * 0.75) throw new Error('This wheel is too large for a share link.')
   const encoded = btoa(String.fromCharCode(...bytes))
     .replaceAll('+', '-')
     .replaceAll('/', '_')
@@ -34,8 +31,7 @@ export function createShareLink(wheel: Wheel): string {
 }
 
 export function readSharedWheel(fragment: string) {
-  if (fragment.length > maxLength)
-    throw new Error('This share link is too large. Import a JSON file instead.')
+  if (fragment.length > maxLength) throw new Error('This share link is too large.')
   const bytes = Uint8Array.from(atob(fragment.replaceAll('-', '+').replaceAll('_', '/')), (char) =>
     char.charCodeAt(0),
   )

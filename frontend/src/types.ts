@@ -50,7 +50,7 @@ export type Wheel = z.infer<typeof backupWheelSchema> & {
   id: string
   updated_at: string
 }
-export type LocalWheel = Wheel
+export type LocalWheel = Wheel & { saved: boolean }
 export type Template = {
   id: string
   title: string

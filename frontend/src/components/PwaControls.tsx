@@ -102,7 +102,8 @@ export function PwaControls({
           </button>
         ) : (
           <button className="text-button" onClick={() => report(t.installInstructions)}>
-            {t.installHelp}
+            <Download size={15} />
+            {t.install}
           </button>
         ))}
     </div>

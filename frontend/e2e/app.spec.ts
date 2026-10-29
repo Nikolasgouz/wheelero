@@ -9,12 +9,13 @@ async function ready(page: Page) {
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
 
-test('edit, spin, pointer agreement, refresh persistence, JSON backup and library', async ({
-  page,
-}) => {
+test('edit, spin, pointer agreement, refresh persistence and library', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') })
   await ready(page)
-  await expect(page.locator('.wheel-tools button')).toHaveCount(3)
+  await expect(page.locator('.wheel-tools button')).toHaveCount(2)
+  expect((await readSavedState(page)).wheels.map((wheel) => wheel.options.length)).toEqual([
+    6, 0, 0,
+  ])
   await expect(page.getByRole('button', { name: 'Pause idle rotation' })).toHaveCount(0)
   await expect
     .poll(() =>
@@ -26,48 +27,48 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
     )
     .toBe(true)
   await page.locator('.sidebar-actions').getByRole('button', { name: 'Sort', exact: true }).click()
-  expect(
-    await page
-      .locator('.sidebar-entry input')
-      .evaluateAll((inputs) => inputs.map((input) => (input as HTMLInputElement).value)),
-  ).toEqual(['Alex', 'Emma', 'James', 'Noah', 'Olivia', 'Sofia'])
+  const entries = page.getByRole('textbox', { name: 'Entries', exact: true })
+  await expect(entries).toHaveValue('Alex\nEmma\nJames\nNoah\nOlivia\nSofia')
   await page
     .locator('.sidebar-actions')
     .getByRole('button', { name: 'Shuffle', exact: true })
     .click()
-  expect(
-    await page
-      .locator('.sidebar-entry input')
-      .evaluateAll((inputs) => inputs.map((input) => (input as HTMLInputElement).value).sort()),
-  ).toEqual(['Alex', 'Emma', 'James', 'Noah', 'Olivia', 'Sofia'])
+  expect((await entries.inputValue()).split('\n').sort()).toEqual([
+    'Alex',
+    'Emma',
+    'James',
+    'Noah',
+    'Olivia',
+    'Sofia',
+  ])
   await page.locator('.sidebar-actions').getByRole('button', { name: 'Sort', exact: true }).click()
-  await page.getByRole('button', { name: 'Edit name: Alex', exact: true }).click()
-  const firstEntry = page.getByLabel('Entry 1', { exact: true })
-  await expect(firstEntry).toBeFocused()
-  expect(
-    await firstEntry.evaluate((input: HTMLInputElement) =>
-      input.value.slice(input.selectionStart!, input.selectionEnd!),
-    ),
-  ).toBe('Alex')
+  const beforeEdit = await readSavedState(page)
+  await entries.focus()
+  await entries.evaluate((input: HTMLTextAreaElement) => input.setSelectionRange(0, 4))
   await page.keyboard.insertText('Πίτσα παρέας 🍕')
-  await firstEntry.press('Enter')
-  await expect(firstEntry).not.toBeFocused()
-  await page.getByLabel('New entry…', { exact: true }).fill('Παγωτό 🍦')
-  await page.getByRole('button', { name: 'Add entry', exact: true }).click()
-  await expect(page.locator('.sidebar-entry')).toHaveCount(7)
-  await page.getByRole('button', { name: 'Delete entry: Παγωτό 🍦', exact: true }).click()
-  await expect(page.locator('.sidebar-entry')).toHaveCount(6)
+  await entries.press('Control+End')
+  await entries.press('Enter')
+  await page.keyboard.insertText('Παγωτό 🍦')
+  await expect(page.locator('#sidebar-tab-entries .count-badge')).toHaveText('7')
+  await entries.press('Home')
+  await entries.press('Shift+End')
+  await entries.press('Backspace')
+  await entries.press('Backspace')
+  await expect(page.locator('#sidebar-tab-entries .count-badge')).toHaveText('6')
+  await expect
+    .poll(async () => (await readSavedState(page)).wheels[0].options.map((option) => option.id))
+    .toEqual(beforeEdit.wheels[0].options.map((option) => option.id))
   await showScreen(page, 'options')
   await page.getByLabel('Wheel title', { exact: true }).fill('Η παρέα μας 🎲')
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'wheel')
   await page.clock.pauseAt(new Date('2026-01-01T01:00:00Z'))
   await page.getByRole('button', { name: 'Click to spin', exact: true }).focus()
   await page.keyboard.press('Enter')
-  await expect(page.getByLabel('Entry 1', { exact: true })).toBeDisabled()
-  for (const name of ['Customize', 'Unmute sound', 'Presentation mode']) {
-    const button = page.locator('.wheel-tools').getByRole('button', { name, exact: true })
+  await expect(entries).toBeDisabled()
+  for (const name of ['Customise', 'Save', 'Share', 'Unmute sound', 'Presentation mode']) {
+    const button = page.getByRole('button', { name, exact: true })
     await expect(button).toBeDisabled()
     await expect(button).toHaveCSS('cursor', 'not-allowed')
     await button.evaluate((node: HTMLButtonElement) => node.click())
@@ -132,22 +133,14 @@ test('edit, spin, pointer agreement, refresh persistence, JSON backup and librar
   )
   await expect(page.locator('#sidebar-results .history li')).toBeVisible()
   await page.reload()
-  await expect(page.getByLabel('Entry 1', { exact: true })).toHaveValue('Πίτσα παρέας 🍕')
+  await expect(entries).toHaveValue('Πίτσα παρέας 🍕\nEmma\nJames\nNoah\nOlivia\nSofia')
   await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue('Η παρέα μας 🎲')
   await expect(page.locator('.history li')).toHaveCount(1)
-  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
-  await expect(page.locator('.wheel-card')).toHaveCount(1)
-  const download = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export JSON' }).click()
-  expect((await download).suggestedFilename()).toMatch(/wheelero.*\.json/)
-  await page.getByRole('button', { name: 'Copy: Η παρέα μας 🎲', exact: true }).click()
-  await expect(page.locator('.wheel-card')).toHaveCount(2)
-  await page.locator('input[type=file]').setInputFiles({
-    name: 'bad.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from('{"version":9}'),
-  })
-  await expect(page.getByRole('alert')).toContainText('Invalid backup')
+  await page.getByRole('button', { name: 'Open', exact: true }).first().click()
+  await expect(page.locator('.wheel-card')).toHaveCount(3)
+  await expect(page.getByRole('button', { name: /Export JSON|Import JSON/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Copy: Η παρέα μας 🎲', exact: true }).first().click()
+  await expect(page.locator('.wheel-card')).toHaveCount(4)
 })
 
 test('share fragment copies a wheel without a server or revocation', async ({ page, browser }) => {
@@ -196,7 +189,7 @@ test('production service worker: offline reload, edit, draw and local persistenc
   await showScreen(page, 'options')
   await expect(page.getByText('Saved', { exact: true })).toBeVisible()
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   const stored = (await readSavedState(page)).wheels[0]
   expect(stored.results).toHaveLength(1)
   expect(stored.results[0].source).toBe('offline')
@@ -210,8 +203,8 @@ test('two tabs preserve edits to different fields', async ({ page, context }) =>
   await showScreen(other, 'options')
   await page.getByLabel('Wheel title', { exact: true }).fill('Shared local title')
   await other.getByLabel('Option 1', { exact: true }).fill('Edited in another tab')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await other.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
+  await other.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   const stored = (await readSavedState(page)).wheels[0]
   expect(stored.title).toBe('Shared local title')
   expect(stored.options[0].label).toBe('Edited in another tab')
@@ -220,8 +213,8 @@ test('two tabs preserve edits to different fields', async ({ page, context }) =>
 
 test('bulk blanks, duplicate removal, 200 entries and no-repeat exhaustion', async ({ page }) => {
   await ready(page)
-  await showScreen(page, 'options')
-  await page.getByRole('button', { name: '🤔 Yes or no?', exact: false }).click()
+  await page.getByRole('button', { name: 'Templates', exact: true }).click()
+  await page.getByRole('button', { name: /Yes or no\?/ }).click()
   await showScreen(page, 'options')
   await page.getByRole('switch', { name: 'No repeats' }).check()
   for (let i = 0; i < 2; i++) {
@@ -234,18 +227,20 @@ test('bulk blanks, duplicate removal, 200 entries and no-repeat exhaustion', asy
   await page.getByRole('button', { name: 'New round', exact: true }).first().click()
   await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
+  await showScreen(page, 'wheel')
+  await page.getByRole('tab', { name: 'Entries', exact: true }).click()
+  const entries = page.getByRole('textbox', { name: 'Entries', exact: true })
+  await entries.fill((await entries.inputValue()) + '\nAnna\n\nAnna\n')
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Add multiple entries' }).click()
-  await page.getByLabel('One entry per line').fill('\nAnna\n\nAnna\n')
-  await page.getByRole('button', { name: 'Add these entries' }).click()
   await page.getByRole('button', { name: 'Remove duplicates' }).click()
   await expect(page.locator('.option-row')).toHaveCount(3)
+  await showScreen(page, 'wheel')
+  await entries.fill(
+    (await entries.inputValue()) +
+      '\n' +
+      Array.from({ length: 197 }, (_, i) => `Entry ${i}`).join('\n'),
+  )
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Add multiple entries' }).click()
-  await page
-    .getByLabel('One entry per line')
-    .fill(Array.from({ length: 197 }, (_, i) => `Όνομα ${i}`).join('\n'))
-  await page.getByRole('button', { name: 'Add these entries' }).click()
   await expect(page.locator('.option-row')).toHaveCount(200)
   await expect(page.locator('.wheel-svg text')).toHaveCount(200)
   await expect(page.locator('.wheel-legend li')).toHaveCount(200)
@@ -264,11 +259,8 @@ for (const width of [360, 390, 768, 1440]) {
       'Sort',
       'Clear',
     ])
-    await expect(page.locator('.wheel-tools button').first()).toHaveAttribute(
-      'aria-label',
-      'Customize',
-    )
-    await page.getByRole('button', { name: 'Customize', exact: true }).click()
+    await expect(page.locator('.wheel-tools button')).toHaveCount(2)
+    await page.getByRole('button', { name: 'Customise', exact: true }).click()
     await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
     await page.keyboard.press('Escape')
     await expect(page.locator('.templates-section')).toBeHidden()
@@ -326,7 +318,7 @@ for (const width of [360, 390, 768, 1440]) {
       await expect(page.locator('.home-info')).toHaveCount(0)
       await expect(page.getByLabel('Wheel title', { exact: true })).toBeVisible()
       await expect(page.locator('.spinner-panel')).toBeHidden()
-      await page.getByRole('button', { name: 'Customize', exact: true }).click()
+      await page.getByRole('button', { name: 'Customise', exact: true }).click()
       await expect(page.getByRole('dialog').getByRole('tab')).toHaveCount(3)
       await page.keyboard.press('Escape')
       await page.screenshot({ path: `../artifacts/editor-${width}.png`, fullPage: true })

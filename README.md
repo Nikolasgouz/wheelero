@@ -1,16 +1,56 @@
 # Wheelero
 
+The footer groups its six information links into
+**Help & information** and **Privacy & terms**. **Help & FAQ**, **About Wheelero**,
+**Contact & support**, **Privacy Policy**, **Terms of Use** and **Cookie settings** open
+dedicated pages. The current page is highlighted. **Install app** remains available.
+Help answers expand individually, and information pages include a return-to-wheel link.
+Contact contains a reply-email field and message box. The support inbox address is not
+included in the website. Submission uses a Formspree form ID configured as
+`VITE_CONTACT_FORM_ID` in the root `.env` or build environment. **Local sending is active
+and verified** with form ID `xljjlgrl`. The recipient is configured privately at Formspree.
+The connected Gmail inbox received the real production-preview test. This change has not
+been published to wheelero.com. Future deployment needs GitHub variable `CONTACT_FORM_ID`.
+See [contact setup](docs/contact-form.md) for the activation and delivery verification steps.
+Cookie settings explains actual browser storage, without unused consent switches.
+See [public pages](docs/public-pages.md) for routes and publication limitations.
+Install app opens the browser's installation prompt when
+available or shows installation instructions. **Save & update** appears only when a new
+version has been detected. Interface labels follow the selected language.
+
 **One spin, one decision.** A static React/TypeScript/Bun/Vite website and offline PWA.
-The current application has **no backend, API calls, server sessions or SQLite dependency**.
+The wheel has **no backend, server sessions or SQLite dependency**. Wheel data stays local.
+The optional contact form is the only explicit third-party submission flow.
 
 Live website: **https://wheelero.com** (GitHub Pages). HTTPS, local draws/sharing and
 offline use were verified on the public domain on 2026-10-26.
 
 The 2026-10-27 release reverts the entire usability/Classroom commit to the preceding
-interface and translation coverage. Existing classes remain as ordinary saved wheels.
+interface. Existing classes remain as ordinary saved wheels. The latest local copy refresh
+adds fourteen-language public content without restoring Classroom.
 The subsequent desktop layout keeps the wheel centered on the screen, with Entries on the
 right. At normal desktop sizes the whole tool fits above the fold; large lists scroll inside
 their panel. Narrow screens and high zoom retain natural page scrolling.
+The local homepage has a directly editable wheel title on the left on desktop (above the
+wheel on mobile). The freed desktop title row lets the centered wheel grow, with a taller
+Entries panel. The marketing H1 stays visually hidden; the wheel's decorative
+stars and dots have been removed. These latest edits are awaiting user approval to commit.
+Entries now uses a single text area: type or paste one name per line, press Enter to add
+another, and edit/delete text directly. Shuffle, Sort and Clear remain above it; More
+options opens the detailed editor; bulk paste is available directly in Entries, without
+a separate Add multiple entries control. See [Entries editor](docs/entries.md).
+The homepage opens directly on a large centered wheel. Its own title appears above it;
+the introductory heading stays hidden. Names remain editable in Save and the detailed editor. The center
+spin label wraps inside its button in all supported menu languages.
+The top menu offers Customise, New, Save, Share, Open (saved wheels), and Templates.
+New starts a draft with the original six names and default settings. Save names the wheel
+and updates the saved wheel with that name. A new name creates an independent copy in Open,
+keeping the previous wheel. Templates also start drafts.
+Open initially contains three saved wheels: Pick a name with the six default names,
+plus Wheel 2 and Wheel 3 with zero entries/results. These are editable, real stored wheels.
+Later New/template drafts appear in Open only after Save. Imported/copied wheels and
+older lists remain available. Deleting a starter wheel does not recreate it on refresh.
+Drafts recover after refresh but stay out of Open. Opening a saved copy creates a working draft, so later edits preserve the saved version.
 IndexedDB v12 safely preserves data from the intervening v11 release; no database reset.
 
 ## Local storage
@@ -18,27 +58,33 @@ IndexedDB v12 safely preserves data from the intervening v11 release; no databas
 Wheels, images, customization, results and removed entries live in **IndexedDB** on the
 user's device. This offers substantially more capacity than localStorage; the actual quota
 depends on the browser/device. localStorage holds small preferences and editor drafts.
-My wheels > Protect local storage requests persistent storage where supported. The browser
-may decline; even a grant cannot protect data from the user clearing browser storage.
+Open shows saved wheels directly, without the former storage-information panel.
+Clearing browser storage deletes local wheels. JSON import/export controls are no longer offered.
 
-Old browser databases migrate to IndexedDB v12. The migration retains a recovery copy of
+Old browser databases migrate to IndexedDB v14. The migration retains a recovery copy of
 the previous record. No names are uploaded. Existing server-only records are not fetched
 or erased. The historical backend and ignored SQLite files remain on disk for recovery.
 
-Use **Export JSON** for backups or moving between devices/domains. Import validates the
-file and preserves customization/images/history. TXT result export works in Notepad.
-Do not clear browser site data without a backup.
+TXT result export remains available and works in Notepad. Standard wheel JSON import/export
+was removed at the user's request; migration-recovery export is retained only for old data.
 
 ## Features
+
+Home explanations, instructions, features, About/Privacy, tool introductions/controls,
+footer links and template display names follow the selected language (14 languages).
+Copy describes the current Save/Open, in-place Entries editing, TXT result export, local
+share links and explicit sound previews. User-entered wheel data is never translated.
+Default pre-rendered SEO remains English; client title/description follow the language.
 
 - 1-10,000 entries per wheel, inline editing, Excel/line paste, shuffle/sort, duplicates,
   templates, saved wheels, no-repeat rounds, result history and restoration of winners.
 - Unbiased Web Crypto selection, pointer/result agreement, optional sound, themes/images,
-  customizable duration, fullscreen, keyboard support and reduced motion.
-- Name picker, yes/no, number-range and balanced-team tools, plus About, Privacy and FAQ.
+  customizable duration, fullscreen, keyboard support and reduced motion. Customize Play
+  previews bypass the wheel mute switch; selected volume and No sound still apply.
+- Name picker, yes/no, number-range and balanced-team tools, plus About and Privacy. The Questions & answers section has been removed.
 - Share a copy in a URL fragment, without uploading it. History/other wheels are excluded.
-  Links cannot be revoked. Wheels exceeding the 16,000-character payload limit use JSON
-  files instead. Some messaging apps may truncate long links; JSON is the reliable option.
+  Links cannot be revoked. Wheels exceeding the 16,000-character payload limit cannot be
+  shared by link. Some messaging apps may truncate long links.
 - Pre-rendered HTML, canonical/OG metadata, robots, sitemap, original icons/social image,
   actual 404 handling and installable/offline PWA.
 
@@ -136,7 +182,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/public-preview.ps1 -
 
 The temporary Cloudflare URL requires this PC awake/online. Its state is in ignored
 artifacts/public-preview.json. No database is created. Restarting the tunnel changes the
-origin; export JSON before moving between origins.
+origin; locally saved wheels do not move between origins.
 
 The `backend/` folder is historical and excluded from deployment. Its old tests and SQLite
 backup script are retained for recovery; they are not part of the current runtime checks.

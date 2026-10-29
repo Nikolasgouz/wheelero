@@ -1,3 +1,4 @@
+import { getLanguage, translate } from '../locale'
 import { useState } from 'react'
 import { parseEntries } from '../lib/entries'
 import { generateTeams } from '../lib/teams'
@@ -27,7 +28,7 @@ export function NumberRange({
           max < min ||
           max - min >= 10000
         ) {
-          setError('Use whole numbers and a range of 1–10,000 entries.')
+          setError(translate('Choose a whole-number range of up to 10,000 numbers.'))
           return
         }
         apply(Array.from({ length: max - min + 1 }, (_, index) => String(min + index)))
@@ -35,7 +36,7 @@ export function NumberRange({
       }}
     >
       <label>
-        Minimum
+        {translate('Minimum')}
         <input
           type="number"
           step="1"
@@ -45,7 +46,7 @@ export function NumberRange({
         />
       </label>
       <label>
-        Maximum
+        {translate('Maximum')}
         <input
           type="number"
           step="1"
@@ -55,7 +56,7 @@ export function NumberRange({
         />
       </label>
       <button className="secondary" disabled={disabled}>
-        Generate number wheel
+        {translate('Generate number wheel')}
       </button>
       {error && <p role="alert">{error}</p>}
     </form>
@@ -68,13 +69,13 @@ export function TeamGenerator() {
   const [teams, setTeams] = useState<string[][]>([])
   const [error, setError] = useState('')
   return (
-    <section className="team-tool card" lang="en">
+    <section className="team-tool card" lang={getLanguage()}>
       <form
         onSubmit={(event) => {
           event.preventDefault()
           const names = parseEntries(text)
           if (names.some((name) => name.length > 160)) {
-            setError('Names may contain up to 160 characters.')
+            setError(translate('Names may contain up to 160 characters.'))
             return
           }
           try {
@@ -82,11 +83,11 @@ export function TeamGenerator() {
             setError('')
           } catch (error) {
             if (!(error instanceof RangeError)) throw error
-            setError(error.message)
+            setError(translate(error.message))
           }
         }}
       >
-        <label htmlFor="team-names">Names — one per line or spreadsheet cell</label>
+        <label htmlFor="team-names">{translate('Names, one per line')}</label>
         <textarea
           id="team-names"
           rows={8}
@@ -97,7 +98,7 @@ export function TeamGenerator() {
             localStorage.setItem('wheelero-team-draft', event.target.value)
           }}
         />
-        <label htmlFor="team-count">Number of teams</label>
+        <label htmlFor="team-count">{translate('Number of teams')}</label>
         <input
           id="team-count"
           type="number"
@@ -107,13 +108,15 @@ export function TeamGenerator() {
           value={count}
           onChange={(e) => setCount(e.target.value)}
         />
-        <button className="primary">Generate teams</button>
+        <button className="primary">{translate('Generate teams')}</button>
         {error && <p role="alert">{error}</p>}
       </form>
       <div aria-live="polite" className="team-results">
         {teams.map((team, index) => (
           <section key={index}>
-            <h2>Team {index + 1}</h2>
+            <h2>
+              {translate('Team')} {index + 1}
+            </h2>
             <ul>
               {team.map((name, i) => (
                 <li key={i}>{name}</li>
@@ -131,7 +134,10 @@ export function TeamGenerator() {
                 [
                   '\uFEFF' +
                     teams
-                      .map((team, index) => `Team ${index + 1}\r\n${team.join('\r\n')}`)
+                      .map(
+                        (team, index) =>
+                          `${translate('Team')} ${index + 1}\r\n${team.join('\r\n')}`,
+                      )
                       .join('\r\n\r\n'),
                 ],
                 { type: 'text/plain;charset=utf-8' },
@@ -144,7 +150,7 @@ export function TeamGenerator() {
             URL.revokeObjectURL(url)
           }}
         >
-          Export teams
+          {translate('Export teams')}
         </button>
       )}
     </section>

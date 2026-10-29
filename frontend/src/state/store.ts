@@ -13,6 +13,7 @@ export function forkWheel(
 ): LocalWheel {
   return {
     ...makeWheel(wheel.title, []),
+    saved: true,
     options: wheel.options,
     no_repeat: wheel.no_repeat,
     customization: wheel.customization,
@@ -80,7 +81,13 @@ export async function initialize(path: string) {
       version: 1,
       tool_wheels: {},
       removed: [],
-      wheels: [first],
+      wheels: [
+        { ...first, saved: true },
+        ...[2, 3].map((number) => ({
+          ...makeWheel(`${t.wheel} ${number}`, []),
+          saved: true,
+        })),
+      ],
       active: first.id,
       removals: [],
     }
@@ -151,7 +158,41 @@ export async function addWheels(wheels: LocalWheel[]) {
 }
 export async function selectWheel(id: string) {
   await transaction((state) => {
-    state.active = id
+    const wheel = state.wheels.find((wheel) => wheel.id === id)
+    if (!wheel) throw new Error(t.wheelDeleted)
+    activateWheel(state, wheel)
+  })
+}
+function activateWheel(state: SavedState, wheel: LocalWheel) {
+  if (!wheel.saved) {
+    state.active = wheel.id
+    return
+  }
+  const draft = { ...structuredClone(wheel), id: crypto.randomUUID(), saved: false }
+  state.wheels.push(draft)
+  state.active = draft.id
+}
+export async function saveWheel(id: string, title: string) {
+  await transaction((state) => {
+    const wheel = state.wheels.find((wheel) => wheel.id === id)
+    if (!wheel) throw new Error(t.wheelDeleted)
+    const existing =
+      (wheel.saved && wheel.title === title ? wheel : undefined) ??
+      [...state.wheels].reverse().find((candidate) => candidate.saved && candidate.title === title)
+    const snapshot = {
+      ...structuredClone(wheel),
+      id: existing?.id ?? crypto.randomUUID(),
+      title,
+      updated_at: new Date().toISOString(),
+      saved: true,
+    }
+    if (existing) Object.assign(existing, snapshot)
+    else state.wheels.push(snapshot)
+    if (wheel.saved) activateWheel(state, snapshot)
+    else {
+      wheel.title = title
+      wheel.updated_at = snapshot.updated_at
+    }
   })
 }
 export async function deleteWheel(id: string) {
@@ -162,7 +203,7 @@ export async function deleteWheel(id: string) {
     for (const path of Object.keys(state.tool_wheels))
       if (state.tool_wheels[path] === id) delete state.tool_wheels[path]
     if (!state.wheels.length) state.wheels.push(makeWheel(t.newTitle, []))
-    if (state.active === id) state.active = state.wheels[0].id
+    if (state.active === id) activateWheel(state, state.wheels[0])
   })
 }
 export async function clearWheel(id: string, section: 'entries' | 'results') {

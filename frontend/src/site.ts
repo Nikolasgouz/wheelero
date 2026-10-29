@@ -1,155 +1,212 @@
+export const shareExplanation =
+  'The link contains a copy of the title, entries, images and settings. Results and other wheels are excluded. Anyone with the link can read it. Links cannot be revoked. Large wheels may not fit.'
+
 export const pages = {
   '/': {
     title: 'Wheelero – Random Name Picker & Spin the Wheel',
     heading: 'Spin the Wheel to Pick a Random Name',
     description:
-      'Pick a random name with a customizable wheel. Paste a list, spin, save your wheels and use Wheelero offline. No account needed.',
-    intro:
-      'One spin, one decision. Add your entries, make the wheel your own and let chance choose. Your lists stay on this device. Share a copy by link or JSON file.',
+      'Turn a list into a decision. Add names or choices, customise the wheel and click its center to pick a winner.',
     kind: 'wheel',
   },
   '/random-name-picker': {
     title: 'Random Name Picker – Paste a List & Pick a Winner | Wheelero',
     heading: 'Random Name Picker',
     description:
-      'Paste names from a list or spreadsheet, pick a random winner and remove winners without losing your original entries.',
+      'Paste names into Entries and spin. Use No repeats to give each entry one turn per round.',
     intro:
-      'Start with an empty name list. Paste one name per line or cells copied from Excel, then spin. Use No repeats for a round where everyone gets one turn.',
+      'Paste names into Entries and spin. Use No repeats to give each entry one turn per round.',
     kind: 'wheel',
   },
   '/yes-no-wheel': {
     title: 'Yes or No Wheel – A Simple Random Decision | Wheelero',
     heading: 'Yes or No Wheel',
-    description:
-      'Spin a two-choice wheel for an equal-chance yes or no. Change the labels or customize its colors and sound.',
-    intro:
-      'Two choices, one equal chance each. This wheel starts with Yes and No. Use it for lighthearted decisions; it cannot judge which choice is best for you.',
+    description: 'Spin for Yes or No with equal chances, or edit the two choices.',
+    intro: 'Spin for Yes or No with equal chances, or edit the two choices.',
     kind: 'wheel',
   },
   '/random-number-wheel': {
     title: 'Random Number Wheel – Choose Your Range | Wheelero',
     heading: 'Random Number Wheel',
     description:
-      'Generate a wheel of whole numbers from your chosen range and spin to pick one with equal probability.',
-    intro:
-      'Choose a minimum and maximum whole number. Each number appears once and has the same chance. Generate up to 10,000 numbers; large wheels show a readable selection of labels.',
+      'Choose a whole-number range of up to 10,000 numbers. Generate the wheel and spin.',
+    intro: 'Choose a whole-number range of up to 10,000 numbers. Generate the wheel and spin.',
     kind: 'wheel',
   },
   '/random-team-generator': {
     title: 'Random Team Generator – Split Names into Balanced Teams | Wheelero',
     heading: 'Random Team Generator',
     description:
-      'Paste a list of names and randomly split it into balanced teams. Generate and export teams locally without uploading names.',
+      'Paste names and choose how many teams to make. Groups differ by at most one person. Export them as text.',
     intro:
-      'Choose the number of teams and shuffle everyone into groups. Team sizes differ by at most one person. Each row is a separate participant, even when names match.',
+      'Paste names and choose how many teams to make. Groups differ by at most one person. Export them as text.',
     kind: 'teams',
   },
   '/about': {
     title: 'About Wheelero – One spin, one decision.',
     heading: 'About Wheelero',
-    description:
-      'Learn how Wheelero helps you choose names, numbers and teams using browser randomness and local storage.',
-    intro:
-      'Wheelero turns everyday choices into a simple shared moment: one spin, one decision. Use it for classroom turns, games, group activities and small decisions.',
+    description: 'A wheel for names, ideas and everyday choices. No account needed.',
+    intro: 'A wheel for names, ideas and everyday choices. No account needed.',
     kind: 'information',
   },
   '/privacy': {
     title: 'Privacy – How Wheelero Handles Your Data',
-    heading: 'Privacy at Wheelero',
+    heading: 'Privacy Policy',
     description:
-      'How Wheelero stores wheels in your browser, shares copies without uploads and lets you manage local data.',
-    intro:
-      'Your names, entries, wheel settings and results stay in this browser by default. Wheelero has no advertising, third-party analytics or tracking scripts.',
+      'No account or cloud sync. Wheels stay in this browser. Clearing site data removes them.',
+    intro: 'Learn how Wheelero stores your information and what happens when you share a wheel.',
+    kind: 'information',
+  },
+  '/how-to-use': {
+    title: 'Help & FAQ | Wheelero',
+    heading: 'Help & FAQ',
+    description: 'Get started, personalise your wheel and find answers to common questions.',
+    intro: 'Get started, personalise your wheel and find answers to common questions.',
+    kind: 'information',
+  },
+  '/contact': {
+    title: 'Contact & Support | Wheelero',
+    heading: 'Contact & support',
+    description: 'Send a message for questions, feedback or technical support.',
+    intro: 'Send a message for questions, feedback or technical support.',
+    kind: 'information',
+  },
+  '/terms': {
+    title: 'Terms of Use | Wheelero',
+    heading: 'Terms of Use',
+    description: 'Guidelines for using Wheelero.',
+    intro: 'Guidelines for using Wheelero.',
+    kind: 'information',
+  },
+  '/cookies': {
+    title: 'Cookie Settings | Wheelero',
+    heading: 'Cookie settings',
+    description: 'Cookies and storage on this device.',
+    intro: 'Understand how Wheelero uses browser storage and how to manage your data.',
     kind: 'information',
   },
   '/404': {
     title: 'Page Not Found | Wheelero',
     heading: 'That page could not be found',
-    description: 'Return to the Wheelero wheel or choose another tool.',
-    intro:
-      'This address does not match a Wheelero page. Your saved wheels are still on this device.',
+    description: 'Return to the wheel',
+    intro: 'This page does not exist. Return to the wheel to continue.',
     kind: 'information',
   },
 } as const
 export type SitePath = keyof typeof pages
 export const currentPath = (path: string): SitePath =>
   path === '/launch.html' ? '/' : path in pages ? (path as SitePath) : '/404'
-export const toolLinks = [
-  ['/', 'Spin the wheel'],
-  ['/random-name-picker', 'Name picker'],
-  ['/yes-no-wheel', 'Yes / No'],
-  ['/random-number-wheel', 'Number wheel'],
-  ['/random-team-generator', 'Team generator'],
-] as const
-export const faq = [
-  [
-    'How do I add a list from Excel?',
-    'Open More options, choose Add multiple entries, paste your cells and press Add these entries. Each non-empty line or tab-separated cell becomes one entry. Duplicate names remain separate chances unless you remove them.',
-  ],
-  [
-    'How is the winner selected?',
-    'The browser uses Web Crypto with rejection sampling to give every active entry an equal chance. The wheel animation lands on the selected entry. Colors, sound and duration never change the probabilities. There are no hidden weights.',
-  ],
-  [
-    'Can I restore a removed winner?',
-    'Choose Restore entries in the editor. This restores winners removed on this device and resets No repeats. Clearing the entire entries list also clears its removal history.',
-  ],
-  [
-    'Can I use Wheelero offline?',
-    'Yes, after the app reports Ready to use offline. The wheel, templates, local tools and saved settings work without a connection. Links are created locally; recipients need internet for their first visit.',
-  ],
-  [
-    'How do I install it?',
-    'Use Install when your browser offers it. On iPhone or iPad, open Wheelero in Safari, use Share, then Add to Home Screen. On desktop, use the browser install icon or menu. This installs a PWA, not an App Store or Google Play app.',
-  ],
-  [
-    'What does a shared link reveal?',
-    'The link itself contains a copy of your title, entries, images and customization. History and other wheels are excluded. No upload is made. Anyone with the link can read it, and it cannot be revoked. Use JSON export for wheels too large for a link.',
-  ],
-] as const
+export const footerGroups = [
+  {
+    title: 'Help & information',
+    links: [
+      ['/how-to-use', 'Help & FAQ'],
+      ['/about', 'About Wheelero'],
+      ['/contact', 'Contact & support'],
+    ],
+  },
+  {
+    title: 'Privacy & terms',
+    links: [
+      ['/privacy', 'Privacy Policy'],
+      ['/terms', 'Terms of Use'],
+      ['/cookies', 'Cookie settings'],
+    ],
+  },
+] as const satisfies readonly { title: string; links: readonly (readonly [SitePath, string])[] }[]
 export const information = {
   '/about': [
     [
-      'Made for everyday choices',
-      'The wheel supports editable lists, images, themes, optional sound, no-repeat rounds, result history, backups and a presentation view. Number and team tools use the same browser cryptographic randomness.',
+      'How it works',
+      'Wheelero helps you choose names, organise teams and make everyday decisions. Add your entries, personalise the wheel and spin when you are ready.',
+    ],
+    ['Customise', 'Choose colors, images, sounds and spin duration.'],
+    [
+      'Offline use',
+      'Spin offline when Wheelero reports it is ready. Install the app where your browser supports it.',
+    ],
+  ],
+  '/how-to-use': [
+    [
+      'How do I add entries?',
+      'Type or paste directly into Entries, one name per line. Blank lines are ignored. Duplicates stay separate.',
+    ],
+    ['Customise', 'Choose colors, images, sounds and spin duration.'],
+    [
+      'How does Save work?',
+      'Save updates a wheel with the same name. A different name creates a copy. Open a saved wheel to edit a working draft.',
+    ],
+    ['Results', 'Review, sort, clear or export results as a text file.'],
+    [
+      'How is the winner selected?',
+      'Each eligible entry has an equal chance. Duplicate names count separately. Appearance and sound never change the result.',
     ],
     [
-      'A tool, not a guarantee',
-      'Every active entry has equal probability. Adding the same name twice gives it two entries. Wheelero is not a certified gambling, audit or high-stakes decision system.',
+      'Offline use',
+      'Spin offline when Wheelero reports it is ready. Install the app where your browser supports it.',
     ],
     [
-      'Install without a store',
-      'Wheelero is a Progressive Web App for supported mobile and desktop browsers. The website and installed version share the same features. No account is required.',
+      'How do I start another round?',
+      'No repeats excludes previous winners. New round brings them back. Restore entries in More options restores removed winners.',
     ],
+    ['What does a shared link reveal?', shareExplanation],
     [
-      'Publication details',
-      'This preview does not list a company or contact address. The operator must add their identity and a real contact method before a permanent public launch.',
+      'Install app',
+      'Use Install app if offered. On iPhone or iPad, open Safari, tap Share and choose Add to Home Screen.',
     ],
   ],
   '/privacy': [
     [
-      'Local browser storage',
-      'IndexedDB stores wheels, images, settings, results and removal history on this device. Local storage holds small preferences such as language, theme and sound, plus editor drafts. No names or wheel data are sent to an application backend. Clearing site data removes these records; export JSON backups first.',
+      'Your wheels, on this device',
+      'Entries, images, settings and results are stored in this browser. No lists are uploaded automatically. Clearing site data removes local wheels.',
     ],
     [
       'Offline files',
-      'The service worker caches application files, fonts, bundled images and sounds. It supports offline use after the first complete download. Browser storage capacity and retention depend on your browser, device and available disk space.',
+      'The app downloads files for offline use. Storage space and retention depend on your browser and device.',
     ],
-    [
-      'Sharing without a server',
-      'A share link embeds a copy of the selected wheel in its URL fragment, after #. The fragment is not part of the HTTP request to the host, but anyone you give the full link to can read and copy it. The link is not encrypted and cannot be revoked. Results and other wheels are excluded. Large wheels can be exported as JSON files.',
-    ],
-    [
-      'Existing installations',
-      'An older IndexedDB record is migrated locally and retained as a recovery copy. Old server links and server sync are no longer used. Previously uploaded records are not automatically erased from historical server databases; this website makes no requests to those databases.',
-    ],
+    ['Share', shareExplanation],
     [
       'Hosting and network requests',
-      'Loading the website sends normal network information such as IP address and user agent to the hosting provider. The production website uses GitHub Pages; temporary previews may use Cloudflare Tunnel. There are no third-party trackers or application session cookies. Hosting providers may keep operational logs.',
+      'The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.',
     ],
     [
-      'Before permanent publication',
-      'The operator must add their identity, a real privacy contact and final hosting/provider details before permanent publication. These details have not been supplied. No company or legal certification is claimed.',
+      'Managing stored data',
+      'Delete saved wheels in Open. To remove all local data, use your browser settings for this site. This also removes names, results and preferences.',
+    ],
+  ],
+  '/contact': [
+    [
+      'Report a problem',
+      'Please include your browser, device and the steps that led to the issue. Explain what you expected and what happened instead. Leave out private names and shared wheel links.',
+    ],
+  ],
+  '/terms': [
+    [
+      'Using Wheelero',
+      'Use Wheelero lawfully and respect other people. Only enter or share content you are entitled to use.',
+    ],
+    [
+      'Random results',
+      'Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.',
+    ],
+    [
+      'Your wheels, on this device',
+      'You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.',
+    ],
+    ['Share', shareExplanation],
+  ],
+  '/cookies': [
+    [
+      'Cookie settings',
+      'Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.',
+    ],
+    [
+      'Local storage',
+      'Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.',
+    ],
+    [
+      'Managing stored data',
+      'Delete saved wheels in Open. To remove all local data, use your browser settings for this site. This also removes names, results and preferences.',
     ],
   ],
 } as const

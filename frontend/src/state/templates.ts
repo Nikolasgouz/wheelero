@@ -1,5 +1,5 @@
 import type { Template } from '../types'
-// Bundled examples remain available before the first successful API connection.
+// Bundled examples are available locally and remain editable.
 export const templates: Template[] = [
   {
     id: 'names',
@@ -18,7 +18,7 @@ export const templates: Template[] = [
   {
     id: 'plans',
     title: 'What should we do tonight?',
-    emoji: '✨',
+    emoji: '🌙',
     category: 'With friends',
     options: ['Cinema 🎬', 'Board games 🎲', 'A walk 🌙', 'Drinks 🍹', 'Stay home 🛋️'],
   },

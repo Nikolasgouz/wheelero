@@ -192,3 +192,14 @@ production build και Alembic check. Οι έλεγχοι περιλαμβάν�
 Πέρασαν axe WCAG A/AA, πληκτρολόγιο, reduced motion και layout στα 360/390/768/1440px.
 Επιθεωρήθηκαν screenshots των τεσσάρων πλατών και dark mode. Δεν πραγματοποιήθηκαν
 έλεγχοι σε φυσικές συσκευές, ανθρώπινη ακρόαση ή χρήση με πραγματικό screen reader.
+
+
+## Latest UI simplification (2026-10-29)
+
+Removed the global-mute notice, equal-chance/duplicate-display paragraph and duplicated
+Templates heading/inspiration subtitle in all languages. Customize Play explicitly
+previews either sound even with wheel mute enabled, without changing that preference.
+Stop, selected volume (including 0%), No sound, tab-change and modal-close cleanup remain.
+Browser/OS-level mute is outside the application's control. Standard library JSON export
+and import are removed; TXT result export and legacy migration recovery remain. Large
+share links report their size limit instead of suggesting removed JSON controls.

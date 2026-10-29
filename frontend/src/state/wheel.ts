@@ -4,6 +4,7 @@ import type { LocalWheel } from '../types'
 export function makeWheel(title: string, labels: string[]): LocalWheel {
   return {
     id: crypto.randomUUID(),
+    saved: false,
     title,
     no_repeat: false,
     customization: structuredClone(defaults),

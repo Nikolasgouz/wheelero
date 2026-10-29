@@ -6,13 +6,13 @@ import path from 'node:path'
 test('typing in the middle of a title preserves text and caret position', async ({ page }) => {
   await page.goto('/')
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   const title = page.getByLabel('Wheel title', { exact: true })
   await title.fill('ΑΒΓΔ')
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   await title.focus()
   await title.press('End')
   await title.press('ArrowLeft')
@@ -22,9 +22,9 @@ test('typing in the middle of a title preserves text and caret position', async 
   const option = page.getByLabel('Option 1', { exact: true })
   await option.fill('ΑΒΓΔ')
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   await option.focus()
   await option.press('End')
   await option.press('ArrowLeft')
@@ -32,9 +32,9 @@ test('typing in the middle of a title preserves text and caret position', async 
   await option.pressSequentially('ΧΨΩ', { delay: 50 })
   await expect(option).toHaveValue('ΑΒΧΨΩΓΔ')
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   await page.reload()
   await expect(title).toHaveValue('ΑΒΧΨΩΓΔ')
   await expect(option).toHaveValue('ΑΒΧΨΩΓΔ')
@@ -47,19 +47,22 @@ test('copying a long Greek title preserves an emoji at the truncation boundary',
   await page.goto('/')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   await showScreen(page, 'options')
   await page.getByLabel('Wheel title', { exact: true }).fill(title)
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
-  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
-  await page.getByRole('button', { name: `Copy: ${title}`, exact: true }).click()
-  await expect(page.locator('.wheel-card')).toHaveCount(2)
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
+  await page.getByRole('button', { name: 'Open', exact: true }).first().click()
+  await page
+    .getByRole('button', { name: `Copy: ${title}`, exact: true })
+    .first()
+    .click()
+  await expect(page.locator('.wheel-card')).toHaveCount(4)
   await page.locator('.wheel-card-open').last().click()
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
+  await expect(page.locator('.save-bar > span')).toBeVisible()
   const copies = (await readSavedState(page)).wheels
   expect(copies.map((wheel: { title: string }) => wheel.title)).toContain(`${title} · Copy`)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -92,28 +95,6 @@ test('browser draw completes once even when the server is unreachable', async ({
   await expect(page.locator('.history li')).toHaveCount(1)
 })
 
-test('export and import preserves a wheel and marks imported history as local', async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' })
-  await page.goto('/')
-  await showScreen(page, 'options')
-  await expect(page.getByText('Saved', { exact: true })).toBeVisible()
-  await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
-  await expect(page.getByRole('dialog')).toBeVisible()
-  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
-  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
-  const downloaded = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export JSON' }).click()
-  const file = await (await downloaded).path()
-  await page.locator('input[type=file]').setInputFiles(file!)
-  await expect(page.locator('.wheel-card')).toHaveCount(2)
-  await page.locator('.wheel-card-open').last().click()
-  await expect(page.locator('.history li')).toHaveCount(1)
-  await expect(page.locator('.history li').getByLabel('Device draw / import')).toHaveCount(1)
-})
-
 test(
   'real service-worker update preserves saved and unsubmitted editor work',
   { tag: '@exclusive' },
@@ -131,8 +112,7 @@ test(
     await showScreen(page, 'options')
     await page.getByLabel('Wheel title', { exact: true }).fill('Πριν την ενημέρωση')
     await showScreen(page, 'options')
-    await page.getByRole('button', { name: 'Add multiple entries' }).click()
-    await page.getByLabel('One entry per line').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
+    await page.locator('.add-option input').fill('Πρόχειρη ιδέα που δεν προστέθηκε')
     try {
       await writeFile(
         htmlPath,
@@ -168,7 +148,7 @@ test(
       await expect(page.getByLabel('Wheel title', { exact: true })).toHaveValue(
         'Πριν την ενημέρωση',
       )
-      await expect(page.getByLabel('One entry per line')).toHaveValue(
+      await expect(page.locator('.add-option input')).toHaveValue(
         'Πρόχειρη ιδέα που δεν προστέθηκε',
       )
       await otherTab.close()

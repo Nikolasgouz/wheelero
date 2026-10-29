@@ -1,7 +1,6 @@
 import { showScreen, readSavedState } from './navigation'
 import { expect, test, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
-import { readFile } from 'node:fs/promises'
 
 test.use({ actionTimeout: 15000 })
 
@@ -14,18 +13,18 @@ async function ready(page: Page) {
 const state = readSavedState
 async function customize(page: Page) {
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Customize', exact: true }).click()
+  await page.getByRole('button', { name: 'Customise', exact: true }).click()
   return page.getByRole('dialog')
 }
 async function save(page: Page) {
   await page.getByRole('dialog').getByRole('button', { name: 'OK', exact: true }).click()
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   await showScreen(page, 'wheel')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toBeEnabled()
 }
 
-test('configuration and uploaded assets survive copy, JSON and public snapshot copying', async ({
+test('configuration and uploaded assets survive copy and public snapshot copying', async ({
   page,
   browser,
 }) => {
@@ -38,20 +37,14 @@ test('configuration and uploaded assets survive copy, JSON and public snapshot c
   await expect(dialog.locator('.image-preview')).toHaveAttribute('src', /^data:image\/webp;base64,/)
   await save(page)
   const original = (await state(page)).wheels[0]
-  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
-  await page.getByRole('button', { name: `Copy: ${original.title}`, exact: true }).click()
-  await expect(page.locator('.wheel-card')).toHaveCount(2)
-  const copied = (await state(page)).wheels[1]
-  expect(copied.customization).toEqual(original.customization)
-  const downloadEvent = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export JSON' }).click()
-  const download = await downloadEvent
-  const path = (await download.path())!
-  const archive = JSON.parse(await readFile(path, 'utf8'))
-  expect(archive.wheels[0].customization).toEqual(original.customization)
-  await page.locator('input[type=file]').setInputFiles(path)
+  await page.getByRole('button', { name: 'Open', exact: true }).first().click()
+  await page
+    .getByRole('button', { name: `Copy: ${original.title}`, exact: true })
+    .first()
+    .click()
   await expect(page.locator('.wheel-card')).toHaveCount(4)
-  expect((await state(page)).wheels[2].customization).toEqual(original.customization)
+  const copied = (await state(page)).wheels[4]
+  expect(copied.customization).toEqual(original.customization)
   await page.getByRole('button', { name: 'Wheel', exact: true }).first().click()
   await showScreen(page, 'options')
   await page.getByRole('button', { name: 'Share', exact: true }).click()
@@ -108,13 +101,13 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
     db.close()
   })
   await ready(page)
-  await expect(page.locator('.wheel-title')).toHaveText('Pick a name')
+  await expect(page.locator('.spinner-panel h2')).toHaveText('Pick a name')
   const migrated = await state(page)
   expect(migrated.wheels[0].options.map((o) => o.label)).toEqual(['One', 'Two'])
   expect(migrated.wheels[0].options[0].image).toBe(null)
   expect(migrated.wheels[0].customization.duration).toBe(10)
   expect(migrated.removals).toEqual([])
-  expect(migrated.wheels).toHaveLength(2)
+  expect(migrated.wheels).toHaveLength(3)
   expect(migrated.wheels[1].options.map((o) => o.label)).toEqual([
     'Alex',
     'Emma',
@@ -124,11 +117,11 @@ test('legacy IndexedDB is upgraded with compatible defaults without losing entri
     'Sofia',
   ])
   await page.reload()
-  await expect(page.locator('.wheel-title')).toHaveText('Pick a name')
-  expect((await state(page)).wheels).toHaveLength(2)
+  await expect(page.locator('.spinner-panel h2')).toHaveText('Pick a name')
+  expect((await state(page)).wheels).toHaveLength(3)
 })
 
-test('real audio graph respects preview stop, volume and global mute', async ({ page }) => {
+test('real audio graph previews while wheel is muted and respects stop and volume', async ({ page }) => {
   await page.addInitScript(() => {
     const observed = { starts: 0, stops: 0, volumes: [] as number[] }
     Object.assign(window, { observedAudio: observed })
@@ -163,11 +156,7 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   await expect(page.getByRole('button', { name: 'Mute sound', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
   let dialog = await customize(page)
-  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeDisabled()
-  await dialog.getByRole('button', { name: 'Cancel' }).click()
-  await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Unmute sound', exact: true }).click()
-  dialog = await customize(page)
+  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
   await dialog.getByRole('button', { name: 'Play', exact: true }).click()
   await expect
     .poll(() =>
@@ -262,11 +251,11 @@ test('real audio graph respects preview stop, volume and global mute', async ({ 
   await expect(dialog.getByLabel('Result sound', { exact: true })).toHaveValue('magic')
   await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
   await dialog.getByRole('button', { name: 'Cancel' }).click()
-  // Each reload starts with sound enabled; explicit mute still overrides the sounds.
+  // Explicit previews do not change the saved mute preference.
   await showScreen(page, 'wheel')
-  await page.getByRole('button', { name: 'Mute sound', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Unmute sound', exact: true })).toBeVisible()
   dialog = await customize(page)
-  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeDisabled()
+  await expect(dialog.getByRole('button', { name: 'Play', exact: true })).toBeEnabled()
 })
 
 test('transactional customization: defaults, cancel, every tab, persistence and backup', async ({
@@ -465,12 +454,15 @@ test('automatic removal remains scoped to its original wheel after a copy', asyn
   await showScreen(page, 'wheel')
   await page.getByRole('button', { name: 'Click to spin', exact: true }).click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(1)
-  await page.getByRole('button', { name: 'My wheels', exact: true }).first().click()
-  await page.getByRole('button', { name: `Copy: ${original.title}`, exact: true }).click()
+  await page.getByRole('button', { name: 'Open', exact: true }).first().click()
+  await page
+    .getByRole('button', { name: `Copy: ${original.title}`, exact: true })
+    .first()
+    .click()
   await expect.poll(async () => (await state(page)).removals.length).toBe(0)
   const stored = await state(page)
   expect(stored.wheels.find((wheel) => wheel.id === original.id)!.options).toHaveLength(5)
-  expect(stored.wheels.find((wheel) => wheel.id !== original.id)!.options).toHaveLength(6)
+  expect(stored.wheels.find((wheel) => wheel.id === stored.active)!.options).toHaveLength(6)
 })
 
 test('customization and embedded images persist locally across offline use', async ({
@@ -504,7 +496,7 @@ test('customization and embedded images persist locally across offline use', asy
   await page.getByRole('dialog').getByRole('button', { name: 'Close' }).click()
   await context.setOffline(false)
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Save', exact: true }).click()
+  await page.locator('.save-bar').getByRole('button', { name: 'Save', exact: true }).click()
   const wheels = (await state(page)).wheels
   expect(wheels[0].customization.wheel_image).toBe('/images/nebula.webp')
   expect(wheels[0].results).toHaveLength(1)
@@ -516,12 +508,13 @@ test('1000 visible entries, bounded editor and winning ID survive a four-name pr
   page,
 }) => {
   await ready(page)
+  const entries = page.getByRole('textbox', { name: 'Entries', exact: true })
+  await entries.fill(
+    (await entries.inputValue()) +
+      '\n' +
+      Array.from({ length: 1001 }, (_, i) => `Entry ${i}`).join('\n'),
+  )
   await showScreen(page, 'options')
-  await page.getByRole('button', { name: 'Add multiple entries', exact: true }).click()
-  await page
-    .locator('#bulk-options')
-    .fill(Array.from({ length: 1001 }, (_, i) => `Entry ${i}`).join('\n'))
-  await page.getByRole('button', { name: 'Add these entries', exact: true }).click()
   await expect(page.locator('.option-row')).toHaveCount(200)
   await expect(page.locator('.wheel-svg [data-option-id]')).toHaveCount(1000)
   await page.getByRole('button', { name: 'Next', exact: true }).click()
@@ -627,7 +620,7 @@ for (const width of [360, 390, 768, 1440])
     await expect(dialog.getByRole('tab', { name: 'After spin' })).toBeFocused()
     await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
-    await expect(page.getByRole('button', { name: 'Customize', exact: true })).toBeFocused()
+    await expect(page.getByRole('button', { name: 'Customise', exact: true })).toBeFocused()
     if (width === 390 || width === 1440) {
       await page.getByRole('button', { name: 'Dark mode', exact: true }).click()
       await customize(page)

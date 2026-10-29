@@ -20,7 +20,7 @@ import { translateEnglishDefaults } from './englishDefaults'
 import { upgradeCustomization } from './customizationMigration'
 
 export let migrationNotice = ''
-const database = openDB('gyrna', 12, {
+const database = openDB('gyrna', 14, {
   blocked() {
     window.alert(t.closeOldTabs)
   },
@@ -102,6 +102,7 @@ const database = openDB('gyrna', 12, {
             .filter((wheel) => !wheel.deleted)
             .map((wheel) => ({
               id: wheel.id,
+              saved: true,
               title: wheel.title,
               options: wheel.options,
               results: wheel.results,
@@ -112,10 +113,10 @@ const database = openDB('gyrna', 12, {
         }
         if (state.pending_draw)
           migrationNotice =
-            'An unfinished draw from the old server version could not be recovered. Existing results were preserved; no replacement winner was generated.'
+            'An unfinished draw from the old server version could not be recovered. Existing results were preserved. No replacement winner was generated.'
         await store.put(current, 'current')
       }
-    } else {
+    } else if (oldVersion < 12) {
       const store = transaction.objectStore('state')
       const state: SavedState | undefined = await store.get('current')
       if (state) {
@@ -124,6 +125,7 @@ const database = openDB('gyrna', 12, {
           .put(structuredClone(state), 'before-usability-rollback')
         state.wheels = state.wheels.map((wheel) => ({
           id: wheel.id,
+          saved: true,
           title: wheel.title,
           options: wheel.options,
           results: wheel.results,
@@ -131,6 +133,32 @@ const database = openDB('gyrna', 12, {
           customization: wheel.customization,
           updated_at: wheel.updated_at,
         }))
+        await store.put(state, 'current')
+      }
+    }
+    if (oldVersion === 12) {
+      const store = transaction.objectStore('state')
+      const state: SavedState | undefined = await store.get('current')
+      if (state) {
+        state.wheels = state.wheels.map((wheel) => ({ ...wheel, saved: true }))
+        await store.put(state, 'current')
+      }
+    }
+    if (oldVersion > 0 && oldVersion < 14) {
+      const store = transaction.objectStore('state')
+      const state: SavedState | undefined = await store.get('current')
+      if (state) {
+        let count = state.wheels.filter((wheel) => wheel.saved).length
+        if (count === 0) {
+          state.wheels.find((wheel) => wheel.id === state.active)!.saved = true
+          count = 1
+        }
+        for (; count < 3; count++) {
+          state.wheels.push({
+            ...makeWheel(`${t.wheel} ${count + 1}`, []),
+            saved: true,
+          })
+        }
         await store.put(state, 'current')
       }
     }

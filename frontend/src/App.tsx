@@ -8,15 +8,17 @@ import {
   type CSSProperties,
 } from 'react'
 import {
+  ArrowLeft,
   Check,
   ChevronRight,
   CircleDot,
+  FolderOpen,
   LayoutGrid,
   Maximize2,
   Moon,
+  Pencil,
   Plus,
-  RefreshCw,
-  Settings,
+  Save,
   Settings2,
   Share2,
   Sun,
@@ -27,8 +29,9 @@ import {
 import { createShareLink, readSharedWheel } from './lib/sharing'
 import { exportLegacyBackup } from './state/storage'
 import { Customize } from './components/Customize'
+import { SaveWheel } from './components/SaveWheel'
 import { defaults, type Customization } from './customization'
-import { getLanguage, subscribeLanguage } from './locale'
+import { getLanguage, subscribeLanguage, translate } from './locale'
 import { LanguageMenu } from './components/LanguageMenu'
 import { playSound, prepareApplause, stopSounds } from './lib/audio'
 import { presentationOptions, textColor } from './lib/presentation'
@@ -37,7 +40,7 @@ import { PwaControls } from './components/PwaControls'
 import { HomeInfo } from './components/HomeInfo'
 import { SiteIntro, SiteDetails, SiteFooter } from './components/SiteContent'
 import { NumberRange, TeamGenerator } from './components/Tools'
-import { pages, currentPath } from './site'
+import { pages, currentPath, shareExplanation } from './site'
 import { Wheel as Spinner } from './components/Wheel'
 import { t } from './i18n'
 import { targetRotation } from './lib/geometry'
@@ -57,7 +60,7 @@ import {
   removeDueWinners,
   scheduleRemoval,
   spinWheel,
-  flushStorage,
+  saveWheel,
   useStore,
 } from './state/store'
 import { makeWheel } from './state/wheel'
@@ -82,13 +85,14 @@ export default function App() {
   const [spinOptions, setSpinOptions] = useState<Option[] | null>(null)
   const [result, setResult] = useState<DrawResult | null>(null)
   const [message, setMessage] = useState('')
-  const [storageMessage, setStorageMessage] = useState('')
   const [error, setError] = useState('')
   const [theme, setTheme] = useState(
     localStorage.getItem('theme') ??
       (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   )
   const [customOpen, setCustomOpen] = useState(false)
+  const [saveOpen, setSaveOpen] = useState(false)
+  const [templatesOpen, setTemplatesOpen] = useState(false)
   const [spinConfig, setSpinConfig] = useState<Customization | null>(null)
   const [popupOpen, setPopupOpen] = useState(false)
   const [sound, setSound] = useState(localStorage.getItem('wheelero-sound') === 'true')
@@ -132,13 +136,21 @@ export default function App() {
         reportError(error)
       }
     } else if (new URLSearchParams(location.search).has('share')) {
-      setError('This is an old server share link. Ask the sender for a new link or a JSON export.')
+      setError('This is an old server share link. Ask the sender for a new link.')
     }
   }, [reportError])
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('theme', theme)
   }, [theme])
+  useEffect(() => {
+    document.documentElement.lang = language
+    document.title =
+      language === 'en' ? pages[sitePath].title : `${translate(pages[sitePath].heading)} | Wheelero`
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', translate(pages[sitePath].description))
+  }, [language])
   useEffect(() => {
     const update = () => setOnline(navigator.onLine)
     window.addEventListener('online', update)
@@ -280,7 +292,7 @@ export default function App() {
               {t.retry}
             </button>
             <button className="secondary" onClick={() => run(exportLegacyBackup)}>
-              Export previous browser data
+              {translate('Export previous browser data')}
             </button>
           </>
         )}
@@ -317,19 +329,43 @@ export default function App() {
         </a>
         {pages[sitePath].kind === 'wheel' && (
           <nav className="desktop-nav" aria-label={t.navigation}>
-            <button
-              disabled={locked}
-              className={screen === 'wheel' ? 'selected' : ''}
-              onClick={() => navigate('wheel')}
-            >
-              {t.wheel}
+            <button disabled={locked} onClick={() => setCustomOpen(true)}>
+              <Settings2 size={17} />
+              {t.customise}
             </button>
             <button
               disabled={locked}
-              className={screen === 'library' ? 'selected' : ''}
-              onClick={() => navigate('library')}
+              onClick={() =>
+                run(async () => {
+                  await addWheels([makeWheel(templates[0].title, templates[0].options)])
+                  navigate('wheel')
+                })
+              }
             >
-              {t.library}
+              <Plus size={17} />
+              {t.new}
+            </button>
+            <button disabled={locked} onClick={() => setSaveOpen(true)}>
+              <Save size={17} />
+              {t.save}
+            </button>
+            <button
+              disabled={locked}
+              onClick={() => {
+                setShareUrl('')
+                setShareOpen(true)
+              }}
+            >
+              <Share2 size={17} />
+              {t.share}
+            </button>
+            <button disabled={locked} onClick={() => navigate('library')}>
+              <FolderOpen size={17} />
+              {t.open}
+            </button>
+            <button disabled={locked} onClick={() => setTemplatesOpen(true)}>
+              <LayoutGrid size={17} />
+              {t.templates}
             </button>
           </nav>
         )}
@@ -379,42 +415,28 @@ export default function App() {
             </p>
           )}
           {pages[sitePath].kind === 'information' ? (
-            <SiteDetails path={sitePath} />
+            <SiteDetails
+              path={sitePath}
+              contactFormId={import.meta.env.VITE_CONTACT_FORM_ID ?? ''}
+            />
           ) : pages[sitePath].kind === 'teams' ? (
             <TeamGenerator />
           ) : screen === 'library' ? (
             <>
-              <section className="sync-controls card" lang="en">
-                <h2>Stored in your browser</h2>
-                <p>
-                  Wheels, settings and results are saved in IndexedDB on this device. Export JSON
-                  before clearing browser data or moving to another device.
-                </p>
-                {'storage' in navigator && 'persist' in navigator.storage && (
-                  <button
-                    className="secondary"
-                    disabled={locked}
-                    onClick={() =>
-                      run(async () => {
-                        const granted = await navigator.storage.persist()
-                        setStorageMessage(
-                          granted
-                            ? 'Persistent storage is enabled. Keep JSON backups too; clearing browser data still deletes your wheels.'
-                            : 'The browser did not grant persistent storage. Your wheels are still saved locally; keep JSON backups.',
-                        )
-                      })
-                    }
-                  >
-                    Protect local storage
-                  </button>
-                )}
-                {storageMessage && <p role="status">{storageMessage}</p>}
-              </section>
+              <button
+                className="secondary desktop-return"
+                disabled={locked}
+                onClick={() => navigate('wheel')}
+              >
+                <ArrowLeft size={17} />
+                {t.wheel}
+              </button>
               <Library
-                wheels={data.wheels}
+                wheels={data.wheels.filter((wheel) => wheel.saved)}
                 active={data.active}
                 run={run}
                 openEditor={() => navigate('options')}
+                openWheel={() => navigate('wheel')}
               />
             </>
           ) : (
@@ -444,15 +466,6 @@ export default function App() {
                         {t.count(wheel.options.length)}
                       </span>
                       <div className="wheel-tools">
-                        <button
-                          className="icon-button"
-                          aria-label={ct.title}
-                          title={ct.title}
-                          disabled={locked}
-                          onClick={() => setCustomOpen(true)}
-                        >
-                          <Settings size={18} />
-                        </button>
                         <button
                           className="icon-button"
                           aria-label={sound ? t.soundOff : t.soundOn}
@@ -485,12 +498,33 @@ export default function App() {
                         </button>
                       </div>
                     </div>
-                    <h2
-                      className={config.show_title ? 'wheel-title' : 'sr-only'}
-                      title={wheel.title}
-                    >
-                      {wheel.title}
-                    </h2>
+                    {presenting ? (
+                      <h2 className={config.show_title ? 'wheel-title' : 'sr-only'}>
+                        {wheel.title}
+                      </h2>
+                    ) : config.show_title && screen === 'wheel' ? (
+                      <label className="wheel-title-editor">
+                        <span>
+                          {t.title}
+                          <Pencil size={14} aria-hidden="true" />
+                        </span>
+                        <input
+                          value={wheel.title}
+                          maxLength={120}
+                          disabled={locked}
+                          placeholder={t.placeholder}
+                          onChange={(event) => edit({ title: event.target.value })}
+                          onBlur={() => {
+                            if (!wheel.title.trim()) edit({ title: t.newTitle })
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter') event.currentTarget.blur()
+                          }}
+                        />
+                      </label>
+                    ) : (
+                      <h2 className="sr-only">{wheel.title}</h2>
+                    )}
                   </div>
                   <div className="wheel-area">
                     <Spinner
@@ -505,6 +539,8 @@ export default function App() {
                         displayed.length > 0 &&
                         screen === 'wheel' &&
                         !shareOpen &&
+                        !saveOpen &&
+                        !templatesOpen &&
                         !shared
                       }
                       canSpin={canSpin}
@@ -580,6 +616,14 @@ export default function App() {
                 </div>
                 <div className="editor-column" hidden={screen !== 'options'}>
                   <div className="options-toolbar">
+                    <button
+                      className="secondary desktop-return"
+                      disabled={locked}
+                      onClick={() => navigate('wheel')}
+                    >
+                      <ArrowLeft size={17} />
+                      {t.wheel}
+                    </button>
                     <h2>{t.options}</h2>
                     <button
                       className="secondary"
@@ -612,89 +656,40 @@ export default function App() {
                       })
                     }
                   >
-                    Restore entries
+                    {translate('Restore entries')}
                   </button>
                   <div className="save-bar">
-                    <span>
-                      <Check size={14} />
-                      {t.saved}
-                    </span>
+                    {wheel.saved && (
+                      <span>
+                        <Check size={14} />
+                        {t.saved}
+                      </span>
+                    )}
                     <div>
                       <button
                         className="secondary"
                         disabled={locked || !valid}
                         onClick={() =>
                           run(async () => {
-                            await flushStorage()
+                            await saveWheel(wheel.id, wheel.title.trim())
                             setMessage(t.autoSave)
                           })
                         }
                       >
-                        <RefreshCw size={15} />
+                        <Save size={15} />
                         {t.save}
-                      </button>
-                      <button
-                        className="secondary"
-                        disabled={locked}
-                        onClick={() =>
-                          run(async () => {
-                            setShareUrl('')
-                            setShareOpen(true)
-                          })
-                        }
-                      >
-                        <Share2 size={15} />
-                        {t.share}
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <section className="templates-section" hidden={screen !== 'options'}>
-                <div className="section-heading">
-                  <div>
-                    <h2>
-                      {t.templates} <span>↗</span>
-                    </h2>
-                    <p>{t.templatesHint}</p>
-                  </div>
-                  <span className="template-hint">{t.allTemplates}</span>
-                </div>
-                <div className="template-grid">
-                  {templates.map((template) => (
-                    <button
-                      className="template-card"
-                      key={template.id}
-                      disabled={locked}
-                      onClick={() =>
-                        run(async () => {
-                          await addWheels([makeWheel(template.title, template.options)])
-                          navigate('wheel')
-                        })
-                      }
-                    >
-                      <span className={`template-emoji ${template.id}`}>{template.emoji}</span>
-                      <span>
-                        <strong>{template.title}</strong>
-                        <small>{template.category}</small>
-                      </span>
-                      <ChevronRight size={17} />
-                    </button>
-                  ))}
-                </div>
-              </section>
             </>
           )}
         </div>
-        {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && (
-          <>
-            <HomeInfo />
-            <SiteDetails path={sitePath} />
-          </>
-        )}
+        {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && <HomeInfo />}
       </main>
-      <footer>
-        {!presenting && <SiteFooter />}
+      <footer className="site-footer">
+        {!presenting && <SiteFooter path={sitePath} />}
         <PwaControls busy={locked} report={setMessage} />
       </footer>
       {pages[sitePath].kind === 'wheel' && (
@@ -719,10 +714,51 @@ export default function App() {
         </nav>
       )}
 
+      {templatesOpen && (
+        <Dialog title={t.templates} close={() => setTemplatesOpen(false)}>
+          <section className="templates-section">
+            <div className="section-heading">
+              <span className="template-hint">{t.allTemplates}</span>
+            </div>
+            <div className="template-grid">
+              {templates.map((template) => (
+                <button
+                  className="template-card"
+                  key={template.id}
+                  disabled={locked}
+                  onClick={() =>
+                    run(async () => {
+                      await addWheels([makeWheel(template.title, template.options)])
+                      setTemplatesOpen(false)
+                      navigate('wheel')
+                    })
+                  }
+                >
+                  <span className={`template-emoji ${template.id}`}>{template.emoji}</span>
+                  <span>
+                    <strong>{translate(template.title)}</strong>
+                    <small>{translate(template.category)}</small>
+                  </span>
+                  <ChevronRight size={17} />
+                </button>
+              ))}
+            </div>
+          </section>
+        </Dialog>
+      )}
+      {saveOpen && (
+        <SaveWheel
+          wheel={wheel}
+          close={() => setSaveOpen(false)}
+          saved={() => {
+            setSaveOpen(false)
+            setMessage(t.saved)
+          }}
+        />
+      )}
       {customOpen && (
         <Customize
           value={wheel.customization}
-          muted={!sound}
           close={() => setCustomOpen(false)}
           save={async (customization) => {
             await editWheel(wheel.id, { customization })
@@ -738,7 +774,6 @@ export default function App() {
       {result && popupOpen && (
         <Dialog title={winnerMessage} close={closeResult} headerClose={false}>
           <div className="result-display">
-            <span className="result-sparkle">✦</span>
             <p className="winner">{result.label}</p>
           </div>
           <div className="result-actions">
@@ -760,11 +795,7 @@ export default function App() {
 
       {shareOpen && (
         <Dialog title={t.shareHeading} close={() => setShareOpen(false)}>
-          <p className="muted">
-            This link contains the title, entries, images and settings of this wheel. Results and
-            other wheels are excluded. No upload is made. Anyone with the link can read and copy it.
-            Links cannot be revoked; use JSON export for large wheels.
-          </p>
+          <p className="muted">{translate(shareExplanation)}</p>
           <button
             className="primary full-width"
             disabled={busy || !valid}

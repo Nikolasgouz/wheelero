@@ -6,6 +6,11 @@ import { pages, type SitePath } from '../src/site'
 
 export async function generatePages() {
   const environment = { ...loadEnv('production', '..', ''), ...process.env }
+  const contactFormId = environment.VITE_CONTACT_FORM_ID ?? ''
+  if (contactFormId && !/^[a-zA-Z0-9]{6,64}$/.test(contactFormId))
+    throw new Error(
+      'VITE_CONTACT_FORM_ID must be a Formspree form ID, not an email or URL.',
+    )
   const origin = environment.PUBLIC_URL?.replace(/\/$/, '') ?? ''
   const indexable = environment.PUBLIC_INDEXING === 'true'
   if (indexable && !origin) throw new Error('PUBLIC_URL is required for an indexable build.')
@@ -29,7 +34,7 @@ export async function generatePages() {
               <ol>
                 <li>Add or paste your entries.</li>
                 <li>Choose your settings and spin or generate teams.</li>
-                <li>Save, export or start another round.</li>
+                <li>Save your wheel or export results as text.</li>
               </ol>
               <p>
                 The interactive tool uses JavaScript. Enable it to use the wheel. Names stay on this
@@ -37,9 +42,11 @@ export async function generatePages() {
               </p>
             </section>
           )}
-          <SiteDetails path={path as SitePath} />
+          <SiteDetails path={path as SitePath} contactFormId={contactFormId} />
         </main>
-        <SiteFooter />
+        <footer className="site-footer">
+          <SiteFooter path={path as SitePath} />
+        </footer>
       </div>,
     )
     const url = `${origin}${path === '/404' ? '/' : path}`
