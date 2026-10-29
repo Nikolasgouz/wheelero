@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "アクセス解析の選択はこの端末に保存されます。同意するとGoogle Analyticsは_ga Cookieを最長1年間使用し、ページ訪問数、機能の利用件数、技術的な接続情報を受け取ります。拒否すると収集を停止し、ルーレットを削除せずにこれらのCookieを削除します。",
   "Accept cookies": "Cookieを許可",
   "Reject cookies": "Cookieを拒否",
-  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "訪問数や機能の利用状況を測定するため、任意のGoogle Analytics Cookie（端末に保存される小さなファイル）を使用します。",
-  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "拒否しても全機能を利用できます。名前、項目、結果はGoogleに送信しません。選択はCookie設定でいつでも変更できます。"
+  "Help us improve Wheelero": "Wheeleroの改善にご協力ください",
+  "With your permission, we use analytics cookies to understand how Wheelero is used and make it better. Your names and wheel entries are never sent to Google Analytics. The wheel works just as well if you decline.": "同意いただいた場合、分析用Cookieを使用してWheeleroの利用状況を把握し、改善に役立てます。名前やルーレットの項目がGoogle Analyticsに送信されることはありません。拒否しても、ルーレットは同じように使えます。"
 }

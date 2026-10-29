@@ -12,12 +12,7 @@ export function AnalyticsConsent() {
     <section className="analytics-settings" aria-label={translate('Cookie settings')}>
       <p>
         {translate(
-          'We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.',
-        )}
-      </p>
-      <p>
-        {translate(
-          'Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.',
+          'With your permission, we use analytics cookies to understand how Wheelero is used and make it better. Your names and wheel entries are never sent to Google Analytics. The wheel works just as well if you decline.',
         )}
       </p>
       {consent !== null && (

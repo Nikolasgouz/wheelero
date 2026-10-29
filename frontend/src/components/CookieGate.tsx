@@ -18,10 +18,7 @@ export function CookieGate({ children }: { children: ReactNode }) {
         </div>
         {consent === null && (
           <div className="cookie-overlay">
-            <Dialog title={translate('Cookie settings')} close={() => {}} headerClose={false}>
-              <div className="cookie-language">
-                <LanguageMenu language={language} disabled={false} />
-              </div>
+            <Dialog title={translate('Help us improve Wheelero')} close={() => {}} headerClose={false}>
               <AnalyticsConsent />
             </Dialog>
           </div>

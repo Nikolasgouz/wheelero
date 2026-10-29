@@ -21,14 +21,17 @@ dismissing it, dark theme, readable privacy, rejection enabling the tool and per
 The page is visible through a light scrim without blur, but cannot receive clicks or focus.
 Shared-wheel dialogs wait until the choice to avoid opening above the cookie modal.
 The initial native modal
-cannot be dismissed by Escape/backdrop and includes a language selector. Its equally styled
+cannot be dismissed by Escape/backdrop and has no language selector. Its equally styled
 buttons are Accept cookies and Reject cookies. Both give full access. `AnalyticsConsent.tsx`
 briefly explains cookies, the optional Google Analytics purpose, excluded personal content
 and how to change the choice. Full details including lifetime remain on the cookie and privacy
 pages. `/privacy` can be read before choosing, as a separate static
 information view without the interactive app. `/cookies` retains both choices afterward.
 Labels and explanatory text cover all 14 locales. Existing choices are preserved, not reset
-for this copy update. Dialog titles use unique IDs so the nested language dialog is accessible.
+for this copy update. The heading is "Help us improve Wheelero", followed by the user's
+approved paragraph about optional analytics, excluding names/entries, and unrestricted
+use after rejection. Both are translated in all catalogs. The normal site language menu
+remains available after choosing; the modal follows the existing language automatically.
 The initial language follows the first supported browser preference in navigator.languages,
 including regional variants, unless the visitor has explicitly chosen a saved language.
 English is the fallback and the static prerender language. No IP/location service is used.

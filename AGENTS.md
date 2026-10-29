@@ -35,6 +35,9 @@ aria-hidden until Accept cookies or Reject cookies. Both choices give full acces
 shared-wheel dialog until a choice, so it cannot cover the gate. The cookie modal cannot be
 dismissed; privacy remains readable. Preserve existing choices. Keep its explanation short
 in all 14 locales, with full details on the privacy and cookie settings pages.
+The cookie modal has no language picker. Follow the existing automatic/saved language and
+use the user's "Help us improve Wheelero" heading and approved paragraph, translated in
+all catalogs. The normal site language menu remains available after choosing.
 
 ## Commands
 

@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Analiz tercihiniz bu cihazda saklanır. Kabul ederseniz Google Analytics en fazla bir yıl _ga çerezlerini kullanır ve sayfa ziyaretlerini, özellik kullanım sayılarını ve teknik bağlantı verilerini alır. Reddetmek veri toplamayı durdurur ve çarklarınızı silmeden bu çerezleri kaldırır.",
   "Accept cookies": "Çerezleri kabul et",
   "Reject cookies": "Çerezleri reddet",
-  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "Ziyaretleri ve özellik kullanımını ölçmek için isteğe bağlı Google Analytics çerezleri (cihazınızdaki küçük dosyalar) kullanıyoruz.",
-  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Reddetmek siteyi kısıtlamaz. Adlarınız, girdileriniz ve sonuçlarınız Google’a gönderilmez. Seçiminizi çerez ayarlarından değiştirebilirsiniz."
+  "Help us improve Wheelero": "Wheelero’yu geliştirmemize yardımcı olun",
+  "With your permission, we use analytics cookies to understand how Wheelero is used and make it better. Your names and wheel entries are never sent to Google Analytics. The wheel works just as well if you decline.": "İzninizle, Wheelero’nun nasıl kullanıldığını anlamak ve onu geliştirmek için analiz çerezleri kullanıyoruz. Adlarınız ve çarktaki girdileriniz hiçbir zaman Google Analytics’e gönderilmez. Reddetseniz de çark aynı şekilde çalışır."
 }

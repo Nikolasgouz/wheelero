@@ -223,6 +223,11 @@ test('cookie choice blocks the tool, survives Escape and works with keyboard on 
   await page.goto('https://wheelero.com/')
   const banner = page.locator('dialog:has(.analytics-settings)')
   await expect(banner).toBeVisible()
+  await expect(banner.getByRole('heading')).toHaveText('Help us improve Wheelero')
+  await expect(banner.locator('.language-picker')).toHaveCount(0)
+  await expect(banner.locator('.analytics-settings p').first()).toHaveText(
+    'With your permission, we use analytics cookies to understand how Wheelero is used and make it better. Your names and wheel entries are never sent to Google Analytics. The wheel works just as well if you decline.',
+  )
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toHaveCount(0)
   await expect(page.locator('.wheel-stage')).toBeVisible()

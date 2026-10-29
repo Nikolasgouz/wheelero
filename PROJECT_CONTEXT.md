@@ -2,6 +2,19 @@
 
 Updated: 2026-10-29.
 
+## Latest: approved cookie copy, no modal language picker
+
+CookieGate now uses "Help us improve Wheelero" as its title and no language selector.
+AnalyticsConsent uses the user's exact English paragraph, translated in all 14 catalogs.
+Automatic browser language and saved manual preferences are unchanged. The regular site
+language menu remains; the independent pre-consent privacy view also keeps its menu.
+Buttons, inert background, privacy/settings links and all tracking semantics are unchanged.
+Removed unused cookie-language CSS. Local build/typecheck, lint and all 7 analytics browser
+tests passed. Direct Chromium verified title/body in all 14 automatic browser languages,
+no modal language picker, regional/fallback handling, saved preference after using the normal
+menu, mobile fit and zero Google requests before consent. Screenshot:
+artifacts/improve-cookie-language-el.png. Publication verification pending.
+
 ## Latest: automatic browser language and clearer cookie copy
 
 locale.ts now chooses the saved explicit language, otherwise the first supported browser

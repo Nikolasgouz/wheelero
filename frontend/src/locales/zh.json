@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "您的分析选择保存在此设备上。如果同意，Google Analytics会使用_ga Cookie最长一年，并接收页面访问、功能使用次数和技术连接信息。拒绝后会停止收集并删除这些Cookie，不会删除您的转盘。",
   "Accept cookies": "接受Cookie",
   "Reject cookies": "拒绝Cookie",
-  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "我们使用可选的 Google Analytics Cookie（设备上的小文件）来统计访问量和功能使用情况。",
-  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "拒绝不会限制网站功能。你的姓名、条目和结果不会发送给 Google。你可以随时在 Cookie 设置中更改选择。"
+  "Help us improve Wheelero": "帮助我们改进 Wheelero",
+  "With your permission, we use analytics cookies to understand how Wheelero is used and make it better. Your names and wheel entries are never sent to Google Analytics. The wheel works just as well if you decline.": "经你同意，我们会使用分析 Cookie 来了解 Wheelero 的使用情况并加以改进。你的姓名和转盘条目绝不会发送给 Google Analytics。即使拒绝，转盘也能照常使用。"
 }
