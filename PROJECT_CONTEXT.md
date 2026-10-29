@@ -2,6 +2,15 @@
 
 Updated: 2026-10-29.
 
+## Latest: Pick a number template
+
+state/templates.ts replaces Who goes first with Pick a number, ten entries 1–10, id=numbers.
+The library still has 12 editable templates. New title/category translations cover all 14
+languages and the card keeps its existing accent style. Saved user wheels and frozen legacy
+migration mappings are unchanged. Build/typecheck and lint passed. Direct Chromium verified
+all 14 translated titles/categories, 12 cards with the old template absent, creation of the
+1–10 wheel, a real spin in that range and refresh persistence. Publication pending.
+
 ## Latest: wheel sound enabled on every visit
 
 App.tsx initializes sound=true and no longer reads/writes wheelero-sound in localStorage.

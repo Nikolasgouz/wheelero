@@ -30,11 +30,11 @@ export const templates: Template[] = [
     options: ['Yes', 'No'],
   },
   {
-    id: 'first',
-    title: 'Who goes first?',
+    id: 'numbers',
+    title: 'Pick a number',
     emoji: '🎲',
-    category: 'Game time',
-    options: ['Anna', 'Nikos', 'Maria', 'John'],
+    category: 'Numbers 1–10',
+    options: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
   },
   {
     id: 'movies',

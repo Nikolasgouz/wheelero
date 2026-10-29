@@ -904,7 +904,7 @@ button:hover:not(:disabled) {
 .template-emoji.yes {
   background: #e5eee4;
 }
-.template-emoji.first {
+.template-emoji.numbers {
   background: #e6edf7;
 }
 .template-card strong {

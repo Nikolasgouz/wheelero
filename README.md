@@ -95,6 +95,7 @@ Default pre-rendered SEO remains English; client title/description follow the la
 
 - 1-10,000 entries per wheel, inline editing, Excel/line paste, shuffle/sort, duplicates,
   templates, saved wheels, no-repeat rounds, result history and restoration of winners.
+  The 12 editable templates include Pick a number (1–10), replacing Who goes first.
 - Unbiased Web Crypto selection, pointer/result agreement, optional sound, themes/images,
   customizable duration, fullscreen, keyboard support and reduced motion. Customize Play
   previews bypass the wheel mute switch; selected volume and No sound still apply.
