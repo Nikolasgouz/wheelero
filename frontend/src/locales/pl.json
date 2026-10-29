@@ -418,5 +418,16 @@
   "Choose a quantity from 1 to 1,000.": "Wybierz ilość od 1 do 1000.",
   "There are not enough different numbers in this range.": "W tym zakresie nie ma wystarczająco wielu różnych liczb.",
   "Choose a meal, a film or the next task on your list.": "Wybierz posiłek, film lub kolejne zadanie z listy.",
-  "Spin": "Zakręć"
+  "Spin": "Zakręć",
+  "home.intro": "Zakręć kołem, aby wybrać imię lub podjąć decyzję. Dostosuj koło losujące za pomocą kolorów, obrazów i dźwięków. Bezpłatnie, bez rejestracji.",
+  "namePicker.intro": "Użyj tego narzędzia do losowania imion, aby wybrać kogoś z listy. Stwórz koło z imionami do zajęć w klasie, gier lub losowania nagród.",
+  "numberGenerator.intro": "Użyj generatora liczb losowych, aby wybrać jedną lub więcej liczb całkowitych z wybranego zakresu, z powtórzeniami lub bez nich.",
+  "numberWheel.example": "Użyj koła z liczbami do gier lub zajęć w klasie. Wypróbuj zakres od 1 do 6 w grze przypominającej rzut kostką albo od 1 do 30, aby wybrać ponumerowane zadanie. Edytuj Wpisy, aby usunąć niechciane liczby.",
+  "yesNo.intro": "Użyj koła tak lub nie, aby szybko dokonać losowego wyboru. Zacznij od jednego wpisu Tak i jednego Nie, aby szanse były równe, lub edytuj wpisy.",
+  "teamGenerator.intro": "Użyj generatora losowych drużyn, aby podzielić listę na grupy. Utworzone grupy różnią się liczebnością najwyżej o jedną osobę.",
+  "home.uses.classroom": "Użyj losowania imion, aby wybrać ucznia lub następną osobę do prezentacji. Dodaj tematy, aby wybrać zadanie na lekcję.",
+  "home.uses.teams": "Wybierz kolejność wypowiedzi lub podziel imiona na losowe drużyny.",
+  "home.uses.games": "Wypróbuj koło losujące liczby w grze przypominającej rzut kostką albo użyj generatora liczb losowych, aby wybierać liczby bez kręcenia.",
+  "home.uses.everyday": "Wybierz posiłek, film lub następne zadanie z listy. Gdy masz dwie możliwości, wypróbuj koło tak lub nie.",
+  "home.steps.customise": "Stwórz własne koło losujące z kolorami, obrazami i dźwiękami, a potem wybierz czas trwania każdego obrotu."
 }

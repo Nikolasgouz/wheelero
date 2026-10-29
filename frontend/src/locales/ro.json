@@ -418,5 +418,16 @@
   "Choose a quantity from 1 to 1,000.": "Alege o cantitate de la 1 la 1.000.",
   "There are not enough different numbers in this range.": "Nu există suficiente numere distincte în acest interval.",
   "Choose a meal, a film or the next task on your list.": "Alege o masă, un film sau următoarea sarcină de pe lista ta.",
-  "Spin": "Rotește"
+  "Spin": "Rotește",
+  "home.intro": "Învârte roata pentru a alege un nume sau a lua o decizie. Personalizează roata cu culori, imagini și sunete. Gratuit, fără înregistrare.",
+  "namePicker.intro": "Folosește acest selector aleatoriu de nume pentru a alege pe cineva din listă. Creează o roată cu nume pentru activități la clasă, jocuri sau extrageri de premii.",
+  "numberGenerator.intro": "Folosește acest generator de numere aleatorii pentru a alege unul sau mai multe numere întregi din intervalul ales, cu sau fără repetări.",
+  "numberWheel.example": "Folosește roata cu numere pentru jocuri sau activități la clasă. Încearcă intervalul de la 1 la 6 pentru un joc asemănător aruncării unui zar sau de la 1 la 30 pentru a alege o activitate numerotată. Editează Opțiuni pentru a elimina numerele nedorite.",
+  "yesNo.intro": "Folosește această roată da sau nu pentru o alegere aleatorie rapidă. Începe cu o opțiune Da și una Nu pentru șanse egale sau editează opțiunile.",
+  "teamGenerator.intro": "Folosește acest generator de echipe aleatorii pentru a împărți o listă în grupuri. Grupurile create diferă ca mărime cu cel mult o persoană.",
+  "home.uses.classroom": "Folosește selectorul aleatoriu de nume pentru a alege un elev sau următorul prezentator. Adaugă subiecte pentru a alege o activitate la clasă.",
+  "home.uses.teams": "Alege ordinea intervențiilor sau împarte numele în echipe aleatorii.",
+  "home.uses.games": "Încearcă roata cu numere aleatorii pentru un joc asemănător aruncării unui zar sau folosește generatorul de numere aleatorii pentru a alege numere fără rotire.",
+  "home.uses.everyday": "Alege o masă, un film sau următoarea sarcină din listă. Pentru o decizie între două opțiuni, încearcă roata da sau nu.",
+  "home.steps.customise": "Creează propria roată cu culori, imagini și sunete, apoi alege durata fiecărei rotiri."
 }

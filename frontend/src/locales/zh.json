@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "数量请选择1到1,000。",
   "There are not enough different numbers in this range.": "此范围内没有足够的不同数字。",
   "Choose a meal, a film or the next task on your list.": "选择一餐美食、一部电影或清单上的下一项任务。",
-  "Spin": "旋转"
+  "Spin": "旋转",
+  "home.intro": "转动转盘来挑选名字或做决定。用颜色、图片和音效自定义你的转盘。免费使用，无需注册。",
+  "namePicker.intro": "使用随机姓名选择器从列表中选出一人。为课堂活动、游戏或抽奖创建姓名转盘。",
+  "numberGenerator.intro": "使用随机数生成器，在你设定的范围内选出一个或多个整数，并选择是否允许重复。",
+  "numberWheel.example": "将数字转盘用于游戏或课堂活动。可以试试1到6，像掷骰子一样玩游戏，或用1到30来选择带编号的活动。编辑“选项”可删除不需要的数字。",
+  "yesNo.intro": "使用是或否转盘快速做出随机选择。添加一个“是”和一个“否”即可获得相同概率，也可以编辑选项。",
+  "teamGenerator.intro": "使用随机分组工具将列表分成若干组。各组人数最多相差一人。",
+  "home.uses.classroom": "使用随机姓名选择器挑选学生或下一位发言者。添加主题还可以选择课堂活动。",
+  "home.uses.teams": "选择发言顺序，或将名字随机分组。",
+  "home.uses.games": "试试随机数字转盘，像掷骰子一样玩游戏，或者使用随机数生成器，无需转动就能选出数字。",
+  "home.uses.everyday": "选择一顿饭、一部电影或列表中的下一个任务。在两个选项之间犹豫时，试试是或否转盘。",
+  "home.steps.customise": "用颜色、图片和音效创建自己的转盘，然后选择每次转动的时长。"
 }

@@ -1,5 +1,13 @@
 # Working in Wheelero
 
+Latest user authorization (2026-10-29): translate the new editorial copy into all supported
+languages, commit the accumulated reviewed changes and publish via the existing Pages
+workflow. This supersedes the preceding local-only instructions for this delivery.
+Keep all 11 scoped keys in locales/en.json and the other 13 catalogs aligned. Homepage
+Teams uses neutral speaking-order/team wording, without "random team generator". The
+separate team tool remains. Tool-name bars stay removed from SiteFooter and ToolGuide.
+Preserve useful prose, six help/privacy links, metadata, wheel behavior and existing design.
+
 Choose the visual landing point only after the winner is fixed. App samples a separate
 Web Crypto fraction in [0.05, 0.95) of the winning visible sector. targetRotation stays
 deterministic with an explicit position argument. Never change eligibility to vary landing.

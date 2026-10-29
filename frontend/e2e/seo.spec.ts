@@ -55,13 +55,10 @@ test('six distinct tools preserve useful initial HTML, headings, metadata and li
       await expect(page.locator('.home-info')).toContainText('the next task on your list')
       await expect(page.locator('.info-how')).toHaveCount(1)
     }
-    await expect(page.locator('.footer-tools a')).toHaveCount(6)
-    await expect(page.locator('.footer-tools [aria-current=page]')).toHaveAttribute(
-      'href',
-      publicPath(path),
-    )
+    await expect(page.locator('.footer-tools, .tool-links')).toHaveCount(0)
+    await expect(page.locator('.site-links .footer-group a')).toHaveCount(6)
     for (const href of await page
-      .locator('.footer-tools a')
+      .locator('.site-links .footer-group a')
       .evaluateAll((links) => links.map((link) => link.getAttribute('href')!))) {
       expect((await request.get(href)).status()).toBe(200)
     }

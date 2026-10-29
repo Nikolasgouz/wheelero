@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "1 ile 1.000 arasında adet seçin.",
   "There are not enough different numbers in this range.": "Bu aralıkta yeterince farklı sayı yok.",
   "Choose a meal, a film or the next task on your list.": "Bir yemek, film veya listendeki bir sonraki görevi seç.",
-  "Spin": "Çevir"
+  "Spin": "Çevir",
+  "home.intro": "Bir isim seçmek veya karar vermek için çarkı çevirin. Çarkınızı renkler, resimler ve seslerle özelleştirin. Ücretsizdir, kayıt gerekmez.",
+  "namePicker.intro": "Listenizden birini seçmek için bu rastgele isim seçiciyi kullanın. Sınıf etkinlikleri, oyunlar veya ödül çekilişleri için bir isim çarkı oluşturun.",
+  "numberGenerator.intro": "Seçtiğiniz aralıkta bir veya daha fazla tam sayı seçmek için bu rastgele sayı üretecini kullanın. Sayılar tekrarlanabilir veya benzersiz olabilir.",
+  "numberWheel.example": "Sayı çarkını oyunlar veya sınıf etkinlikleri için kullanın. Zar benzeri bir oyun için 1 ile 6 arasını, numaralı bir etkinlik seçmek için 1 ile 30 arasını deneyin. İstemediğiniz sayıları kaldırmak için Girdiler bölümünü düzenleyin.",
+  "yesNo.intro": "Hızlı bir rastgele seçim için bu evet veya hayır çarkını kullanın. Eşit olasılıklar için bir Evet ve bir Hayır girdisiyle başlayın veya girdileri düzenleyin.",
+  "teamGenerator.intro": "Bir listeyi gruplara ayırmak için bu rastgele takım oluşturucuyu kullanın. Oluşturulan grupların büyüklükleri en fazla bir kişi farklıdır.",
+  "home.uses.classroom": "Bir öğrenci veya sıradaki sunum yapacak kişiyi seçmek için rastgele isim seçiciyi kullanın. Sınıf etkinliği seçmek için konular ekleyin.",
+  "home.uses.teams": "Konuşma sırasını seçin veya isimleri rastgele takımlara ayırın.",
+  "home.uses.games": "Zar benzeri bir oyun için rastgele sayı çarkını deneyin veya çark çevirmeden sayı seçmek için rastgele sayı üretecini kullanın.",
+  "home.uses.everyday": "Bir yemek, film veya listenizdeki sıradaki görevi seçin. İki seçenek arasında karar vermek için evet veya hayır çarkını deneyin.",
+  "home.steps.customise": "Renkler, resimler ve seslerle kendi çarkınızı oluşturun, ardından her dönüşün ne kadar süreceğini seçin."
 }

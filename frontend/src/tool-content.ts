@@ -46,8 +46,7 @@ export const toolGuides = {
       spin,
       'For a round without repeat winners, open More options and enable No repeats. Use New round to make all entries eligible again.',
     ],
-    example:
-      'Make a number wheel from 1 to 6 for a dice-style game, or 1 to 30 to pick a numbered classroom activity. Edit Entries to remove numbers you do not want.',
+    example: 'numberWheel.example',
     faq: [
       [
         'Can I pick several numbers without spinning?',

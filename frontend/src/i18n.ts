@@ -119,25 +119,23 @@ function messages() {
     about: {
       eyebrow: translate('Names, ideas and everyday choices'),
       title: translate('Spin the Wheel'),
-      intro: translate(
-        'Add your choices, customise the wheel and spin to make a decision. Free, with no signup.',
-      ),
+      intro: translate('home.intro'),
       uses: [
         {
           title: translate('Classroom'),
-          text: translate('Pick a student, a topic or the next presenter.'),
+          text: translate('home.uses.classroom'),
         },
         {
           title: translate('Teams'),
-          text: translate('Choose a speaking order or split names into random teams.'),
+          text: translate('home.uses.teams'),
         },
         {
           title: translate('Games'),
-          text: translate('Decide who starts or pick the next challenge.'),
+          text: translate('home.uses.games'),
         },
         {
           title: translate('Everyday choices'),
-          text: translate('Choose a meal, a film or the next task on your list.'),
+          text: translate('home.uses.everyday'),
         },
       ],
       howTitle: translate('How it works'),
@@ -150,7 +148,7 @@ function messages() {
         },
         {
           title: translate('Customise'),
-          text: translate('Choose colors, images, sounds and spin duration.'),
+          text: translate('home.steps.customise'),
         },
         {
           title: translate('Click to spin'),

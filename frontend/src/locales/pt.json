@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Escolhe uma quantidade de 1 a 1.000.",
   "There are not enough different numbers in this range.": "Não existem números diferentes suficientes neste intervalo.",
   "Choose a meal, a film or the next task on your list.": "Escolhe uma refeição, um filme ou a próxima tarefa da tua lista.",
-  "Spin": "Girar"
+  "Spin": "Girar",
+  "home.intro": "Gira a roda para escolher um nome ou tomar uma decisão. Personaliza a tua roda com cores, imagens e sons. Grátis e sem registo.",
+  "namePicker.intro": "Usa este seletor aleatório de nomes para escolher alguém da tua lista. Cria uma roda de nomes para atividades na sala de aula, jogos ou sorteios.",
+  "numberGenerator.intro": "Usa este gerador de números aleatórios para escolher um ou mais inteiros dentro do intervalo que definires, com ou sem repetições.",
+  "numberWheel.example": "Usa a roda de números para jogos ou atividades na sala de aula. Experimenta de 1 a 6 para um jogo semelhante a dados, ou de 1 a 30 para escolher uma atividade numerada. Edita as Entradas para remover os números que não queres.",
+  "yesNo.intro": "Usa esta roda de sim ou não para uma escolha aleatória rápida. Começa com uma entrada Sim e uma Não para teres probabilidades iguais, ou edita as entradas.",
+  "teamGenerator.intro": "Usa este gerador de equipas aleatórias para dividir uma lista em grupos. Os grupos criados diferem em tamanho no máximo por uma pessoa.",
+  "home.uses.classroom": "Usa o seletor aleatório de nomes para escolher um aluno ou a próxima pessoa a apresentar. Adiciona temas para escolher uma atividade na sala de aula.",
+  "home.uses.teams": "Escolhe a ordem de intervenção ou divide os nomes em equipas aleatórias.",
+  "home.uses.games": "Experimenta a roda de números aleatórios para um jogo semelhante a dados, ou usa o gerador de números aleatórios para escolher números sem girar.",
+  "home.uses.everyday": "Escolhe uma refeição, um filme ou a próxima tarefa da tua lista. Para decidir entre duas opções, experimenta a roda de sim ou não.",
+  "home.steps.customise": "Cria a tua própria roda com cores, imagens e sons e escolhe a duração de cada volta."
 }

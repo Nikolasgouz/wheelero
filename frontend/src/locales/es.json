@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Elige una cantidad de 1 a 1.000.",
   "There are not enough different numbers in this range.": "No hay suficientes números distintos en este rango.",
   "Choose a meal, a film or the next task on your list.": "Elige una comida, una película o la siguiente tarea de tu lista.",
-  "Spin": "Girar"
+  "Spin": "Girar",
+  "home.intro": "Gira la ruleta para elegir un nombre o tomar una decisión. Personaliza tu ruleta con colores, imágenes y sonidos. Gratis y sin registro.",
+  "namePicker.intro": "Usa este selector aleatorio de nombres para elegir a alguien de tu lista. Crea una ruleta de nombres para actividades en clase, juegos o sorteos.",
+  "numberGenerator.intro": "Usa este generador de números aleatorios para elegir uno o varios enteros dentro del intervalo que definas, con o sin repeticiones.",
+  "numberWheel.example": "Usa la ruleta de números para juegos o actividades en clase. Prueba del 1 al 6 para un juego similar a los dados, o del 1 al 30 para elegir una actividad numerada. Edita las Entradas para quitar los números que no quieras.",
+  "yesNo.intro": "Usa esta ruleta de sí o no para tomar una decisión aleatoria rápida. Empieza con una entrada Sí y una No para tener las mismas probabilidades, o edita las entradas.",
+  "teamGenerator.intro": "Usa este generador de equipos aleatorios para dividir una lista en grupos. Los grupos creados difieren en tamaño como máximo en una persona.",
+  "home.uses.classroom": "Usa el selector aleatorio de nombres para elegir a un estudiante o a la próxima persona que presentará. Añade temas para elegir una actividad de clase.",
+  "home.uses.teams": "Elige el orden de intervención o divide los nombres en equipos aleatorios.",
+  "home.uses.games": "Prueba la ruleta de números aleatorios para un juego similar a los dados, o usa el generador de números aleatorios para elegir números sin girar.",
+  "home.uses.everyday": "Elige una comida, una película o la siguiente tarea de tu lista. Para decidir entre dos opciones, prueba la ruleta de sí o no.",
+  "home.steps.customise": "Crea tu propia ruleta con colores, imágenes y sonidos, y elige cuánto dura cada giro."
 }

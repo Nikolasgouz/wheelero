@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Choisissez une quantité de 1 à 1 000.",
   "There are not enough different numbers in this range.": "La plage ne contient pas assez de nombres distincts.",
   "Choose a meal, a film or the next task on your list.": "Choisissez un repas, un film ou la prochaine tâche de votre liste.",
-  "Spin": "Tourner"
+  "Spin": "Tourner",
+  "home.intro": "Faites tourner la roue pour choisir un nom ou prendre une décision. Personnalisez votre roue avec des couleurs, des images et des sons. Gratuit, sans inscription.",
+  "namePicker.intro": "Utilisez ce sélecteur de noms aléatoire pour choisir une personne dans votre liste. Créez une roue des noms pour des activités en classe, des jeux ou des tirages au sort.",
+  "numberGenerator.intro": "Utilisez ce générateur de nombres aléatoires pour choisir un ou plusieurs entiers dans l’intervalle défini, avec ou sans répétitions.",
+  "numberWheel.example": "Utilisez la roue des nombres pour des jeux ou des activités en classe. Essayez de 1 à 6 pour un jeu de type dé, ou de 1 à 30 pour choisir une activité numérotée. Modifiez les Participations pour retirer les nombres non souhaités.",
+  "yesNo.intro": "Utilisez cette roue oui ou non pour un choix aléatoire rapide. Commencez avec une participation Oui et une Non pour des chances égales, ou modifiez les participations.",
+  "teamGenerator.intro": "Utilisez ce générateur d’équipes aléatoires pour répartir une liste en groupes. Les groupes créés diffèrent en taille d’une personne au maximum.",
+  "home.uses.classroom": "Utilisez le sélecteur de noms aléatoire pour choisir un élève ou la prochaine personne à présenter. Ajoutez des thèmes pour choisir une activité en classe.",
+  "home.uses.teams": "Choisissez l’ordre de parole ou répartissez les noms en équipes aléatoires.",
+  "home.uses.games": "Essayez la roue des nombres aléatoires pour un jeu de type dé, ou utilisez le générateur de nombres aléatoires pour choisir des nombres sans faire tourner la roue.",
+  "home.uses.everyday": "Choisissez un repas, un film ou la prochaine tâche de votre liste. Pour départager deux options, essayez la roue oui ou non.",
+  "home.steps.customise": "Créez votre propre roue avec des couleurs, des images et des sons, puis choisissez la durée de chaque tour."
 }

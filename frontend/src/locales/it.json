@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Scegli una quantità da 1 a 1.000.",
   "There are not enough different numbers in this range.": "L’intervallo non contiene abbastanza numeri diversi.",
   "Choose a meal, a film or the next task on your list.": "Scegli un pasto, un film o la prossima attività della tua lista.",
-  "Spin": "Gira"
+  "Spin": "Gira",
+  "home.intro": "Gira la ruota per scegliere un nome o prendere una decisione. Personalizza la tua ruota con colori, immagini e suoni. Gratis e senza registrazione.",
+  "namePicker.intro": "Usa questo selettore casuale di nomi per scegliere qualcuno dalla tua lista. Crea una ruota dei nomi per attività in classe, giochi o estrazioni a premi.",
+  "numberGenerator.intro": "Usa questo generatore di numeri casuali per scegliere uno o più interi nell’intervallo che hai definito, con o senza ripetizioni.",
+  "numberWheel.example": "Usa la ruota dei numeri per giochi o attività in classe. Prova da 1 a 6 per un gioco simile ai dadi, oppure da 1 a 30 per scegliere un’attività numerata. Modifica le Voci per eliminare i numeri che non vuoi.",
+  "yesNo.intro": "Usa questa ruota sì o no per una scelta casuale veloce. Inizia con una voce Sì e una No per avere le stesse probabilità, oppure modifica le voci.",
+  "teamGenerator.intro": "Usa questo generatore di squadre casuali per dividere una lista in gruppi. I gruppi creati differiscono per dimensione al massimo di una persona.",
+  "home.uses.classroom": "Usa il selettore casuale di nomi per scegliere uno studente o la prossima persona che presenterà. Aggiungi argomenti per scegliere un’attività in classe.",
+  "home.uses.teams": "Scegli l’ordine degli interventi o dividi i nomi in squadre casuali.",
+  "home.uses.games": "Prova la ruota dei numeri casuali per un gioco simile ai dadi, oppure usa il generatore di numeri casuali per scegliere numeri senza far girare la ruota.",
+  "home.uses.everyday": "Scegli un pasto, un film o la prossima attività della tua lista. Per decidere tra due opzioni, prova la ruota sì o no.",
+  "home.steps.customise": "Crea la tua ruota con colori, immagini e suoni, poi scegli la durata di ogni giro."
 }

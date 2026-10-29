@@ -2308,8 +2308,6 @@ input[type='color'] {
 .site-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .site-links a[aria-current='page'] { font-weight: 650; }
 .footer-group { min-width: 0; }
-.footer-tools { grid-column: 1 / -1; }
-.footer-tools ul { display: flex; flex-wrap: wrap; gap: 0 24px; list-style: none; padding: 0; margin: 0; }
 .footer-group h2 { margin: 0 0 8px; color: var(--text); font-size: 14px; font-weight: 700; }
 .site-links .footer-logo { gap: 10px; padding: 0; margin-bottom: 12px; color: var(--text); font-size: 23px; font-weight: 800; letter-spacing: -0.8px; }
 .footer-logo img { flex-shrink: 0; }
@@ -2332,9 +2330,6 @@ input[type='color'] {
 .team-tool form { display: grid; gap: 14px; }
 .team-tool textarea { min-width: 0; width: 100%; }
 .tool-guide { margin: 24px auto; max-width: 1120px; }
-.tool-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.tool-links a { padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: var(--surface); text-decoration: none; min-height: 44px; }
-.tool-links a[aria-current='page'] { border-color: var(--primary); color: var(--primary); font-weight: 700; }
 .tool-guide h1 { font-size: clamp(25px, 4vw, 36px); margin: 0 0 12px; }
 .tool-guide header { padding-bottom: 24px; }
 .tool-guide li { margin: 8px 0; }

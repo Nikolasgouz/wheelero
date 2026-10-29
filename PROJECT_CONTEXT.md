@@ -1,6 +1,24 @@
-﻿# Wheelero context
+# Wheelero context
 
-Updated: 2026-10-29. Current task: variable landing inside the winning slice.
+Updated: 2026-10-29. Current delivery: localized editorial copy and removal of tool-name
+bars. User now explicitly authorizes commit/push/deployment through the existing workflow.
+Six page introductions/examples and five homepage Uses/How it works paragraphs use scoped
+keys in locales/en.json and all 13 other catalogs. They describe actual tools naturally.
+Homepage Teams keeps neutral wording without "random team generator". The team tool remains.
+SiteFooter and ToolGuide no longer render the repeated tool-name rows; unused CSS removed.
+Six information footer links and contextual related links remain. No wheel, storage,
+metadata, consent or Analytics changes. Initial HTML uses the same translation path.
+Key files: i18n.ts, locale.ts, site.ts, tool-content.ts, locales/*.json and the two components.
+Existing e2e/seo.spec.ts reflects removal of the bars. No new permanent tests were added.
+Build/typecheck/lint and all 31 unit tests passed. Nonblocking translation-bundle warning
+is 526 kB before gzip. All 10 SEO/Analytics E2E cases passed, including offline numbers and
+mobile accessibility. Direct Chromium passed 168 views (14 languages, six routes, 390/1440px),
+six initial HTML routes, unchanged metadata and no horizontal overflow. Representative
+Greek/German/Japanese desktop/mobile screenshots were reviewed. Deployment verification
+is pending. Preview http://localhost:4173/. Next: publish and verify live before claiming
+completion. No credentials, build outputs, browser data or screenshots belong in Git.
+
+Previous release:
 Published and verified live: release 71d8348, successful Pages run 40931251381.
 The user explicitly authorized this release through the existing main-branch workflow.
 

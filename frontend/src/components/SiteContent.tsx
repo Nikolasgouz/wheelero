@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
-import { footerGroups, information, pages, publicPath, toolPaths, type SitePath } from '../site'
+import { footerGroups, information, pages, publicPath, type SitePath } from '../site'
 import { getLanguage, translate } from '../locale'
 import { ContactForm } from './ContactForm'
 
@@ -41,18 +41,6 @@ export function SiteFooter({ path }: { path: SitePath }) {
           ))}
         </section>
       ))}
-      <section className="footer-group footer-tools" aria-labelledby="footer-tools-title">
-        <h2 id="footer-tools-title">{translate('Tools')}</h2>
-        <ul>
-          {toolPaths.map((href) => (
-            <li key={href}>
-              <a href={publicPath(href)} aria-current={path === href ? 'page' : undefined}>
-                {translate(pages[href].heading)}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
     </nav>
   )
 }

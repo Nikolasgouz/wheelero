@@ -1,0 +1,13 @@
+{
+  "home.intro": "Spin the wheel to pick a name or make a decision. Customise your wheel spinner with colours, images and sounds. Free, with no signup.",
+  "namePicker.intro": "Use this random name picker to select someone from your list. Create a name picker wheel for classroom activities, games or prize draws.",
+  "numberGenerator.intro": "Use this random number generator to pick one or more integers within your chosen range, with or without repeats.",
+  "numberWheel.example": "Use the number spinner for games or classroom activities. Try a range from 1 to 6 for a dice-style game, or 1 to 30 to choose a numbered activity. Edit Entries to remove numbers you do not want.",
+  "yesNo.intro": "Use this yes or no wheel for a quick random choice. Start with one Yes and one No entry for equal chances, or edit the entries.",
+  "teamGenerator.intro": "Use this random team generator to split a list into groups. The team randomizer creates groups that differ in size by at most one person.",
+  "home.uses.classroom": "Use the random name picker to choose a student or the next presenter. Add topics to pick a classroom activity.",
+  "home.uses.teams": "Choose a speaking order or split names into random teams.",
+  "home.uses.games": "Try the random number wheel for a dice-style game, or use the random number generator to pick numbers without spinning.",
+  "home.uses.everyday": "Choose a meal, a film or the next task on your list. For a two-way decision, try the yes or no wheel.",
+  "home.steps.customise": "Make your own wheel spinner with colours, images and sounds, then choose how long each spin lasts."
+}

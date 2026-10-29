@@ -1,3 +1,4 @@
+import en from './locales/en.json'
 import el from './locales/el.json'
 import es from './locales/es.json'
 import fr from './locales/fr.json'
@@ -31,7 +32,7 @@ export const languages = [
 export type Language = (typeof languages)[number]['code']
 
 const catalogs: Record<Language, Record<string, string>> = {
-  en: {},
+  en,
   el,
   es,
   fr,

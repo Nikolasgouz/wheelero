@@ -1,5 +1,31 @@
 # Targeted SEO and number generator
 
+## Localized editorial update — 2026-10-29
+
+User authorized commit/push/publication of the reviewed changes, superseding local-only
+instructions. Six replacements use scoped keys: home.intro, namePicker.intro,
+numberGenerator.intro, numberWheel.example, yesNo.intro and teamGenerator.intro. The four
+homepage Uses paragraphs and Customise step use home.uses.* and home.steps.customise.
+All 11 keys exist in English and the other 13 supported languages. Translations now match
+the approved English meaning, with localized tool terms. Homepage Teams retains its neutral
+wording without "random team generator"; the separate tool and description are preserved.
+Scoped keys avoid modifying descriptions shared with older literal translation strings.
+
+Removed the repeated tool-name rows from SiteFooter and ToolGuide, including unused CSS.
+No new sections, keyword lists, hidden text or pages. Original content layout remains.
+Headings, titles, descriptions, canonical URLs, sitemap, Analytics and consent are unchanged.
+Prerendering and client rendering share the copy. Functionality matches all descriptions.
+
+Build/typecheck/lint and 31 unit tests passed. Vite reports a nonblocking 526 kB translation
+chunk warning. All 10 SEO/Analytics E2E cases passed, including offline numbers, consent,
+event deduplication and mobile accessibility. Direct Chromium passed 168 views across
+14 languages, six routes and 390/1440px, plus six initial HTML routes. Metadata remained
+unchanged with no horizontal overflow, duplicate paragraphs or tool bars. Representative
+Greek/German/Japanese desktop/mobile screenshots were visually reviewed.
+Deployment/live verification pending. No ranking or traffic gains are claimed.
+
+## Earlier implementation
+
 Updated 2026-10-29. Published and verified at https://wheelero.com, code d8af70a,
 successful [Pages run 40925325028](https://github.com/Nikolasgouz/wheelero/actions/runs/40925325028).
 

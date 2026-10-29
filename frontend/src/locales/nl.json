@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Kies een aantal van 1 tot 1.000.",
   "There are not enough different numbers in this range.": "Dit bereik bevat niet genoeg verschillende getallen.",
   "Choose a meal, a film or the next task on your list.": "Kies een maaltijd, een film of de volgende taak op je lijst.",
-  "Spin": "Draai"
+  "Spin": "Draai",
+  "home.intro": "Draai aan het rad om een naam te kiezen of een beslissing te nemen. Pas je draairad aan met kleuren, afbeeldingen en geluiden. Gratis, zonder registratie.",
+  "namePicker.intro": "Gebruik deze willekeurige naamkiezer om iemand uit je lijst te kiezen. Maak een namenrad voor activiteiten in de klas, spelletjes of prijsverlotingen.",
+  "numberGenerator.intro": "Gebruik deze generator voor willekeurige getallen om één of meer gehele getallen binnen je gekozen bereik te kiezen, met of zonder herhalingen.",
+  "numberWheel.example": "Gebruik het getallenrad voor spelletjes of activiteiten in de klas. Probeer 1 tot en met 6 voor een dobbelspel, of 1 tot en met 30 om een genummerde activiteit te kiezen. Bewerk Invoer om ongewenste getallen te verwijderen.",
+  "yesNo.intro": "Gebruik dit ja-of-nee-rad voor een snelle willekeurige keuze. Begin met één Ja en één Nee voor gelijke kansen, of bewerk de invoer.",
+  "teamGenerator.intro": "Gebruik deze willekeurige teamgenerator om een lijst in groepen te verdelen. De groepen verschillen hoogstens één persoon in grootte.",
+  "home.uses.classroom": "Gebruik de willekeurige naamkiezer om een leerling of de volgende presentator te kiezen. Voeg onderwerpen toe om een activiteit in de klas te kiezen.",
+  "home.uses.teams": "Kies de spreekvolgorde of verdeel namen in willekeurige teams.",
+  "home.uses.games": "Probeer het willekeurige getallenrad voor een dobbelspel, of gebruik de generator voor willekeurige getallen om getallen te kiezen zonder te draaien.",
+  "home.uses.everyday": "Kies een maaltijd, een film of de volgende taak op je lijst. Probeer het ja-of-nee-rad als je tussen twee opties moet kiezen.",
+  "home.steps.customise": "Maak je eigen draairad met kleuren, afbeeldingen en geluiden en kies hoelang elke draai duurt."
 }

@@ -1,5 +1,13 @@
 # Wheelero
 
+Current delivery (2026-10-29): revised introductions and practical examples are translated
+in all 14 languages. Existing Uses/How it works sections explain each tool naturally.
+The homepage Teams paragraph keeps neutral wording. The bottom tool-name bars are removed,
+while help/privacy and contextual related links remain. Metadata and behavior are unchanged.
+The user authorized commit and publication. Deployment verification is pending.
+See [editorial copy and verification](docs/seo.md). Local preview: http://localhost:4173/.
+
+Previous release:
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
 71d8348. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
 Random landing within the winning slice was verified in 12 live desktop/mobile spins,

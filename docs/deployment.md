@@ -1,5 +1,10 @@
 # Static deployment
 
+Current authorized delivery (2026-10-29): localized editorial copy in all 14 languages,
+homepage use cases and removal of repeated tool-name bars. Local build/typecheck/lint,
+31 unit tests, 10 SEO/Analytics E2E cases and 168 translated desktop/mobile views passed.
+Publish through the existing main-branch Pages workflow. Live verification pending.
+
 Variable winning-slice landing verified live on 2026-10-29: release 71d8348, successful
 [run 40931251381](https://github.com/Nikolasgouz/wheelero/actions/runs/40931251381).
 Independent visual sampling changes the landing fraction without altering winner selection.

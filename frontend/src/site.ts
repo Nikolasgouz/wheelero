@@ -7,7 +7,7 @@ export const pages = {
     heading: 'Spin the Wheel',
     description:
       'Make your own wheel with names, tasks or choices. Customise colors and sounds, spin for a random decision and save your wheel. Free, with no signup.',
-    intro: 'Add your choices, customise the wheel and spin to make a decision. Free, with no signup.',
+    intro: 'home.intro',
     kind: 'wheel',
   },
   '/random-name-picker': {
@@ -15,15 +15,14 @@ export const pages = {
     heading: 'Random Name Picker',
     description:
       'Paste names into Entries and spin. Use No repeats to give each entry one turn per round.',
-    intro:
-      'Paste names into Entries and spin. Use No repeats to give each entry one turn per round.',
+    intro: 'namePicker.intro',
     kind: 'wheel',
   },
   '/yes-no-wheel': {
     title: 'Yes or No Wheel – A Simple Random Decision | Wheelero',
     heading: 'Yes or No Wheel',
     description: 'Spin for Yes or No with equal chances, or edit the two choices.',
-    intro: 'Spin for Yes or No with equal chances, or edit the two choices.',
+    intro: 'yesNo.intro',
     kind: 'wheel',
   },
   '/random-number-wheel': {
@@ -39,8 +38,7 @@ export const pages = {
     heading: 'Random Team Generator',
     description:
       'Paste names and choose how many teams to make. Groups differ by at most one person. Export them as text.',
-    intro:
-      'Paste names and choose how many teams to make. Groups differ by at most one person. Export them as text.',
+    intro: 'teamGenerator.intro',
     kind: 'teams',
   },
   '/random-number-generator': {
@@ -48,8 +46,7 @@ export const pages = {
     heading: 'Random Number Generator',
     description:
       'Generate random integers between your minimum and maximum. Pick one or many numbers, allow repeats or keep each batch unique, and copy your results.',
-    intro:
-      'Choose a range and generate one or many random integers, with or without repeats. No spinning required.',
+    intro: 'numberGenerator.intro',
     kind: 'numbers',
   },
   '/about': {

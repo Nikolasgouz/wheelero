@@ -416,5 +416,16 @@
   "Choose a quantity from 1 to 1,000.": "Wähle eine Anzahl von 1 bis 1.000.",
   "There are not enough different numbers in this range.": "Dieser Bereich enthält nicht genügend unterschiedliche Zahlen.",
   "Choose a meal, a film or the next task on your list.": "Wähle ein Essen, einen Film oder die nächste Aufgabe auf deiner Liste.",
-  "Spin": "Drehen"
+  "Spin": "Drehen",
+  "home.intro": "Drehe das Rad, um einen Namen auszuwählen oder eine Entscheidung zu treffen. Gestalte dein Glücksrad mit Farben, Bildern und Sounds. Kostenlos und ohne Anmeldung.",
+  "namePicker.intro": "Wähle mit der zufälligen Namensauswahl jemanden aus deiner Liste aus. Erstelle ein Namensrad für den Unterricht, Spiele oder Verlosungen.",
+  "numberGenerator.intro": "Wähle mit diesem Zufallszahlengenerator eine oder mehrere ganze Zahlen aus deinem festgelegten Bereich, mit oder ohne Wiederholungen.",
+  "numberWheel.example": "Nutze das Zahlenrad für Spiele oder Unterrichtsaktivitäten. Probiere den Bereich von 1 bis 6 für ein Würfelspiel oder von 1 bis 30, um eine nummerierte Aufgabe auszuwählen. Bearbeite die Einträge, um unerwünschte Zahlen zu entfernen.",
+  "yesNo.intro": "Nutze dieses Ja-oder-Nein-Rad für eine schnelle Zufallsentscheidung. Starte mit je einem Ja- und Nein-Eintrag für gleiche Chancen oder bearbeite die Einträge.",
+  "teamGenerator.intro": "Teile mit diesem Zufallsgenerator für Teams eine Liste in Gruppen auf. Die erzeugten Gruppen unterscheiden sich um höchstens eine Person.",
+  "home.uses.classroom": "Wähle mit der zufälligen Namensauswahl ein Kind oder die nächste Person für eine Präsentation aus. Füge Themen hinzu, um eine Unterrichtsaktivität auszuwählen.",
+  "home.uses.teams": "Lege eine Redereihenfolge fest oder teile Namen zufällig in Teams ein.",
+  "home.uses.games": "Probiere das Zufallszahlenrad für ein Würfelspiel oder wähle mit dem Zufallszahlengenerator Zahlen aus, ohne ein Rad zu drehen.",
+  "home.uses.everyday": "Wähle ein Essen, einen Film oder die nächste Aufgabe auf deiner Liste. Bei zwei Möglichkeiten hilft das Ja-oder-Nein-Rad.",
+  "home.steps.customise": "Gestalte dein eigenes Glücksrad mit Farben, Bildern und Sounds und lege fest, wie lange jede Drehung dauert."
 }

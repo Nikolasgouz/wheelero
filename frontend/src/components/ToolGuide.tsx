@@ -1,5 +1,5 @@
 import { getLanguage, translate } from '../locale'
-import { pages, publicPath, toolPaths, type SitePath } from '../site'
+import { pages, publicPath, type SitePath } from '../site'
 import { toolGuides, type ToolPath } from '../tool-content'
 
 export function ToolGuide({ path }: { path: SitePath }) {
@@ -7,17 +7,6 @@ export function ToolGuide({ path }: { path: SitePath }) {
   const guide = toolGuides[path as ToolPath]
   return (
     <div className="tool-guide" lang={getLanguage()}>
-      <nav className="tool-links" aria-label={translate('Tools')}>
-        {toolPaths.map((href) => (
-          <a
-            key={href}
-            href={publicPath(href)}
-            aria-current={href === path ? 'page' : undefined}
-          >
-            {translate(pages[href].heading)}
-          </a>
-        ))}
-      </nav>
       <article className="site-details">
         <section>
           <h2>{translate('How it works')}</h2>
