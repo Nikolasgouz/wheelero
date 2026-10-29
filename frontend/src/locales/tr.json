@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Analiz tercihiniz bu cihazda saklanır. Kabul ederseniz Google Analytics en fazla bir yıl _ga çerezlerini kullanır ve sayfa ziyaretlerini, özellik kullanım sayılarını ve teknik bağlantı verilerini alır. Reddetmek veri toplamayı durdurur ve çarklarınızı silmeden bu çerezleri kaldırır.",
   "Accept cookies": "Çerezleri kabul et",
   "Reject cookies": "Çerezleri reddet",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Çerezler küçük tarayıcı dosyalarıdır. İzninizle Google Analytics bunları ziyaretleri ve özellik kullanımını ölçmek için kullanır. Adlar, girdiler veya sonuçlar gönderilmez.",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "Her iki seçim de tam erişim sağlar. Seçiminizi çerez ayarlarından değiştirebilirsiniz."
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "Ziyaretleri ve özellik kullanımını ölçmek için isteğe bağlı Google Analytics çerezleri (cihazınızdaki küçük dosyalar) kullanıyoruz.",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Reddetmek siteyi kısıtlamaz. Adlarınız, girdileriniz ve sonuçlarınız Google’a gönderilmez. Seçiminizi çerez ayarlarından değiştirebilirsiniz."
 }

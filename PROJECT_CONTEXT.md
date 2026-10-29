@@ -2,6 +2,20 @@
 
 Updated: 2026-10-29.
 
+## Latest: automatic browser language and clearer cookie copy
+
+locale.ts now chooses the saved explicit language, otherwise the first supported browser
+language from navigator.languages (regional tag -> base), otherwise English. Static build
+HTML remains English. Automatic detection is not saved as an explicit preference and uses
+no geolocation/network request. The gate, site and privacy/cookie settings stay consistent.
+Cookie copy in all 14 catalogs now plainly describes optional Google Analytics cookies,
+unrestricted use after rejection, no wheel names/entries/results sent, and changing choices.
+Local build/typecheck, lint, 16 unit tests and all 7 analytics browser tests passed. Direct
+Chromium checked all 14 browser locales/regional tags, ordered preferences, unsupported
+fallback, saved manual override + refresh, translated cookie settings, mobile fit and zero
+Google requests before acceptance. Screenshot: artifacts/automatic-cookie-language-el.png.
+Publication verification pending.
+
 ## Latest: visible site behind compact cookie choice
 
 The app now mounts behind CookieGate, with an inert/aria-hidden wrapper until the visitor

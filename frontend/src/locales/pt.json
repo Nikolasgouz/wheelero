@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "A escolha de estatísticas é guardada neste dispositivo. Se aceitar, o Google Analytics utiliza cookies _ga durante até um ano e recebe visitas, contagens de utilização e dados técnicos de ligação. Rejeitar interrompe a recolha e remove estes cookies sem apagar as rodas.",
   "Accept cookies": "Aceitar cookies",
   "Reject cookies": "Rejeitar cookies",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Os cookies são pequenos ficheiros do navegador. Com a tua autorização, o Google Analytics usa-os para medir visitas e utilização de funcionalidades, sem nomes, entradas ou resultados.",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "Ambas as opções dão acesso total. Podes mudar a escolha nas definições de cookies."
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "Usamos cookies opcionais do Google Analytics (pequenos ficheiros no teu dispositivo) para medir visitas e utilização de funcionalidades.",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Rejeitá-los não limita o site. Não enviamos nomes, entradas ou resultados para a Google. Podes mudar a escolha nas definições de cookies."
 }

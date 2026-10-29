@@ -370,6 +370,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Выбор аналитики сохраняется на этом устройстве. При согласии Google Analytics использует файлы cookie _ga до одного года и получает посещения страниц, количества использований функций и технические данные подключения. Отказ прекращает сбор и удаляет эти cookie, не удаляя ваши колёса.",
   "Accept cookies": "Принять cookie",
   "Reject cookies": "Отклонить cookie",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Cookie — небольшие файлы браузера. С вашего согласия Google Analytics использует их для подсчёта посещений и использования функций, без имён, записей или результатов.",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "Оба варианта дают полный доступ. Выбор можно изменить в настройках cookie."
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "Мы используем необязательные cookie Google Analytics (небольшие файлы на вашем устройстве) для подсчёта посещений и использования функций.",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Отказ не ограничивает сайт. Ваши имена, записи и результаты не отправляются в Google. Выбор можно изменить в настройках cookie."
 }

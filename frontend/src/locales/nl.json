@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Je statistiekkeuze wordt op dit apparaat opgeslagen. Als je accepteert, gebruikt Google Analytics _ga-cookies tot één jaar en ontvangt het paginabezoeken, gebruiksaantallen en technische verbindingsgegevens. Weigeren stopt de verzameling en verwijdert deze cookies zonder je raden te wissen.",
   "Accept cookies": "Cookies accepteren",
   "Reject cookies": "Cookies weigeren",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Cookies zijn kleine browserbestanden. Met je toestemming meet Google Analytics daarmee bezoeken en het gebruik van functies, zonder namen, invoer of resultaten.",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "Beide keuzes geven volledige toegang. Je kunt je keuze wijzigen in de cookie-instellingen."
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "We gebruiken optionele Google Analytics-cookies (kleine bestanden op je apparaat) om bezoeken en het gebruik van functies te meten.",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Weigeren beperkt de site niet. Je namen, invoer en resultaten worden niet naar Google gestuurd. Je kunt je keuze wijzigen in de cookie-instellingen."
 }

@@ -370,6 +370,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Alegerea pentru analiză este salvată pe acest dispozitiv. Dacă accepți, Google Analytics folosește cookie-uri _ga timp de cel mult un an și primește vizite, numărători de utilizare și date tehnice de conexiune. Refuzul oprește colectarea și șterge aceste cookie-uri fără a șterge roțile.",
   "Accept cookies": "Acceptă cookie-uri",
   "Reject cookies": "Refuză cookie-uri",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Cookie-urile sunt fișiere mici ale browserului. Cu acordul tău, Google Analytics le folosește pentru a măsura vizitele și utilizarea funcțiilor, fără nume, intrări sau rezultate.",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "Ambele opțiuni oferă acces complet. Poți schimba alegerea în setările cookie-urilor."
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "Folosim cookie-uri opționale Google Analytics (fișiere mici pe dispozitivul tău) pentru a măsura vizitele și utilizarea funcțiilor.",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "Respingerea lor nu limitează site-ul. Nu trimitem numele, intrările sau rezultatele tale către Google. Poți schimba alegerea în setările cookie-urilor."
 }

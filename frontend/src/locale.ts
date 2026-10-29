@@ -47,7 +47,13 @@ const catalogs: Record<Language, Record<string, string>> = {
   zh,
 }
 const saved = typeof window === 'undefined' ? null : localStorage.getItem('spinaro-language')
-let language: Language = languages.find(({ code }) => code === saved)?.code ?? 'en'
+const browserLanguages = typeof window === 'undefined' ? [] : navigator.languages
+let language: Language =
+  languages.find(({ code }) => code === saved)?.code ??
+  browserLanguages
+    .map((locale) => languages.find(({ code }) => code === locale.split('-')[0].toLowerCase()))
+    .find((match) => match)?.code ??
+  'en'
 const listeners = new Set<() => void>()
 
 export const getLanguage = () => language

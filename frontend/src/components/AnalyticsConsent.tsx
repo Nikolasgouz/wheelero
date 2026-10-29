@@ -12,12 +12,12 @@ export function AnalyticsConsent() {
     <section className="analytics-settings" aria-label={translate('Cookie settings')}>
       <p>
         {translate(
-          'Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.',
+          'We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.',
         )}
       </p>
       <p>
         {translate(
-          'Either choice gives full access. You can change it anytime in Cookie settings.',
+          'Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.',
         )}
       </p>
       {consent !== null && (

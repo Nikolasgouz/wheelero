@@ -24,6 +24,9 @@ New visitors must choose **Accept cookies** or **Reject cookies** before using t
 Both choices give full access. The site is visible behind the dialog but cannot receive
 clicks or keyboard focus until a choice. The concise dialog explains cookies, supports language selection
 and links to a privacy view readable before choosing. Existing choices are remembered.
+On first visit, the site and cookie dialog follow the browser's preferred supported language.
+An explicitly selected language takes priority on later visits. Unsupported languages fall
+back to English; no location lookup is used. All 14 supported languages include cookie copy.
 See [public pages](docs/public-pages.md) for routes and publication limitations.
 Install app opens the browser's installation prompt when
 available or shows installation instructions. **Save & update** appears only when a new

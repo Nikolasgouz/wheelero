@@ -25,6 +25,11 @@ pages. `/privacy` can be read before choosing, as a separate static
 information view without the interactive app. `/cookies` retains both choices afterward.
 Labels and explanatory text cover all 14 locales. Existing choices are preserved, not reset
 for this copy update. Dialog titles use unique IDs so the nested language dialog is accessible.
+The initial language follows the first supported browser preference in navigator.languages,
+including regional variants, unless the visitor has explicitly chosen a saved language.
+English is the fallback and the static prerender language. No IP/location service is used.
+The concise explanation names optional Google Analytics cookies and their purpose, confirms
+rejection preserves every feature, and excludes wheel content from collection.
 The versioned preference `wheelero-analytics-consent-v1` in localStorage is either accepted
 or rejected. Unknown values require a new choice. Choosing nothing or rejecting loads no
 Google script and sends no consent pings. Choosing rejection fully enables the wheel.

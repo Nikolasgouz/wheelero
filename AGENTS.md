@@ -18,7 +18,10 @@ single-use helpers. Python lines <=100 chars if modifying historical tooling.
 Do not add tests unless requested; storage/draw/import tests were explicitly requested
 for this project. Update obsolete API expectations to actual local behavior.
 
-English default with fourteen-language UI and public copy (locale.ts/locales/*.json). Preserve Wheelero
+Fourteen-language UI and public copy (locale.ts/locales/*.json). Use an explicitly saved
+language first, then the first supported navigator.languages preference (regional tags map
+to their base language), then English. Prerendering remains English. Do not persist automatic
+detection as a manual preference or use IP geolocation. Preserve Wheelero
 branding, user content and local asset licenses. Editorial content is in src/site.ts.
 Keep one H1 and meaningful functionality per public page. The user authorized optional GA4
 G-JB9ZRMKRKR on 2026-10-29 with basic consent. No Google requests before acceptance.

@@ -368,6 +368,6 @@
   "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "您的分析选择保存在此设备上。如果同意，Google Analytics会使用_ga Cookie最长一年，并接收页面访问、功能使用次数和技术连接信息。拒绝后会停止收集并删除这些Cookie，不会删除您的转盘。",
   "Accept cookies": "接受Cookie",
   "Reject cookies": "拒绝Cookie",
-  "Cookies are small browser files. With your permission, Google Analytics uses them to measure visits and feature usage, without your names, entries or results.": "Cookie 是浏览器保存的小文件。经你同意，Google Analytics 会使用它们统计访问和功能使用情况，不会发送姓名、条目或结果。",
-  "Either choice gives full access. You can change it anytime in Cookie settings.": "两种选择均可使用全部功能。你可以随时在 Cookie 设置中更改选择。"
+  "We use optional Google Analytics cookies (small files on your device) to measure visits and feature usage.": "我们使用可选的 Google Analytics Cookie（设备上的小文件）来统计访问量和功能使用情况。",
+  "Rejecting does not limit the site. Your names, entries and results are not sent to Google. Change your choice anytime in Cookie settings.": "拒绝不会限制网站功能。你的姓名、条目和结果不会发送给 Google。你可以随时在 Cookie 设置中更改选择。"
 }
