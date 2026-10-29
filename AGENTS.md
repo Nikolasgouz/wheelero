@@ -1,5 +1,8 @@
 # Working in Wheelero
 
+Pause idle rotation while the winner popup is open. Resume after closing/removing the
+winner when otherwise eligible, and continue respecting reduced motion.
+
 Latest controls follow-up: the center uses a short visible Spin translation (Greek: Γύρνα),
 with the existing descriptive t.spin aria-label. Keep words intact and fit both dimensions
 inside the center. Sidebar action buttons wrap at their intrinsic width with 44px targets.

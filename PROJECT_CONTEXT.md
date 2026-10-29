@@ -4,6 +4,13 @@ Updated: 2026-10-29. Current task: short spin labels and responsive sidebar acti
 Published and verified live: release 0bd30aa, successful Pages run 40928555868.
 The user explicitly authorized this release through the existing main-branch workflow.
 
+Latest follow-up: App.tsx excludes popupOpen from the wheel's idle-rotation condition.
+The winner remains under the pointer while the result dialog is visible. Close/Remove
+winner resumes idle rotation, with reduced motion still respected. No new UI text or layout.
+Build/typecheck/lint and both existing spin/reduced-motion browser cases passed. Direct
+desktop/mobile verification checks a stable actual transform while the popup is open,
+then resumption after Close/Remove winner and keyboard dismissal. Publication pending.
+
 Latest controls follow-up, published: Wheel uses t.spinShort for visible Spin
 (Greek Γύρνα) in all 14 languages, keeping t.spin as the descriptive aria-label. Center text
 uses nowrap with a full-width grid track and width/height fitting. Sidebar action rows wrap

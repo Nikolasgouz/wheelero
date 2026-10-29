@@ -543,6 +543,7 @@ export default function App() {
                       winnerId={result?.option_id ?? null}
                       idle={
                         !spinning &&
+                        !popupOpen &&
                         displayed.length > 0 &&
                         screen === 'wheel' &&
                         !shareOpen &&
