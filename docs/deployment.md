@@ -1,5 +1,11 @@
 # Static deployment
 
+Cookie-choice follow-up verified on 2026-10-29: code 151c72b, successful run
+[40903094723](https://github.com/Nikolasgouz/wheelero/actions/runs/40903094723).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live verification
+confirmed the required initial choice, rejection unlocking the app and no Google requests
+before choice or after rejection. Existing consent preferences are preserved.
+
 GA4 release verified on 2026-10-29: code 6bb5296, successful run
 [40893717840](https://github.com/Nikolasgouz/wheelero/actions/runs/40893717840).
 Build checks, 16 unit tests, 41 browser cases and the PWA-update regression passed.

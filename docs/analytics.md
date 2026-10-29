@@ -3,6 +3,9 @@
 Measurement ID: `G-JB9ZRMKRKR`. Installation requested on 2026-10-29. No earlier Analytics
 or Tag Manager installation was found. The existing Cookie settings page was informational.
 Published on wheelero.com as 6bb5296 through successful run 40893717840.
+Required cookie-choice follow-up is live as 151c72b via successful run 40903094723. All CI
+checks passed. Live verification confirmed blocking before a choice, Escape/backdrop not
+dismissing it, dark theme, readable privacy, rejection enabling the tool and persistence.
 
 ## Consent and production gating
 

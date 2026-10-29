@@ -15,7 +15,12 @@ all 14 languages. The old floating banner is removed. Consent/tracking semantics
 Lint/build/typecheck and 10 targeted E2E passed (analytics, required choice, shared links,
 modal dismissal). Manual Chromium verified all 14 labels/mobile overflow, nested language
 dialog and privacy access before consent. Screenshots: artifacts/cookie-gate-*.png (ignored).
-Deployment of this follow-up is pending; the previous GA4 release below is already live.
+Published as 151c72b through successful run 40903094723. All 41 browser tests, the isolated
+PWA-update case, 16 unit tests, build/typecheck/lint and deployment passed. Live Chromium
+verified blocked tool before choice, Escape/backdrop resistance, system dark mode, privacy
+access, rejection unlocking the wheel, remembered choice on reload and zero Google requests
+before/after rejection. Screenshot: artifacts/live-cookie-gate-mobile.png. Existing accepted
+or rejected users will not see the initial modal again; /cookies still changes their choice.
 
 ## GA4 published and verified
 
