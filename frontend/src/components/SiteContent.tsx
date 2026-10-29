@@ -48,13 +48,7 @@ export function SiteFooter({ path }: { path: SitePath }) {
     </nav>
   )
 }
-export function SiteDetails({
-  path,
-  contactFormId,
-}: {
-  path: SitePath
-  contactFormId: string
-}) {
+export function SiteDetails({ path, contactFormId }: { path: SitePath; contactFormId: string }) {
   if (path in information)
     return (
       <article className="site-details" lang={getLanguage()}>
@@ -74,6 +68,25 @@ export function SiteDetails({
         )}
         {path === '/privacy' && (
           <section>
+            <h2>{translate('Optional analytics')}</h2>
+            <p>
+              {translate(
+                'Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.',
+              )}
+            </p>
+            <p>
+              {translate(
+                'Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.',
+              )}
+            </p>
+            <a className="back-to-wheel" href="/cookies">
+              {translate('Cookie settings')}
+            </a>
+            <p>
+              <a href="https://policies.google.com/privacy">
+                Google · {translate('Privacy Policy')}
+              </a>
+            </p>
             <h2>{translate('Contact & support')}</h2>
             <p>
               {translate(

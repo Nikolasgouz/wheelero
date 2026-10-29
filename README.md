@@ -16,7 +16,8 @@ and verified** with form ID `xljjlgrl`. The recipient is configured privately at
 The connected Gmail inbox received the real production-preview test. The Pages build uses
 this public form ID by default; GitHub variable `CONTACT_FORM_ID` can override it.
 See [contact setup](docs/contact-form.md) for the activation and delivery verification steps.
-Cookie settings explains actual browser storage, without unused consent switches.
+Cookie settings explains browser storage and allows accepting or rejecting optional Analytics
+at any time. Before acceptance, no Google Analytics script or request is loaded.
 See [public pages](docs/public-pages.md) for routes and publication limitations.
 Install app opens the browser's installation prompt when
 available or shows installation instructions. **Save & update** appears only when a new
@@ -24,7 +25,8 @@ version has been detected. Interface labels follow the selected language.
 
 **One spin, one decision.** A static React/TypeScript/Bun/Vite website and offline PWA.
 The wheel has **no backend, server sessions or SQLite dependency**. Wheel data stays local.
-The optional contact form is the only explicit third-party submission flow.
+The contact form sends explicit messages to Formspree. Optional GA4 runs only after analytics
+consent on the production origin. See [Analytics and consent](docs/analytics.md).
 
 Live website: **https://wheelero.com** (GitHub Pages). HTTPS, local draws/sharing and
 offline use were verified on the public domain on 2026-10-26.

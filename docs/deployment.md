@@ -20,6 +20,11 @@ and https://www.wheelero.com redirect to the HTTPS apex. Physical installs remai
 
 ## Build for the real origin
 
+The Pages workflow sets VITE_ANALYTICS_ENABLED=true for GA4 G-JB9ZRMKRKR. Runtime also
+requires https://wheelero.com and explicit analytics acceptance. Local/temporary previews
+stay untracked. Include analytics.html and its generated chunks when publishing. Never put
+the Google tag directly into prerendered pages or PWA runtime caches. See analytics.md.
+
 After confirming ownership of the domain, set PUBLIC_URL=https://wheelero.com and
 PUBLIC_INDEXING=true, then run from frontend/:
 

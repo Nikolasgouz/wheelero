@@ -93,6 +93,7 @@ export default defineConfig({
   ],
   build: {
     rollupOptions: {
+      input: { main: resolve('index.html'), analytics: resolve('analytics.html') },
       output: {
         manualChunks(id) {
           if (id.includes('/src/locales/')) return 'translations'

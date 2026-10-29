@@ -1,4 +1,6 @@
 import { ct } from './customization.i18n'
+import { AnalyticsConsent } from './components/AnalyticsConsent'
+import { trackAnalytics } from './lib/analytics'
 import {
   useCallback,
   useEffect,
@@ -243,6 +245,7 @@ export default function App() {
         )
         stop()
         setResult(outcome.result)
+        trackAnalytics({ name: 'wheel_spin_complete', entry_count: outcome.result.choice_count })
         setSidebarTab('results')
         setPopupOpen(config.popup)
         if (soundEnabled.current) playSound(config.result_sound, config.result_volume, reportError)
@@ -689,6 +692,8 @@ export default function App() {
         {screen === 'wheel' && !presenting && pages[sitePath].kind === 'wheel' && <HomeInfo />}
       </main>
       <footer className="site-footer">
+        {sitePath === '/cookies' && <AnalyticsConsent settings />}
+        {sitePath !== '/cookies' && <AnalyticsConsent />}
         {!presenting && <SiteFooter path={sitePath} />}
         <PwaControls busy={locked} report={setMessage} />
       </footer>
@@ -802,6 +807,7 @@ export default function App() {
             onClick={() =>
               run(async () => {
                 setShareUrl(createShareLink(wheel))
+                trackAnalytics({ name: 'wheel_share', entry_count: wheel.options.length })
               })
             }
           >

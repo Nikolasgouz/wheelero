@@ -1,5 +1,10 @@
 # Architecture
 
+Optional GA4 is a user-authorized exception to local-only wheel processing. Basic consent
+gates a separate same-origin analytics frame with the official Google tag, keeping automatic
+DOM measurement away from forms/names. Only known routes/static titles and numeric counts
+cross its validated message boundary. The editor never loads Google scripts. See analytics.md.
+
 Current stack: React/TypeScript, Bun/Vite and static file hosting. There is no application
 backend. Python/FastAPI/SQLite code remains in backend/ solely as historical source/recovery.
 

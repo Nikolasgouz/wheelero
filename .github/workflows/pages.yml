@@ -37,6 +37,7 @@ jobs:
           PUBLIC_URL: https://wheelero.com
           PUBLIC_INDEXING: 'true'
           VITE_CONTACT_FORM_ID: ${{ vars.CONTACT_FORM_ID || 'xljjlgrl' }}
+          VITE_ANALYTICS_ENABLED: 'true'
       - name: Share the production build with test jobs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

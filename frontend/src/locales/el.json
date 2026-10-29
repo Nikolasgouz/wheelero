@@ -252,7 +252,6 @@
   "Existing installations": "Υπάρχουσες εγκαταστάσεις",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "Τα παλιότερα δεδομένα του browser αναβαθμίζονται τοπικά. Αυτή η έκδοση δεν προσπελαύνει ούτε διαγράφει αυτόματα ιστορικά δεδομένα server.",
   "Hosting and network requests": "Φιλοξενία και αιτήματα δικτύου",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "Ο πάροχος φιλοξενίας λαμβάνει συνήθη στοιχεία σύνδεσης, όπως τη διεύθυνση IP. Το Wheelero δεν προσθέτει διαφημίσεις ή αναλυτικά στοιχεία τρίτων.",
   "Spin the wheel": "Γύρνα τον τροχό",
   "Name picker": "Επιλογή ονόματος",
   "Yes / No": "Ναι / Όχι",
@@ -331,7 +330,6 @@
   "Random results": "Τυχαία αποτελέσματα",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Το Wheelero προορίζεται για καθημερινές επιλογές και παιχνίδια. Ένα τυχαίο αποτέλεσμα δεν αποτελεί επαγγελματική συμβουλή ή πιστοποιημένη κλήρωση.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Εσύ διαχειρίζεσαι τις λίστες και τους κοινόχρηστους συνδέσμους σου. Τα δεδομένα του browser μπορεί να διαγραφούν ή να χαθούν. Το Wheelero δεν παρέχει αντίγραφα ασφαλείας στο cloud ή ανάκτηση λογαριασμού.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Το Wheelero δεν δημιουργεί cookies και δεν χρησιμοποιεί εργαλεία διαφημιστικής παρακολούθησης ή ανάλυσης επισκεψιμότητας. Σε αυτή την έκδοση δεν υπάρχουν προαιρετικές άδειες cookies για αλλαγή.",
   "Local storage": "Τοπική αποθήκευση",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "Ονόματα, τροχοί, εικόνες και αποτελέσματα αποθηκεύονται στο IndexedDB. Γλώσσα, προτιμήσεις και πρόχειρα αποθηκεύονται στο localStorage. Τα αρχεία της εφαρμογής αποθηκεύονται προσωρινά για χρήση χωρίς σύνδεση.",
   "Email us with questions or to report a problem.": "Στείλε μας email για ερωτήσεις ή για να αναφέρεις ένα πρόβλημα.",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "Έγιναν πολλές προσπάθειες. Περίμενε πριν δοκιμάσεις ξανά.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Το μήνυμα δεν έγινε δεκτό. Το κείμενό σου διατηρήθηκε. Δοκίμασε αργότερα.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "Δεν μπορέσαμε να επιβεβαιώσουμε την υποβολή. Το κείμενό σου διατηρήθηκε. Έλεγξε τη σύνδεσή σου πριν δοκιμάσεις ξανά.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Όταν στέλνεις μήνυμα επικοινωνίας, το email απάντησης και το μήνυμά σου υποβάλλονται σε επεξεργασία από το Formspree και προωθούνται στα εισερχόμενα της υποστήριξης. Οι συμμετοχές και τα αποτελέσματα του τροχού δεν περιλαμβάνονται."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Όταν στέλνεις μήνυμα επικοινωνίας, το email απάντησης και το μήνυμά σου υποβάλλονται σε επεξεργασία από το Formspree και προωθούνται στα εισερχόμενα της υποστήριξης. Οι συμμετοχές και τα αποτελέσματα του τροχού δεν περιλαμβάνονται.",
+  "Optional analytics": "Προαιρετικά στατιστικά",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Να επιτρέπεται στο Google Analytics να μετρά επισκέψεις και χρήση λειτουργιών? Λαμβάνει πλήθη, όχι ονόματα, περιεχόμενο τροχών, αποτελέσματα ή στοιχεία επικοινωνίας. Δεν αποστέλλεται τίποτα πριν από την αποδοχή σας.",
+  "Analytics is allowed.": "Τα στατιστικά επιτρέπονται.",
+  "Analytics is off.": "Τα στατιστικά είναι ανενεργά.",
+  "Accept analytics": "Αποδοχή στατιστικών",
+  "Reject analytics": "Απόρριψη στατιστικών",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Ο πάροχος φιλοξενίας λαμβάνει στοιχεία σύνδεσης, όπως τη διεύθυνση IP. Το προαιρετικό Google Analytics ξεκινά μόνο μετά την αποδοχή σας. Μπορείτε να το απορρίψετε ή να αλλάξετε επιλογή στις Ρυθμίσεις cookies.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Η επιλογή σας για τα στατιστικά αποθηκεύεται σε αυτή τη συσκευή. Αν αποδεχτείτε, το Google Analytics χρησιμοποιεί cookies _ga για έως ένα έτος και λαμβάνει επισκέψεις σελίδων, πλήθη χρήσης λειτουργιών και τεχνικά στοιχεία σύνδεσης. Η απόρριψη σταματά τη συλλογή και αφαιρεί αυτά τα cookies χωρίς να διαγράφει τους τροχούς σας."
 }

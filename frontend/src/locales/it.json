@@ -252,7 +252,6 @@
   "Existing installations": "Installazioni esistenti",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "I dati precedenti del browser vengono migrati localmente. Questa versione non accede ai dati storici del server né li elimina automaticamente.",
   "Hosting and network requests": "Hosting e richieste di rete",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "Il fornitore di hosting riceve normali dati di connessione, come l’indirizzo IP. Wheelero non aggiunge pubblicità o analisi di terze parti.",
   "Spin the wheel": "Gira la ruota",
   "Name picker": "Selettore di nomi",
   "Yes / No": "Sì / No",
@@ -331,7 +330,6 @@
   "Random results": "Risultati casuali",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero è pensato per scelte quotidiane e giochi. Un risultato casuale non è una consulenza professionale né un’estrazione certificata.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Gestisci tu le liste e i link condivisi. I dati del browser possono essere cancellati o persi. Wheelero non offre backup nel cloud né recupero dell’account.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero non imposta cookie e non usa strumenti di tracciamento pubblicitario o analitico. In questa versione non ci sono autorizzazioni per cookie facoltativi da modificare.",
   "Local storage": "Archiviazione locale",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "Nomi, ruote, immagini e risultati usano IndexedDB. Lingua, preferenze e bozze usano localStorage. I file dell’app sono memorizzati nella cache per l’uso offline.",
   "Email us with questions or to report a problem.": "Scrivici un’email per domande o per segnalare un problema.",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "Troppe richieste. Attendi prima di riprovare.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Il messaggio non è stato accettato. Il testo è conservato. Riprova più tardi.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "Non è stato possibile confermare l’invio. Il testo è conservato. Controlla la connessione prima di riprovare.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Quando invii un messaggio, Formspree elabora la tua email di risposta e il messaggio e li recapita alla nostra assistenza. Le voci e i risultati della ruota non sono inclusi."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Quando invii un messaggio, Formspree elabora la tua email di risposta e il messaggio e li recapita alla nostra assistenza. Le voci e i risultati della ruota non sono inclusi.",
+  "Optional analytics": "Statistiche facoltative",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Consentire a Google Analytics di misurare visite e uso delle funzioni? Riceve conteggi, non nomi, contenuti delle ruote, risultati o recapiti. Non viene inviato nulla prima del consenso.",
+  "Analytics is allowed.": "Le statistiche sono consentite.",
+  "Analytics is off.": "Le statistiche sono disattivate.",
+  "Accept analytics": "Accetta statistiche",
+  "Reject analytics": "Rifiuta statistiche",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Il fornitore di hosting riceve dati di connessione come l’indirizzo IP. Google Analytics facoltativo si avvia solo dopo il consenso. Puoi rifiutarlo o cambiare scelta nelle impostazioni dei cookie.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "La scelta sulle statistiche viene salvata su questo dispositivo. Se accetti, Google Analytics usa cookie _ga per un massimo di un anno e riceve visite, conteggi d’uso delle funzioni e dati tecnici di connessione. Rifiutare interrompe la raccolta e rimuove questi cookie senza eliminare le ruote."
 }

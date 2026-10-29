@@ -252,7 +252,6 @@
   "Existing installations": "现有安装",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "旧版浏览器数据会在本地迁移。此版本不会访问或自动删除历史服务器数据。",
   "Hosting and network requests": "托管与网络请求",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "托管方会收到IP地址等常规连接数据。Wheelero不添加广告或第三方分析。",
   "Spin the wheel": "旋转转盘",
   "Name picker": "名字选择器",
   "Yes / No": "是 / 否",
@@ -331,7 +330,6 @@
   "Random results": "随机结果",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero适用于日常选择和游戏。随机结果不构成专业建议或经过认证的抽奖。",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "您自行管理列表和共享链接。浏览器数据可能被清除或丢失。Wheelero不提供云备份或账户恢复。",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero不设置Cookie，也不使用广告或分析追踪器。此版本没有可更改的可选Cookie权限。",
   "Local storage": "本地存储",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "姓名、转盘、图片和结果使用IndexedDB存储。语言、偏好设置和草稿使用localStorage。应用文件会缓存以供离线使用。",
   "Email us with questions or to report a problem.": "如有疑问或需要报告问题，请给我们发送电子邮件。",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "请求过多。请等待后重试。",
   "Your message was not accepted. Your text is still here. Please try again later.": "消息未被接受。您的文字已保留。请稍后重试。",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "无法确认提交状态。您的文字已保留。重试前请检查连接。",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "发送联系消息时，您的回复邮箱和消息会由Formspree处理并递交到我们的支持邮箱。不包含转盘选项和结果。"
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "发送联系消息时，您的回复邮箱和消息会由Formspree处理并递交到我们的支持邮箱。不包含转盘选项和结果。",
+  "Optional analytics": "可选分析",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "是否允许Google Analytics统计页面访问和功能使用情况？它只接收数量，不接收姓名、转盘内容、结果或联系方式。在您同意之前不会发送任何数据。",
+  "Analytics is allowed.": "已允许分析。",
+  "Analytics is off.": "分析已关闭。",
+  "Accept analytics": "接受分析",
+  "Reject analytics": "拒绝分析",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "托管服务商会接收IP地址等连接信息。可选的Google Analytics仅在您同意后启动。您可以拒绝或在Cookie设置中更改选择。",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "您的分析选择保存在此设备上。如果同意，Google Analytics会使用_ga Cookie最长一年，并接收页面访问、功能使用次数和技术连接信息。拒绝后会停止收集并删除这些Cookie，不会删除您的转盘。"
 }

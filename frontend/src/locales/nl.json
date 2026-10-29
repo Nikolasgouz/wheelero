@@ -252,7 +252,6 @@
   "Existing installations": "Bestaande installaties",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "Oudere browsergegevens worden lokaal gemigreerd. Deze versie raadpleegt of verwijdert historische servergegevens niet automatisch.",
   "Hosting and network requests": "Hosting en netwerkverzoeken",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "De host ontvangt normale verbindingsgegevens, zoals je IP-adres. Wheelero voegt geen reclame of analyses van derden toe.",
   "Spin the wheel": "Draai aan het wiel",
   "Name picker": "Naamkiezer",
   "Yes / No": "Ja / Nee",
@@ -331,7 +330,6 @@
   "Random results": "Willekeurige resultaten",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero is bedoeld voor dagelijkse keuzes en spelletjes. Een willekeurige uitkomst is geen professioneel advies of gecertificeerde trekking.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Je beheert je eigen lijsten en gedeelde links. Browsergegevens kunnen worden gewist of verloren gaan. Wheelero biedt geen cloudback-up of accountherstel.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero plaatst geen cookies en gebruikt geen reclame- of analysetrackers. Deze versie heeft geen optionele cookietoestemmingen om te wijzigen.",
   "Local storage": "Lokale opslag",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "Namen, wielen, afbeeldingen en resultaten gebruiken IndexedDB. Taal, voorkeuren en concepten gebruiken localStorage. App-bestanden worden gecachet voor offline gebruik.",
   "Email us with questions or to report a problem.": "Mail ons met vragen of om een probleem te melden.",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "Te veel verzoeken. Wacht voordat je het opnieuw probeert.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Je bericht is niet geaccepteerd. Je tekst is bewaard. Probeer het later opnieuw.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "We konden de verzending niet bevestigen. Je tekst is bewaard. Controleer je verbinding voordat je het opnieuw probeert.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Als je een bericht stuurt, verwerkt Formspree je antwoordadres en bericht en levert die af bij onze ondersteuningsmailbox. Wielitems en resultaten worden niet meegestuurd."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Als je een bericht stuurt, verwerkt Formspree je antwoordadres en bericht en levert die af bij onze ondersteuningsmailbox. Wielitems en resultaten worden niet meegestuurd.",
+  "Optional analytics": "Optionele statistieken",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Mag Google Analytics paginabezoeken en het gebruik van functies meten? Het ontvangt aantallen, geen namen, radinhoud, resultaten of contactgegevens. Er wordt niets verstuurd voordat je akkoord gaat.",
+  "Analytics is allowed.": "Statistieken zijn toegestaan.",
+  "Analytics is off.": "Statistieken staan uit.",
+  "Accept analytics": "Statistieken accepteren",
+  "Reject analytics": "Statistieken weigeren",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "De hostingprovider ontvangt verbindingsgegevens zoals je IP-adres. Het optionele Google Analytics start pas na je toestemming. Je kunt weigeren of je keuze wijzigen via Cookie-instellingen.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Je statistiekkeuze wordt op dit apparaat opgeslagen. Als je accepteert, gebruikt Google Analytics _ga-cookies tot één jaar en ontvangt het paginabezoeken, gebruiksaantallen en technische verbindingsgegevens. Weigeren stopt de verzameling en verwijdert deze cookies zonder je raden te wissen."
 }

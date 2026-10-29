@@ -3,6 +3,7 @@ import { t } from '../i18n'
 import { ct } from '../customization.i18n'
 import type { Customization } from '../customization'
 import { randomIndex } from '../lib/random'
+import { trackAnalytics } from '../lib/analytics'
 import type { DrawResult, LocalWheel, Option, SavedState, Wheel } from '../types'
 import { readState, writeState, migrationNotice } from './storage'
 import { templates } from './templates'
@@ -173,7 +174,7 @@ function activateWheel(state: SavedState, wheel: LocalWheel) {
   state.active = draft.id
 }
 export async function saveWheel(id: string, title: string) {
-  await transaction((state) => {
+  const entryCount = await transaction((state) => {
     const wheel = state.wheels.find((wheel) => wheel.id === id)
     if (!wheel) throw new Error(t.wheelDeleted)
     const existing =
@@ -193,7 +194,9 @@ export async function saveWheel(id: string, title: string) {
       wheel.title = title
       wheel.updated_at = snapshot.updated_at
     }
+    return wheel.options.length
   })
+  trackAnalytics({ name: 'wheel_save', entry_count: entryCount })
 }
 export async function deleteWheel(id: string) {
   await transaction((state) => {

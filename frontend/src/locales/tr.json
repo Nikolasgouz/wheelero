@@ -252,7 +252,6 @@
   "Existing installations": "Mevcut kurulumlar",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "Eski tarayıcı verileri yerel olarak taşınır. Bu sürüm geçmiş sunucu verilerine erişmez veya bunları otomatik silmez.",
   "Hosting and network requests": "Barındırma ve ağ istekleri",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "Barındırma sağlayıcısı IP adresiniz gibi normal bağlantı verilerini alır. Wheelero reklam veya üçüncü taraf analizleri eklemez.",
   "Spin the wheel": "Çarkı çevir",
   "Name picker": "İsim seçici",
   "Yes / No": "Evet / Hayır",
@@ -331,7 +330,6 @@
   "Random results": "Rastgele sonuçlar",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero günlük seçimler ve oyunlar içindir. Rastgele bir sonuç profesyonel tavsiye veya onaylı çekiliş değildir.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Listelerinizi ve paylaşılan bağlantılarınızı siz yönetirsiniz. Tarayıcı verileri silinebilir veya kaybolabilir. Wheelero bulut yedeği veya hesap kurtarma sağlamaz.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero çerez yerleştirmez, reklam veya analiz izleyicileri kullanmaz. Bu sürümde değiştirilecek isteğe bağlı çerez izinleri yoktur.",
   "Local storage": "Yerel depolama",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "İsimler, çarklar, görseller ve sonuçlar IndexedDB kullanır. Dil, tercihler ve taslaklar localStorage kullanır. Uygulama dosyaları çevrimdışı kullanım için önbelleğe alınır.",
   "Email us with questions or to report a problem.": "Sorularınız veya sorun bildirmek için bize e-posta gönderin.",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "Çok fazla istek. Yeniden denemeden önce bekleyin.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Mesajınız kabul edilmedi. Metniniz korundu. Lütfen daha sonra tekrar deneyin.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "Gönderimi doğrulayamadık. Metniniz korundu. Yeniden denemeden önce bağlantınızı kontrol edin.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "İletişim mesajı gönderdiğinizde yanıt e-postanız ve mesajınız Formspree tarafından işlenip destek gelen kutumuza iletilir. Çark girdileri ve sonuçları dahil edilmez."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "İletişim mesajı gönderdiğinizde yanıt e-postanız ve mesajınız Formspree tarafından işlenip destek gelen kutumuza iletilir. Çark girdileri ve sonuçları dahil edilmez.",
+  "Optional analytics": "İsteğe bağlı analiz",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Google Analytics'in sayfa ziyaretlerini ve özellik kullanımını ölçmesine izin verilsin mi? Adları, çark içeriğini, sonuçları veya iletişim bilgilerini değil, sayıları alır. Kabul etmeden önce hiçbir şey gönderilmez.",
+  "Analytics is allowed.": "Analize izin veriliyor.",
+  "Analytics is off.": "Analiz kapalı.",
+  "Accept analytics": "Analizi kabul et",
+  "Reject analytics": "Analizi reddet",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Barındırma sağlayıcısı IP adresi gibi bağlantı verilerini alır. İsteğe bağlı Google Analytics yalnızca kabul ettiğinizde başlar. Reddedebilir veya Çerez ayarlarından seçiminizi değiştirebilirsiniz.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Analiz tercihiniz bu cihazda saklanır. Kabul ederseniz Google Analytics en fazla bir yıl _ga çerezlerini kullanır ve sayfa ziyaretlerini, özellik kullanım sayılarını ve teknik bağlantı verilerini alır. Reddetmek veri toplamayı durdurur ve çarklarınızı silmeden bu çerezleri kaldırır."
 }

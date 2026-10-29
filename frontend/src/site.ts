@@ -167,7 +167,7 @@ export const information = {
     ['Share', shareExplanation],
     [
       'Hosting and network requests',
-      'The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.',
+      'The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.',
     ],
     [
       'Managing stored data',
@@ -198,7 +198,7 @@ export const information = {
   '/cookies': [
     [
       'Cookie settings',
-      'Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.',
+      'Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.',
     ],
     [
       'Local storage',

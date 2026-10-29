@@ -254,7 +254,6 @@
   "Existing installations": "Существующие установки",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "Старые данные браузера переносятся локально. Эта версия не обращается к историческим данным сервера и не удаляет их автоматически.",
   "Hosting and network requests": "Хостинг и сетевые запросы",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "Хостинг получает обычные данные соединения, например IP-адрес. Wheelero не добавляет рекламу или стороннюю аналитику.",
   "Spin the wheel": "Вращать колесо",
   "Name picker": "Выбор имени",
   "Yes / No": "Да / Нет",
@@ -333,7 +332,6 @@
   "Random results": "Случайные результаты",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero предназначен для повседневного выбора и игр. Случайный результат не является профессиональным советом или сертифицированным розыгрышем.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Вы управляете своими списками и общими ссылками. Данные браузера могут быть удалены или потеряны. Wheelero не предоставляет облачное резервирование или восстановление аккаунтов.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero не устанавливает cookie и не использует рекламные или аналитические трекеры. В этой версии нет разрешений для необязательных cookie, которые можно изменить.",
   "Local storage": "Локальное хранение",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "Имена, колёса, изображения и результаты используют IndexedDB. Язык, предпочтения и черновики используют localStorage. Файлы приложения кешируются для работы офлайн.",
   "Email us with questions or to report a problem.": "Напишите нам по электронной почте, чтобы задать вопрос или сообщить о проблеме.",
@@ -363,5 +361,13 @@
   "Too many requests. Please wait before trying again.": "Слишком много запросов. Подождите перед повторной попыткой.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Сообщение не принято. Ваш текст сохранён. Попробуйте позже.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "Не удалось подтвердить отправку. Ваш текст сохранён. Проверьте соединение перед повторной попыткой.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "При отправке сообщения Formspree обрабатывает ваш адрес для ответа и текст сообщения и передаёт их в нашу почту поддержки. Записи и результаты колеса не включаются."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "При отправке сообщения Formspree обрабатывает ваш адрес для ответа и текст сообщения и передаёт их в нашу почту поддержки. Записи и результаты колеса не включаются.",
+  "Optional analytics": "Необязательная аналитика",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Разрешить Google Analytics измерять посещения и использование функций? Передаются количества, а не имена, содержимое колёс, результаты или контактные данные. До вашего согласия ничего не отправляется.",
+  "Analytics is allowed.": "Аналитика разрешена.",
+  "Analytics is off.": "Аналитика выключена.",
+  "Accept analytics": "Разрешить аналитику",
+  "Reject analytics": "Отклонить аналитику",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Хостинг получает данные подключения, например IP-адрес. Необязательная аналитика Google запускается только после согласия. Вы можете отказаться или изменить выбор в настройках файлов cookie.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Выбор аналитики сохраняется на этом устройстве. При согласии Google Analytics использует файлы cookie _ga до одного года и получает посещения страниц, количества использований функций и технические данные подключения. Отказ прекращает сбор и удаляет эти cookie, не удаляя ваши колёса."
 }

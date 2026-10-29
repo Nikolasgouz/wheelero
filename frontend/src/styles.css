@@ -2263,6 +2263,15 @@ input[type='color'] {
 
 /* Public pages keep the interactive wheel first and use the existing visual tokens. */
 .site-intro { max-width: 960px; margin: 20px auto 28px; text-align: center; }
+.analytics-banner { position: fixed; left: 16px; bottom: 16px; z-index: 40; width: min(360px, calc(100vw - 32px)); padding: 18px; box-shadow: 0 8px 36px #21133d30; }
+.analytics-settings { width: 100%; padding: 24px; }
+.analytics-banner h2, .analytics-settings h2 { margin: 0 0 8px; font-size: 17px; }
+.analytics-banner p, .analytics-settings p { margin: 8px 0; font-size: 13px; line-height: 1.6; }
+.analytics-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.analytics-actions button { flex: 1; min-height: 44px; }
+@media (max-width: 760px) {
+  .analytics-banner { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
 .site-intro h1 { font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.8px; margin: 8px 0; }
 .site-intro p { color: var(--muted); font-size: 14px; line-height: 1.65; margin: 8px 0; }
 .site-intro .info-eyebrow { color: var(--primary); font-size: 11px; }

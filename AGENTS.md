@@ -7,8 +7,8 @@ this delivery. Keep credentials and local data ignored. Verify the workflow and 
 
 The user chose local browser storage and no backend. Keep React/TypeScript, Bun/Vite and
 the existing design. Wheels/images/results use IndexedDB v14; small preferences/drafts
-use localStorage. No wheel network APIs/cloud sync. Explicit contact submissions are the
-exception, documented below. Historical backend/SQLite files stay intact
+use localStorage. No wheel network APIs/cloud sync. Explicit contact submissions and
+consent-gated analytics counts are exceptions documented below. Historical backend/SQLite files stay intact
 for recovery and are excluded from deployment.
 
 Keep code simple, readable and focused. No broad exception handlers, silent failures,
@@ -20,7 +20,13 @@ for this project. Update obsolete API expectations to actual local behavior.
 
 English default with fourteen-language UI and public copy (locale.ts/locales/*.json). Preserve Wheelero
 branding, user content and local asset licenses. Editorial content is in src/site.ts.
-Keep one H1 and meaningful functionality per public page. No trackers.
+Keep one H1 and meaningful functionality per public page. The user authorized optional GA4
+G-JB9ZRMKRKR on 2026-10-29 with basic consent. No Google requests before acceptance.
+Use the analytics iframe and strict message schema, never load gtag in the editor DOM.
+Only allowed page paths/static titles and numeric feature counts may cross that boundary.
+No names, results, emails, links, query strings or fragments. No advertising features.
+Consent can be changed at /cookies. Revocation removes the frame and GA cookies immediately,
+including across tabs, without deleting wheels. See docs/analytics.md for tests and debug.
 
 ## Commands
 

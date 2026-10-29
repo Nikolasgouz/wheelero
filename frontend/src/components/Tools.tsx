@@ -2,6 +2,7 @@ import { getLanguage, translate } from '../locale'
 import { useState } from 'react'
 import { parseEntries } from '../lib/entries'
 import { generateTeams } from '../lib/teams'
+import { trackAnalytics } from '../lib/analytics'
 
 export function NumberRange({
   disabled,
@@ -80,6 +81,11 @@ export function TeamGenerator() {
           }
           try {
             setTeams(generateTeams(names, Number(count)))
+            trackAnalytics({
+              name: 'teams_generate',
+              entry_count: names.length,
+              team_count: Number(count),
+            })
             setError('')
           } catch (error) {
             if (!(error instanceof RangeError)) throw error

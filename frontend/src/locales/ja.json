@@ -252,7 +252,6 @@
   "Existing installations": "既存のインストール",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "古いブラウザーデータは端末内で移行されます。このバージョンは過去のサーバーデータにアクセスせず、自動削除もしません。",
   "Hosting and network requests": "ホスティングとネットワーク通信",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "ホストにはIPアドレスなど通常の接続情報が送られます。Wheeleroは広告や第三者のアクセス解析を追加しません。",
   "Spin the wheel": "ホイールを回す",
   "Name picker": "名前選択",
   "Yes / No": "はい / いいえ",
@@ -331,7 +330,6 @@
   "Random results": "ランダムな結果",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheeleroは日常の選択やゲームのためのツールです。ランダムな結果は専門的な助言や認証された抽選ではありません。",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "リストと共有リンクはご自身で管理します。ブラウザーのデータは削除または消失する可能性があります。Wheeleroはクラウドバックアップやアカウント復旧を提供していません。",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "WheeleroはCookieを設定せず、広告や分析用のトラッカーを使用しません。このバージョンには変更できる任意のCookie許可はありません。",
   "Local storage": "ローカルストレージ",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "名前、ホイール、画像、結果にはIndexedDBを使用します。言語、設定、下書きにはlocalStorageを使用します。アプリのファイルはオフライン利用のためにキャッシュされます。",
   "Email us with questions or to report a problem.": "ご質問や問題の報告はメールでお送りください。",
@@ -361,5 +359,13 @@
   "Too many requests. Please wait before trying again.": "リクエストが多すぎます。しばらく待ってから再度お試しください。",
   "Your message was not accepted. Your text is still here. Please try again later.": "メッセージは受け付けられませんでした。入力内容は保持されています。後ほど再度お試しください。",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "送信を確認できませんでした。入力内容は保持されています。接続を確認してから再度お試しください。",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "お問い合わせを送信すると、返信用メールアドレスとメッセージがFormspreeで処理され、サポートの受信箱に届きます。ホイールの項目や結果は含まれません。"
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "お問い合わせを送信すると、返信用メールアドレスとメッセージがFormspreeで処理され、サポートの受信箱に届きます。ホイールの項目や結果は含まれません。",
+  "Optional analytics": "任意のアクセス解析",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Google Analyticsによるページ訪問数や機能の利用状況の測定を許可しますか？送信するのは件数で、名前、ルーレットの内容、結果、連絡先は送信しません。同意するまで何も送信されません。",
+  "Analytics is allowed.": "アクセス解析は許可されています。",
+  "Analytics is off.": "アクセス解析は無効です。",
+  "Accept analytics": "アクセス解析を許可",
+  "Reject analytics": "アクセス解析を拒否",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "ホスティング事業者はIPアドレスなどの接続情報を受け取ります。任意のGoogle Analyticsは同意後にのみ開始します。Cookie設定で拒否したり選択を変更したりできます。",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "アクセス解析の選択はこの端末に保存されます。同意するとGoogle Analyticsは_ga Cookieを最長1年間使用し、ページ訪問数、機能の利用件数、技術的な接続情報を受け取ります。拒否すると収集を停止し、ルーレットを削除せずにこれらのCookieを削除します。"
 }

@@ -254,7 +254,6 @@
   "Existing installations": "Instalări existente",
   "Older browser data is migrated locally. Historical server data is not accessed or automatically deleted by this version.": "Datele vechi din browser sunt migrate local. Această versiune nu accesează și nu șterge automat datele istorice de pe server.",
   "Hosting and network requests": "Găzduire și solicitări de rețea",
-  "The host receives normal connection data, such as your IP address. Wheelero adds no advertising or third-party analytics.": "Gazda primește date normale de conexiune, precum adresa IP. Wheelero nu adaugă publicitate sau analiză de la terți.",
   "Spin the wheel": "Rotește roata",
   "Name picker": "Selector de nume",
   "Yes / No": "Da / Nu",
@@ -333,7 +332,6 @@
   "Random results": "Rezultate aleatorii",
   "Wheelero is for everyday choices and games. A random result is not professional advice or a certified draw.": "Wheelero este destinat alegerilor de zi cu zi și jocurilor. Un rezultat aleatoriu nu este sfat profesional sau tragere la sorți certificată.",
   "You manage your lists and shared links. Browser storage can be cleared or lost. Wheelero does not provide cloud backup or account recovery.": "Tu îți gestionezi listele și linkurile partajate. Datele browserului pot fi șterse sau pierdute. Wheelero nu oferă copii de siguranță în cloud sau recuperarea conturilor.",
-  "Wheelero does not set cookies or use advertising or analytics trackers. There are no optional cookie permissions to change in this version.": "Wheelero nu setează cookie-uri și nu folosește instrumente de urmărire publicitară sau analitică. În această versiune nu există permisiuni pentru cookie-uri opționale de modificat.",
   "Local storage": "Stocare locală",
   "Names, wheels, images and results use IndexedDB. Language, preferences and drafts use localStorage. App files are cached for offline use.": "Numele, roțile, imaginile și rezultatele folosesc IndexedDB. Limba, preferințele și ciornele folosesc localStorage. Fișierele aplicației sunt memorate în cache pentru utilizare offline.",
   "Email us with questions or to report a problem.": "Trimite-ne un email cu întrebări sau pentru a raporta o problemă.",
@@ -363,5 +361,13 @@
   "Too many requests. Please wait before trying again.": "Prea multe cereri. Așteaptă înainte să încerci din nou.",
   "Your message was not accepted. Your text is still here. Please try again later.": "Mesajul nu a fost acceptat. Textul tău a fost păstrat. Încearcă mai târziu.",
   "We could not confirm submission. Your text is still here. Check your connection before trying again.": "Nu am putut confirma trimiterea. Textul tău a fost păstrat. Verifică legătura înainte de a reîncerca.",
-  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Când trimiți un mesaj, adresa ta de răspuns și mesajul sunt procesate de Formspree și livrate în căsuța noastră de asistență. Intrările și rezultatele roții nu sunt incluse."
+  "When you send a contact message, your reply email and message are processed by Formspree and delivered to our support inbox. Wheel entries and results are not included.": "Când trimiți un mesaj, adresa ta de răspuns și mesajul sunt procesate de Formspree și livrate în căsuța noastră de asistență. Intrările și rezultatele roții nu sunt incluse.",
+  "Optional analytics": "Analiză opțională",
+  "Allow Google Analytics to measure page visits and feature usage? It receives counts, not names, wheel content, results or contact details. Nothing is sent before you accept.": "Permiți Google Analytics să măsoare vizitele și utilizarea funcțiilor? Primește numărători, nu nume, conținutul roților, rezultate sau date de contact. Nu se trimite nimic înainte să accepți.",
+  "Analytics is allowed.": "Analiza este permisă.",
+  "Analytics is off.": "Analiza este oprită.",
+  "Accept analytics": "Acceptă analiza",
+  "Reject analytics": "Refuză analiza",
+  "The host receives connection data such as your IP address. Optional Google Analytics starts only after you accept. You can reject it or change your choice in Cookie settings.": "Furnizorul de găzduire primește date de conexiune, precum adresa IP. Google Analytics opțional pornește doar după acceptare. Poți refuza sau schimba alegerea în Setări cookie.",
+  "Your analytics choice is stored on this device. If you accept, Google Analytics uses _ga cookies for up to one year and receives page visits, feature counts and technical connection data. Rejecting stops collection and removes these cookies without deleting your wheels.": "Alegerea pentru analiză este salvată pe acest dispozitiv. Dacă accepți, Google Analytics folosește cookie-uri _ga timp de cel mult un an și primește vizite, numărători de utilizare și date tehnice de conexiune. Refuzul oprește colectarea și șterge aceste cookie-uri fără a șterge roțile."
 }

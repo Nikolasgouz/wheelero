@@ -18,6 +18,15 @@ export default defineConfig({
   ],
   reporter: process.env.CI ? [['list'], ['github']] : 'list',
   use: {
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: 'http://localhost:4173',
+          localStorage: [{ name: 'wheelero-analytics-consent-v1', value: 'rejected' }],
+        },
+      ],
+    },
     baseURL: 'http://localhost:4173',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',

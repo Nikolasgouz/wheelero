@@ -2,6 +2,27 @@
 
 Updated: 2026-10-29.
 
+## GA4 implementation in progress
+
+User authorized GA4 G-JB9ZRMKRKR and publication through the existing workflow. No prior
+tag or consent controls existed. Added basic consent banner and persistent /cookies controls
+in 14 languages. Consent gates the official tag inside analytics.html, a separate empty
+frame so automatic measurement cannot observe the editor/contact DOM. Strict Zod message
+schema accepts only known paths, static titles and numeric feature counts. No query, fragment,
+referrer, wheel names/content/results/contact info is passed. Parent never loads Google code.
+Production build flag + exact production origin + acceptance required. Revocation disables
+and removes the frame/cookies across tabs without reloading or deleting wheels.
+Events: completed spin, successful Save, link creation, valid team generation. Manual
+page_view only; config automatic views are disabled. Temporary debug via sessionStorage,
+never URL parameters or consent bypass. See docs/analytics.md for files/behavior/commands.
+All seven focused E2E cases and four existing responsive/accessibility cases passed (11/11).
+Lint, build/typecheck and 16 unit tests passed. The existing full suite also runs before Pages
+publishes. Existing tests select a rejected localhost preference; dedicated analytics tests
+start with no consent and intercept the production origin/Google queue explicitly.
+Real Google tag requests were inspected with collection intercepted: one clean page_view
+and spin event, no synthetic private markers. This is not proof of GA report ingestion.
+Live publication/verification pending. No Analytics admin/Realtime account is connected.
+
 ## Published and verified
 
 Code 54a537f is live at https://wheelero.com via successful GitHub run 40863773592.
