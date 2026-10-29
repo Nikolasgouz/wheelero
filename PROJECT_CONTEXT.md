@@ -2,7 +2,20 @@
 
 Updated: 2026-10-29.
 
-## GA4 implementation in progress
+## GA4 published and verified
+
+Code 6bb5296 is live through successful run 40893717840. Typecheck/lint/build, 16 unit
+tests, all 41 browser tests and the isolated real PWA-update case passed in GitHub Actions.
+Direct live Chromium observed zero Google requests/cookies before consent, then HTTP204
+collection responses for page_view and all four custom events with safe locations/counts.
+The homepage emitted one page_view. Revoking removed GA cookies; a later draw/navigation
+sent nothing. Debug events contain debug_mode. Contact-field sentinel values were absent
+from actual-tag requests (that extra inspection intercepted collection, did not submit mail).
+Google also produced a standard scroll event from its frame on some pages, with safe metadata.
+No GA admin/Realtime/DebugView access is available. HTTP204 verifies transport acknowledgement,
+not report ingestion or property configuration. Live evidence is ignored under artifacts/
+live-analytics-verification.json. All 14 consent labels and mobile overflow were checked,
+and the consent panel passed light/dark accessibility scans.
 
 User authorized GA4 G-JB9ZRMKRKR and publication through the existing workflow. No prior
 tag or consent controls existed. Added basic consent banner and persistent /cookies controls
@@ -21,7 +34,7 @@ publishes. Existing tests select a rejected localhost preference; dedicated anal
 start with no consent and intercept the production origin/Google queue explicitly.
 Real Google tag requests were inspected with collection intercepted: one clean page_view
 and spin event, no synthetic private markers. This is not proof of GA report ingestion.
-Live publication/verification pending. No Analytics admin/Realtime account is connected.
+Deployment is complete; the report-side verification limitation remains as described above.
 
 ## Published and verified
 

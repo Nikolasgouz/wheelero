@@ -1,8 +1,9 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-54a537f. All CI checks and deployment passed. Live checks covered title editing/persistence,
-desktop/mobile layout, spinning, offline use and the configured contact form.
+6bb5296. All CI checks and deployment passed. Optional GA4 requires consent, with safe page
+views and feature counts. Live collection requests received HTTP204; GA report ingestion
+could not be checked without property access. See [analytics verification](docs/analytics.md).
 
 The footer groups its six information links into
 **Help & information** and **Privacy & terms**. **Help & FAQ**, **About Wheelero**,

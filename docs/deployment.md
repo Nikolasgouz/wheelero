@@ -1,5 +1,11 @@
 # Static deployment
 
+GA4 release verified on 2026-10-29: code 6bb5296, successful run
+[40893717840](https://github.com/Nikolasgouz/wheelero/actions/runs/40893717840).
+Build checks, 16 unit tests, 41 browser cases and the PWA-update regression passed.
+Live consent gating, revocation and HTTP204 collection acknowledgements were verified.
+Realtime/report ingestion remains unverified without GA property access. See analytics.md.
+
 Latest verified release (2026-10-29): code 54a537f, successful run
 [40863773592](https://github.com/Nikolasgouz/wheelero/actions/runs/40863773592).
 All build checks, 16 unit tests, 34 browser cases and the isolated PWA-update test passed.

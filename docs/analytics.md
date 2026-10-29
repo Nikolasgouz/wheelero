@@ -2,6 +2,7 @@
 
 Measurement ID: `G-JB9ZRMKRKR`. Installation requested on 2026-10-29. No earlier Analytics
 or Tag Manager installation was found. The existing Cookie settings page was informational.
+Published on wheelero.com as 6bb5296 through successful run 40893717840.
 
 ## Consent and production gating
 
@@ -53,7 +54,8 @@ The only custom events are:
 No wheel/entry/result identifiers, names, titles supplied by users, contacts, images or
 sharing payloads are sent. Google still receives ordinary technical data such as network
 IP, browser/device information and its random cookie identifier after acceptance. Google
-may produce standard session/engagement information. Events before acceptance or while
+may produce standard session/engagement information and scroll events (observed live, with
+safe page metadata). Events before acceptance or while
 offline are discarded, not stored for later upload. Events during the local frame's load
 are held in memory only after consent and cleared if consent is withdrawn.
 
@@ -88,7 +90,11 @@ An additional manual Chromium check executed the real Google tag against the loc
 at the production origin, intercepting collection requests before transmission. It emitted
 one page_view and one wheel_spin_complete with clean page_location, empty referrer and no
 synthetic private markers. This confirms request construction, not receipt in GA reports.
-Live deployment and collection verification are recorded in PROJECT_CONTEXT.md after release.
+Live Chromium subsequently verified HTTP204 collection acknowledgements for page_view and
+all four custom events, one homepage view, zero requests before consent and no requests
+from a subsequent draw after revocation. GA cookies disappeared on revocation. Actual tag
+requests from the contact page contained no test reply email/message values. All 41 browser
+cases, the PWA-update regression, 16 unit tests and build/lint/typecheck passed in CI.
 No GA admin/Realtime/DebugView access is connected. Do not claim report ingestion from an
 HTTP acknowledgement alone. Review property retention/access settings in Google Analytics.
 
