@@ -8,6 +8,9 @@ import { startAnalytics } from './lib/analytics'
 import { CookieGate } from './components/CookieGate'
 
 document.documentElement.lang = getLanguage()
+document.documentElement.dataset.theme =
+  localStorage.getItem('theme') ??
+  (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
 const path = currentPath(location.pathname.replace(/\/$/, '') || '/')
 document.title = pages[path].title
 document.querySelector('meta[name="description"]')?.setAttribute('content', pages[path].description)

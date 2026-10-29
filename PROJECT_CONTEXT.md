@@ -9,7 +9,8 @@ modal and do not mount the interactive application. Both Accept cookies and Reje
 unlock all features. Existing choices stay valid. /privacy renders a restricted readable
 information page before choice, with no wheel controls. Language selection works inside
 the modal; Dialog now uses unique useId titles and LanguageMenu includes the visible language
-in its accessible name. AnalyticsConsent explains cookies, purpose/lifetime and privacy in
+in its accessible name. Theme is initialized before the gate mounts, preserving saved/system
+dark mode before choosing. AnalyticsConsent explains cookies, purpose/lifetime and privacy in
 all 14 languages. The old floating banner is removed. Consent/tracking semantics unchanged.
 Lint/build/typecheck and 10 targeted E2E passed (analytics, required choice, shared links,
 modal dismissal). Manual Chromium verified all 14 labels/mobile overflow, nested language

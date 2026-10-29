@@ -219,9 +219,11 @@ test('cookie choice blocks the tool, survives Escape and works with keyboard on 
 }) => {
   await analyticsBrowser(page)
   await page.setViewportSize({ width: 390, height: 844 })
+  await page.emulateMedia({ colorScheme: 'dark' })
   await page.goto('https://wheelero.com/')
   const banner = page.locator('dialog:has(.analytics-settings)')
   await expect(banner).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
   await expect(page.getByRole('button', { name: 'Click to spin', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
   await expect(banner).toBeVisible()
