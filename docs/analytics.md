@@ -2,6 +2,9 @@
 
 Measurement ID: `G-JB9ZRMKRKR`. Installation requested on 2026-10-29. No earlier Analytics
 or Tag Manager installation was found. The existing Cookie settings page was informational.
+Approved "Help us improve Wheelero" copy with no modal language picker is live as 32eeaf0
+via successful run 40910298245. All CI checks passed. Live Chromium verified the title/body
+in all 14 automatic languages, absent modal picker, mobile fit and zero pre-consent requests.
 Automatic browser language and clearer copy are live as 9f7e287 via successful run
 40908662642. All CI checks passed. Live Chromium verified all 14 browser languages/regional
 variants, ordered preferences/fallback, saved manual override, translated settings, mobile

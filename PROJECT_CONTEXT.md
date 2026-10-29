@@ -13,7 +13,10 @@ Removed unused cookie-language CSS. Local build/typecheck, lint and all 7 analyt
 tests passed. Direct Chromium verified title/body in all 14 automatic browser languages,
 no modal language picker, regional/fallback handling, saved preference after using the normal
 menu, mobile fit and zero Google requests before consent. Screenshot:
-artifacts/improve-cookie-language-el.png. Publication verification pending.
+artifacts/improve-cookie-language-el.png. Published as 32eeaf0 via successful run 40910298245.
+All 41 browser cases, isolated PWA update, 16 unit tests and build checks passed. Live Chromium
+verified the approved title/body in all 14 automatic languages, no cookie language picker,
+mobile fit, saved language through the regular menu and zero pre-consent Google requests.
 
 ## Latest: automatic browser language and clearer cookie copy
 

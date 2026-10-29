@@ -1,5 +1,11 @@
 # Static deployment
 
+Approved cookie copy verified live on 2026-10-29: code 32eeaf0, successful run
+[40910298245](https://github.com/Nikolasgouz/wheelero/actions/runs/40910298245).
+All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
+verified the approved heading/paragraph, no language selector inside the modal, automatic
+translation in 14 languages, mobile fit and no Google requests before consent.
+
 Automatic cookie language verified live on 2026-10-29: code 9f7e287, successful run
 [40908662642](https://github.com/Nikolasgouz/wheelero/actions/runs/40908662642).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
