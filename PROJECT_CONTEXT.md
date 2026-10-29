@@ -1,7 +1,7 @@
 ﻿# Wheelero context
 
-Updated: 2026-10-29. Current task: short spin labels and responsive sidebar actions.
-Published and verified live: release 0bd30aa, successful Pages run 40928555868.
+Updated: 2026-10-29. Current task: pause idle rotation behind the winner dialog.
+Published and verified live: release 048ad9d, successful Pages run 40929895815.
 The user explicitly authorized this release through the existing main-branch workflow.
 
 Latest follow-up: App.tsx excludes popupOpen from the wheel's idle-rotation condition.
@@ -9,7 +9,9 @@ The winner remains under the pointer while the result dialog is visible. Close/R
 winner resumes idle rotation, with reduced motion still respected. No new UI text or layout.
 Build/typecheck/lint and both existing spin/reduced-motion browser cases passed. Direct
 desktop/mobile verification checks a stable actual transform while the popup is open,
-then resumption after Close/Remove winner and keyboard dismissal. Publication pending.
+then resumption after Close/Remove winner and keyboard dismissal. All checks passed again
+live on desktop/mobile, including reduced motion. Final CI passed all 45 browser/PWA cases,
+31 unit tests, build/typecheck/lint and deployment. Screenshots: artifacts/winner-paused-live-*.png.
 
 Latest controls follow-up, published: Wheel uses t.spinShort for visible Spin
 (Greek Γύρνα) in all 14 languages, keeping t.spin as the descriptive aria-label. Center text

@@ -1,5 +1,11 @@
 # Static deployment
 
+Winner-dialog pause verified live on 2026-10-29: release 048ad9d, successful
+[run 40929895815](https://github.com/Nikolasgouz/wheelero/actions/runs/40929895815).
+App.tsx gates idle rotation on !popupOpen. All 45 browser/PWA cases, 31 unit tests and
+build/typecheck/lint passed. Live desktop/mobile checks confirmed unchanged transform while
+the popup is open, resumption after Close/Remove winner, Escape and reduced-motion behavior.
+
 Spin labels and sidebar wrapping verified live on 2026-10-29: release 0bd30aa, successful
 [run 40928555868](https://github.com/Nikolasgouz/wheelero/actions/runs/40928555868).
 All 45 browser/PWA cases, 31 unit tests, build/typecheck/lint passed. The first run caught
