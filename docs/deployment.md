@@ -142,8 +142,9 @@ server-only links will not resolve in the static app; ask their author for a JSO
 
 Remaining publication details: add the real operator identity when supplied. The support
 recipient is no longer in browser assets. Contact uses verified Formspree form xljjlgrl.
-Set CONTACT_FORM_ID=xljjlgrl as a GitHub repository variable before a future authorized
-deployment. Real local-preview delivery was verified. This change is not deployed.
+The build defaults to public Formspree ID xljjlgrl, overridable with the GitHub repository
+variable CONTACT_FORM_ID. No receiver email or API credential is embedded. Real local-preview
+delivery was verified. The user authorized deploying these changes on 2026-10-29.
 The privacy text identifies GitHub Pages hosting. Canonical URLs, 404, sharing and offline
 reload have been verified live; installation on physical devices remains to be checked.
 Browser data does not transfer automatically between domains.

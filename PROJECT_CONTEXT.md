@@ -4,6 +4,12 @@ Updated: 2026-10-29.
 
 ## Delivery authorization
 
+The user subsequently authorized push and deployment to wheelero.com. Deployment is now
+in progress via the existing main-branch Pages workflow. The workflow uses the verified
+public Formspree ID xljjlgrl as its default, overridable by CONTACT_FORM_ID. No private
+recipient address or credentials are included. Verify the workflow and live site before
+claiming this release is published. This supersedes the previous local-only instruction.
+
 The user now requested a Git commit of the accumulated local changes. Earlier no-commit
 notes below describe the previous review phase. This delivery is a local commit only,
 with no push or production deployment. Root .env, credentials, screenshots and builds

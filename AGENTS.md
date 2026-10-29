@@ -1,8 +1,9 @@
 # Working in Wheelero
 
-Latest delivery instruction (2026-10-29): the user authorized committing the accumulated
-local changes to Git. This supersedes earlier no-commit notes for this delivery only.
-No push or production deployment was requested.
+Latest delivery instruction (2026-10-29): after committing the accumulated local changes,
+the user authorized pushing and deploying them to wheelero.com through the existing
+main-branch GitHub Pages workflow. This supersedes earlier no-commit/no-deploy notes for
+this delivery. Keep credentials and local data ignored. Verify the workflow and live site.
 
 The user chose local browser storage and no backend. Keep React/TypeScript, Bun/Vite and
 the existing design. Wheels/images/results use IndexedDB v14; small preferences/drafts

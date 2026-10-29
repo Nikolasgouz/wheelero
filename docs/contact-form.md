@@ -1,6 +1,6 @@
 # Contact form
 
-Updated 2026-10-29. Local changes only, no commit or deployment.
+Updated 2026-10-29. Changes committed; user subsequently authorized deployment.
 
 ## Active configuration
 
@@ -17,9 +17,9 @@ bun run build
 bun run preview --port 4173 --strictPort
 ```
 
-For a future authorized deployment, set the GitHub repository variable CONTACT_FORM_ID to
-xljjlgrl. The local workflow edit maps it to VITE_CONTACT_FORM_ID. No remote setting was
-changed and wheelero.com has not been updated. The free plan currently allows 50 submissions
+The Pages workflow defaults VITE_CONTACT_FORM_ID to xljjlgrl. A GitHub repository variable
+CONTACT_FORM_ID can override it. The public ID is not a secret; the recipient remains
+private in Formspree. The free plan currently allows 50 submissions
 per month. No paid subscription was selected. Monitor provider limits before wider use.
 
 ## Behavior and privacy
