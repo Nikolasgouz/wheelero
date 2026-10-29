@@ -1,6 +1,7 @@
 # Targeted SEO and number generator
 
-Updated 2026-10-29. Publication verification pending.
+Updated 2026-10-29. Published and verified at https://wheelero.com, code 3e9d755,
+successful [Pages run 40922917095](https://github.com/Nikolasgouz/wheelero/actions/runs/40922917095).
 
 ## Inspection and decisions
 
@@ -126,8 +127,22 @@ maximum summed layout shift 0.022 and LCP 320 ms. These are localhost lab observ
 not real-user Core Web Vitals or a production performance guarantee. Screenshots and
 measurements are ignored under artifacts/seo-*.png and artifacts/seo-layout.json.
 
-Final CI and live release checks are pending. Physical devices, human screen-reader
-testing, real-user performance, Search Console indexing and ranking changes are unverified.
+Final CI passed all 44 browser cases in four shards, the isolated PWA-update case, all
+31 unit tests, typecheck, lint, build and deployment. No tests were skipped in CI.
+
+Live Chromium verified all six HTML/client pages, unique titles/H1, canonical URLs,
+Twitter metadata, indexability, existing 301 redirects, real unknown-route 404, sitemap
+and robots. The new generator produced a full unique batch and worked after offline reload.
+No Google requests occurred before consent or after rejection. All 48 viewport/theme/tool
+views and all 14-language x six-route checks passed again live. The short unthrottled live
+sample measured max summed CLS 0.0006 and LCP 632 ms. These remain lab measurements, not
+field Core Web Vitals. Screenshots: artifacts/seo-1440-light-home.png and
+artifacts/seo-390-dark-numbers.png, with other sizes/themes alongside them.
+
+Physical devices, human screen-reader testing, native-speaker review, real-user performance,
+Search Console indexing and ranking changes remain unverified. Analytics delivery/report
+ingestion was not retested in this SEO release. Existing analytics coverage uses mock
+collection to verify consent, one page_view and safe metadata without tracking test output.
 
 ## Search Console follow-up
 

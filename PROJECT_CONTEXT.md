@@ -1,8 +1,8 @@
 ﻿# Wheelero context
 
 Updated: 2026-10-29. Current task: targeted SEO plus a real instant number generator.
-Publication is explicitly authorized through the existing main-branch Pages workflow.
-Code and local checks are in progress, not yet published. Previous live code: 0580832.
+Published and verified live: code 3e9d755, successful Pages run 40922917095.
+The user explicitly authorized this release through the existing main-branch workflow.
 
 ## Product and runtime
 
@@ -77,10 +77,17 @@ two diagnostic workers). All seven Analytics cases passed after the fixture fix.
 14-language x six-tool checks passed. The isolated PWA update passed, retaining saved and
 unsubmitted editor work through a real worker replacement.
 
-Next: commit/push, wait for
-Pages CI/deployment, verify the six live URLs and update release status here/docs/README.
-Search Console access, indexing/rank changes, physical-device installation, human screen-reader
-and native-speaker review are unverified. Do not promise rankings or Analytics report ingestion.
+Final CI passed all 44 browser cases plus isolated PWA update, 31 unit tests, typecheck,
+lint, build and deployment. Live Chromium verified six initial HTML/client pages, canonical
+301 destinations, sitemap/robots, real 404, unique number batches, offline generation and
+zero Google requests before consent/after rejection. All 48 layout views and 14-language x
+six-route checks passed again live. No storage, wheel selection or customization regression.
+
+Next: owner submits sitemap.xml and inspects the six canonical tool URLs in Search Console,
+then monitors actual impressions/clicks. No connected Search Console access is available.
+Indexing/rank changes, physical-device installation, human screen-reader/native-speaker review
+and field performance remain unverified. This release did not retest GA report ingestion.
+No known unfinished implementation work for this SEO request. See docs/seo.md for details.
 
 ## Commands and delivery
 

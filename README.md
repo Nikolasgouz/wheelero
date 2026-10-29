@@ -1,7 +1,10 @@
 # Wheelero
 
 Latest release verified live on 2026-10-29: [wheelero.com](https://wheelero.com), code
-0580832. All CI checks and deployment passed. Wheel sound starts enabled on every page load.
+3e9d755. All 45 browser/PWA checks, 31 unit tests, build/typecheck/lint and deployment passed.
+Six task-specific SEO pages and the new instant random number generator are live, verified
+in initial HTML and Chromium, including offline use. See [SEO verification](docs/seo.md).
+Wheel sound starts enabled on every page load.
 New visitors see the site behind a compact
 cookie dialog and must accept or reject before using the tool. Optional GA4 requires consent, with safe page
 views and feature counts. Live collection requests received HTTP204; GA report ingestion

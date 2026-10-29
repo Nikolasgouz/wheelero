@@ -1,5 +1,12 @@
 # Static deployment
 
+Targeted SEO and instant number generator verified live on 2026-10-29: code 3e9d755,
+successful [run 40922917095](https://github.com/Nikolasgouz/wheelero/actions/runs/40922917095).
+All 44 browser cases, isolated PWA update, 31 unit tests and build/typecheck/lint passed.
+Live verification covered six HTML/client routes, canonical redirects, 404, sitemap/robots,
+number generation/offline use, 48 layout views, 14 languages and no tracking before consent
+or after rejection. No DNS, hosting, workflow, storage-schema or backend changes. See seo.md.
+
 Pick a number template verified live on 2026-10-29: code 0580832, successful run
 [40914388174](https://github.com/Nikolasgouz/wheelero/actions/runs/40914388174).
 All 41 browser cases, PWA-update test, 16 unit tests and build checks passed. Live Chromium
