@@ -140,9 +140,10 @@ test('number generator is accessible on mobile in light and dark themes', async 
   for (const theme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
     await page.goto('/random-number-generator')
-    await page.evaluate((theme) => {
-      document.documentElement.dataset.theme = theme
-    }, theme)
+    // The first visit saves light mode. Change that preference through React's control,
+    // rather than racing the app's theme effect with a direct DOM attribute mutation.
+    if (theme === 'dark') await page.getByRole('button', { name: 'Dark mode', exact: true }).click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
     await page.getByRole('button', { name: 'Generate numbers', exact: true }).click()
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     expect((await new AxeBuilder({ page }).include('#main-content').analyze()).violations).toEqual(

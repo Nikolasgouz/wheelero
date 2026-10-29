@@ -13,6 +13,11 @@ targeted browser cases passed. Direct Chromium checked 360/390/768/1366/1920px i
 Greek, all other short labels at 360px, and spin/shuffle/sort/clear/result export/keyboard.
 All 22 views fit with no horizontal overflow. Desktop/mobile screenshots were reviewed:
 artifacts/spin-controls-local-*.png. Publication/live verification pending.
+First CI run 40927758156 stopped on the existing number-generator dark-mode contrast test.
+That test wrote data-theme directly while React retained a saved light preference. It now
+switches through the actual theme button and asserts the resulting theme. Six repeated
+cases passed. This changes test setup only, not site theme styling or the two-fix scope.
+All 14 spinning-state translations also fit in the center at 360px.
 
 Current follow-up: remove the homepage's extra SEO/ToolGuide panel, integrating unique
 information in HomeInfo with the earlier aesthetic. Implemented: visible H1 in
