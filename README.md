@@ -1,5 +1,10 @@
 # Wheelero
 
+AdSense onboarding (2026-10-30): publisher ownership metadata and `/ads.txt` are prepared
+for `pub-8954880355873863` through the existing Pages deployment. Site review, the Individual
+payments profile and advertising consent setup are separate activation steps. No ad-serving
+script is loaded by this change. See [AdSense setup](docs/adsense.md).
+
 Current delivery (2026-10-29): revised introductions and practical examples are translated
 in all 14 languages. Existing Uses/How it works sections explain each tool naturally.
 The homepage Teams paragraph keeps neutral wording. The bottom tool-name bars are removed,

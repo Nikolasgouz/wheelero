@@ -1,5 +1,13 @@
 # Wheelero context
 
+2026-10-30 AdSense setup: the user requested connecting the existing deployed site and
+authorized repository access. The publisher is pub-8954880355873863. Ownership metadata in
+frontend/index.html and frontend/public/ads.txt support review through the existing Pages
+workflow. No advertising requests or consent changes are introduced. Complete live
+verification, AdSense review submission and the Individual payment profile, then configure
+certified advertising consent before enabling ads. See docs/adsense.md. Never add personal
+payment details or credentials to this repository.
+
 Updated: 2026-10-29. Current delivery: localized editorial copy and removal of tool-name
 bars. User now explicitly authorizes commit/push/deployment through the existing workflow.
 Six page introductions/examples and five homepage Uses/How it works paragraphs use scoped
