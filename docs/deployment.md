@@ -2,7 +2,8 @@
 
 AdSense onboarding (2026-10-30) adds the publisher ownership meta tag and root `/ads.txt`
 for pub-8954880355873863. Both travel through the existing build, verification and Pages
-deployment. Verify the live files and submit site review in AdSense after deployment.
+deployment. Published as `2adafbc` through successful run 41066940511. Six live tool pages
+and `/ads.txt` passed HTTP checks. AdSense verified ownership and accepted review submission.
 This stage does not serve ads. See [remaining activation steps](adsense.md).
 
 Current authorized delivery (2026-10-29): localized editorial copy in all 14 languages,

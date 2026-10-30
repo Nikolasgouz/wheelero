@@ -14,11 +14,18 @@ ads or reinterpret existing Analytics consent as advertising consent. Google's m
 verification method permits ownership verification and a review request before ad serving.
 The existing wheel layout, local data, Analytics isolation and cookie choices remain intact.
 
+Published on 2026-10-30 as commit `2adafbc` through successful
+[Pages run 41066940511](https://github.com/Nikolasgouz/wheelero/actions/runs/41066940511).
+All build checks, four browser shards, the isolated PWA update and deployment passed.
+Live HTTP 200 checks confirmed the exact head metadata on all six tool routes and the
+exact `/ads.txt` line. AdSense confirmed ownership, accepted the review request and now
+shows **Getting ready / Review requested**. This is pending review, not approval.
+The new Individual payment profile still requires the payee's name and postal address.
+
 Local validation: locked install, typecheck, lint, all 31 existing unit tests and the
 production build passed. Parsed all 15 generated public HTML files to confirm the exact
 publisher meta tag is in the head, checked the emitted ads.txt line and confirmed no
-ad-serving script was introduced. Deployment and Google review status must be checked
-separately after publication.
+ad-serving script was introduced.
 
 ## Activation checklist
 

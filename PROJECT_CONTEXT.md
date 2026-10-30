@@ -3,8 +3,10 @@
 2026-10-30 AdSense setup: the user requested connecting the existing deployed site and
 authorized repository access. The publisher is pub-8954880355873863. Ownership metadata in
 frontend/index.html and frontend/public/ads.txt support review through the existing Pages
-workflow. No advertising requests or consent changes are introduced. Complete live
-verification, AdSense review submission and the Individual payment profile, then configure
+workflow. Published as 2adafbc with successful run 41066940511, including all browser/PWA
+checks. Six live tool pages and ads.txt passed HTTP checks. Google verified ownership and
+accepted review submission: Getting ready / Review requested. No advertising requests or
+consent changes are introduced. Complete the Individual payment profile, then configure
 certified advertising consent before enabling ads. See docs/adsense.md. Never add personal
 payment details or credentials to this repository.
 
